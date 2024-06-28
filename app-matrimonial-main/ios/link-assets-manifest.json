@@ -1,0 +1,65 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "src/assets/fonts/Borel-Regular.ttf",
+      "sha1": "93af82eec3087358e36d188076acee45492dad6a"
+    },
+    {
+      "path": "src/assets/fonts/Cookie-Regular.ttf",
+      "sha1": "815acb8ae7f98dd13cd0a1334b80ec2ec51cb339"
+    },
+    {
+      "path": "src/assets/fonts/Lora-Bold.ttf",
+      "sha1": "6181c8c5c0046d8f9a484293108a27bba37618de"
+    },
+    {
+      "path": "src/assets/fonts/Lora-BoldItalic.ttf",
+      "sha1": "25f9b29ad281cc336e35c516b6d2c73da4e149d9"
+    },
+    {
+      "path": "src/assets/fonts/Lora-Italic.ttf",
+      "sha1": "d73f87c37abe1130d87be288cca54f4887dc17a7"
+    },
+    {
+      "path": "src/assets/fonts/Lora-Medium.ttf",
+      "sha1": "75a72ab8c80d696a517f4245c837011646756290"
+    },
+    {
+      "path": "src/assets/fonts/Lora-MediumItalic.ttf",
+      "sha1": "e13875499470c43930048db1724d65c5ed86971a"
+    },
+    {
+      "path": "src/assets/fonts/Lora-Regular.ttf",
+      "sha1": "d4178fd9d41a324df797c06803fb0aeba8fbacd4"
+    },
+    {
+      "path": "src/assets/fonts/Lora-SemiBold.ttf",
+      "sha1": "a65c10e353bfd67b7aaba44498063bfc71e829d8"
+    },
+    {
+      "path": "src/assets/fonts/Lora-SemiBoldItalic.ttf",
+      "sha1": "27403b82ee87deac15f4fca41dd88e36383faadd"
+    },
+    {
+      "path": "src/assets/fonts/PoiretOne-Regular.ttf",
+      "sha1": "75769d8c5e3ff4a2cd158b8c1ed59bb5ecea8c8a"
+    },
+    {
+      "path": "src/assets/fonts/Poppins-Bold.ttf",
+      "sha1": "3bc8164396c3e6c1e4fae0cf2a51ea66381c1c2d"
+    },
+    {
+      "path": "src/assets/fonts/Poppins-Medium.ttf",
+      "sha1": "cf83e7582e60ed83f67c7d68b4f7482ac9fc6958"
+    },
+    {
+      "path": "src/assets/fonts/Poppins-Regular.ttf",
+      "sha1": "52f9413b264e8ecefbbf12830e3dfadebbf72986"
+    },
+    {
+      "path": "src/assets/fonts/Poppins-SemiBold.ttf",
+      "sha1": "bb68fa19e20495d26a20308b90712bd2c6150642"
+    }
+  ]
+}
