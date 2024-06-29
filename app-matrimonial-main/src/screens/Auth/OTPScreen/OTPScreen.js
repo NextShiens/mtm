@@ -36,7 +36,7 @@ const OTPScreen = () => {
     const enteredOTP = otp.join('');
     if (enteredOTP.length > 3) {
       try {
-        const response = await fetch(`${API_URL}/user/verifyEmail`, {
+        const response = await fetch(`${API_URL}/user/confirmEmail`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -47,7 +47,7 @@ const OTPScreen = () => {
           })
         });
         const data = await response.json();
-        
+        console.log('data from otp page ', data);
         if (response.ok) {
           navigation.navigate('DrawerNavigation');
         } else {

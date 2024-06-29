@@ -6,7 +6,7 @@ export const styles =
       height: 50,
       width: '100%',
       flexDirection: 'row',
-      justifyContent: 'space-between',
+      justifyContent: 'center',
       alignItems: 'center',
     },
     googleIconContainer: {
@@ -16,21 +16,5 @@ export const styles =
       justifyContent: 'center',
       alignItems: 'center',
       borderRadius: 10,
-    },
-    facebookIconContainer: {
-      height: 50,
-      width: '30%',
-      backgroundColor: COLORS.dark.facebookIconCont,
-      borderRadius: 10,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    appleIconContainer: {
-      height: 50,
-      width: '30%',
-      backgroundColor: COLORS.dark.appleIconCont,
-      borderRadius: 10,
-      alignItems: 'center',
-      justifyContent: 'center',
     },
   });
