@@ -19,7 +19,10 @@ async function getFCMToken() {
     try {
       fcmToken = await messaging().getToken();
       if (fcmToken) {
+        console.log('FCM Token:', fcmToken);
         await AsyncStorage.setItem('fcmToken', fcmToken);
+        // Here, you should send this token to your backend
+        sendFCMTokenToBackend(fcmToken);
       }
     } catch (error) {
       console.log('Error getting FCM token:', error);
@@ -27,13 +30,36 @@ async function getFCMToken() {
   }
 }
 
-export const notificationListener = () => {
+async function sendFCMTokenToBackend(fcmToken) {
+  const userId = await AsyncStorage.getItem('userId');
+  const accessToken = await AsyncStorage.getItem('AccessToken');
+
+  try {
+    const response = await fetch(`${API_URL}/user/updateFCMToken`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify({
+        userId: userId,
+        fcmToken: fcmToken,
+      }),
+    });
+    const data = await response.json();
+    console.log('FCM token sent to backend:', data);
+  } catch (error) {
+    console.error('Error sending FCM token to backend:', error);
+  }
+}
+
+export const notificationListener = (navigation) => {
   messaging().onNotificationOpenedApp(remoteMessage => {
     console.log(
       'Notification caused app to open from background state:',
       remoteMessage.notification,
     );
-    // Navigate to appropriate screen based on the notification
+    handleNotification(remoteMessage, navigation);
   });
 
   messaging()
@@ -44,12 +70,23 @@ export const notificationListener = () => {
           'Notification caused app to open from quit state:',
           remoteMessage.notification,
         );
-        // Navigate to appropriate screen based on the notification
+        handleNotification(remoteMessage, navigation);
       }
     });
 
   messaging().onMessage(async remoteMessage => {
     console.log('A new FCM message arrived!', JSON.stringify(remoteMessage));
-    // Handle the message here (e.g., show a local notification)
+    // You can show a local notification here if you want
   });
 };
+
+function handleNotification(remoteMessage, navigation) {
+  // Handle different types of notifications
+  if (remoteMessage.data.type === 'chat') {
+    navigation.navigate('ChatScreen', {
+      userId: remoteMessage.data.senderId,
+      roomId: remoteMessage.data.roomId,
+    });
+  }
+  // Handle other notification types as needed
+}

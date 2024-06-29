@@ -1,14 +1,19 @@
 import React, { useEffect } from 'react';
 import AppNavigator from './src/navigation';
-import { notificationListener, requestUserPermission } from './src/utils/pushNotifications';
+import { requestUserPermission } from './src/utils/pushNotifications';
+import { SocketProvider } from './SocketContext';
+
 
 const App = () => {
   useEffect(() => {
     requestUserPermission();
-    notificationListener();
   }, []);
+
   return (
-    <AppNavigator />
+    <SocketProvider>
+      <AppNavigator />
+    </SocketProvider>
+
   );
 };
 

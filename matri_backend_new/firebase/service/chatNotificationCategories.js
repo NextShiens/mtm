@@ -38,6 +38,7 @@ async function getFcmTokenForChat(userId) {
       return deviceToken;
     } else {
       console.log("users device token does not exist");
+      return "sdfknaslkfsalf "
     }
   } catch (err) {
     console.log("error retreiving FCM token:", err);

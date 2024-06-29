@@ -1,7 +1,6 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { View, TextInput, TouchableOpacity, Image, Text } from 'react-native';
+import React, { useEffect, useState, useCallback, useContext } from 'react';
+import { View, TextInput, TouchableOpacity, Image } from 'react-native';
 import { GiftedChat, Bubble } from 'react-native-gifted-chat';
-import io from 'socket.io-client';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { styles } from './styles';
 import { IMAGES } from '../../../assets/images';
@@ -9,51 +8,48 @@ import { COLORS } from '../../../assets/theme';
 import Icon from '../../../components/Icon/Icon';
 import { SVG } from '../../../assets/svg';
 import Space from '../../../components/Space/Space';
+
 import { API_URL } from '../../../../constant';
+import { SocketContext } from '../../../../SocketContext';
+import { Text } from 'react-native-svg';
 
 const ChatScreen = ({ navigation, route }) => {
-
   const [messages, setMessages] = useState([]);
-  const [socket, setSocket] = useState(null);
+  const { socket } = useContext(SocketContext);
   const { userId, roomId, user } = route.params;
   const [currentUser, setCurrentUser] = useState({});
 
   useEffect(() => {
-    debugger
     const fetchUser = async () => {
       const userString = await AsyncStorage.getItem('theUser');
       if (userString) {
         const user = JSON.parse(userString);
         setCurrentUser(user);
       }
-      console.log('User:', currentUser);
     };
+
 
     fetchUser();
   }, []);
-
+  console.log('user', currentUser);
 
   useEffect(() => {
-    const newSocket = io(API_URL);
-    setSocket(newSocket);
+    if (socket) {
+      socket.emit('join_room', roomId);
 
-    newSocket.on('connect', () => {
-      console.log('Connected to socket server');
-      newSocket.emit('join_room', roomId);
-    });
+      socket.on('receive_message', (message) => {
+        setMessages(previousMessages => GiftedChat.append(previousMessages, message));
+      });
+    }
 
-    newSocket.on('receive_message', (message) => {
-      setMessages(previousMessages => GiftedChat.append(previousMessages, message));
-    });
+    fetchChatHistory();
 
     return () => {
-      newSocket.disconnect();
+      if (socket) {
+        socket.off('receive_message');
+      }
     };
-  }, []);
-
-  useEffect(() => {
-    fetchChatHistory();
-  }, []);
+  }, [socket]);
 
   const fetchChatHistory = async () => {
     try {
@@ -79,11 +75,13 @@ const ChatScreen = ({ navigation, route }) => {
 
   const onSend = useCallback((messages = []) => {
     const [message] = messages;
-    socket.emit('send_message', {
-      roomId,
-      ...message,
-      receiverId: userId,
-    });
+    if (socket) {
+      socket.emit('send_message', {
+        roomId,
+        ...message,
+        receiverId: userId,
+      });
+    }
     setMessages(previousMessages => GiftedChat.append(previousMessages, messages));
   }, [socket]);
 
@@ -118,12 +116,12 @@ const ChatScreen = ({ navigation, route }) => {
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <TouchableOpacity
               onPress={() => {
-                navigation.goBack();
+                navigateBack()
               }}>
               <Icon
                 SVGIcon={<SVG.BackArrow fill={'black'} />}
                 onPress={() => {
-                  navigation.goBack();
+                  navigateBack()
                 }}
               />
             </TouchableOpacity>
