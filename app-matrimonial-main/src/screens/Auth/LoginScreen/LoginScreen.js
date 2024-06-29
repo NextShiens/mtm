@@ -89,7 +89,8 @@ const loginAndGetAccessToken = async () => {
               await AsyncStorage.setItem('loginToken', res);
               await loginAndGetAccessToken();
               await verifyUserEmail();
-              navigation.navigate('OTPScreen', {email});
+              // navigation.navigate('OTPScreen', {email});
+              navigation.navigate('ProfileCreateScreen');
             };
             setUid();
           } else {

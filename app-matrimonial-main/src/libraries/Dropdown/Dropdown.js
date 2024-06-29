@@ -51,7 +51,7 @@ const CustomDropdown = ({
 
   const renderItem = ({ item }) => (
     <TouchableOpacity style={styles.item} onPress={() => handleSelect(item)}>
-      <Text>{item}</Text>
+      <Text style={styles.itemText}>{item}</Text>
     </TouchableOpacity>
   );
 
@@ -84,6 +84,7 @@ const CustomDropdown = ({
               <TextInput
                 style={styles.searchBar}
                 placeholder={searchPlaceholder || "Search..."}
+                placeholderTextColor="#999"
                 value={searchValue}
                 onChangeText={(text) => searchFunction(text)}
               />
@@ -128,7 +129,7 @@ const styles = StyleSheet.create({
     color: '#999',
   },
   selectedText: {
-    color: '#000',
+    color: '#000000',
   },
   modalContainer: {
     flex: 1,
@@ -156,6 +157,7 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     borderRadius: 5,
     paddingRight: 40,
+    color: '#000000',
   },
   searchIconContainer: {
     position: 'absolute',
@@ -168,6 +170,9 @@ const styles = StyleSheet.create({
     padding: 10,
     borderBottomWidth: 1,
     borderBottomColor: '#eee',
+  },
+  itemText: {
+    color: '#000000',
   },
   closeButton: {
     marginTop: 10,

@@ -51,7 +51,7 @@ const ProfileCreateScreen = () => {
   const [formData, setFormData] = useState({
     age: '',
     height: '',
-    gender: 'male',
+    gender: '',
     maritalStatus: '',
     dateOfBirth: '',
     religion: '',
