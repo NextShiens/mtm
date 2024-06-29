@@ -37,8 +37,6 @@ const LoginScreen = () => {
   const backNavigationHandler = () => {
     navigation.goBack();
   };
-  const facebookAuthHandler = () => {};
-  const appleAuthHandler = () => {};
 
   const googleAuthHandler = async () => {};
   const forgotPassHandler = () => {
@@ -232,9 +230,7 @@ const loginAndGetAccessToken = async () => {
             <Space mT={30} />
 
             <SocialAuth
-              onFacebookAuth={facebookAuthHandler}
               onGoogleAuth={googleAuthHandler}
-              onAppleAuth={appleAuthHandler}
             />
             <Space mT={20} />
             <TouchableOpacity style={[STYLES.rowCenter, STYLES.JCCenter]}>
