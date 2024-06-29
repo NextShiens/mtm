@@ -1,22 +1,22 @@
-import {DrawerContentScrollView} from '@react-navigation/drawer';
-import React, {useState} from 'react';
-import {Dimensions, Image, TouchableOpacity, View} from 'react-native';
-import {Fonts} from '../../assets/fonts';
-import {IMAGES} from '../../assets/images';
-import {SVG} from '../../assets/svg';
-import {COLORS, STYLES} from '../../assets/theme';
+import { DrawerContentScrollView } from '@react-navigation/drawer';
+import React, { useState } from 'react';
+import { Dimensions, Image, TouchableOpacity, View } from 'react-native';
+import { Fonts } from '../../assets/fonts';
+import { IMAGES } from '../../assets/images';
+import { SVG } from '../../assets/svg';
+import { COLORS, STYLES } from '../../assets/theme';
 import AppText from '../../components/AppText/AppText';
 import CustomImage from '../../components/CustomImage/CustomImage';
 import Icon from '../../components/Icon/Icon';
 import Space from '../../components/Space/Space';
-import {DrawerListData} from '../../data/appData';
+import { DrawerListData } from '../../data/appData';
 import auth from '@react-native-firebase/auth';
-import {LABELS} from '../../labels';
-import {styles} from './styles';
+import { LABELS } from '../../labels';
+import { styles } from './styles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Toast} from '../../utils/native';
+import { Toast } from '../../utils/native';
 
-const CustomDrawerContent = ({props, navigation}) => {
+const CustomDrawerContent = ({ props, navigation }) => {
   const [isOnline, setIsOnline] = useState(true);
   const [drawerData, setDrawerData] = useState(DrawerListData);
   const [selectedRoute, setSelectedRoute] = useState('User Name');
@@ -38,19 +38,21 @@ const CustomDrawerContent = ({props, navigation}) => {
       const logout = async () => {
         await AsyncStorage.removeItem('AccessToken');
         Toast('Logged Out Successfully');
+        await AsyncStorage.removeItem('theUser');
+        await AsyncStorage.clear();
         navigation.navigate('InitialScreen');
       };
 
       logout();
-      // auth()
-      //   .signOut()
-      //   .then(async () => {
-      //     await AsyncStorage.removeItem('loginToken');
-      //     navigation.navigate('InitialScreen');
-      //   })
-      //   .catch(err => {
-      //     console.log(err);
-      //   });
+      auth()
+        .signOut()
+        .then(async () => {
+          await AsyncStorage.removeItem('loginToken');
+          navigation.navigate('InitialScreen');
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   };
   return (
@@ -62,16 +64,16 @@ const CustomDrawerContent = ({props, navigation}) => {
               <CustomImage
                 source={IMAGES.profileAvatar}
                 size={50}
-                extraStyle={{container: STYLES.bR(25)}}
+                extraStyle={{ container: STYLES.bR(25) }}
               />
               {isOnline && <View style={style.onlineDot}></View>}
             </View>
             <Space mL={10} />
-            <View style={{height: 25, marginBottom: 10}}>
+            <View style={{ height: 25, marginBottom: 10 }}>
               <AppText
                 title={LABELS.exampleName}
                 variant={'h4'}
-                extraStyle={{fontFamily: Fonts.PoppinsSemiBold}}
+                extraStyle={{ fontFamily: Fonts.PoppinsSemiBold }}
               />
               <AppText
                 title={LABELS.businessMan}
@@ -124,7 +126,7 @@ const CustomDrawerContent = ({props, navigation}) => {
               />
               <Space mL={10} />
               <View
-                style={{maxWidth: '90%'}}
+                style={{ maxWidth: '90%' }}
                 onPress={() => {
                   handleItemClick(route);
                 }}>
@@ -185,7 +187,7 @@ const CustomDrawerContent = ({props, navigation}) => {
             />
           </View>
           <View
-            style={{width: '20%', position: 'absolute', right: 20, top: 10}}>
+            style={{ width: '20%', position: 'absolute', right: 20, top: 10 }}>
             <CustomImage
               source={IMAGES.character}
               size={60}

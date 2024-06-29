@@ -1,11 +1,11 @@
 import auth from '@react-native-firebase/auth';
-import {useNavigation} from '@react-navigation/native';
-import React, {useState} from 'react';
-import {ScrollView, TouchableOpacity, View} from 'react-native';
-import {Fonts} from '../../../assets/fonts';
-import {IMAGES} from '../../../assets/images';
-import {SVG} from '../../../assets/svg';
-import {COLORS, STYLES} from '../../../assets/theme';
+import { useNavigation } from '@react-navigation/native';
+import React, { useState } from 'react';
+import { ScrollView, TouchableOpacity, View } from 'react-native';
+import { Fonts } from '../../../assets/fonts';
+import { IMAGES } from '../../../assets/images';
+import { SVG } from '../../../assets/svg';
+import { COLORS, STYLES } from '../../../assets/theme';
 import AppButton from '../../../components/AppButton/AppButton';
 import AppHeader from '../../../components/AppHeader/AppHeader';
 import AppInput from '../../../components/AppInput/AppInput';
@@ -14,13 +14,13 @@ import AppText from '../../../components/AppText/AppText';
 import LayoutImage from '../../../components/LayoutImage/LayoutImage';
 import SocialAuth from '../../../components/SocialAuth/SocialAuth';
 import Space from '../../../components/Space/Space';
-import {LABELS} from '../../../labels';
-import {ERRORS} from '../../../labels/error';
+import { LABELS } from '../../../labels';
+import { ERRORS } from '../../../labels/error';
 import CustomCheckbox from '../../../libraries/Checkbox/Checkbox';
-import {Toast} from '../../../utils/native';
-import {styles} from './styles';
-import {loginUser} from '../../../services/firebase';
-import {isValidatedLogin} from '../../../utils/validation';
+import { Toast } from '../../../utils/native';
+import { styles } from './styles';
+import { loginUser } from '../../../services/firebase';
+import { isValidatedLogin } from '../../../utils/validation';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL } from '../../../../constant';
 
@@ -38,7 +38,7 @@ const LoginScreen = () => {
     navigation.goBack();
   };
 
-  const googleAuthHandler = async () => {};
+  const googleAuthHandler = async () => { };
   const forgotPassHandler = () => {
     navigation.navigate('ForgotPassword');
   };
@@ -56,8 +56,8 @@ const LoginScreen = () => {
     } catch (error) {
       console.error(error);
     }
-   };
-const loginAndGetAccessToken = async () => { 
+  };
+  const loginAndGetAccessToken = async () => {
     const data = await fetch(
       `${API_URL}/user/login`,
       {
@@ -75,13 +75,14 @@ const loginAndGetAccessToken = async () => {
 
     const content = await data.json();
     await AsyncStorage.setItem('AccessToken', content.token);
-    console.log("Access token set" + content.token);
+    await AsyncStorage.setItem('theUser', JSON.stringify(content));
+    console.log(content, 'content');
   };
   const loginHandler = async () => {
     if (!email && !password) {
       Toast(ERRORS.emptyForm);
     } else {
-      if (isValidatedLogin({email, password})) {
+      if (isValidatedLogin({ email, password })) {
         await loginUser(email, password).then(res => {
           if (res) {
             const setUid = async () => {
@@ -126,12 +127,12 @@ const loginAndGetAccessToken = async () => {
         <LayoutImage imgSrc={IMAGES.theme2} />
         <AppHeader
           iconLeft={<SVG.BackArrow fill={'black'} />}
-          extraStyle={{container: {position: 'absolute'}}}
+          extraStyle={{ container: { position: 'absolute' } }}
           onLeftIconPress={backNavigationHandler}
         />
 
         <View style={[style.contentContainer]}>
-          <AppLogo extraStyle={{container: [STYLES.bottom('10%')]}} />
+          <AppLogo extraStyle={{ container: [STYLES.bottom('10%')] }} />
           <View style={[style.formContainer]}>
             <AppText
               title={LABELS.welcomeBack}

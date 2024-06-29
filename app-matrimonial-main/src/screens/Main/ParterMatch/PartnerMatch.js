@@ -25,6 +25,20 @@ const PartnerMatch = ({ navigation }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [currentUser, setCurrentUser] = useState({});
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const userString = await AsyncStorage.getItem('theUser');
+      if (userString) {
+        const user = JSON.parse(userString);
+        setCurrentUser(user);
+      }
+    };
+
+    fetchUser();
+  }, []);
+
 
   useEffect(() => {
     fetchMatchedUsers();
@@ -64,7 +78,6 @@ const PartnerMatch = ({ navigation }) => {
       }
 
       const data = await response.json();
-      console.log('Matched users:', data?.matchedUsers);
       setMatchedUsers(data?.matchedUsers || []);
       setFilteredUsers(data?.matchedUsers || []);
     } catch (err) {
@@ -183,7 +196,8 @@ const PartnerMatch = ({ navigation }) => {
                 navigation.navigate('UserDetailsScreen', { userId: user?._id });
               }}
               onPressBtn2={() => {
-                navigation.navigate('ChatScreen', { userId: user?._id });
+                console.log('Chat button pressed');
+                navigation.navigate('ChatScreen', { userId: user?._id, roomId: `${user?._id}_${user._id}`,user:user });
               }}
             />
           ))

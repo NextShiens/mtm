@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Image, ScrollView, TouchableOpacity, View, Alert,Text,Button } from 'react-native';
+import { Image, ScrollView, TouchableOpacity, View, Alert, Text, Button } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import RazorpayCheckout from 'react-native-razorpay';
 import { Fonts } from '../../../assets/fonts';
@@ -16,11 +16,8 @@ import Icon from '../../../components/Icon/Icon';
 import { styles } from './styles';
 import { API_URL } from '../../../../constant';
 
-
-
-const PaymentScreen = ({ navigation,route }) => {
-
-  const { plan,index} = route.params;
+const PaymentScreen = ({ navigation, route }) => {
+  const { plan, index } = route.params;
   const [memberShipPlan, setMemberShipPlan] = useState(null);
   const [selectedMethod, setSelectedMethod] = useState(null);
   const [keyId, setKeyId] = useState('rzp_test_kBRcDfjP4gr0PM');
@@ -36,11 +33,9 @@ const PaymentScreen = ({ navigation,route }) => {
   }, []);
 
   const fetchKeyId = async () => {
-    debugger
     console.log('API_URL from line 36', API_URL);
     try {
       const token = await AsyncStorage.getItem('AccessToken');
-      console.log('token from line 41', token);
       const response = await fetch(`${API_URL}/get-keyid`, {
         method: 'GET',
         headers: {
@@ -48,32 +43,34 @@ const PaymentScreen = ({ navigation,route }) => {
           "authorization": `Bearer ${token}`
         },
       });
-  
+
       if (!response.ok) {
         console.log('response from line 50', response);
         throw new Error(`Failed to fetch key ID: ${response.status} ${response.statusText}`);
-        
       }
-  
+
       const data = await response.json();
       console.log('data from line 52', data);
-  
+
       if (!data.keyId) {
         throw new Error('KeyId is not present in the response');
       }
-  
+
       setKeyId(data.keyId);
+      console.log('keyId from line 59', data.keyId);
     } catch (error) {
       console.error('Error fetching key ID:', error);
       Alert.alert('Error', 'Unable to initialize payment. Please try again.');
     }
   };
+
   const bacKNavigationHandler = () => {
     navigation.goBack();
   };
+
   const handleRightIconPress = () => {
     navigation.navigate('NotificationScreen');
-  };  
+  };
 
   useEffect(() => {
     fetchKeyId();
@@ -82,9 +79,9 @@ const PaymentScreen = ({ navigation,route }) => {
   const createOrder = async (amount) => {
     console.log("createOrder called with amount:", amount);
     try {
-      const token = await AsyncStorage.getItem('AccessToken')||'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjdhNGMwNWU0Yjk5NTE0YTk5ODY0ZGMiLCJpYXQiOjE3MTkyOTA4ODYsImV4cCI6MTc1MDgyNjg4Nn0.aHEiDyz_ig4SmBdbe0uy0WSRQQIJuto6Z09Y5fre3f8';
+      const token = await AsyncStorage.getItem('AccessToken');
       console.log("Token fetched:", token);
-  
+
       const response = await fetch(`${API_URL}/create-order`, {
         method: 'POST',
         headers: {
@@ -93,15 +90,15 @@ const PaymentScreen = ({ navigation,route }) => {
         },
         body: JSON.stringify({ amount }),
       });
-  
+
       console.log("Response from create-order:", response);
-  
+
       if (!response.ok) {
         const errorText = await response.text();
         console.error(`Failed to create order: ${response.status} ${response.statusText} - ${errorText}`);
         throw new Error(`Failed to create order: ${response.status} ${response.statusText}`);
       }
-  
+
       const data = await response.json();
       console.log("Order created successfully:", data);
       return data;
@@ -110,7 +107,6 @@ const PaymentScreen = ({ navigation,route }) => {
       throw error;
     }
   };
-  
 
   const verifyPayment = async (paymentData) => {
     try {
@@ -132,16 +128,15 @@ const PaymentScreen = ({ navigation,route }) => {
   };
 
   const handlePayment = async () => {
-    debugger
     console.log("handlePayment called");
     setLoading(true);
     try {
-      const amount = plan.price * 100 || 200;
+      const amount = plan.price;
       console.log("Amount for createOrder:", amount);
-  
+
       const order = await createOrder(amount);
       console.log("Order created:", order);
-  
+
       const options = {
         description: 'Membership Payment',
         image: 'https://your-app-logo.png',
@@ -157,23 +152,23 @@ const PaymentScreen = ({ navigation,route }) => {
         },
         theme: { color: '#F37254' }
       };
-  
+
       console.log("Razorpay options:", options);
-  
+
       const data = await RazorpayCheckout.open(options);
       console.log("Razorpay response:", data);
-  
+
       const verificationResult = await verifyPayment({
         razorpay_payment_id: data.razorpay_payment_id,
         razorpay_order_id: data.razorpay_order_id,
         razorpay_signature: data.razorpay_signature,
         userId: 'user123',
-        membershipId: memberShipPlan.id,
+        membershipId: memberShipPlan?.id || 'defaultMembershipId',
         amount
       });
-  
+
       console.log("Verification result:", verificationResult);
-  
+
       if (verificationResult.success) {
         Alert.alert('Success', 'Payment was successful');
       } else {
@@ -186,22 +181,24 @@ const PaymentScreen = ({ navigation,route }) => {
       setLoading(false);
     }
   };
-  
 
   const onRightIconPress = () => {
     navigation.goBack();
   };
+  const membershipSelectionHandler = async (plan) => {
+    await handlePayment()
+  };
+
 
   const onPayCardSelection = (item) => {
     setSelectedMethod(item.key);
-    handlePayment(); 
   };
 
   const style = styles;
 
   return (
-       <ScrollView style={style.main}>
-        <View style={style.headerContainer}>
+    <ScrollView style={style.main}>
+      <View style={style.headerContainer}>
         <AppHeader
           iconLeft={<SVG.BackArrow fill={'black'} />}
           onLeftIconPress={bacKNavigationHandler}
@@ -218,65 +215,71 @@ const PaymentScreen = ({ navigation,route }) => {
         />
       </View>
       <Space mT={20} />
-    <View key={index} style={style.planContainer}>
-    <Text style={style.planName}>{plan.name}</Text>
-    {plan.features.map((feature, i) => (
-      <View key={i} style={style.featureContainer}>
-        {feature.icon}
-        <Text style={style.feature}>{feature.text}</Text>
+      <View key={index} style={style.planContainer}>
+        <Text style={style.planName}>{plan.name || 'Default Plan Name'}</Text>
+        <View style={style.featureContainer}>
+          <Text style={style.feature}>Duration: {plan.duration || 'N/A'}</Text>
+        </View>
+        <View style={style.featureContainer}>
+          <Text style={style.feature}>Live Chats: {plan.liveChats || 'N/A'}</Text>
+        </View>
+        <View style={style.featureContainer}>
+          <Text style={style.feature}>Messages: {plan.messages || 0}</Text>
+        </View>
+        <View style={style.featureContainer}>
+          <Text style={style.feature}>Profile Views: {plan.profileViews || 0}</Text>
+        </View>
+        <Text style={style.price}>{plan.price || 0}</Text>
       </View>
-    ))}
-    <Text style={style.price}>{plan.price}</Text>
-  </View>
-  <Space mT={10} />
-  <View style={STYLES.pH(HORIZON_MARGIN)}>
-    <Space mT={20} />
-    <AppText
-      title={LABELS.choosePayMethod}
-      variant={'h3'}
-      extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
-    />
-    <Space mT={20} />
-    {paymentMethods ? (
-      paymentMethods.map((item, index) => (
-        <React.Fragment key={item.key}>
-          <TouchableOpacity
-            style={style.optionContainer}
-            onPress={() => onPayCardSelection(item)}
-            disabled={loading}>
-            <View style={{ width: '50%', paddingHorizontal: 10 }}>
-              <Image
-                source={item.img}
-                style={style.payIcons}
-                resizeMode="contain"
-              />
-            </View>
-            <View style={{
-              width: '10%',
-              justifyContent: 'center',
-              alignItems: 'flex-end',
-            }}>
-              <Icon
-                SVGIcon={
-                  selectedMethod === item.key ? (
-                    <SVG.circleFilled fill={COLORS.dark.primary} />
-                  ) : (
-                    <SVG.unfilledCircle fill={COLORS.dark.lightGrey} />
-                  )
-                }
-              />
-            </View>
-          </TouchableOpacity>
-          <Space mT={20} />
-          <TouchableOpacity style={style.button} onPress={() => membershipSelectionHandler(plan)}>
-      <Text style={style.buttonText}>Subcribe</Text>
-    </TouchableOpacity>
-        </React.Fragment>
-      ))
-    ) : null}
-    <Space mT={10} />
-  </View>
-</ScrollView>
+      <Space mT={10} />
+      <View style={STYLES.pH(HORIZON_MARGIN)}>
+        <Space mT={20} />
+        <AppText
+          title={LABELS.choosePayMethod}
+          variant={'h3'}
+          extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
+        />
+        <Space mT={20} />
+        {paymentMethods ? (
+          paymentMethods.map((item, index) => (
+            <React.Fragment key={item.key}>
+              <TouchableOpacity
+                style={style.optionContainer}
+                onPress={() => onPayCardSelection(item)}
+                disabled={loading}>
+                <View style={{ width: '50%', paddingHorizontal: 10 }}>
+                  <Image
+                    source={item.img}
+                    style={style.payIcons}
+                    resizeMode="contain"
+                  />
+                </View>
+                <View style={{
+                  width: '10%',
+                  justifyContent: 'center',
+                  alignItems: 'flex-end',
+                }}>
+                  <Icon
+                    SVGIcon={
+                      selectedMethod === item.key ? (
+                        <SVG.circleFilled fill={COLORS.dark.primary} />
+                      ) : (
+                        <SVG.unfilledCircle fill={COLORS.dark.lightGrey} />
+                      )
+                    }
+                  />
+                </View>
+              </TouchableOpacity>
+              <Space mT={20} />
+              <TouchableOpacity style={style.button} onPress={() => membershipSelectionHandler(plan)}>
+                <Text style={style.buttonText}>Subscribe</Text>
+              </TouchableOpacity>
+            </React.Fragment>
+          ))
+        ) : null}
+        <Space mT={10} />
+      </View>
+    </ScrollView>
   );
 };
 

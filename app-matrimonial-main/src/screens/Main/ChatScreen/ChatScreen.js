@@ -1,139 +1,121 @@
-import {View, Text, TouchableOpacity, TextInput, Image} from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {styles} from './styles';
-import {GiftedChat, IMessage, Bubble} from 'react-native-gifted-chat';
-import moment from 'moment';
-import {IMAGES} from '../../../assets/images';
-import {COLORS} from '../../../assets/theme';
-import {Toast} from '../../../utils/native';
-import AppHeader from '../../../components/AppHeader/AppHeader';
+import React, { useEffect, useState, useCallback } from 'react';
+import { View, TextInput, TouchableOpacity, Image, Text } from 'react-native';
+import { GiftedChat, Bubble } from 'react-native-gifted-chat';
+import io from 'socket.io-client';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { styles } from './styles';
+import { IMAGES } from '../../../assets/images';
+import { COLORS } from '../../../assets/theme';
 import Icon from '../../../components/Icon/Icon';
-import {SVG} from '../../../assets/svg';
+import { SVG } from '../../../assets/svg';
 import Space from '../../../components/Space/Space';
+import { API_URL } from '../../../../constant';
 
-const ChatScreen = ({navigation}) => {
+const ChatScreen = ({ navigation, route }) => {
+
   const [messages, setMessages] = useState([]);
-  const [inputText, setInputText] = useState('');
+  const [socket, setSocket] = useState(null);
+  const { userId, roomId, user } = route.params;
+  const [currentUser, setCurrentUser] = useState({});
 
   useEffect(() => {
-    setMessages([
-      {
-        _id: 1,
-        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-        createdAt: new Date(),
+    debugger
+    const fetchUser = async () => {
+      const userString = await AsyncStorage.getItem('theUser');
+      if (userString) {
+        const user = JSON.parse(userString);
+        setCurrentUser(user);
+      }
+      console.log('User:', currentUser);
+    };
 
-        user: {
-          _id: 2,
-          name: 'User',
-          avatar: IMAGES.profile2,
-        },
-      },
-      {
-        _id: 2,
-        text: 'Lorem ipsum dolor sit amet.',
-        createdAt: new Date(),
-        user: {
-          _id: 1,
-          name: 'You',
-          avatar: IMAGES.carousel1,
-        },
-      },
-    ]);
+    fetchUser();
   }, []);
 
-  console.log(messages);
-  const style = styles;
-  const renderBubble = props => {
+
+  useEffect(() => {
+    const newSocket = io(API_URL);
+    setSocket(newSocket);
+
+    newSocket.on('connect', () => {
+      console.log('Connected to socket server');
+      newSocket.emit('join_room', roomId);
+    });
+
+    newSocket.on('receive_message', (message) => {
+      setMessages(previousMessages => GiftedChat.append(previousMessages, message));
+    });
+
+    return () => {
+      newSocket.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
+    fetchChatHistory();
+  }, []);
+
+  const fetchChatHistory = async () => {
+    try {
+      const token = await AsyncStorage.getItem('AccessToken');
+      const response = await fetch(`${API_URL}/user/getMessages?roomId=${roomId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+      const data = await response.json();
+      if (data.success) {
+        setMessages(data.messages.map(msg => ({
+          _id: msg._id,
+          text: msg.text,
+          createdAt: new Date(msg.createdAt),
+          user: msg.user,
+        })));
+      }
+    } catch (error) {
+      console.error('Error fetching chat history:', error);
+    }
+  };
+
+  const onSend = useCallback((messages = []) => {
+    const [message] = messages;
+    socket.emit('send_message', {
+      roomId,
+      ...message,
+      receiverId: userId,
+    });
+    setMessages(previousMessages => GiftedChat.append(previousMessages, messages));
+  }, [socket]);
+
+  const renderBubble = (props) => {
     return (
       <Bubble
         {...props}
         wrapperStyle={{
           left: {
             backgroundColor: '#F3F5FE',
-            padding: '3%',
-            borderTopRightRadius: 20,
-            borderTopLeftRadius: 10,
-            borderBottomLeftRadius: 25,
-            borderBottomRightRadius: 20,
-            marginBottom: '6%',
-            alignItems: 'flex-start',
           },
           right: {
             backgroundColor: '#1D264D',
-            padding: '3%',
-            borderTopRightRadius: 25,
-            borderTopLeftRadius: 20,
-            borderBottomLeftRadius: 20,
-            borderBottomRightRadius: 10,
-            marginBottom: '6%',
-            alignItems: 'flex-start',
           },
         }}
         textStyle={{
           left: {
             color: 'black',
-            textAlign: 'left',
           },
           right: {
             color: COLORS.dark.white,
-            textAlign: 'justify',
           },
-        }}></Bubble>
+        }}
+      />
     );
-  };
-
-  const renderTime = props => {
-    return (
-      <Text
-        style={{
-          color: '#626262',
-          position: 'absolute',
-          right: -10,
-          top: 14,
-        }}>
-        {moment(props.currentMessage.createdAt).format('hh:mm ')}
-      </Text>
-    );
-  };
-
-  const renderInputToolbar = props => {
-    return (
-      <InputToolbar {...props}>
-        <TextInput
-          placeholder="Type a message..."
-          value={inputText}
-          onChangeText={text => setInputText(text)}
-          style={{flex: 1, fontSize: 16, marginLeft: 10}}
-        />
-      </InputToolbar>
-    );
-  };
-
-  const handleSend = () => {
-    if (inputText.trim().length > 0) {
-      const newMessage = {
-        _id: Math.round(Math.random() * 1000000).toString(),
-        text: inputText.trim(),
-        createdAt: new Date(),
-        user: {
-          _id: 1,
-          name: 'User',
-        },
-      };
-
-      setMessages(previousMessages =>
-        GiftedChat.append(previousMessages, [newMessage]),
-      );
-
-      setInputText('');
-    }
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.Header_Cont}>
         <View style={styles.Header}>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <TouchableOpacity
               onPress={() => {
                 navigation.goBack();
@@ -148,13 +130,13 @@ const ChatScreen = ({navigation}) => {
             <Space mL={10} />
             <View style={styles.User_Cont}>
               <Image
-                style={{height: 50, width: 50, borderRadius: 25}}
-                source={IMAGES.carousel1}
+                style={{ height: 50, width: 50, borderRadius: 25 }}
+                source={user.userImages[0] ? { uri: user.userImages[0] } : IMAGES.userIcon}
               />
               <Space mL={10} />
               <View style={styles.UserDetail}>
-                <Text style={styles.User_name}>Maansvi Goya</Text>
-                <Text style={styles.Status}>Online</Text>
+                <Text style={styles.User_name}>{user.name}</Text>
+                {/* <Text style={styles.Status}>onLine</Text> */}
               </View>
             </View>
           </View>
@@ -168,80 +150,12 @@ const ChatScreen = ({navigation}) => {
       </View>
       <GiftedChat
         messages={messages}
-        onSend={handleSend}
+        onSend={messages => onSend(messages)}
         user={{
-          _id: 1,
+          _id: currentUser._id,
         }}
         renderBubble={renderBubble}
-        renderTime={renderTime}
       />
-
-      <View style={styles.InputOuter_View}>
-        <View
-          style={{
-            backgroundColor: '#FFFFFF',
-            marginBottom: '5%',
-            flexDirection: 'row',
-            width: '100%',
-            paddingTop: '1%',
-            justifyContent: 'space-between',
-          }}>
-          <View style={styles.InputContainer}>
-            <TouchableOpacity
-              style={styles.Touch_Image}
-              onPress={() => {
-                Toast('soon we will add this feature');
-              }}>
-              <Image source={IMAGES.smile} style={styles.Smile_Icon} />
-            </TouchableOpacity>
-            <TextInput
-              style={styles.Textinputcontainer}
-              placeholder=" Write a message..."
-              placeholderTextColor={COLORS.dark.inputBorder}
-              value={inputText}
-              onChangeText={text => setInputText(text)}
-            />
-          </View>
-          <View style={styles.Circular_View}>
-            {inputText.length === 0 ? (
-              <TouchableOpacity
-                onPress={() => {
-                  Toast('This feature is not working now');
-                }}>
-                <Image
-                  resizeMode="contain"
-                  style={{
-                    height: 50,
-                    width: 50,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    backgroundColor: COLORS.dark.primary,
-                    borderRadius: 25,
-                  }}
-                  source={IMAGES.audio}
-                />
-              </TouchableOpacity>
-            ) : (
-              <TouchableOpacity
-                style={{
-                  height: 50,
-                  width: 50,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  backgroundColor: COLORS.dark.secondary,
-                  borderRadius: 25,
-                }}
-                onPress={handleSend}>
-                <Image
-                  resizeMode="contain"
-                  style={styles.Send_Image}
-                  source={IMAGES.sendIcon}
-                />
-              </TouchableOpacity>
-            )}
-          </View>
-        </View>
-      </View>
     </View>
   );
 };

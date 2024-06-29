@@ -33,7 +33,7 @@ const MembershipPlan = ({ navigation }) => {
   };
 
   const getSubscriptions = async () => {
-    setIsLoading(true); 
+    setIsLoading(true);
     try {
       const token = await AsyncStorage.getItem('AccessToken');
       const response = await fetch(`${API_URL}/user/getSubscription`, {
@@ -49,7 +49,7 @@ const MembershipPlan = ({ navigation }) => {
     } catch (error) {
       console.error(error.message);
     } finally {
-      setIsLoading(false); 
+      setIsLoading(false);
     }
   };
 
@@ -97,10 +97,10 @@ const MembershipPlan = ({ navigation }) => {
         {subscription.map((plan, index) => (
           <View key={plan._id} style={style.planContainer}>
             <Text style={style.planName}>{plan.name}</Text>
-            <Text style={style.feature}>Duration: {plan.duration}</Text>
-            <Text style={style.feature}>Messages: {plan.messages}</Text>
-            <Text style={style.feature}>Live Chats: {plan.liveChats}</Text>
-            <Text style={style.feature}>Profile Views: {plan.profileViews}</Text>
+            <Text style={style.feature}><Text style={{ color: 'green' }}>✓ </Text>Duration: {plan.duration}</Text>
+            <Text style={style.feature}><Text style={{ color: 'green' }}>✓ </Text>Messages: {plan.messages}</Text>
+            <Text style={style.feature}><Text style={{ color: 'green' }}>✓ </Text>Live Chats: {plan.liveChats}</Text>
+            <Text style={style.feature}><Text style={{ color: 'green' }}>✓ </Text>Profile Views: {plan.profileViews}</Text>
             <Text style={style.price}>₹{plan.price}</Text>
             <TouchableOpacity style={style.button} onPress={() => membershipSelectionHandler(plan)}>
               <Text style={style.buttonText}>Start Now</Text>

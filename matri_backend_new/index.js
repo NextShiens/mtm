@@ -14,9 +14,9 @@ const { checkRoom, saveMessage } = require("./services/chatRoom");
 const { sendchatNotification } = require("./firebase/service");
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
+const Message = require("./models/message");
 
 app.use(bodyParser.json({ limit: "50mb" }));
-//
 app.use(express.json({ limit: "50mb" }));
 app.use(
   cors({
@@ -29,36 +29,35 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000",
-    // origin: "https://metrimonial-backend-2c3a23b121fc.herokuapp.com/",
+    origin: ["http://localhost:3000", "*"],
     methods: ["GET", "POST"],
   },
 });
 
-// const cors = require("cors");
-
-io.on("connection", (socket) => {
-  console.log(`User Connected: ${socket.id}`);
-
-  socket.on("join_room", (data) => {
-    socket.join(data);
-    console.log(`User with ID: ${socket.id} joined room: ${data}`);
+io.on('connection', (socket) => {
+  socket.on('join_room', (roomId) => {
+    socket.join(roomId);
   });
 
-  socket.on("send_message", (data) => {
-    console.log("data....", data.receiverId);
-    sendchatNotification(data.receiverId, {
-      message: data.text,
-      title: data.author,
+  socket.on('send_message', async (data) => {
+    const newMessage = new Message({
+      roomId: data.roomId,
+      user: data.user,
+      text: data.text,
+      createdAt: data.createdAt,
     });
-    checkRoom(data);
-    socket.to(data.roomId);
-    socket.emit("receive_message", data);
-    saveMessage(data);
-  });
+    await newMessage.save();
 
-  socket.on("disconnect", () => {
-    console.log("User Disconnected", socket.id);
+
+    io.to(data.roomId).emit('receive_message', data);
+
+    io.to(data.receiverId).emit('notification', {
+      type: 'chat',
+      senderId: data.user._id,
+      roomId: data.roomId,
+      message: data.text,
+      createdAt: data.createdAt
+    });
   });
 });
 

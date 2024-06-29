@@ -18,7 +18,6 @@ const createOrder = async (req, res) => {
     receipt: `receipt_${Math.random() * 10}`,
   };
 
-  // Create an order in razorpay
 
   try {
     const order = await razorpay.orders.create(options);

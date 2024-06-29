@@ -5,6 +5,7 @@ const {
   getFcmTokenForChat,
 } = require("./chatNotificationCategories");
 
+
 async function sendchatNotification(
   userId,
   messageData
