@@ -12,75 +12,98 @@ const { ObjectID, ObjectId } = require("mongodb");
 const userMatchController = {
   //.......................................userMatch..................................//
 
-  async userMatch(req, res, next) {
-    const userId = req.user?._id;
-    const user = await User.findById(userId);
-    const userGender = user.gender;
-    const gender = userGender === "male" ? "female" : "male";
-    const matchType = req.query.matchType;
-    // const maritalStatus = user.partnerPreference?.partnerMaritalStatus;
-    // const ageRange = user.partnerPreference.partnerAge?.split("-");
-    // const minAge = parseInt(ageRange[0], 10);
-    // const maxAge = parseInt(ageRange[1], 10);
-    // const heightRange = user.partnerPreference.partnerHeight?.split("-");
-    // const minheight = parseInt(heightRange[0], 10);
-    // const maxheight = parseInt(heightRange[1], 10);
-    // const education = user.partnerPreference.education;
-    // const occupation = user.partnerPreference.partnerOccupation;
-    // const motherTongue = user.partnerPreference.partnerMotherTongue;
-    // const incomeRange = user.partnerPreference.partnerAnnualIncome?.split("-");
-    // const minIncome = parseInt(incomeRange[0], 10);
-    // const maxIncome = parseInt(incomeRange[1], 10);
-    // const sect = user.partnerPreference.partnerSect;
-    // const city = user.partnerPreference.partnerCity;
-    let matchedUsers;
-    if (matchType == "newUsers") {
-      const sevenDaysAgo = new Date();
-      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 365);
-
-      // Fetch users with the opposite gender and requests from the last 7 days
-
-      const excludedUserIds = [
-        ...user.sentInterests,
-        ...user.receivedInterests,
-        ...user.friends,
-      ];
-      matchedUsers = await User.find({
-        _id: { $nin: excludedUserIds },
-        gender: gender, // Opposite gender
-        createdAt: { $gte: sevenDaysAgo }, // Requests from the last 7 days
-      });
-
-      //   console.log(matchedUsers)
-
-      // Do something with the matchedUsers, like sending them as a response
+  async  userMatch(req, res, next) {
+    try {
+      const userId = req.user?._id;
+      const user = await User.findById(userId);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+  
+      const userGender = user.gender;
+      const gender = userGender === "male" ? "female" : "male";
+      const matchType = req.query.matchType;
+  
+      const {
+        partnerAge,
+        partnerMaritalStatus,
+        partnerHeight,
+        education,
+        partnerOccupation,
+        partnerMotherTongue,
+        partnerAnnualIncome,
+        partnerSect,
+        partnerCity
+      } = user.partnerPreference || {};
+  
+      let matchedUsers;
+  
+      if (matchType === "newUsers") {
+        const oneYearAgo = new Date();
+        oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+  
+        const excludedUserIds = [
+          ...user.sentInterests,
+          ...user.receivedInterests,
+          ...user.friends,
+          userId 
+        ];
+  
+        matchedUsers = await User.find({
+          _id: { $nin: excludedUserIds },
+          gender: gender,
+          createdAt: { $gte: oneYearAgo }
+        });
+  
+      } else if (matchType === "match") {
+        const [minAge, maxAge] = (partnerAge || "").split("-").map(age => parseInt(age, 10));
+        const [minIncome, maxIncome] = (partnerAnnualIncome || "").split("-").map(income => {
+          if (income.includes("Lac")) {
+            return parseFloat(income) * 100000;
+          }
+          return parseFloat(income);
+        });
+  
+        const baseMatchCriteria = {
+          gender: gender,
+          _id: { $nin: [userId] } 
+        };
+  
+        const flexibleMatchCriteria = {
+          $or: [
+            { age: { $gte: minAge || 0, $lte: maxAge || 100 } },
+            { occupation: partnerOccupation },
+            { city: partnerCity }
+          ]
+        };
+  
+        if (partnerMaritalStatus) {
+          flexibleMatchCriteria.$or.push({ maritalStatus: partnerMaritalStatus });
+        }
+        if (education) {
+          flexibleMatchCriteria.$or.push({ highestDegree: education });
+        }
+        if (partnerMotherTongue) {
+          flexibleMatchCriteria.$or.push({ motherTongue: partnerMotherTongue });
+        }
+        if (minIncome !== undefined && maxIncome !== undefined) {
+          flexibleMatchCriteria.$or.push({ annualIncome: { $gte: minIncome, $lte: maxIncome } });
+        }
+        if (partnerSect) {
+          flexibleMatchCriteria.$or.push({ sect: partnerSect });
+        }
+  
+        matchedUsers = await User.find({
+          $and: [baseMatchCriteria, flexibleMatchCriteria]
+        });
+      } else {
+        return res.status(400).json({ message: "Invalid matchType" });
+      }
+  
       res.json({ matchedUsers });
-      console.log("matched users "+matchedUsers);
-    } else  { //matchType == "match"
-      const partnerPreferenceCriteria = {
-        // age: { $gte: minAge, $lte: maxAge },
-        gender: gender,
-        // maritalStatus: maritalStatus,
-        // $or: [
-          // { height: { $gte: minheight, $lte: maxheight } },
-          // { education: education },
-          // { occupation: occupation },
-          // { motherTongue: motherTongue },
-          // { annualIncome: { $gte: minIncome, $lte: maxIncome } },
-          // { sect: sect },
-          // { city: city },
-          // Add more conditions as needed
-        // ],
-      };
-
-      const matchedUsers = await User.find(partnerPreferenceCriteria);
-
-      //  matchedUsers = await User.find({
-      //     gender,
-      //     maritalStatus
-      //   });
-      res.json({ matchedUsers });
-      console.log("matched users "+matchedUsers);
+    } catch (error) {
+      console.error("Error in userMatch:", error);
+      res.status(500).json({ message: "Internal server error" });
     }
   },
   //.......................................RecentlyViewed..................................//

@@ -104,7 +104,7 @@ const RegisterScreen = ({ navigation }) => {
           console.log('User Firebase Id: line103', userFirebaseId);
           Toast('User registered successfully');
           await userFirstTimeReg(userFirebaseId)
-          navigation.navigate('LoginScreen');
+          navigation.navigate('ProfileCreateScreen');
         }
         catch (error) {
           Toast(error);

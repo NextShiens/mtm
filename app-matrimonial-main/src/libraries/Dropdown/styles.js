@@ -13,7 +13,8 @@ export const styles = StyleSheet.create({
   },
   inputStyles: {
     fontFamily: Fonts.PoppinsRegular,
-    color: COLORS.dark.inputBorder,
+    // color: COLORS.dark.inputBorder,
+    color: '#000000',
   },
   dropdownStyles: {
     borderColor: COLORS.dark.inputBorder,
@@ -23,13 +24,16 @@ export const styles = StyleSheet.create({
     top: -10, 
     width: '100%',
     backgroundColor: COLORS.dark.white,
+    color: '#000000',
   },
   dropdownTextStyles: {
     fontFamily: Fonts.PoppinsRegular,
-    color: COLORS.dark.inputBorder,
+    // color: COLORS.dark.inputBorder,
+    color: '#000000',
   },
   container: {
     position: 'relative',
+    color: '#000000',
   },
   dropdownButton: {
     flexDirection: 'row',
@@ -39,9 +43,11 @@ export const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 5,
+    color: '#000000',
   },
   dropdownButtonText: {
     fontSize: 16,
+    color: '#000000',
   },
   dropdown: {
     position: 'absolute',
@@ -54,18 +60,23 @@ export const styles = StyleSheet.create({
     backgroundColor: COLORS.dark.white,
     zIndex: 9999, 
     maxHeight: 200,
+    color: '#000000',
   },
   searchInput: {
     padding: 10,
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
+    fontSize: 16,
+    color: '#000000',
   },
   item: {
     padding: 10,
     borderBottomWidth: 1,
+    color: '#000000',
     borderBottomColor: '#eee',
   },
   itemText: {
     fontSize: 16,
+    color: '#000000',
   },
 });

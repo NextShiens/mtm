@@ -20,29 +20,39 @@ import { API_URL } from '../../../../constant';
 
 const PartnerMatch = ({ navigation }) => {
   const [matchedUsers, setMatchedUsers] = useState([]);
+  const [filteredUsers, setFilteredUsers] = useState([]);
   const [matchType, setMatchType] = useState('match');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
 
-  useEffect(async () => {
-    await fetchMatchedUsers();
+  useEffect(() => {
+    fetchMatchedUsers();
 
     return () => {
       setMatchedUsers([]);
+      setFilteredUsers([]);
       setLoading(true);
       setError(null);
     }
   }, []);
 
+  useEffect(() => {
+    filterUsers();
+  }, [searchTerm, matchedUsers]);
+
   const fetchMatchedUsers = async () => {
     console.log('Fetching matched users...');
     try {
       const token = await AsyncStorage.getItem('AccessToken');
-      console.log('Token from mathc :', token);
+      if (!token) {
+        throw new Error('Access token not found');
+      }
+
       const response = await fetch(`${API_URL}/user/userMatch?matchType=${matchType}`, {
         method: 'GET',
         headers: {
-          'Authorization': `Bearer ${token}`,
+          'authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         }
       });
@@ -50,15 +60,17 @@ const PartnerMatch = ({ navigation }) => {
       if (!response.ok) {
         const errorResponse = await response.json();
         console.error('Error response:', errorResponse);
+        throw new Error(errorResponse.message || 'Failed to fetch matched users');
       }
 
       const data = await response.json();
-      console.log('Matched users:', data.matchedUsers);
-      setMatchedUsers(data.matchedUsers);
-      setLoading(false);
+      console.log('Matched users:', data?.matchedUsers);
+      setMatchedUsers(data?.matchedUsers || []);
+      setFilteredUsers(data?.matchedUsers || []);
     } catch (err) {
       console.error('Error fetching matched users:', err);
-      setError('Failed to fetch matched users. Please try again.');
+      setError(err.message || 'Failed to fetch matched users. Please try again.');
+    } finally {
       setLoading(false);
     }
   };
@@ -67,10 +79,34 @@ const PartnerMatch = ({ navigation }) => {
     navigation.navigate('NotificationScreen');
   };
 
-  const handlesearchFunctionality = item => {
+  const handlesearchFunctionality = (text) => {
+    setSearchTerm(text);
+  };
+
+  const filterUsers = () => {
+    if (!searchTerm) {
+      setFilteredUsers(matchedUsers);
+      return;
+    }
+
+    const lowercasedSearch = searchTerm.toLowerCase();
+    const filtered = matchedUsers.filter(user => {
+      return (
+        user.name?.toLowerCase().includes(lowercasedSearch) ||
+        user.profession?.toLowerCase().includes(lowercasedSearch) ||
+        user.age?.toString().includes(lowercasedSearch) ||
+        user.height?.toLowerCase().includes(lowercasedSearch) ||
+        user.location?.toLowerCase().includes(lowercasedSearch) ||
+        user.language?.toLowerCase().includes(lowercasedSearch) ||
+        user.castName?.toLowerCase().includes(lowercasedSearch)
+      );
+    });
+
+    setFilteredUsers(filtered);
   };
 
   const handlesearchBtn = () => {
+    // Implement search button functionality here if needed
   };
 
   const style = styles;
@@ -99,7 +135,7 @@ const PartnerMatch = ({ navigation }) => {
           onLeftIconPress={() => {
             navigation.goBack();
           }}
-          title={LABELS.matches}
+          title={LABELS.matches || 'Matches'}
           iconRight={
             <TouchableOpacity onPress={handleRightIconPress}>
               <CustomImage
@@ -118,8 +154,9 @@ const PartnerMatch = ({ navigation }) => {
           extraStyle={{
             textInputCont: [style.textInputCont],
           }}
-          placeholder={LABELS.searchHere}
+          placeholder={LABELS.searchHere || 'Search here'}
           onChangeText={handlesearchFunctionality}
+          value={searchTerm}
         />
         <TouchableOpacity
           style={style.filterBtn}
@@ -135,20 +172,24 @@ const PartnerMatch = ({ navigation }) => {
 
       <Space mT={5} />
       <View style={STYLES.pH(HORIZON_MARGIN)}>
-        {matchedUsers.map(user => (
-          <AppCard
-            key={user._id}
-            isBtnShown={true}
-            btnType={'requestsubmission'}
-            data={user}
-            onPressBtn1={() => {
-              navigation.navigate('UserDetailsScreen', { userId: user._id });
-            }}
-            onPressBtn2={() => {
-              navigation.navigate('ChatScreen', { userId: user._id });
-            }}
-          />
-        ))}
+        {filteredUsers.length > 0 ? (
+          filteredUsers.map(user => (
+            <AppCard
+              key={user?._id || Math.random().toString()}
+              isBtnShown={true}
+              btnType={'requestsubmission'}
+              data={user}
+              onPressBtn1={() => {
+                navigation.navigate('UserDetailsScreen', { userId: user?._id });
+              }}
+              onPressBtn2={() => {
+                navigation.navigate('ChatScreen', { userId: user?._id });
+              }}
+            />
+          ))
+        ) : (
+          <AppText title="No matched users found" color={COLORS.dark.secondary} />
+        )}
       </View>
     </ScrollView>
   );
