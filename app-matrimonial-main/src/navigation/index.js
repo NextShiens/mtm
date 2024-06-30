@@ -23,6 +23,8 @@ import DrawerNavigation from './DrawerNavigation/DrawerNavigation';
 import UserDetailsScreen from '../screens/Main/UserDetailsScreen/UserDetailsScreen';
 import SavedUserScreen from '../screens/Main/SavedUsersScreen/SavedUserScreen';
 import ChatScreen from '../screens/Main/ChatScreen/ChatScreen';
+import DeleteAccount from '../screens/Main/DeleteAccount/DeleteAccount';
+import ChangePasswordScreen from '../screens/Main/ChangePassword/ChangePassword';
 
 
 const Stack = createNativeStackNavigator();
@@ -150,6 +152,16 @@ const HomeStack = () => {
         name="AccountSettingsScreen"
         component={AccountSettingsScreen}
         options={options}
+      />
+      <Stack.Screen
+        name="DeleteAccount"
+        component={DeleteAccount}
+        options={options}
+      />
+      <Stack.Screen
+        name="ChangePasswordScreen"
+        component={ChangePasswordScreen}
+        options={options} 
       />
 
       <Stack.Screen

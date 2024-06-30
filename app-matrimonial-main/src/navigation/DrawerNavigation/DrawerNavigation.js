@@ -13,6 +13,8 @@ import BottomNavigation from '../BottomNavigation/BottomNavigation';
 import CustomDrawerContent from './CustomDrawerContent';
 import ChatScreen from '../../screens/Main/ChatScreen/ChatScreen';
 import AccountSettingsScreen from '../../screens/Main/AccountSettings/AccountSettings';
+import DeleteAccount from '../../screens/Main/DeleteAccount/DeleteAccount';
+import ChangePasswordScreen from '../../screens/Main/ChangePassword/ChangePassword';
 
 const Drawer = createDrawerNavigator();
 const DrawerNavigation = () => {
@@ -40,6 +42,8 @@ const DrawerNavigation = () => {
           name="AccountSettingsScreen"
           component={AccountSettingsScreen}
         />
+        <Drawer.Screen name="DeleteAccount" component={DeleteAccount} />
+        <Drawer.Screen name="ChangePasswordScreen" component={ChangePasswordScreen} />
       </Drawer.Navigator>
     </>
   );

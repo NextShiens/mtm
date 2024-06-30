@@ -171,23 +171,18 @@ const userAuthController = {
   },
 
   async changePassword(req, res, next) {
-    const userId = req.query.id;
-
+    const { password, newPassword, userId } = req.body;
     const userChangePasswordSchema = Joi.object({
       password: Joi.string().required(),
       newPassword: Joi.string().required(),
+      userId: Joi.string().required(),
     });
     const { error } = userChangePasswordSchema.validate(req.body);
 
     if (error) {
       return next(error);
     }
-
-    const { password, newPassword } = req.body;
-   
-
     let user;
-
     try {
       user = await User.findById(userId);
       if (!user) {
@@ -209,7 +204,6 @@ const userAuthController = {
       res.status(500).send("Server Error");
     }
   },
-
   async forgotPassword(req, res, next) {
     // const userId = req.query.id;
 
@@ -383,7 +377,7 @@ const userAuthController = {
   //.......................................CompleteProfile..................................//
 
   async completeProfile(req, res, next) {
-   
+
     try {
       const userSchema = Joi.object({
         gender: Joi.string().valid("male", "female").required(),
@@ -469,7 +463,7 @@ const userAuthController = {
     if (error) {
       return next(error);
     }
-    const { phone, name, DOB, userImages , email, gender, height, city, motherTongue, partner, highestDegree, occupation, maritalStatus, employedIn, annualIncome} = req.body;
+    const { phone, name, DOB, userImages, email, gender, height, city, motherTongue, partner, highestDegree, occupation, maritalStatus, employedIn, annualIncome } = req.body;
     const userId = req.user._id;
 
     const user = await User.findById(userId);

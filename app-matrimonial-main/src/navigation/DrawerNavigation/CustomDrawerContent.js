@@ -34,6 +34,7 @@ const ProfileAvatar = () => (
   </Svg>
 );
 const CustomDrawerContent = ({ props, navigation }) => {
+  
   const [isOnline, setIsOnline] = useState( false);
   const [drawerData, setDrawerData] = useState(DrawerListData);
   const [selectedRoute, setSelectedRoute] = useState('User Name');
@@ -85,24 +86,18 @@ const CustomDrawerContent = ({ props, navigation }) => {
 
   const handleItemClick = item => {
     setSelectedRoute(item.name);
-    if (item.name == 'Connections') {
+    if (item.name === 'Connections') {
       navigation.navigate('Connection');
-    }
-    if (item.name == 'Membership') {
+    } else if (item.name === 'Membership') {
       navigation.navigate('MembershipPlan');
-    }
-    if (item.name == 'Payment Method') {
+    } else if (item.name === 'Payment Method') {
       navigation.navigate('PaymentScreen');
-    }
-    if (item.name == 'Account Settings') {
+    } else if (item.name === 'Account Setting') {
       navigation.navigate('AccountSettingsScreen');
-    }
-    if (item.name == 'Log Out') {
+    } else if (item.name === 'Log Out') {
       const logout = async () => {
         await AsyncStorage.removeItem('AccessToken');
         Toast('Logged Out Successfully');
-        await AsyncStorage.removeItem('theUser');
-        await AsyncStorage.clear();
         navigation.navigate('InitialScreen');
       };
 
