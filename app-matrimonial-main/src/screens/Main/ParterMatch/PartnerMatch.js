@@ -95,7 +95,48 @@ const PartnerMatch = ({ navigation }) => {
   const handlesearchFunctionality = (text) => {
     setSearchTerm(text);
   };
+  async function addToRecentlyViewed(viewedUserId) {
+    const apiUrl = `${API_URL}/user/recentlyViewed`;
+    const token = await AsyncStorage.getItem('AccessToken');
 
+    try {
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          userId: viewedUserId
+        })
+      });
+
+      if (!response.ok) {
+        let errorMessage = 'An error occurred while adding user to recently viewed';
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.message || errorMessage;
+        } catch (e) {
+          errorMessage = response.statusText;
+        }
+        throw new Error(errorMessage);
+      }
+
+      const data = await response.json();
+      return {
+        success: true,
+        message: 'User added to recently viewed successfully!',
+        data: data
+      };
+    } catch (error) {
+      console.error('Error adding user to recently viewed:', error);
+      return {
+        success: false,
+        message: error.message || 'An unexpected error occurred',
+        error: error
+      };
+    }
+  }
   const filterUsers = () => {
     if (!searchTerm) {
       setFilteredUsers(matchedUsers);
@@ -106,12 +147,17 @@ const PartnerMatch = ({ navigation }) => {
     const filtered = matchedUsers.filter(user => {
       return (
         user.name?.toLowerCase().includes(lowercasedSearch) ||
-        user.profession?.toLowerCase().includes(lowercasedSearch) ||
+        user.occupation?.toLowerCase().includes(lowercasedSearch) ||
         user.age?.toString().includes(lowercasedSearch) ||
         user.height?.toLowerCase().includes(lowercasedSearch) ||
-        user.location?.toLowerCase().includes(lowercasedSearch) ||
-        user.language?.toLowerCase().includes(lowercasedSearch) ||
-        user.castName?.toLowerCase().includes(lowercasedSearch)
+        user.city?.toLowerCase().includes(lowercasedSearch) ||
+        user.motherTongue?.toLowerCase().includes(lowercasedSearch) ||
+        user.sect?.toLowerCase().includes(lowercasedSearch) ||
+        user.religion?.toLowerCase().includes(lowercasedSearch) ||
+        user.highestDegree?.toLowerCase().includes(lowercasedSearch) ||
+        user.maritalStatus?.toLowerCase().includes(lowercasedSearch) ||
+        user.annualIncome?.toLowerCase().includes(lowercasedSearch) ||
+        user.workLocation?.toLowerCase().includes(lowercasedSearch) 
       );
     });
 
@@ -126,11 +172,16 @@ const PartnerMatch = ({ navigation }) => {
 
   if (loading) {
     return (
-      <View style={[STYLES.flexCenter, STYLES.flex1]}>
-        <ActivityIndicator size="large" color={COLORS.dark.primary} />
+      <View style={{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+      }}>
+        <ActivityIndicator size="xl" color={COLORS.dark.primary} />
       </View>
     );
   }
+
 
   if (error) {
     return (
@@ -193,11 +244,12 @@ const PartnerMatch = ({ navigation }) => {
               btnType={'requestsubmission'}
               data={user}
               onPressBtn1={() => {
+                addToRecentlyViewed(user?._id);
                 navigation.navigate('UserDetailsScreen', { userId: user?._id });
               }}
               onPressBtn2={() => {
                 console.log('Chat button pressed');
-                navigation.navigate('ChatScreen', { userId: user?._id, roomId: `${user?._id}_${user._id}`,user:user });
+                navigation.navigate('ChatScreen', { userId: user?._id, roomId: `${user?._id}_${user._id}`, user: user });
               }}
             />
           ))

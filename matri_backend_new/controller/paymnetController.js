@@ -1,5 +1,6 @@
 require("dotenv").config();
 const Razorpay = require("razorpay");
+const mongoose = require('mongoose');
 const User = require("../models/user");
 const Order = require("../models/order");
 
@@ -8,7 +9,6 @@ const razorpay = new Razorpay({
   key_secret: 'ZAl5MyuBueiB8wxzA2dIpsXb',
 });
 console.log(process.env.RAZORPAY_KEY_ID, "key_id")
-// Create order endpoint
 const createOrder = async (req, res) => {
   const { amount } = req.body;
   console.log(amount, "amount")
@@ -18,6 +18,7 @@ const createOrder = async (req, res) => {
     receipt: `receipt_${Math.random() * 10}`,
   };
 
+  // Create an order in razorpay
 
   try {
     const order = await razorpay.orders.create(options);
@@ -35,34 +36,39 @@ const verifyPayment = async (req, res) => {
     razorpay_payment_id,
     razorpay_signature,
     userId,
-    memberShipId,
+    membership,
     amount,
   } = req.body;
-  const crypto = require("crypto");
-  const hash = crypto
-    .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
-    .update(razorpay_order_id + "|" + razorpay_payment_id)
-    .digest("hex");
 
-  if (hash === razorpay_signature) {
-    // craete order record in database
+  if (!mongoose.Types.ObjectId.isValid(userId) || !mongoose.Types.ObjectId.isValid(membership)) {
+    return res.status(400).json({ success: false, message: 'Invalid userId or membership' });
+  }
+
+  try {
+    // Create order record in database
     const newOrder = await Order.create({
-      memberShipId,
-      userId,
+      membership: mongoose.Types.ObjectId(membership),
+      userId: mongoose.Types.ObjectId(userId),
       orderId: razorpay_order_id,
       amount,
     });
 
-    // update user membeship and order history
-    await User.findByIdAndUpdate(userId, {
-      membership: memberShipId,
+    // Update user membership and order history
+    const updatedUser = await User.findByIdAndUpdate(userId, {
+      membership: mongoose.Types.ObjectId(membership),
       isPaid: true,
       $push: { orders: newOrder._id },
-    });
-    res.status(200).json({ success: true, newOrder });
-  } else {
-    res.status(500).json({ success: false });
+    }, { new: true }); // Ensure to get the updated document back
+
+    if (!updatedUser) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+    console.log("updatedUser", updatedUser)
+    return res.status(200).json({ success: true, newOrder });
+    console.log("updatedUser", updatedUser)
+  } catch (error) {
+    console.error('Error updating user membership:', error);
+    return res.status(500).json({ success: false, error: error.message });
   }
 };
-
 module.exports = { createOrder, verifyPayment };

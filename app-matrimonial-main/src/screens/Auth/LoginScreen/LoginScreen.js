@@ -69,6 +69,7 @@ const LoginScreen = () => {
         body: JSON.stringify({
           email: email,
           password: password,
+          fcmToken: await AsyncStorage.getItem('fcmToken'),
         }),
       },
     );

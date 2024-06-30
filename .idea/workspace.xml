@@ -1,10 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="AutoImportSettings">
-    <option name="autoReloadType" value="SELECTIVE" />
+    <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="65d36aab-a37b-4c85-8af8-c97fc015eff2" name="Changes" comment="" />
+    <list default="true" id="65d36aab-a37b-4c85-8af8-c97fc015eff2" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app-matrimonial-main/android/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app-matrimonial-main/android/app/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app-matrimonial-main/src/assets/theme/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-matrimonial-main/src/assets/theme/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app-matrimonial-main/src/components/AppCard/AppCard.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-matrimonial-main/src/components/AppCard/AppCard.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app-matrimonial-main/src/components/HorizontalCard/HorizontalCard.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-matrimonial-main/src/components/HorizontalCard/HorizontalCard.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app-matrimonial-main/src/components/HorizontalCard/styles.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-matrimonial-main/src/components/HorizontalCard/styles.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app-matrimonial-main/src/components/NotificationCard/NotificationCard.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-matrimonial-main/src/components/NotificationCard/NotificationCard.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app-matrimonial-main/src/components/SnapCarousel/SnapCarousel.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-matrimonial-main/src/components/SnapCarousel/SnapCarousel.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app-matrimonial-main/src/data/appData.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-matrimonial-main/src/data/appData.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app-matrimonial-main/src/navigation/DrawerNavigation/CustomDrawerContent.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-matrimonial-main/src/navigation/DrawerNavigation/CustomDrawerContent.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app-matrimonial-main/src/screens/Auth/LoginScreen/LoginScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-matrimonial-main/src/screens/Auth/LoginScreen/LoginScreen.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app-matrimonial-main/src/screens/Main/ChatScreen/ChatScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-matrimonial-main/src/screens/Main/ChatScreen/ChatScreen.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app-matrimonial-main/src/screens/Main/ChatScreen/styles.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-matrimonial-main/src/screens/Main/ChatScreen/styles.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app-matrimonial-main/src/screens/Main/Connections/Connections.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-matrimonial-main/src/screens/Main/Connections/Connections.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app-matrimonial-main/src/screens/Main/HomePage/HomePage.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-matrimonial-main/src/screens/Main/HomePage/HomePage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app-matrimonial-main/src/screens/Main/NotificationScreen/NotificationScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-matrimonial-main/src/screens/Main/NotificationScreen/NotificationScreen.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app-matrimonial-main/src/screens/Main/ParterMatch/PartnerMatch.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-matrimonial-main/src/screens/Main/ParterMatch/PartnerMatch.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app-matrimonial-main/src/screens/Main/PaymentScreen/PaymentScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-matrimonial-main/src/screens/Main/PaymentScreen/PaymentScreen.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app-matrimonial-main/src/screens/Main/ProfileUpdateScreen/ProfileUpdateScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-matrimonial-main/src/screens/Main/ProfileUpdateScreen/ProfileUpdateScreen.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app-matrimonial-main/src/screens/Main/UserDetailsScreen/UserDetailsScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-matrimonial-main/src/screens/Main/UserDetailsScreen/UserDetailsScreen.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app-matrimonial-main/src/store/slices/membershipSlice.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-matrimonial-main/src/store/slices/membershipSlice.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app-matrimonial-main/src/utils/pushNotifications.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-matrimonial-main/src/utils/pushNotifications.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/matri_backend_new/controller/chatController.js" beforeDir="false" afterPath="$PROJECT_DIR$/matri_backend_new/controller/chatController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/matri_backend_new/controller/paymnetController.js" beforeDir="false" afterPath="$PROJECT_DIR$/matri_backend_new/controller/paymnetController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/matri_backend_new/controller/userAuthController.js" beforeDir="false" afterPath="$PROJECT_DIR$/matri_backend_new/controller/userAuthController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/matri_backend_new/controller/userMatchController.js" beforeDir="false" afterPath="$PROJECT_DIR$/matri_backend_new/controller/userMatchController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/matri_backend_new/firebase/service/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/matri_backend_new/firebase/service/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/matri_backend_new/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/matri_backend_new/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/matri_backend_new/middlewares/auth.js" beforeDir="false" afterPath="$PROJECT_DIR$/matri_backend_new/middlewares/auth.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/matri_backend_new/routes/user.js" beforeDir="false" afterPath="$PROJECT_DIR$/matri_backend_new/routes/user.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/matri_backend_new/services/chatRoom.js" beforeDir="false" afterPath="$PROJECT_DIR$/matri_backend_new/services/chatRoom.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/matri_backend_new/vaishakhi-matrimony-firebase-adminsdk-mjr6h-34a24c9c5e.json" beforeDir="false" afterPath="$PROJECT_DIR$/matri_backend_new/vaishakhi-matrimony-firebase-adminsdk-mjr6h-34a24c9c5e.json" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -13,7 +46,37 @@
   <component name="ClangdSettings">
     <option name="formatViaClangd" value="false" />
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 0
+}</component>
+  <component name="ProjectId" id="2iaDUBzW4k2TYTR7fAnc1qdTTQk" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
+    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="65d36aab-a37b-4c85-8af8-c97fc015eff2" name="Changes" comment="" />
+      <created>1719719808934</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1719719808934</updated>
+    </task>
     <servers />
   </component>
 </project>

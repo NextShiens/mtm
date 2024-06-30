@@ -57,6 +57,7 @@ router.get("/user/getRecentViewed", auth, userMatchController.getRecentViewed);
 
 //................match user....................
 router.get("/user/userMatch",auth,  userMatchController.userMatch);
+router.get("/user/newUsers", auth, userMatchController.newUsers);
 
 router.get(
   "/user/getPendingRequestsReceiver",

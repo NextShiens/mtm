@@ -106,38 +106,73 @@ const userMatchController = {
       res.status(500).json({ message: "Internal server error" });
     }
   },
+  async  newUsers(req, res)  {
+    try {
+      const userId = req.user?._id;
+      const user = await User.findById(userId);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+  
+      const userGender = user.gender;
+      const targetGender = userGender === "male" ? "female" : "male";
+  
+      const sevenDaysAgo = new Date();
+      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+  
+      const excludedUserIds = [
+        ...user.sentInterests,
+        ...user.receivedInterests,
+        ...user.friends,
+        userId
+      ];
+  
+      const newUsers = await User.find({
+        _id: { $nin: excludedUserIds },
+        gender: targetGender,
+        createdAt: { $gte: sevenDaysAgo }
+      }).select('-password -__v');
+  
+      res.json({ newUsers });
+    } catch (error) {
+      console.error("Error in fetching new users:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  },
   //.......................................RecentlyViewed..................................//
 
   async recentlyViewed(req, res, next) {
     const viewerId = req.user._id;
-    const viewedUserId = req.query.userId; // Assuming the user ID is in the userId property
+    const viewedUserId = req.body.userId; 
 
     try {
-      // Find the viewer user in the database
       const viewerUser = await User.findById(viewerId);
 
       if (!viewerUser) {
         return res.status(404).json({ error: "Viewer user not found" });
       }
-      // Check if viewedUserId is already in the most recent position
+
+      if (!viewerUser.recentlyViewed) {
+        viewerUser.recentlyViewed = [];
+      }
+
       if (
         viewerUser.recentlyViewed.length > 0 &&
-        viewerUser.recentlyViewed[0] == viewedUserId // Convert ObjectId to string for comparison
+        viewerUser.recentlyViewed[0].toString() === viewedUserId
       ) {
         return res.json({
           success: true,
           message: "User already in the most recent position",
         });
       }
+
+      // Remove viewedUserId if it's already in the array
+      viewerUser.recentlyViewed = viewerUser.recentlyViewed.filter(
+        id => id.toString() !== viewedUserId
+      );
+
       // Add viewedUserId to the most recent position
       viewerUser.recentlyViewed.unshift(viewedUserId);
-
-      // Limit the array to a certain size (optional)
-      const maxArraySize = 10; // You can adjust this based on your requirements
-      viewerUser.recentlyViewed = viewerUser.recentlyViewed.slice(
-        0,
-        maxArraySize
-      );
 
       // Save the updated user document
       await viewerUser.save();
@@ -150,18 +185,26 @@ const userMatchController = {
   },
 
   async getRecentViewed(req, res, next) {
-    const userId = req.user._id;
-    const user = await User.findById(userId).populate({
-      path: "recentlyViewed",
-      model: User,
-    });
-
-    if (!user) {
-      return res.status(404).json({ error: "user not found" });
+    try {
+      const userId = req.user._id;
+      const user = await User.findById(userId).populate({
+        path: "recentlyViewed",
+        model: User
+      });
+  
+      if (!user) {
+        return res.status(404).json({ error: "user not found" });
+      }
+  
+      res.json({ success: true, recentlyViewed: user.recentlyViewed });
+    } catch (error) {
+      next(error);
     }
-    res.json({ success: true, recentlyViewed: user.recentlyViewed });
-  },
+  }
+  
+,
 
+  
   //.......................................SendInterest..................................//
 
   async sendInterest(req, res, next) {
@@ -170,69 +213,75 @@ const userMatchController = {
       receiverId: Joi.string().required(),
     });
     const { error } = interestSchema.validate(req.body);
-
+  
     if (error) {
       return next(error);
     }
-
+  
     const { receiverId } = req.body;
     const senderId = req.user._id;
     let receiver;
     let sender;
-    let updatedUser;
-
+    let updatedSender;
+    let updatedReceiver;
+  
     try {
-      // match userId
+      // Find the receiver
       receiver = await User.findOne({ _id: receiverId });
-      const matchRequest = new MatchRequest({
-        senderId,
-        receiverId,
-      });
-      await matchRequest.save();
-
-      if (receiver == null) {
+  
+      if (!receiver) {
         const error = {
           status: 401,
           message: "Invalid receiverId",
         };
         return next(error);
-      } else {
-        sender = await User.findOne({ _id: senderId });
-        const notification = new Notification({
-          senderId,
-          receiverId,
-          title: "Matrimonial",
-          message: `${sender?.name} has sent you an interest`,
-        });
-        await notification.save();
-
-        sendchatNotification(receiverId, {
-          title: "Matrimonial",
-          message: `${sender?.name} has sent you an interest`,
-        });
-
-        updatedUser = await User.findOneAndUpdate(
-          { _id: senderId },
-          { $addToSet: { sentInterests: receiverId } },
-          { new: true } // Return the updated document
-        );
-
-        await User.findOneAndUpdate(
-          { _id: receiverId },
-          { $addToSet: { receivedInterests: senderId } },
-          { new: true } // Return the updated document
-        );
       }
+  
+      const matchRequest = new MatchRequest({
+        senderId,
+        receiverId,
+      });
+      await matchRequest.save();
+  
+      // Find the sender
+      sender = await User.findOne({ _id: senderId });
+  
+      const notification = new Notification({
+        senderId,
+        receiverId,
+        title: "Matrimonial",
+        message: `${sender?.name} has sent you an interest`,
+      });
+      await notification.save();
+  
+      sendchatNotification(receiverId, {
+        title: "Matrimonial",
+        message: `${sender?.name} has sent you an interest`,
+      });
+  
+      // Update the sender's sentInterests
+      updatedSender = await User.findOneAndUpdate(
+        { _id: senderId },
+        { $addToSet: { sentInterests: receiverId } },
+        { new: true } // Return the updated document
+      );
+  
+      // Update the receiver's receivedInterests
+      updatedReceiver = await User.findOneAndUpdate(
+        { _id: receiverId },
+        { $addToSet: { receivedInterests: senderId } },
+        { new: true } // Return the updated document
+      );
+  
     } catch (error) {
       return next(error);
     }
-
+  
     return res
       .status(200)
-      .json({ message: "Interest sent successfully!", user: updatedUser });
-
-    // return res.status(200).json({ user: user, auth: true, token: accessToken });
+      .json({ message: "Interest sent successfully!", user: updatedSender });
   },
+  
 
   /////..........................matchRequests..........................//
 

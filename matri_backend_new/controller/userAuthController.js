@@ -184,7 +184,7 @@ const userAuthController = {
     }
 
     const { password, newPassword } = req.body;
-    console.log(password);
+   
 
     let user;
 

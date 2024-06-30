@@ -59,12 +59,14 @@ const chatController = {
     });
   },
 
-  async getMessages(req, res, next) {
+async getMessages(req, res, next) {
     const roomId = req.query.roomId;
 
     try {
       const messages = await Message.find({ roomId }).exec();
-      // let responseArray = [];
+      console.log("Fetched messages:", messages); 
+
+      let responseArray = [];
       // messages.map((message) => {
       //   responseArray.push({
       //     user: message.message[0].user,
@@ -79,6 +81,7 @@ const chatController = {
         success: true,
         messages,
       });
+
       // return conversations;
     } catch (error) {
       console.error("Error fetching conversations:", error.message);

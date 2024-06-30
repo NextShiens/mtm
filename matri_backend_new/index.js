@@ -46,11 +46,13 @@ io.on("connection", (socket) => {
   });
 
   socket.on("send_message", (data) => {
-    console.log("data....", data.receiverId);
+    console.log("data....", data);
     sendchatNotification(data.receiverId, {
       message: data.text,
       title: data.author,
-    });
+
+    },
+      data.user._id,);
     checkRoom(data);
     socket.to(data.roomId);
     socket.emit("receive_message", data);

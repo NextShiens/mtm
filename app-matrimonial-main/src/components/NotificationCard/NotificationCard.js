@@ -21,7 +21,7 @@ const groupNotificationsByDate = (data, handleNotificationPress) => {
     older: [],
   };
 
-  data.forEach(item => {
+  data && data.forEach(item => {
     const notificationDate = new Date(item.timestamp);
 
     if (notificationDate.toDateString() === today.toDateString()) {

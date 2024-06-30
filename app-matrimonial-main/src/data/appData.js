@@ -775,10 +775,6 @@ export const filterOptions = [
     key: '3',
     value: LABELS.nearestMe,
   },
-  {
-    key: '4',
-    value: LABELS.Password,
-  },
 ];
 export const carouselData = [
   {

@@ -88,7 +88,6 @@ const ProfileUpdateScreen = ({ navigation }) => {
         console.log('ImagePicker Error: ', response.error);
       } else {
         const source = { uri: response.assets[0].uri };
-        console.log('source line 108', source);
         setProfileImage(source);
         uploadImage(response.assets[0]);
       }
@@ -112,7 +111,6 @@ const ProfileUpdateScreen = ({ navigation }) => {
 
       formData.append('file', { uri: fileUri, name: filename, type });
 
-      console.log('Sending request to:', `${API_URL}/user/uploadFile`);
       const response = await fetch(`${API_URL}/user/uploadFile`, {
         method: 'POST',
         headers: {
@@ -129,7 +127,6 @@ const ProfileUpdateScreen = ({ navigation }) => {
       }
 
       const result = await response.json();
-      console.log('Response from upload image:', result);
 
       setProfileData(prevData => ({
         ...prevData,
@@ -217,7 +214,7 @@ const ProfileUpdateScreen = ({ navigation }) => {
           employedIn: result.user.employedIn ? result.user.employedIn.toString() : '',
           annualIncome: result.user.annualIncome ? result.user.annualIncome.toString() : '',
         });
-        console.log('profileData', result.user);
+        
       } else {
         Toast(result.message);
       }
@@ -233,7 +230,7 @@ const ProfileUpdateScreen = ({ navigation }) => {
 
   const handleUpdate = async () => {
     const { name, email, phone, dateOfBirth: DOB, gender, height, location: city, motherTongue,  highestDegree, occupation, maritalStatus, employedIn, annualIncome, profilePicture: userImages } = profileData;
-    console.log('profileData', profileData);
+   
 
     try {
       const token = await AsyncStorage.getItem('AccessToken');
@@ -247,7 +244,6 @@ const ProfileUpdateScreen = ({ navigation }) => {
       });
 
       const result = await response.json();
-      console.log('response', result);
       if (!response.ok) {
         Toast(result.message);
       }

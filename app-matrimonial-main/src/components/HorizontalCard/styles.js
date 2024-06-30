@@ -23,6 +23,10 @@ export const styles = StyleSheet.create({
     marginTop: 10,
   },
   imgContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    
     width: '35%',
     borderRadius: 20,
   },

@@ -1,5 +1,5 @@
 import { DrawerContentScrollView } from '@react-navigation/drawer';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Dimensions, Image, TouchableOpacity, View } from 'react-native';
 import { Fonts } from '../../assets/fonts';
 import { IMAGES } from '../../assets/images';
@@ -15,13 +15,40 @@ import { LABELS } from '../../labels';
 import { styles } from './styles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Toast } from '../../utils/native';
+import Svg, { Circle, Path } from 'react-native-svg';
 
+const ProfileAvatar = () => (
+  <Svg width="50" height="50" viewBox="0 0 100 100">
+    <Circle cx="50" cy="50" r="50" fill="#b3e5fc" />
+    <Path
+      d="M50,31a19,19 0 1,0 38,0a19,19 0 1,0 -38,0"
+      fill="#fff"
+      transform="translate(-19 15)"
+    />
+    <Path
+      d="M50,59c-16,0-30,7-30,16v5h60v-5c0-9-14-16-30-16z"
+      fill="#fff"
+    />
+  </Svg>
+);
 const CustomDrawerContent = ({ props, navigation }) => {
   const [isOnline, setIsOnline] = useState(true);
   const [drawerData, setDrawerData] = useState(DrawerListData);
   const [selectedRoute, setSelectedRoute] = useState('User Name');
+  const [userName, setUserName] = useState('');
+  const [userImage, setUserImage] = useState('');
+  const [userProfession, setUserProfession] = useState('Profession');
+
   const style = styles;
   const windowWidth = Dimensions.get('window').width;
+  useEffect(async () => {
+    const userString = await AsyncStorage.getItem('theUser');
+    const user = JSON.parse(userString);
+    setUserName(user.user.name)
+    const image = user.user.userImages[0];
+    setUserImage(image);
+    setUserProfession(user.user.occupation)
+  }, [])
 
   const handleItemClick = item => {
     setSelectedRoute(item.name);
@@ -61,22 +88,29 @@ const CustomDrawerContent = ({ props, navigation }) => {
         <View style={style.contentContainer}>
           <View style={style.nameHolder}>
             <View style={style.avatarContainer}>
-              <CustomImage
-                source={IMAGES.profileAvatar}
-                size={50}
-                extraStyle={{ container: STYLES.bR(25) }}
-              />
+              {userImage ? (
+                <CustomImage
+                  uri={userImage}
+                  size={50}
+                  extraStyle={{ container: STYLES.bR(25) }}
+                />
+              ) : (
+                <ProfileAvatar
+                
+                  extraStyle={{ container: STYLES.bR(25) }}
+                />
+              )}
               {isOnline && <View style={style.onlineDot}></View>}
             </View>
             <Space mL={10} />
             <View style={{ height: 25, marginBottom: 10 }}>
               <AppText
-                title={LABELS.exampleName}
+                title={userName}
                 variant={'h4'}
                 extraStyle={{ fontFamily: Fonts.PoppinsSemiBold }}
               />
               <AppText
-                title={LABELS.businessMan}
+                title={userProfession}
                 color={COLORS.dark.inputBorder}
               />
             </View>

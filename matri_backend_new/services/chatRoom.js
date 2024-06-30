@@ -11,12 +11,12 @@ const checkRoom = async (data) => {
     try {
       const conversationToSave = new Conversation({
         roomId: data.roomId,
-        members: [data.authorId, data.receiverId],
+        members: [data.user._id, data.receiverId],
       });
 
       await conversationToSave.save();
 
-      const user = await User.findById(data.authorId);
+      const user = await User.findById(data.user._id);
       let newObject = {
         roomId: data.roomId,
         chatedId: data.receiverId,

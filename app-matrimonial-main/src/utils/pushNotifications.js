@@ -21,8 +21,8 @@ async function getFCMToken() {
       if (fcmToken) {
         console.log('FCM Token:', fcmToken);
         await AsyncStorage.setItem('fcmToken', fcmToken);
-        // Here, you should send this token to your backend
         sendFCMTokenToBackend(fcmToken);
+        console.log('FCM token sent to backend', fcmToken);
       }
     } catch (error) {
       console.log('Error getting FCM token:', error);

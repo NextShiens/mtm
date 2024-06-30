@@ -1,24 +1,33 @@
-import React, { useEffect, useState } from 'react';
-import { Image, ScrollView, TouchableOpacity, View, Alert, Text, Button } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+  Image,
+  ScrollView,
+  TouchableOpacity,
+  View,
+  Alert,
+  Text,
+  Button,
+} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import RazorpayCheckout from 'react-native-razorpay';
-import { Fonts } from '../../../assets/fonts';
-import { IMAGES } from '../../../assets/images';
-import { SVG } from '../../../assets/svg';
-import { COLORS, HORIZON_MARGIN, STYLES } from '../../../assets/theme';
+import {Fonts} from '../../../assets/fonts';
+import {IMAGES} from '../../../assets/images';
+import {SVG} from '../../../assets/svg';
+import {COLORS, HORIZON_MARGIN, STYLES} from '../../../assets/theme';
 import AppHeader from '../../../components/AppHeader/AppHeader';
 import AppText from '../../../components/AppText/AppText';
 import CustomImage from '../../../components/CustomImage/CustomImage';
 import Space from '../../../components/Space/Space';
-import { LABELS } from '../../../labels';
-import { paymentMethods } from '../../../data/appData';
+import {LABELS} from '../../../labels';
+import {paymentMethods} from '../../../data/appData';
 import Icon from '../../../components/Icon/Icon';
-import { styles } from './styles';
-import { API_URL } from '../../../../constant';
+import {styles} from './styles';
+import {API_URL} from '../../../../constant';
 
-const PaymentScreen = ({ navigation, route }) => {
-  const { plan, index } = route.params;
-  const [memberShipPlan, setMemberShipPlan] = useState(null);
+
+const PaymentScreen = ({navigation, route}) => {
+  const {plan, index} = route.params;
+  const [memberShipPlan, setMemberShipPlan] = useState("12334");
   const [selectedMethod, setSelectedMethod] = useState(null);
   const [keyId, setKeyId] = useState('rzp_test_kBRcDfjP4gr0PM');
   const [loading, setLoading] = useState(false);
@@ -26,48 +35,49 @@ const PaymentScreen = ({ navigation, route }) => {
   useEffect(() => {
     const getMemberShipPlan = async () => {
       const data = await AsyncStorage.getItem('memberShipPlan');
-      console.log('data from line 30', data);
       setMemberShipPlan(data);
     };
     getMemberShipPlan();
   }, []);
+  
+  useEffect(async()=>{
+    const user = await AsyncStorage.getItem('theUser'); 
+  }
+  ,[]);
+
 
   const fetchKeyId = async () => {
-    console.log('API_URL from line 36', API_URL);
     try {
       const token = await AsyncStorage.getItem('AccessToken');
       const response = await fetch(`${API_URL}/get-keyid`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          "authorization": `Bearer ${token}`
+          authorization: `Bearer ${token}`,
         },
       });
 
       if (!response.ok) {
-        console.log('response from line 50', response);
-        throw new Error(`Failed to fetch key ID: ${response.status} ${response.statusText}`);
+        throw new Error(
+          `Failed to fetch key ID: ${response.status} ${response.statusText}`,
+        );
       }
 
       const data = await response.json();
-      console.log('data from line 52', data);
 
       if (!data.keyId) {
         throw new Error('KeyId is not present in the response');
       }
 
       setKeyId(data.keyId);
-      console.log('keyId from line 59', data.keyId);
     } catch (error) {
       console.error('Error fetching key ID:', error);
       Alert.alert('Error', 'Unable to initialize payment. Please try again.');
     }
   };
-
   const bacKNavigationHandler = () => {
     navigation.goBack();
   };
-
   const handleRightIconPress = () => {
     navigation.navigate('NotificationScreen');
   };
@@ -76,31 +86,31 @@ const PaymentScreen = ({ navigation, route }) => {
     fetchKeyId();
   }, []);
 
-  const createOrder = async (amount) => {
-    console.log("createOrder called with amount:", amount);
+  const createOrder = async amount => {
     try {
       const token = await AsyncStorage.getItem('AccessToken');
-      console.log("Token fetched:", token);
-
+  
       const response = await fetch(`${API_URL}/create-order`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          "Authorization": `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ amount }),
+        body: JSON.stringify({amount}),
       });
 
-      console.log("Response from create-order:", response);
 
       if (!response.ok) {
         const errorText = await response.text();
-        console.error(`Failed to create order: ${response.status} ${response.statusText} - ${errorText}`);
-        throw new Error(`Failed to create order: ${response.status} ${response.statusText}`);
+        console.error(
+          `Failed to create order: ${response.status} ${response.statusText} - ${errorText}`,
+        );
+        throw new Error(
+          `Failed to create order: ${response.status} ${response.statusText}`,
+        );
       }
 
       const data = await response.json();
-      console.log("Order created successfully:", data);
       return data;
     } catch (error) {
       console.error('Error creating order:', error);
@@ -108,14 +118,14 @@ const PaymentScreen = ({ navigation, route }) => {
     }
   };
 
-  const verifyPayment = async (paymentData) => {
+  const verifyPayment = async paymentData => {
     try {
       const token = await AsyncStorage.getItem('AccessToken');
       const response = await fetch(`${API_URL}/verify-payment`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          "Authorization": `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(paymentData),
       });
@@ -128,49 +138,47 @@ const PaymentScreen = ({ navigation, route }) => {
   };
 
   const handlePayment = async () => {
-    console.log("handlePayment called");
     setLoading(true);
     try {
-      const amount = plan.price;
-      console.log("Amount for createOrder:", amount);
-
-      const order = await createOrder(amount);
-      console.log("Order created:", order);
-
-      const options = {
-        description: 'Membership Payment',
-        image: 'https://your-app-logo.png',
+      const price = plan.price * 100 || 5000;
+  
+      const orderData = await createOrder(price);
+  
+      var options = {
+        key: keyId, // Enter the Key ID generated from the Dashboard
+        amount: price.toString(),
         currency: 'INR',
-        key: keyId,
-        amount: order.amount,
-        name: 'Metromonial',
-        order_id: order.id,
+        name: 'Acme Corp',
+        description: 'Test Transaction',
+        image: 'https://example.com/your_logo',
+        order_id: orderData._id,
+        callback_url: 'https://eneqd3r9zrjok.x.pipedream.net/',
         prefill: {
-          email: 'user@example.com',
-          contact: '9999999999',
-          name: 'John Doe'
+          name: 'Gaurav Kumar',
+          email: 'gaurav.kumar@example.com',
+          contact: '9000090000',
         },
-        theme: { color: '#F37254' }
+        notes: {
+          address: 'Razorpay Corporate Office',
+        },
+        theme: {
+          color: '#3399cc',
+        },
       };
-
-      console.log("Razorpay options:", options);
-
-      const data = await RazorpayCheckout.open(options);
-      console.log("Razorpay response:", data);
-
+  
       const verificationResult = await verifyPayment({
-        razorpay_payment_id: data.razorpay_payment_id,
-        razorpay_order_id: data.razorpay_order_id,
-        razorpay_signature: data.razorpay_signature,
-        userId: 'user123',
-        membershipId: memberShipPlan?.id || 'defaultMembershipId',
-        amount
+        razorpay_payment_id: 'dummy_payment_id',
+        razorpay_order_id: orderData.id,
+        razorpay_signature: 'dummy_signature',
+        userId:user._id ,
+        membership: plan._id,
+        membershipname: plan.name,
+        amount: price,
       });
-
-      console.log("Verification result:", verificationResult);
-
+      console.log('Verification result:', verificationResult);
+  
       if (verificationResult.success) {
-        Alert.alert('Success', 'Payment was successful');
+        Alert.alert('Success', 'Payment and membership update successful');
       } else {
         throw new Error('Payment verification failed');
       }
@@ -181,17 +189,11 @@ const PaymentScreen = ({ navigation, route }) => {
       setLoading(false);
     }
   };
+  
 
-  const onRightIconPress = () => {
-    navigation.goBack();
-  };
-  const membershipSelectionHandler = async (plan) => {
-    await handlePayment()
-  };
-
-
-  const onPayCardSelection = (item) => {
+  const onPayCardSelection = item => {
     setSelectedMethod(item.key);
+    handlePayment();
   };
 
   const style = styles;

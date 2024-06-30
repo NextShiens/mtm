@@ -1,4 +1,4 @@
-import React from 'react';
+import React ,{useEffect } from 'react';
 import {
   Dimensions,
   Image,
@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { useRoute} from '@react-navigation/native';
 import Carousel, {Pagination} from 'react-native-snap-carousel';
 import {Fonts} from '../../../assets/fonts';
 import {IMAGES} from '../../../assets/images';
@@ -15,41 +16,173 @@ import AppHeader from '../../../components/AppHeader/AppHeader';
 import AppText from '../../../components/AppText/AppText';
 import CustomImage from '../../../components/CustomImage/CustomImage';
 import Space from '../../../components/Space/Space';
-import {carouselData} from '../../../data/appData';
 import {LABELS} from '../../../labels';
 import {styles} from './styles';
 import {Toast} from '../../../utils/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { API_URL } from '../../../../constant';
+import { SvgXml } from 'react-native-svg';
+
+const defaultProfileSvg = `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+  <circle cx="12" cy="7" r="4"></circle>
+</svg>
+`;
 
 const UserDetailsScreen = ({navigation}) => {
+  const route = useRoute();
+  const userId = route.params?.userId || ''   ;
   const screenWidth = Dimensions.get('window').width;
   const [activeSlide, setActiveSlide] = React.useState(0);
+  const [userDetails, setUserDetails] = React.useState({});
   const style = styles;
 
-  const renderItem = ({item}) => (
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      try {
+        const token = await AsyncStorage.getItem('AccessToken');
+        const response = await fetch(`${API_URL}/user/userDetails/${userId}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'authorization': `Bearer ${token}`,
+          },
+        });
+        const data = await response.json();
+        setUserDetails(data.user);
+      } catch (error) {
+        console.error("Failed to fetch user details:", error);Play
+      }
+    };
+
+    fetchUserDetails();
+  }, [userId]);
+
+  async function sendInterest() {
+    const apiUrl = `${API_URL}/user/sendInterest`;
+    const token = await AsyncStorage.getItem('AccessToken');
+  
+    try {
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'authorization': `Bearer ${token}` 
+        },
+        body: JSON.stringify({
+          receiverId: userId
+        })
+      });
+  
+      if (!response.ok) {
+        let errorMessage = 'An error occurred while sending interest';
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.message || errorMessage;
+        } catch (e) {
+         
+          errorMessage = response.statusText;
+        }
+        throw new Error(errorMessage);
+      }
+  
+      const data = await response.json();
+      Toast('Interest sent successfully!');
+      return {
+        success: true,
+        message: 'Interest sent successfully!',
+        data: data
+      };
+    } catch (error) {
+      console.error('Error sending interest:', error);
+      return {
+        success: false,
+        message: error.message || 'An unexpected error occurred',
+        error: error
+      };
+    }
+  }
+
+  const carouselData = [
+    {
+      id: '0',
+      name: userDetails.name || 'N/A',
+      age: userDetails.age || 'N/A',
+      height: userDetails.height || 'N/A',
+      occupation: userDetails.occupation || 'N/A',
+      location: userDetails.city || 'N/A',
+      isVerified: userDetails.isActive || false,
+      userStatus: userDetails.isPaid ? 'Premium' : 'Free',
+      img: userDetails.userImages?.[0] || <SvgXml xml={defaultProfileSvg} width="50%" height="50%" />,
+      category: 'Profile'
+    },
+    {
+      id: '1',
+      name: userDetails.name || 'N/A',
+      age: userDetails.age || 'N/A',
+      height: userDetails.height || 'N/A',
+      occupation: userDetails.occupation || 'N/A',
+      location: userDetails.workLocation || 'N/A',
+      isVerified: userDetails.isActive || false,
+      userStatus: userDetails.isPaid ? 'Premium' : 'Free',
+      img: userDetails.userImages?.[1] || <SvgXml xml={defaultProfileSvg} width="50%" height="50%" />,
+      category: 'Work'
+    },
+    {
+      id: '2',
+      name: userDetails.name || 'N/A',
+      age: userDetails.age || 'N/A',
+      height: userDetails.height || 'N/A',
+      occupation: userDetails.occupation || 'N/A',
+      location: userDetails.city || 'N/A',
+      isVerified: userDetails.isActive || false,
+      userStatus: userDetails.isPaid ? 'Premium' : 'Free',
+      img: userDetails.userImages?.[2] || <SvgXml xml={defaultProfileSvg} width="50%" height="50%" />,
+      category: 'Education'
+    },
+    {
+      id: '3',
+      name: userDetails.name || 'N/A',
+      age: userDetails.age || 'N/A',
+      height: userDetails.height || 'N/A',
+      occupation: userDetails.occupation || 'N/A',
+      location: userDetails.city || 'N/A',
+      isVerified: userDetails.isActive || false,
+      userStatus: userDetails.isPaid ? 'Premium' : 'Free',
+      img: userDetails.userImages?.[3] || <SvgXml xml={defaultProfileSvg} width="50%" height="50%" />,
+      category: 'Religion'
+    },
+  ];
+  const renderItem = ({ item, index }) => (
     <View style={style.slideContainer}>
-      <Image source={IMAGES.carousel1} style={style.image} />
+      {userDetails.userImages && userDetails.userImages[index] ? (
+        <Image source={{ uri: userDetails.userImages[index] }} style={style.image} />
+      ) : (
+        <View style={[style.image, { backgroundColor: COLORS.dark.gray }]}>
+          <SvgXml xml={defaultProfileSvg} width="50%" height="50%" />
+        </View>
+      )}
       <View style={style.gradient}>
         <AppHeader
           iconLeft={<SVG.BackArrow fill={'black'} />}
           textColor="white"
           iconRight={
-            <>
-              <TouchableOpacity
-                style={style.rightIconContainer}
-                onPress={() => {
-                  navigation.navigate('SavedUserScreen');
-                }}>
-                <CustomImage
-                  source={IMAGES.savedIcon}
-                  size={18}
-                  resizeMode={'contain'}
-                />
-              </TouchableOpacity>
-            </>
+            <TouchableOpacity
+              style={style.rightIconContainer}
+              onPress={() => {
+                navigation.navigate('SavedUserScreen');
+              }}>
+              <CustomImage
+                source={IMAGES.savedIcon}
+                size={18}
+                resizeMode={'contain'}
+              />
+            </TouchableOpacity>
           }
           title={LABELS.matches}
           extraStyle={{
-            container: {width: '100%'},
+            container: { width: '100%' },
           }}
         />
       </View>
@@ -82,27 +215,26 @@ const UserDetailsScreen = ({navigation}) => {
           <View style={style.basicDetailsContainer}>
             <Space mT={20} />
             <AppText
-              title={LABELS.ShusmitaSharma}
+              title={userDetails?.name || 'N/A'}
               variant={'h3'}
               color={COLORS.dark.black}
               extraStyle={STYLES.fontFamily(Fonts.PoppinsSemiBold)}
             />
             <AppText
-              title={LABELS.AssistantManager}
+              title={userDetails?.occupation || 'N/A'}
               variant={'h5'}
               color={COLORS.dark.inputBorder}
               extraStyle={STYLES.fontFamily(Fonts.PoppinsRegular)}
             />
             <Space mT={13} />
             <AppText
-              title={LABELS.examplePara}
-              variant={'h5'}
+              title={userDetails.description || 'This user prefers to keep an air of mystery about them.' }      
               color={COLORS.dark.black}
               extraStyle={STYLES.fontFamily(Fonts.PoppinsRegular)}
             />
             <Space mT={13} />
             <AppText
-              title={LABELS.mumbaiIndia}
+              title={userDetails?.city || 'N/A'}
               variant={'h5'}
               color={COLORS.dark.inputBorder}
               extraStyle={STYLES.fontFamily(Fonts.PoppinsRegular)}
@@ -132,7 +264,7 @@ const UserDetailsScreen = ({navigation}) => {
                 extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
               />
               <AppText
-                title={'Ayesha Khan'}
+                title={userDetails?.name || 'N/A'}
                 variant={'h4'}
                 color={COLORS.dark.black}
                 extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
@@ -146,7 +278,7 @@ const UserDetailsScreen = ({navigation}) => {
                 extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
               />
               <AppText
-                title={LABELS.neverMarried}
+                title={userDetails?.maritalStatus || 'N/A'}
                 variant={'h4'}
                 color={COLORS.dark.black}
                 extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
@@ -160,7 +292,7 @@ const UserDetailsScreen = ({navigation}) => {
                 extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
               />
               <AppText
-                title={'6 Ft 7 inch'}
+                title={userDetails?.height || 'N/A'}
                 variant={'h4'}
                 color={COLORS.dark.black}
                 extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
@@ -173,7 +305,7 @@ const UserDetailsScreen = ({navigation}) => {
                 extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
               />
               <AppText
-                title={'Own'}
+                title={userDetails?.profileCreatedFor||'Self'}
                 variant={'h4'}
                 color={COLORS.dark.black}
                 extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
@@ -190,7 +322,7 @@ const UserDetailsScreen = ({navigation}) => {
                   extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
                 />
                 <AppText
-                  title={'23'}
+                  title={userDetails?.age || 'N/A'}
                   variant={'h4'}
                   color={COLORS.dark.black}
                   extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
@@ -204,7 +336,7 @@ const UserDetailsScreen = ({navigation}) => {
                   extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
                 />
                 <AppText
-                  title={'Female'}
+                  title={userDetails?.gender || 'N/A'}
                   variant={'h4'}
                   color={COLORS.dark.black}
                   extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
@@ -218,7 +350,7 @@ const UserDetailsScreen = ({navigation}) => {
                   extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
                 />
                 <AppText
-                  title={'Mughal'}
+                  title={userDetails?.sect || 'N/A'}
                   variant={'h4'}
                   color={COLORS.dark.black}
                   extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
@@ -231,7 +363,7 @@ const UserDetailsScreen = ({navigation}) => {
                   extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
                 />
                 <AppText
-                  title={'No'}
+                  title={userDetails?.disability||'No'}
                   variant={'h4'}
                   color={COLORS.dark.black}
                   extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
@@ -267,7 +399,7 @@ const UserDetailsScreen = ({navigation}) => {
                   extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
                 />
                 <AppText
-                  title={'+91 3453545 6'}
+                  title={userDetails?.phone || 'N/A'}
                   variant={'h4'}
                   color={COLORS.dark.black}
                   extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
@@ -281,7 +413,7 @@ const UserDetailsScreen = ({navigation}) => {
                   extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
                 />
                 <AppText
-                  title={LABELS.exampleEmail}
+                  title={userDetails?.email || 'N/A'}
                   variant={'h4'}
                   color={COLORS.dark.black}
                   extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
@@ -310,7 +442,7 @@ const UserDetailsScreen = ({navigation}) => {
               extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
             />
             <AppText
-              title={'Gwailor, Madhya Pradesh, India'}
+              title={userDetails?.city + ', India' || 'N/A'}
               variant={'h4'}
               color={COLORS.dark.black}
               extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
@@ -323,7 +455,7 @@ const UserDetailsScreen = ({navigation}) => {
               extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
             />
             <AppText
-              title={'Gwailor, Madhya Pradesh, India'}
+              title={userDetails?.city + ', India'  || 'N/A'}
               variant={'h4'}
               color={COLORS.dark.black}
               extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
@@ -347,13 +479,13 @@ const UserDetailsScreen = ({navigation}) => {
           <View style={style.basicInfoContainer}>
             <View style={style.infoCont1}>
               <AppText
-                title={LABELS.highestEducation}
+                title={LABELS.highestDegree}
                 variant={'h4'}
                 color={COLORS.dark.gray}
                 extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
               />
               <AppText
-                title={'M.Phil Chemistry'}
+                title={userDetails?.highestDegree || 'N/A'}
                 variant={'h4'}
                 color={COLORS.dark.black}
                 extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
@@ -367,7 +499,7 @@ const UserDetailsScreen = ({navigation}) => {
                 extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
               />
               <AppText
-                title={'Student'}
+                title={userDetails?.occupation || 'N/A'}
                 variant={'h4'}
                 color={COLORS.dark.black}
                 extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
@@ -383,7 +515,7 @@ const UserDetailsScreen = ({navigation}) => {
                 extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
               />
               <AppText
-                title={'Not Working'}
+                title={userDetails?.employedIn || 'N/A'}
                 variant={'h4'}
                 color={COLORS.dark.black}
                 extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
@@ -397,7 +529,7 @@ const UserDetailsScreen = ({navigation}) => {
                 extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
               />
               <AppText
-                title={'2 Lac'}
+                title={userDetails?.annualIncome + ' INR' || 'N/A'}
                 variant={'h4'}
                 color={COLORS.dark.black}
                 extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
@@ -431,7 +563,7 @@ const UserDetailsScreen = ({navigation}) => {
                 extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
               />
               <AppText
-                title={'Single'}
+                title={userDetails.partnerPreference?.partnerMaritalStatus || 'N/A'} 
                 variant={'h4'}
                 color={COLORS.dark.black}
                 extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
@@ -445,7 +577,7 @@ const UserDetailsScreen = ({navigation}) => {
                 extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
               />
               <AppText
-                title={'25 to 40'}
+                title={userDetails.partnerPreference?.partnerAge   || 'N/A'}
                 variant={'h4'}
                 color={COLORS.dark.black}
                 extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
@@ -459,7 +591,7 @@ const UserDetailsScreen = ({navigation}) => {
                 extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
               />
               <AppText
-                title={'M.Phil'}
+                title={userDetails.partnerPreference?.education  || 'N/A'}
                 variant={'h4'}
                 color={COLORS.dark.black}
                 extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
@@ -472,7 +604,7 @@ const UserDetailsScreen = ({navigation}) => {
                 extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
               />
               <AppText
-                title={'Hindi'}
+                title={userDetails.partnerPreference?.partnerMotherTongue || 'N/A'}
                 variant={'h4'}
                 color={COLORS.dark.black}
                 extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
@@ -487,7 +619,7 @@ const UserDetailsScreen = ({navigation}) => {
                 extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
               />
               <AppText
-                title={'Mughal'}
+                title={userDetails.partnerPreference?.partnerSect || 'N/A'}
                 variant={'h4'}
                 color={COLORS.dark.black}
                 extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
@@ -501,7 +633,7 @@ const UserDetailsScreen = ({navigation}) => {
                 extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
               />
               <AppText
-                title={'5ft 8 Inch'}
+                title={userDetails.partnerPreference?.partnerHeight || 'N/A'}
                 variant={'h4'}
                 color={COLORS.dark.black}
                 extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
@@ -515,7 +647,7 @@ const UserDetailsScreen = ({navigation}) => {
                 extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
               />
               <AppText
-                title={'Doctor'}
+                title={userDetails.partnerPreference?.partnerOccupation || 'N/A'}
                 variant={'h4'}
                 color={COLORS.dark.black}
                 extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
@@ -528,7 +660,7 @@ const UserDetailsScreen = ({navigation}) => {
                 extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
               />
               <AppText
-                title={'Rs. 20-35Lakh'}
+                title={userDetails.partnerPreference?.partnerAnnualIncome  || 'N/A'}
                 variant={'h4'}
                 color={COLORS.dark.black}
                 extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
@@ -554,10 +686,7 @@ const UserDetailsScreen = ({navigation}) => {
               borderRadius: 6,
             }}
             onPress={() => {
-              Toast('Your request has been sent successfully');
-              setTimeout(() => {
-                navigation.navigate('HomePage');
-              }, 1000);
+              sendInterest();
             }}>
             <CustomImage
               source={IMAGES.sendIcon}
@@ -576,7 +705,7 @@ const UserDetailsScreen = ({navigation}) => {
 
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate('ChatScreen');
+              navigation.navigate('ChatScreen', { userId: userDetails?._id, roomId: `${userDetails?._id}_${userDetails._id}`,user:userDetails });
             }}
             style={{
               width: '15%',
