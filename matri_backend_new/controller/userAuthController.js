@@ -518,7 +518,7 @@ const userAuthController = {
     const { isActive } = req.body;
     const userId = req.user._id;
 
-    const user = await User.findById(userId);
+    const user = await User.findByIdAndUpdate(userId);
 
     if (!user) {
       const error = new Error("User not found!");

@@ -12,6 +12,7 @@ import PaymentScreen from '../../screens/Main/PaymentScreen/PaymentScreen';
 import BottomNavigation from '../BottomNavigation/BottomNavigation';
 import CustomDrawerContent from './CustomDrawerContent';
 import ChatScreen from '../../screens/Main/ChatScreen/ChatScreen';
+import AccountSettingsScreen from '../../screens/Main/AccountSettings/AccountSettings';
 
 const Drawer = createDrawerNavigator();
 const DrawerNavigation = () => {
@@ -35,6 +36,10 @@ const DrawerNavigation = () => {
         <Drawer.Screen name="UserDetailsScreen" component={UserDetailsScreen} />
         <Drawer.Screen name="PartnerMatch" component={PartnerMatch} />
         <Drawer.Screen name="SavedUserScreen" component={SavedUserScreen} />
+        <Drawer.Screen
+          name="AccountSettingsScreen"
+          component={AccountSettingsScreen}
+        />
       </Drawer.Navigator>
     </>
   );

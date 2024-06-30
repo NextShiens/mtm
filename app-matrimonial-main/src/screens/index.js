@@ -21,3 +21,4 @@ export {default as Connections} from './Main/Connections/Connections';
 export {default as ForgotPassword} from './Auth/ForgotPassword/ForgotPassword';
 export {default as UserDetailsScreen} from './Main/UserDetailsScreen/UserDetailsScreen';
 export {default as SavedUserScreen} from './Main/SavedUsersScreen/SavedUserScreen';
+export {default as AccountSettingsScreen} from './Main/AccountSettings/AccountSettings';

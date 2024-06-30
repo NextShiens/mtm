@@ -49,7 +49,8 @@
     "react-native-svg": "^13.14.0",
     "react-native-vector-icons": "^10.1.0",
     "react-redux": "^8.1.3",
-    "socket.io-client": "^4.7.5"
+    "socket.io-client": "^4.7.5",
+    "toggle-switch-react-native": "^3.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

@@ -224,7 +224,7 @@ const HomePage = () => {
             'Authorization': `Bearer ${token}`,
           },
         });
-    
+
         if (!response.ok) {
           if (response.status === 404) {
             throw new Error('No new users found');
@@ -232,7 +232,7 @@ const HomePage = () => {
             throw new Error('Something went wrong');
           }
         }
-    
+
         const { newUsers } = await response.json();
         setNewUsers(newUsers)
       } catch (error) {
@@ -244,7 +244,8 @@ const HomePage = () => {
     fetchRecentlyViewed();
   }, []);
   const handleLeftIconPress = () => {
-    navigation.openDrawer();
+    console.log('Attempting to open drawer');
+   navigation.openDrawer();
   };
 
   const handleRightIconPress = () => {
@@ -278,8 +279,8 @@ const HomePage = () => {
   };
 
   const onSubmitFilter = () => {
-navigation.navigate('PartnerMatch', { filteredData: { selectedGender, selectedMaritalStatus, selectedLanguage, range } });
-        setShowFilters(false);
+    navigation.navigate('PartnerMatch', { filteredData: { selectedGender, selectedMaritalStatus, selectedLanguage, range } });
+    setShowFilters(false);
   };
 
   return (
@@ -288,7 +289,9 @@ navigation.navigate('PartnerMatch', { filteredData: { selectedGender, selectedMa
         <View style={styles.headerContainer}>
           <AppHeader
             iconLeft={
-              <TouchableOpacity onPress={handleLeftIconPress}>
+              <TouchableOpacity onPress={() => {
+                navigation.openDrawer();
+              }}>
                 <CustomImage
                   source={IMAGES.menuIcon}
                   size={17}

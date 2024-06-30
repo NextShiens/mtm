@@ -1,7 +1,7 @@
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
-import {Connections, ForgotPassword, ProfileUpdateScreen} from '../screens';
+import {Connections, ForgotPassword, ProfileUpdateScreen , AccountSettingsScreen} from '../screens';
 import InitialScreen from '../screens/Auth/InitialScreen/InitialScreen';
 import LoginScreen from '../screens/Auth/LoginScreen/LoginScreen';
 import OTPScreen from '../screens/Auth/OTPScreen/OTPScreen';
@@ -23,6 +23,7 @@ import DrawerNavigation from './DrawerNavigation/DrawerNavigation';
 import UserDetailsScreen from '../screens/Main/UserDetailsScreen/UserDetailsScreen';
 import SavedUserScreen from '../screens/Main/SavedUsersScreen/SavedUserScreen';
 import ChatScreen from '../screens/Main/ChatScreen/ChatScreen';
+
 
 const Stack = createNativeStackNavigator();
 const options = {headerShown: false};
@@ -145,6 +146,12 @@ const HomeStack = () => {
         component={Connections}
         options={options}
       />
+      <Stack.Screen
+        name="AccountSettingsScreen"
+        component={AccountSettingsScreen}
+        options={options}
+      />
+
       <Stack.Screen
         name="ChatScreen"
         component={ChatScreen}

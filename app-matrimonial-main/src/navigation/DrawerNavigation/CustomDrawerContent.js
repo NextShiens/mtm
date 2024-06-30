@@ -16,6 +16,8 @@ import { styles } from './styles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Toast } from '../../utils/native';
 import Svg, { Circle, Path } from 'react-native-svg';
+import ToggleSwitch from 'toggle-switch-react-native';
+import { API_URL } from '../../../constant';
 
 const ProfileAvatar = () => (
   <Svg width="50" height="50" viewBox="0 0 100 100">
@@ -32,12 +34,13 @@ const ProfileAvatar = () => (
   </Svg>
 );
 const CustomDrawerContent = ({ props, navigation }) => {
-  const [isOnline, setIsOnline] = useState(true);
+  const [isOnline, setIsOnline] = useState( false);
   const [drawerData, setDrawerData] = useState(DrawerListData);
   const [selectedRoute, setSelectedRoute] = useState('User Name');
   const [userName, setUserName] = useState('');
   const [userImage, setUserImage] = useState('');
   const [userProfession, setUserProfession] = useState('Profession');
+  
 
   const style = styles;
   const windowWidth = Dimensions.get('window').width;
@@ -46,9 +49,39 @@ const CustomDrawerContent = ({ props, navigation }) => {
     const user = JSON.parse(userString);
     setUserName(user.user.name)
     const image = user.user.userImages[0];
+    setIsOnline(user?.user?.isActive);
     setUserImage(image);
     setUserProfession(user.user.occupation)
   }, [])
+  const handleToggle = async () => {
+  
+    setIsOnline(!isOnline);
+    console.log('isOnline status :', isOnline);
+
+    try {
+      const token = await AsyncStorage.getItem('AccessToken');
+      const response = await fetch(`${API_URL}/user/updateActiveStatus`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          isActive: isOnline, 
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update profile');
+      }
+
+      const result = await response.json();
+      console.log('Profile updated successfully:', result);
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      // Handle error, show toast, etc.
+    }
+  };
 
   const handleItemClick = item => {
     setSelectedRoute(item.name);
@@ -60,6 +93,9 @@ const CustomDrawerContent = ({ props, navigation }) => {
     }
     if (item.name == 'Payment Method') {
       navigation.navigate('PaymentScreen');
+    }
+    if (item.name == 'Account Settings') {
+      navigation.navigate('AccountSettingsScreen');
     }
     if (item.name == 'Log Out') {
       const logout = async () => {
@@ -138,6 +174,52 @@ const CustomDrawerContent = ({ props, navigation }) => {
         {DrawerListData.map(route => {
           if (route.name === 'Home') {
             return null;
+          }
+          if (route.name === 'Active Status') {
+            return (
+              <TouchableOpacity
+              key={route.key}
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                paddingVertical: 10,
+                paddingHorizontal:17
+              }}>
+              <CustomImage
+                source={route.iconName}
+                size={25}
+                resizeMode={'contain'}
+              />
+              <Space mL={10} />
+              <View style={{ flex: 1  }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'  }}>
+                  <AppText
+                    title={route.name}
+                    variant={'h6'}
+                    extraStyle={{ fontFamily: Fonts.PoppinsSemiBold }}
+                    color={COLORS.dark.black}
+                  />
+                  {route.name === 'Active Status' && (
+                    <ToggleSwitch
+                      isOn={isOnline}
+                      onColor="#F97B22"
+                      offColor="#F3F5FE"
+                      size="small"
+                      onToggle={handleToggle}
+                      style={{ marginLeft: 10 }}
+                    />
+                  )}
+                </View>
+                <AppText
+                  title={route.description}
+                  variant={'body2'}
+                  extraStyle={{ fontFamily: Fonts.PoppinsRegular, marginTop: 5 }}
+                  color={COLORS.dark.inputBorder}
+                />
+              </View>
+            </TouchableOpacity>
+        
+            );
           }
           return (
             <TouchableOpacity

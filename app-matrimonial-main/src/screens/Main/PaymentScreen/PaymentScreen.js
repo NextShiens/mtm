@@ -53,7 +53,7 @@ const PaymentScreen = ({navigation, route}) => {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          authorization: `Bearer ${token}`,
+          "authorization": `Bearer ${token}`,
         },
       });
 
@@ -249,7 +249,7 @@ const PaymentScreen = ({navigation, route}) => {
                 style={style.optionContainer}
                 onPress={() => onPayCardSelection(item)}
                 disabled={loading}>
-                <View style={{ width: '50%', paddingHorizontal: 10 }}>
+                <View style={{ width: '80%', paddingHorizontal: 10 }}>
                   <Image
                     source={item.img}
                     style={style.payIcons}

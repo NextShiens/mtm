@@ -1,3 +1,5 @@
+import { AccountSettingsScreen } from "../screens";
+
 export const LABELS = {
   cancel:'Cancel',
   newPass: 'New Password',
@@ -98,6 +100,7 @@ export const LABELS = {
   notification: 'Notifications',
   profile: 'Profile',
   connection: 'Connections',
+  AccountSettingsScreen: 'Account Settings',
   accept: 'Accept',
   reject: 'Reject',
   update: 'Update',
