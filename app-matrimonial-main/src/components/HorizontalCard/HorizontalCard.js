@@ -15,6 +15,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import { Svg, Path } from 'react-native-svg';
 import { useRoute } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
+import { subscriptionCheck ,checkLiveChatAvailability} from '../../utils/subscriptionCheck';
 const HorizontalCard = ({
   data,
   onLinkPress,
@@ -123,8 +124,12 @@ const HorizontalCard = ({
                       <View style={[STYLES.selfLeft, STYLES.gap, STYLES.row]}>
                         <TouchableOpacity
                           style={style.sendIconBtn}
-                          onPress={() => {
-                            navigation.navigate('UserDetailsScreen', { userId: item?._id });
+                          onPress={ async () => {
+                            if (await subscriptionCheck(item)) {
+                              navigation.navigate('UserDetailsScreen', { userId: item?._id });
+                            } else {
+                              Toast("Your profile view limit exceeded.");
+                            }
                           }}>
                           <CustomImage
                             source={IMAGES.sendIcon}
@@ -134,8 +139,13 @@ const HorizontalCard = ({
                         </TouchableOpacity>
                         <TouchableOpacity
                           style={style.chatIconBtn}
-                          onPress={() => {
-                            navigation.navigate('ChatScreen', { userId: item?._id, roomId: `${item?._id}_${item._id}`, user: item });
+                          onPress={async() => {
+                            if (await checkLiveChatAvailability(item)) {
+                              navigation.navigate('ChatScreen', { userId: item?._id, roomId: `${item?._id}_${item._id}`, user: item });
+                            } else {
+                              Toast("Your can't chat buy premium.");
+                            }
+                         
                           }}>
                           <CustomImage
                             source={IMAGES.chatIcon}

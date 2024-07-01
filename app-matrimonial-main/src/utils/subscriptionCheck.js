@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 async function subscriptionCheck(user) {
+  debugger
   try {
     const subscriptionsData = await AsyncStorage.getItem('subscriptions');
     const subscriptions = JSON.parse(subscriptionsData);

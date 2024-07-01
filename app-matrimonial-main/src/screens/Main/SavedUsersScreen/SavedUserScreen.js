@@ -55,10 +55,6 @@ const SavedUserScreen = ({ navigation }) => {
     navigation.navigate('NotificationScreen');
   };
 
-  const addToRecentlyViewed = async (userId) => {
-    // Implement the logic to add the user to recently viewed
-    console.log('Added to recently viewed:', userId);
-  };
 
   if (isLoading) {
     return <Text>Loading...</Text>;
@@ -72,32 +68,33 @@ const SavedUserScreen = ({ navigation }) => {
     <ScrollView>
       <View style={styles.headerContainer}>
         <AppHeader
-        iconLeft={<SVG.BackArrow size={24} fill={'black'} />}
-        onLeftIconPress={() => navigation.goBack()}
+          iconLeft={<SVG.BackArrow size={24} fill={'black'} />}
+          onLeftIconPress={() => navigation.goBack()}
           title={LABELS.saved}
-        iconRight={
-          <TouchableOpacity onPress={handleRightIconPress}>
-            <Image source={IMAGES.notificationIcon} style={styles.Bell_Icon} />
-          </TouchableOpacity>
-        }
+          iconRight={
+            <TouchableOpacity onPress={handleRightIconPress}>
+              <Image source={IMAGES.notificationIcon} style={styles.Bell_Icon} />
+            </TouchableOpacity>
+          }
         />
       </View>
       <Space mT={20} />
       <View style={STYLES.pH(HORIZON_MARGIN)}>
         {savedUserData.length > 0 ? (
-          <AppCard
-            isBtnShown={true}
-            btnType={'sendInterest'}
-            data={savedUserData}
-            onPressBtn1={(user) => {
-              addToRecentlyViewed(user?._id);
-              navigation.navigate('UserDetailsScreen', { userId: user?._id });
-            }}
-            onPressBtn2={(user) => {
-              console.log('Chat button pressed');
-              navigation.navigate('ChatScreen', { userId: user?._id, roomId: `${user?._id}_${user._id}`, user: user });
-            }}
-          />
+          savedUserData.map((user) => (
+            <AppCard
+              isBtnShown={true}
+              btnType={'sendInterest'}
+              data={user}
+              onPressBtn1={() => {
+                navigation.navigate('UserDetailsScreen', { userId: user?._id });
+              }}
+              onPressBtn2={() => {
+                console.log('Chat button pressed');
+                navigation.navigate('ChatScreen', { userId: user?._id, roomId: `${user?._id}_${user._id}`, user: user });
+              }}
+            />
+          ))
         ) : (
           <AppText title="No saved users found" color={COLORS.dark.secondary} />
         )}

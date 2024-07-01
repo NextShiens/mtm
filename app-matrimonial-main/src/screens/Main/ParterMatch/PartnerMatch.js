@@ -544,7 +544,7 @@ const PartnerMatch = ({ navigation }) => {
                 if (await checkLiveChatAvailability(user)) {
                   navigation.navigate('ChatScreen', { userId: user?._id, roomId: `${user?._id}_${user._id}`, user: user });
                 } else {
-                  Toast("Your profile view limit exceeded.");
+                  Toast("You can't chat buy premium.");
                 }
               
               }}
