@@ -52,7 +52,6 @@ const LoginScreen = () => {
       });
       const data = await response.json();
       await AsyncStorage.setItem('subscriptions', JSON.stringify(data));
-      console.log(SON.stringify(data));
     } catch (error) {
       console.error(error.message);
     } finally {

@@ -113,4 +113,6 @@ router.get("/user/userDetails/:id", auth, userAuthController.userDetails);
 router.post("/user/userPreferences/", auth, userAuthController.userPreferences);
 
 router.get("/user/profile", auth, userAuthController.userProfile);
+
+router.get('/user/current-user', auth, userAuthController.currentUser)
 module.exports = router;

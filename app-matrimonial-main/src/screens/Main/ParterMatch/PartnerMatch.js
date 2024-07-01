@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, TouchableOpacity, View, ActivityIndicator,Image, Text,StyleSheet,Modal,Pressable } from 'react-native';
+import { ScrollView, TouchableOpacity, View, ActivityIndicator, Image, Text, StyleSheet, Modal, Pressable } from 'react-native';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
 import FastImage from 'react-native-fast-image';
 import LinearGradient from 'react-native-linear-gradient';
@@ -19,7 +19,7 @@ import AppCard from '../../../components/AppCard/AppCard';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL } from '../../../../constant';
 import { Toast } from '../../../utils/native';
-import { subscriptionCheck ,checkLiveChatAvailability} from '../../../utils/subscriptionCheck';
+import { subscriptionCheck, checkLiveChatAvailability } from '../../../utils/subscriptionCheck';
 
 const filterStyles = StyleSheet.create({
   container: {
@@ -168,13 +168,13 @@ const filterStyles = StyleSheet.create({
   },
 });
 
-const PartnerMatch = ({ navigation }) => {
+const PartnerMatch = ({ navigation, route }) => {
   const [matchedUsers, setMatchedUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [matchType, setMatchType] = useState('match');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState(route.params?.searchTerm || '');
   const [currentUser, setCurrentUser] = useState({});
   const [showFilters, setShowFilters] = useState(false);
   const [selectedGender, setSelectedGender] = useState('');
@@ -211,7 +211,6 @@ const PartnerMatch = ({ navigation }) => {
   }, [searchTerm, matchedUsers]);
 
   const fetchMatchedUsers = async () => {
-    console.log('Fetching matched users...');
     try {
       const token = await AsyncStorage.getItem('AccessToken');
       if (!token) {
@@ -316,7 +315,7 @@ const PartnerMatch = ({ navigation }) => {
         user.highestDegree?.toLowerCase().includes(lowercasedSearch) ||
         user.maritalStatus?.toLowerCase().includes(lowercasedSearch) ||
         user.annualIncome?.toLowerCase().includes(lowercasedSearch) ||
-        user.workLocation?.toLowerCase().includes(lowercasedSearch) 
+        user.workLocation?.toLowerCase().includes(lowercasedSearch)
       );
     });
 
@@ -354,8 +353,8 @@ const PartnerMatch = ({ navigation }) => {
     <ScrollView>
       <View style={style.headerContainer}>
         <AppHeader
-        iconLeft={<SVG.BackArrow size={24} fill={'black'} />}
-        onLeftIconPress={() => navigation.goBack()}
+          iconLeft={<SVG.BackArrow size={24} fill={'black'} />}
+          onLeftIconPress={() => navigation.goBack()}
           title={LABELS.matches || 'Matches'}
           iconRight={
             <TouchableOpacity onPress={handleRightIconPress}>
@@ -375,152 +374,152 @@ const PartnerMatch = ({ navigation }) => {
           onChangeText={handlesearchFunctionality}
           value={searchTerm}
         />
-            <TouchableOpacity
-              style={styles.filterBtn}
-              activeOpacity={0.8}
-              onPress={() => setShowFilters(true)}>
-              <CustomImage
-                source={IMAGES.filterIcon}
-                size={17}
-                resizeMode={'contain'}
-              />
-            </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.filterBtn}
+          activeOpacity={0.8}
+          onPress={() => setShowFilters(true)}>
+          <CustomImage
+            source={IMAGES.filterIcon}
+            size={17}
+            resizeMode={'contain'}
+          />
+        </TouchableOpacity>
       </View>
 
       <Space mT={20} />
-      
+
       <Modal
-            animationType="slide"
-            transparent={true}
-            visible={showFilters}
-            onRequestClose={() => setShowFilters(false)}>
-            <View style={filterStyles.container}>
-              <View style={filterStyles.modalContent}>
-                <ScrollView>
-                  <View style={filterStyles.ChildContainer}>
-                    <Text style={filterStyles.sectionTitle}>Gender</Text>
-                    <View style={filterStyles.buttonRow}>
-                      <TouchableOpacity
-                        style={
-                          selectedGender === 'male'
-                            ? filterStyles.selectedButton
-                            : filterStyles.button
-
-                        }
-                        onPress={() => setSelectedGender('male')}>
-                        <Text style={{ color: '#F97B22', textAlign: 'center', fontWeight: 'bold', }}>Male</Text>
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        style={
-                          selectedGender === 'female'
-                            ? filterStyles.selectedButton
-                            : filterStyles.button
-                        }
-                        onPress={() => setSelectedGender('female')}>
-                        <Text style={{ color: '#F97B22', textAlign: 'center', fontWeight: 'bold', }}>Female</Text>
-                      </TouchableOpacity>
-                    </View>
-                  </View>
-                  <View style={filterStyles.ChildContainer1}>
-                    <Text style={filterStyles.sectionTitle}>Marital Status</Text>
-                    <View style={filterStyles.buttonRow}>
-                      <TouchableOpacity
-                        style={
-                          selectedMaritalStatus === 'married'
-                            ? filterStyles.selectedButton
-                            : filterStyles.button
-                        }
-                        onPress={() => setSelectedMaritalStatus('married')}>
-                        <Text style={{ color: '#F97B22', textAlign: 'center', fontWeight: 'bold', }}>Married</Text>
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        style={
-                          selectedMaritalStatus === 'unmarried'
-                            ? filterStyles.selectedButton
-                            : filterStyles.button
-                        }
-                        onPress={() => setSelectedMaritalStatus('unmarried')}>
-                        <Text style={{ color: '#F97B22', textAlign: 'center', fontWeight: 'bold', }}>Unmarried</Text>
-                      </TouchableOpacity>
-                    </View>
-                  </View>
-                  <View style={filterStyles.ChildContainer2}>
-                    <Text style={filterStyles.sectionTitle}>Language</Text>
-                    <View style={filterStyles.buttonRow2}>
-                      <TouchableOpacity
-                        style={
-                          selectedLanguage === 'english'
-                            ? filterStyles.selectedButton2
-                            : filterStyles.button2
-                        }
-                        onPress={() => setSelectedLanguage('english')}>
-                        <Text style={{ color: '#F97B22', textAlign: 'center', fontWeight: 'bold', }}>English</Text>
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        style={
-                          selectedLanguage === 'urdu'
-                            ? filterStyles.selectedButton2
-                            : filterStyles.button2
-                        }
-                        onPress={() => setSelectedLanguage('urdu')}>
-                        <Text style={{ color: '#F97B22', textAlign: 'center', fontWeight: 'bold', }}>Urdu</Text>
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        style={
-                          selectedLanguage === 'hindi'
-                            ? filterStyles.selectedButton2
-                            : filterStyles.button2
-                        }
-                        onPress={() => setSelectedLanguage('hindi')}>
-                        <Text style={{ color: '#F97B22', textAlign: 'center', fontWeight: 'bold', }}>Hindi</Text>
-                      </TouchableOpacity>
-                    </View>
-                  </View>
-                  <Text style={filterStyles.sectionTitle}>Salary Range</Text>
-                  <Text style={filterStyles.salaryText}>
-                    {range[0]} - {range[1]}
-                  </Text>
-                  <View style={filterStyles.sliderContainer}>
-                    <MultiSlider
-                      values={range}
-                      min={0}
-                      max={1000000}
-                      step={100}
-                      onValuesChange={setRange}
-                      selectedStyle={{
-                        backgroundColor: '#F97B22',
-                      }}
-                      trackStyle={{
-                        height: 6,
-                      }}
-                      markerStyle={{
-                        backgroundColor: 'white',
-                        borderWidth: 2,
-                        borderColor: '#F97B22',
-                        padding: 5,
-
-                      }}
-                    />
-                  </View>
+        animationType="slide"
+        transparent={true}
+        visible={showFilters}
+        onRequestClose={() => setShowFilters(false)}>
+        <View style={filterStyles.container}>
+          <View style={filterStyles.modalContent}>
+            <ScrollView>
+              <View style={filterStyles.ChildContainer}>
+                <Text style={filterStyles.sectionTitle}>Gender</Text>
+                <View style={filterStyles.buttonRow}>
                   <TouchableOpacity
-                    style={filterStyles.applyButton}
-                    onPress={onSubmitFilter}>
-                    <Text style={filterStyles.applyButtonText}>
-                      Apply Filter
-                    </Text>
-                  </TouchableOpacity>
-                </ScrollView>
+                    style={
+                      selectedGender === 'male'
+                        ? filterStyles.selectedButton
+                        : filterStyles.button
 
-                <Pressable
-                  style={filterStyles.closeButton}
-                  onPress={() => setShowFilters(false)}>
-                  <Text style={filterStyles.closeButtonText}>
-                    Close Filters
-                  </Text>
-                </Pressable>
+                    }
+                    onPress={() => setSelectedGender('male')}>
+                    <Text style={{ color: '#F97B22', textAlign: 'center', fontWeight: 'bold', }}>Male</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={
+                      selectedGender === 'female'
+                        ? filterStyles.selectedButton
+                        : filterStyles.button
+                    }
+                    onPress={() => setSelectedGender('female')}>
+                    <Text style={{ color: '#F97B22', textAlign: 'center', fontWeight: 'bold', }}>Female</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
-            </View>
-          </Modal>
+              <View style={filterStyles.ChildContainer1}>
+                <Text style={filterStyles.sectionTitle}>Marital Status</Text>
+                <View style={filterStyles.buttonRow}>
+                  <TouchableOpacity
+                    style={
+                      selectedMaritalStatus === 'married'
+                        ? filterStyles.selectedButton
+                        : filterStyles.button
+                    }
+                    onPress={() => setSelectedMaritalStatus('married')}>
+                    <Text style={{ color: '#F97B22', textAlign: 'center', fontWeight: 'bold', }}>Married</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={
+                      selectedMaritalStatus === 'unmarried'
+                        ? filterStyles.selectedButton
+                        : filterStyles.button
+                    }
+                    onPress={() => setSelectedMaritalStatus('unmarried')}>
+                    <Text style={{ color: '#F97B22', textAlign: 'center', fontWeight: 'bold', }}>Unmarried</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+              <View style={filterStyles.ChildContainer2}>
+                <Text style={filterStyles.sectionTitle}>Language</Text>
+                <View style={filterStyles.buttonRow2}>
+                  <TouchableOpacity
+                    style={
+                      selectedLanguage === 'english'
+                        ? filterStyles.selectedButton2
+                        : filterStyles.button2
+                    }
+                    onPress={() => setSelectedLanguage('english')}>
+                    <Text style={{ color: '#F97B22', textAlign: 'center', fontWeight: 'bold', }}>English</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={
+                      selectedLanguage === 'urdu'
+                        ? filterStyles.selectedButton2
+                        : filterStyles.button2
+                    }
+                    onPress={() => setSelectedLanguage('urdu')}>
+                    <Text style={{ color: '#F97B22', textAlign: 'center', fontWeight: 'bold', }}>Urdu</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={
+                      selectedLanguage === 'hindi'
+                        ? filterStyles.selectedButton2
+                        : filterStyles.button2
+                    }
+                    onPress={() => setSelectedLanguage('hindi')}>
+                    <Text style={{ color: '#F97B22', textAlign: 'center', fontWeight: 'bold', }}>Hindi</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+              <Text style={filterStyles.sectionTitle}>Salary Range</Text>
+              <Text style={filterStyles.salaryText}>
+                {range[0]} - {range[1]}
+              </Text>
+              <View style={filterStyles.sliderContainer}>
+                <MultiSlider
+                  values={range}
+                  min={0}
+                  max={1000000}
+                  step={100}
+                  onValuesChange={setRange}
+                  selectedStyle={{
+                    backgroundColor: '#F97B22',
+                  }}
+                  trackStyle={{
+                    height: 6,
+                  }}
+                  markerStyle={{
+                    backgroundColor: 'white',
+                    borderWidth: 2,
+                    borderColor: '#F97B22',
+                    padding: 5,
+
+                  }}
+                />
+              </View>
+              <TouchableOpacity
+                style={filterStyles.applyButton}
+                onPress={onSubmitFilter}>
+                <Text style={filterStyles.applyButtonText}>
+                  Apply Filter
+                </Text>
+              </TouchableOpacity>
+            </ScrollView>
+
+            <Pressable
+              style={filterStyles.closeButton}
+              onPress={() => setShowFilters(false)}>
+              <Text style={filterStyles.closeButtonText}>
+                Close Filters
+              </Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
 
       <Space mT={5} />
       <View style={STYLES.pH(HORIZON_MARGIN)}>
@@ -531,22 +530,22 @@ const PartnerMatch = ({ navigation }) => {
               isBtnShown={true}
               btnType={'requestsubmission'}
               data={user}
-              onPressBtn1={ async () => {
+              onPressBtn1={async () => {
                 addToRecentlyViewed(user?._id);
                 if (await subscriptionCheck(user)) {
                   navigation.navigate('UserDetailsScreen', { userId: user?._id });
                 } else {
                   Toast("Your profile view limit exceeded.");
                 }
-               
+
               }}
-              onPressBtn2={async() => {
-                if (await checkLiveChatAvailability(user)) {
+              onPressBtn2={async () => {
+                if (await checkLiveChatAvailability(JSON.parse(await AsyncStorage.getItem('theUser')))) {
                   navigation.navigate('ChatScreen', { userId: user?._id, roomId: `${user?._id}_${user._id}`, user: user });
                 } else {
-                  Toast("You can't chat buy premium.");
+                  Toast("You can't chat buy premium plan.");
                 }
-              
+
               }}
             />
           ))

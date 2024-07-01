@@ -657,6 +657,16 @@ const userAuthController = {
       res.status(200).json({ user, success: true });
     }
   },
+
+  async currentUser(req, res, next) {
+    const user = req.user;
+
+    if (!user) {
+      res.status(401).json({ success: false, message: "User not found" });
+    } else {
+      res.status(200).json({ user, success: true });
+    }
+  }
 };
 
 module.exports = userAuthController;

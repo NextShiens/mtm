@@ -23,6 +23,8 @@ import Space from '../../../components/Space/Space';
 import { API_URL } from '../../../../constant';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
+import Svg, {Path} from 'react-native-svg';
+
 import {
   HorizontalCardData,
   carouselData,
@@ -32,7 +34,11 @@ import {
 import { LABELS } from '../../../labels';
 import { Toast } from '../../../utils/native';
 import { styles } from './styles';
-
+const MenuIcon = ({size = 24, color = 'black'}) => (
+  <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+    <Path d="M3 12h18M3 6h18M3 18h18" stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"/>
+  </Svg>
+);
 const filterStyles = StyleSheet.create({
   container: {
     flex: 1,
@@ -182,6 +188,7 @@ const filterStyles = StyleSheet.create({
 
 const HomePage = () => {
   const navigation = useNavigation();
+  const [selectedFilter, setSelectedFilter] = useState('1');
   const [selectedCategory, setSelectedCategory] = useState('New Join');
   const [error, setError] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
@@ -256,13 +263,36 @@ const HomePage = () => {
     navigation.navigate('NotificationScreen');
   };
 
-  const handleItemPress = (item) => {
+  const handleItemPress = async (item) => {
     setSelectedCategory(item.value);
     console.log('Selected Category:', item.value);
     
     if (item.value === 'Matches') {
       navigation.navigate('PartnerMatch', { selectedCategory: item.value });
+    } else if (item.value === 'Near Me') {
+      try {
+        const userString = await AsyncStorage.getItem('theUser');
+        if (userString) {
+          const user = JSON.parse(userString);
+          if (user.city) {
+            navigation.navigate('PartnerMatch', { 
+              selectedCategory: item.value,
+              searchTerm: user.city 
+            });
+          } else {
+            // Handle case where user doesn't have a city set
+            Toast("Please set your city in your profile.");
+          }
+        } else {
+          // Handle case where user data is not available
+          Toast(" Userdata not available. Please log in again.");
+        }
+      } catch (error) {
+        console.error('Error retrieving user data:', error);
+        Toast("An error occurred. Please try again.");
+      }
     }
+    // Add other conditions for different filter options if needed
   };
 
   const handleSearch = query => {
@@ -299,10 +329,7 @@ const HomePage = () => {
               <TouchableOpacity onPress={() => {
                 navigation.openDrawer();
               }}>
-                <CustomImage
-                  source={IMAGES.menuIcon}
-                  size={17}
-                  resizeMode={'contain'}
+                <MenuIcon
                 />
               </TouchableOpacity>
             }
@@ -478,7 +505,11 @@ const HomePage = () => {
 
           <Space mT={20} />
 
-          <HorizontalScreen data={filterOptions} onPress={handleItemPress} />
+          <HorizontalScreen 
+  data={filterOptions} 
+  onPress={handleItemPress} 
+  initialSelectedItem={selectedFilter}
+/>
           <Space mT={20} />
 
           <View style={{ paddingHorizontal: 15, borderRadius: 20 }}>

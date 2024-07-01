@@ -13,8 +13,9 @@ import Icon from '../Icon/Icon';
 import Space from '../Space/Space';
 import { useNavigation } from '@react-navigation/native';
 import { styles } from './styles';
-import { subscriptionCheck ,checkLiveChatAvailability} from '../../utils/subscriptionCheck';
+import { subscriptionCheck, checkLiveChatAvailability } from '../../utils/subscriptionCheck';
 import { Toast } from '../../utils/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SnapCarousel = ({ data }) => {
   const navigation = useNavigation();
@@ -105,24 +106,24 @@ const SnapCarousel = ({ data }) => {
     </>
   );
 
-  const handleSendInterest =async () => {
+  const handleSendInterest = async () => {
     const currentItem = data[activeSlide];
     const isSubscribed = await subscriptionCheck(currentItem);
-    if(isSubscribed){
+    if (isSubscribed) {
       navigation.navigate('UserDetailsScreen', { userId: currentItem?._id });
-    }else{
+    } else {
       Toast("Your profile view limit exceeded.");
     }
-   
+
   };
 
-  const handleChat =async  () => {
+  const handleChat = async () => {
     const currentItem = data[activeSlide];
-    const isSubscribed = await checkLiveChatAvailability(currentItem);
-    if(isSubscribed){
-    navigation.navigate('ChatScreen', { userId: currentItem?._id, roomId: `${currentItem?._id}_${currentItem._id}`, user: currentItem });
-    }else{
-      Toast("You can't chat buy premium");
+    const isSubscribed = await checkLiveChatAvailability(JSON.parse(await AsyncStorage.getItem('theUser')));
+    if (isSubscribed) {
+      navigation.navigate('ChatScreen', { userId: currentItem?._id, roomId: `${currentItem?._id}_${currentItem._id}`, user: currentItem });
+    } else {
+      Toast("You can't chat buy premium plan");
     }
   };
 

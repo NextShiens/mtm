@@ -1,6 +1,35 @@
 import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import { API_URL } from '../../constant';
+
+export const saveCurrentUser = async () => {
+  try {
+    // Assuming you have the base URL defined elsewhere
+    const response = await fetch(`${API_URL}/user/current-user`, {
+      method: 'GET',
+      headers: {
+        // Include any necessary headers, such as authorization tokens
+        'Authorization': 'Bearer ' + (await AsyncStorage.getItem('AccessToken')),
+        'Content-Type': 'application/json',
+      },
+    });
+
+    const jsonResponse = await response.json();
+
+    if (response.ok && jsonResponse.success) {
+      // Save the user in AsyncStorage
+      await AsyncStorage.setItem('theUser', JSON.stringify(jsonResponse));
+      console.log('User saved successfully');
+    } else {
+      console.error('Failed to fetch current user:', jsonResponse.message);
+    }
+  } catch (error) {
+    console.error('Error fetching current user:', error);
+  }
+};
+
+
 export async function requestUserPermission() {
   const authStatus = await messaging().requestPermission();
   const enabled =

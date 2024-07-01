@@ -41,6 +41,7 @@ const CustomDrawerContent = ({ props, navigation }) => {
   const [userName, setUserName] = useState('');
   const [userImage, setUserImage] = useState('');
   const [userProfession, setUserProfession] = useState('Profession');
+  const [userEmail, setUserEmail] = useState('');
 
   const style = styles;
   const windowWidth = Dimensions.get('window').width;
@@ -53,6 +54,7 @@ const CustomDrawerContent = ({ props, navigation }) => {
       setIsOnline(user.user.isActive);
       setUserImage(user.user.userImages[0]);
       setUserProfession(user.user.occupation);
+      setUserEmail(user.user.email);
     } catch (error) {
       console.error('Error fetching user data:', error);
     }
@@ -110,6 +112,8 @@ const CustomDrawerContent = ({ props, navigation }) => {
       navigation.navigate('PaymentScreen');
     } else if (item.name === 'Account Setting') {
       navigation.navigate('AccountSettingsScreen');
+    } else if (item.name === 'User Name') {
+      navigation.navigate('ProfileUpdateScreen');
     } else if (item.name === 'Log Out') {
       const logout = async () => {
         await AsyncStorage.removeItem('AccessToken');
@@ -136,11 +140,10 @@ const CustomDrawerContent = ({ props, navigation }) => {
         <View style={style.contentContainer}>
           <View style={style.nameHolder}>
             <View style={style.avatarContainer}>
-              {userImage ? (
-                <CustomImage
-                  uri={userImage}
-                  size={50}
-                  extraStyle={{ container: STYLES.bR(25) }}
+              {userImage !== '' ? (
+                <Image
+                  source={{ uri: userImage }}
+                  style={{ width: 50, height: 50, borderRadius: 25 }}
                 />
               ) : (
                 <ProfileAvatar
@@ -186,6 +189,7 @@ const CustomDrawerContent = ({ props, navigation }) => {
           if (route.name === 'Home') {
             return null;
           }
+
           if (route.name === 'Active Status') {
             return (
               <TouchableOpacity
@@ -207,7 +211,7 @@ const CustomDrawerContent = ({ props, navigation }) => {
                     <AppText
                       title={route.name}
                       variant={'h6'}
-                      extraStyle={{ fontFamily: Fonts.PoppinsSemiBold }}
+                      extraStyle={style.drawerItemText}
                       color={COLORS.dark.black}
                     />
                     <ToggleSwitch
@@ -224,6 +228,54 @@ const CustomDrawerContent = ({ props, navigation }) => {
                     variant={'body2'}
                     extraStyle={{ fontFamily: Fonts.PoppinsRegular, marginTop: 5 }}
                     color={COLORS.dark.inputBorder}
+                  />
+                </View>
+              </TouchableOpacity>
+            );
+          }
+          if (route.name === 'User Name') {
+            return (
+              <TouchableOpacity
+                key={route.key}
+                style={
+                  route.name === selectedRoute
+                    ? style.activeDrawerItem
+                    : style.inactiveDrawerItem
+                }
+                onPress={() => {
+                  handleItemClick(route);
+                }}>
+                <CustomImage
+                  source={route.iconName}
+                  size={25}
+                  resizeMode={'contain'}
+                  onPress={() => {
+                    handleItemClick(route);
+                  }}
+                />
+                <Space mL={10} />
+                <View
+                  style={{ maxWidth: '90%' }}
+                  onPress={() => {
+                    handleItemClick(route);
+                  }}>
+                  <AppText
+                    title={userName}
+                    variant={'h6'}
+                    extraStyle={style.drawerItemText}
+                    color={COLORS.dark.black}
+                    onPress={() => {
+                      handleItemClick(route);
+                    }}
+                  />
+                  <AppText
+                    title={userEmail}
+                    variant={'body2'}
+                    extraStyle={style.drawerItemDescription}
+                    color={COLORS.dark.inputBorder}
+                    onPress={() => {
+                      handleItemClick(route);
+                    }}
                   />
                 </View>
               </TouchableOpacity>

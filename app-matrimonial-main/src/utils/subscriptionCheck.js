@@ -1,21 +1,18 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-async function subscriptionCheck(user) {
+async function subscriptionCheck() {
   try {
     const subscriptionsData = await AsyncStorage.getItem('subscriptions');
     const subscriptions = JSON.parse(subscriptionsData);
+    const user = JSON.parse(await AsyncStorage.getItem('theUser'));
 
-    if (!subscriptions || !Array.isArray(subscriptions) || subscriptions.length === 0) {
-      return false;
-    }
-
-    const userSubscription = subscriptions.find(sub => sub._id === user.membership);
+    const userSubscription = subscriptions.subscriptions.find(sub => sub._id === user.user.membership);
 
     if (!userSubscription) {
       return false;
     }
 
-    const profileViewCount = user.recentlyViewed.length;
+    const profileViewCount = user.user.recentlyViewed.length;
 
     if (profileViewCount >= userSubscription.profileViews) {
       return false;
@@ -36,15 +33,12 @@ async function subscriptionCheck(user) {
 
 async function checkLiveChatAvailability(user) {
   try {
+    debugger
     const subscriptionsData = await AsyncStorage.getItem('subscriptions');
     const subscriptions = JSON.parse(subscriptionsData);
     console.log(subscriptions, 'subscriptions');
 
-    if (!subscriptions || !Array.isArray(subscriptions) || subscriptions.length === 0) {
-      return false;
-    }
-
-    const userSubscription = subscriptions.find(sub => sub._id === user.membership);
+    const userSubscription = subscriptions.subscriptions.find(sub => sub._id === user.user.membership);
 
     if (!userSubscription) {
       return false;

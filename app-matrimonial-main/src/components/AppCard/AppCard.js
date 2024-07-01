@@ -100,9 +100,9 @@ const AppCard = ({ isBtnShown, btnType, data, onPressBtn1, onPressBtn2 }) => {
             extraStyle={STYLES.fontFamily(Fonts.PoppinsRegular)}
           />
           <View style={STYLES.rowCenter}>
-          
+
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <LocationIcon  size={16}/>
+              <LocationIcon size={16} />
               <AppText
                 title={item?.city || 'N/A'}
                 variant={'h5'}
@@ -134,28 +134,20 @@ const AppCard = ({ isBtnShown, btnType, data, onPressBtn1, onPressBtn2 }) => {
           {btnType && btnType == 'requestAcception' ? (
             <>
               <View style={style.acceptBtnContainer}>
-                <TouchableOpacity
-                  onPress={() => {
-                    onPressFunction(item);
-                  }}>
-                  <AppButton
-                    extraStyle={{
-                      container: [style.acceptBtn],
-                    }}
-                    title={
-                      btnType === 'requestAcception'
-                        ? LABELS.accept
-                        : LABELS.sendInterest
-                    }
-                    onPress={() => {
-                      onPressFunction(item);
-                    }}
-                  />
-                   <CustomImage
-                            source={IMAGES.sendIcon}
-                            size={11}
-                            resizeMode={'contain'}
-                          />
+                <TouchableOpacity onPress={() => onPressFunction(item)}>
+                  <View>
+                    <AppButton
+                      extraStyle={{
+                        container: [style.acceptBtn],
+                      }}
+                      title={btnType === 'requestAcception' ? "Accept" : 'View Profile'}
+                    />
+                    <CustomImage
+                      source={IMAGES.sendIcon}
+                      size={11}
+                      resizeMode={'contain'}
+                    />
+                  </View>
                 </TouchableOpacity>
 
                 <TouchableOpacity
