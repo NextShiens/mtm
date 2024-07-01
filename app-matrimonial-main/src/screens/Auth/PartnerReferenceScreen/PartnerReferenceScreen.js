@@ -106,8 +106,6 @@ const PartnerReferenceScreen = ({ navigation }) => {
   
       const responseData = await response.json();
       console.log('Profile update response:', responseData);
-      console.log('All profile data:', allProfileData);
-  
       navigation.navigate('LoginScreen');
     } catch (error) {
       console.error('Error updating profile:', error.message);

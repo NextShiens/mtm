@@ -10,7 +10,7 @@ import { SVG } from '../../../assets/svg';
 const AccountSettingsScreen = ({ navigation }) => {
 
   const handleLeftIconPress = () => {
-    navigation.navigate('HomePage');
+    navigation.navigate('DrawerNavigation');
   };
 
   const handleRightIconPress = () => {

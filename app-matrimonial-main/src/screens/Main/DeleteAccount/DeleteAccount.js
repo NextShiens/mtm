@@ -12,7 +12,7 @@ import { API_URL } from '../../../../constant';
 const DeleteAccount = () => {
   const navigation = useNavigation();
   const handleDeleteAccount = async () => {
-    debugger
+    
     const user = await AsyncStorage.getItem('theUser');
     try {
       const token = await AsyncStorage.getItem('AccessToken');
@@ -35,9 +35,12 @@ const DeleteAccount = () => {
       }
 
       const result = await response.json();
+      await AsyncStorage.removeItem('AccessToken');
+      await AsyncStorage.removeItem('theUser');
+      navigation.navigate('LoginScreen');
       console.log('Account deleted successfully:', result);
+
       Toast('Account deleted successfully');
-      navigation.goBack();
     } catch (error) {
       console.error('Error deleting account:', error);
       Toast('Failed to delete account');

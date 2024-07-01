@@ -18,10 +18,13 @@ import { styles } from './styles';
 import { API_URL } from '../../../../constant'; 
 import { useRoute } from '@react-navigation/native';
 
+
 const OTPScreen = () => {
   const route = useRoute();
-  const userEmail = route.params?.email || '';
-  console.log('userEmail from otp page ', userEmail);
+  const userEmailParams = route.params?.email || '';
+  setUserEmail(userEmailParams);
+  console.log('userEmail from otp page ', userEmailParams);
+  const [userEmail, setUserEmail] = useState('');
   const [otp, setOtp] = useState(['', '', '', '']);
   const navigation = useNavigation();
   const style = styles;
@@ -31,7 +34,22 @@ const OTPScreen = () => {
     updatedOTP[index] = text;
     setOtp(updatedOTP);
   };
+  const verifyUserEmail = async () => {
+    try {
 
+      const response = await fetch(`${API_URL}/user/verifyEmail`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({email:userEmail }),
+      });
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
   const handleSubmit = async () => {
     const enteredOTP = otp.join('');
     if (enteredOTP.length > 3) {
@@ -49,7 +67,7 @@ const OTPScreen = () => {
         const data = await response.json();
         console.log('data from otp page ', data);
         if (response.ok) {
-          navigation.navigate('DrawerNavigation');
+          navigation.navigate('ProfileCreateScreen');
         } else {
           Toast('Verification error');
         }
@@ -63,7 +81,9 @@ const OTPScreen = () => {
     }
   };
 
-  const resendCodeHandler = () => {};
+  const resendCodeHandler = () => {
+    verifyUserEmail();
+  };
   const backNavigationHandler = () => {
     navigation.goBack();
   };

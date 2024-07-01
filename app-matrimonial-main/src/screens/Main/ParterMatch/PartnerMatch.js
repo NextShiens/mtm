@@ -17,6 +17,8 @@ import ConnectionsInboxCard from '../../../components/ConnectionsInboxCard/Conne
 import AppCard from '../../../components/AppCard/AppCard';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL } from '../../../../constant';
+import { Toast } from '../../../utils/native';
+import { subscriptionCheck ,checkLiveChatAvailability} from '../../../utils/subscriptionCheck';
 
 const PartnerMatch = ({ navigation }) => {
   const [matchedUsers, setMatchedUsers] = useState([]);
@@ -243,13 +245,22 @@ const PartnerMatch = ({ navigation }) => {
               isBtnShown={true}
               btnType={'requestsubmission'}
               data={user}
-              onPressBtn1={() => {
+              onPressBtn1={ async () => {
                 addToRecentlyViewed(user?._id);
-                navigation.navigate('UserDetailsScreen', { userId: user?._id });
+                if (await subscriptionCheck(user)) {
+                  navigation.navigate('UserDetailsScreen', { userId: user?._id });
+                } else {
+                  Toast("Your profile view limit exceeded.");
+                }
+               
               }}
-              onPressBtn2={() => {
-                console.log('Chat button pressed');
-                navigation.navigate('ChatScreen', { userId: user?._id, roomId: `${user?._id}_${user._id}`, user: user });
+              onPressBtn2={async() => {
+                if (await checkLiveChatAvailability(user)) {
+                  navigation.navigate('ChatScreen', { userId: user?._id, roomId: `${user?._id}_${user._id}`, user: user });
+                } else {
+                  Toast("Your profile view limit exceeded.");
+                }
+              
               }}
             />
           ))

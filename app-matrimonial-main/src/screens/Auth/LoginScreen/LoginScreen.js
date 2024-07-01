@@ -42,19 +42,21 @@ const LoginScreen = () => {
   const forgotPassHandler = () => {
     navigation.navigate('ForgotPassword');
   };
-  const verifyUserEmail = async () => {
+  const getSubscriptions = async () => { 
     try {
-      const response = await fetch(`${API_URL}/user/verifyEmail`, {
-        method: 'POST',
+      const response = await fetch(`${API_URL}/user/getSubscription`, {
+        method: 'GET',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email }),
       });
       const data = await response.json();
-      console.log(data);
+      await AsyncStorage.setItem('subscriptions', JSON.stringify(data));
+      console.log(SON.stringify(data));
     } catch (error) {
-      console.error(error);
+      console.error(error.message);
+    } finally {
+      console.log('done');
     }
   };
   const loginAndGetAccessToken = async () => {
@@ -87,26 +89,16 @@ const LoginScreen = () => {
         await loginUser(email, password).then(res => {
           if (res) {
             const setUid = async () => {
-              // fcm token
               await AsyncStorage.setItem('loginToken', res);
               await loginAndGetAccessToken();
-              await verifyUserEmail();
-              // navigation.navigate('OTPScreen', {email});
-              navigation.navigate('ProfileCreateScreen');
+              await  getSubscriptions();
+              navigation.navigate('DrawerNavigation');
             };
             setUid();
           } else {
             console.log('There is an error');
           }
         });
-
-        // if (message) {
-        //   Toast(message);
-        // } else {
-        //   Toast('Signed in!');
-        // await AsyncStorage.setItem('loginToken',)
-        //   navigation.navigate('OTPScreen');
-        // }
       }
     }
   };

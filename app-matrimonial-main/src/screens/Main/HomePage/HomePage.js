@@ -177,6 +177,7 @@ const HomePage = () => {
   const navigation = useNavigation();
 
   const [selectedCategory, setSelectedCategory] = useState('New Join');
+  const [error, setError] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredData, setFilteredData] = useState(usersData);
   const [showFilters, setShowFilters] = useState(false);

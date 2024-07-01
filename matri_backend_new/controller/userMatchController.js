@@ -206,6 +206,43 @@ const userMatchController = {
 
   
   //.......................................SendInterest..................................//
+ async saveUser(req, res, next) {
+  const userId = req.user._id;  
+  const userToSaveId = req.body.userId;
+  try {
+    const user = await User.findById(userId)
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    if (!user.savedUsers) {
+      user.savedUsers = [];
+    }
+    if (user.savedUsers.includes(userToSaveId)) {
+      return res.json({ success: true, message: "User already saved" });
+    }
+    user.savedUsers.push(userToSaveId);
+    await user.save();
+    res.json({ success: true, message: "User saved successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+},
+ async getSavedUsers(req, res, next) {
+  try {
+    const userId = req.user._id;
+    const user = await User.findById(userId).populate({ path: "savedUsers", model: User });
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    res.json({ success: true, savedUsers: user.savedUsers });
+    console.log("savedUsers", user.savedUsers);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+},
+
 
   async sendInterest(req, res, next) {
     const interestSchema = Joi.object({

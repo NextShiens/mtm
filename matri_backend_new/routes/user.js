@@ -88,6 +88,8 @@ router.get(
 //................................Interests..................................//
 
 router.post("/user/sendInterest", auth, userMatchController.sendInterest);
+router .post("/user/saveUser", auth, userMatchController.saveUser);
+router.get("/user/getSavedUsers", auth, userMatchController.getSavedUsers);
 
 //................................Chat..................................//
 //
@@ -102,7 +104,7 @@ router.get("/user/getMessages", chatController.getMessages);
 router.post("/user/searchUser", auth, userAuthController.searchUser);
 
 // ---------------------subscription----------------------
-router.get("/user/getSubscription", auth, userAuthController.getSubscriptions);
+router.get("/user/getSubscription", userAuthController.getSubscriptions);
 
 // ---------------------user details----------------------
 router.get("/user/userDetails/:id", auth, userAuthController.userDetails);

@@ -32,7 +32,6 @@ const ChangePasswordScreen = () => {
   };
 
   const handleChangePassword = async () => {
-    debugger
     try {
       const token = await AsyncStorage.getItem('AccessToken');
       const theUser = await AsyncStorage.getItem('theUser');
@@ -43,7 +42,7 @@ const ChangePasswordScreen = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
+          "authorization": `Bearer ${token}`,
         },
         body: JSON.stringify({
             userId:user.user._id,
@@ -57,9 +56,12 @@ const ChangePasswordScreen = () => {
       }
 
       const result = await response.json();
+      await AsyncStorage.removeItem('AccessToken');
+      await AsyncStorage.removeItem('theUser');
       console.log('Password changed successfully:', result);
       Toast('Password changed successfully');
-      navigation.goBack(); // Navigate back after successful password change
+      navigation.navigate('LoginScreen')
+   
     } catch (error) {
       console.error('Error changing password:', error);
       Toast('Failed to change password');

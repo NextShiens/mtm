@@ -59,7 +59,6 @@ const RegisterScreen = ({ navigation }) => {
     setFormData({ ...formData, [key]: value });
   };
   const userFirstTimeReg = async (userFirebaseId) => {
-    console.log('User Firebase Id: line61', userFirebaseId);
     const res = await fetch(`${API_URL}/user/register`, {
       method: 'POST',
       headers: {
@@ -74,15 +73,30 @@ const RegisterScreen = ({ navigation }) => {
       }),
     });
     const data = await res.json();
-    await AsyncStorage.setItem('AccessToken', data.token);
+    // await AsyncStorage.setItem('AccessToken', data.token);
     if (data.error) {
       Toast(data.error);
     } else {
       Toast('User registered successfully');
-      navigation.navigate('ProfileCreateScreen');
+      navigation.navigate('OTPScreen' , {email: formData.email});
     }
   };
+  const verifyUserEmail = async () => {
+    try {
 
+      const response = await fetch(`${API_URL}/user/verifyEmail`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({emal:formData.email }),
+      });
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
   const onRegisterPress = async () => {
     const { name, email, phoneNumber, password, isAgreed } = formData;
     if (!name && !email && !password && !phoneNumber && !isChecked) {
@@ -104,7 +118,8 @@ const RegisterScreen = ({ navigation }) => {
           console.log('User Firebase Id: line103', userFirebaseId);
           Toast('User registered successfully');
           await userFirstTimeReg(userFirebaseId)
-          navigation.navigate('ProfileCreateScreen');
+          await verifyUserEmail();
+          navigation.navigate('OTPScreen');
         }
         catch (error) {
           Toast(error);

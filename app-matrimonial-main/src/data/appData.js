@@ -82,7 +82,7 @@ export const usersData = [
     education: 'Bachelor',
     occupation: 'Engineer',
     motherToungue: 'German',
-    AnnualIncome: '12 Lac',
+    AnnualIncome: '120000',
     sect: 'Sunni',
     city: 'Berlin',
     location: 'Seoul, South Korea',
