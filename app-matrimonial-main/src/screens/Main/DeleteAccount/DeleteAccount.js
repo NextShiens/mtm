@@ -1,25 +1,26 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, TextInput } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, TextInput, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import CustomImage from '../../../components/CustomImage/CustomImage';
 import AppHeader from '../../../components/AppHeader/AppHeader';
-import {IMAGES} from '../../../assets/images'; 
+import { IMAGES } from '../../../assets/images'; 
 import { SVG } from '../../../assets/svg';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL } from '../../../../constant';
 
 const DeleteAccount = () => {
   const navigation = useNavigation();
+  
   const handleDeleteAccount = async () => {
-    
+
     const user = await AsyncStorage.getItem('theUser');
     try {
       const token = await AsyncStorage.getItem('AccessToken');
       const theUser = await AsyncStorage.getItem('theUser');
       const user = JSON.parse(theUser);
-        const email = user.user.email;
-        const userId = user.user._id;
+      const email = user.user.email;
+      const userId = user.user._id;
 
       const response = await fetch(`${API_URL}/user/deleteAccount`, {
         method: 'POST',
@@ -47,7 +48,6 @@ const DeleteAccount = () => {
     }
   };
 
-
   const handleRightIconPress = () => {
     navigation.navigate('NotificationScreen');
   };
@@ -59,16 +59,12 @@ const DeleteAccount = () => {
         onLeftIconPress={() => navigation.goBack()}
         title="Delete Account"
         iconRight={
-            <TouchableOpacity onPress={handleRightIconPress}>
-              <CustomImage
-                source={IMAGES.notificationIcon} 
-                size={27}
-                resizeMode="contain"
-              />
-            </TouchableOpacity>
-          }
+          <TouchableOpacity onPress={handleRightIconPress}>
+            <Image source={IMAGES.notificationIcon} style={styles.Bell_Icon} />
+          </TouchableOpacity>
+        }
       />
-       <View style={styles.line} />
+      <View style={styles.line} />
       <View style={styles.contentContainer}>
         <Text style={styles.title}>Delete Account</Text>
         <Text style={styles.subtitle}>
@@ -79,8 +75,8 @@ const DeleteAccount = () => {
           placeholder="Your Explanation Is Entirely Optional.."
           multiline
         />
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText} onPress={handleDeleteAccount}>Confirm Deletion</Text>
+        <TouchableOpacity style={styles.button} onPress={handleDeleteAccount}>
+          <Text style={styles.buttonText}>Confirm Deletion</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -94,8 +90,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   contentContainer: {
-    marginTop: 32,
-    paddingHorizontal: 16,
+    marginTop: 30,
   },
   title: {
     fontSize: 24,
@@ -113,16 +108,16 @@ const styles = StyleSheet.create({
     borderColor: '#E0E0E0',
     borderWidth: 1,
     borderRadius: 8,
-    height: 100,
+    height: 120,
     textAlignVertical: 'top',
     backgroundColor: '#F9F9F9',
     color: '#000',
   },
   button: {
-    marginTop: 32,
-    backgroundColor: 'orange',
+    marginTop: 25,
+    backgroundColor: '#F97B22',
     paddingVertical: 16,
-    borderRadius: 8,
+    borderRadius: 16,
     alignItems: 'center',
   },
   buttonText: {
@@ -132,8 +127,14 @@ const styles = StyleSheet.create({
   },
   line: {
     height: 1,
-    backgroundColor: '#E0E0E0', // Gray color for the line
+    backgroundColor: '#E0E0E0',
     marginHorizontal: 16,
+  },
+  Bell_Icon: {
+    width: 25,
+    height: 30,
+    resizeMode: 'contain',
+    marginRight: '1%',
   },
 });
 

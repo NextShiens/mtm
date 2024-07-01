@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, TouchableOpacity, View, Text } from 'react-native';
+import { ScrollView, TouchableOpacity, View, Text, Image } from 'react-native';
 import { IMAGES } from '../../../assets/images';
 import { SVG } from '../../../assets/svg';
 import AppHeader from '../../../components/AppHeader/AppHeader';
@@ -72,18 +72,14 @@ const SavedUserScreen = ({ navigation }) => {
     <ScrollView>
       <View style={styles.headerContainer}>
         <AppHeader
-          iconLeft={<SVG.BackArrow fill={'black'} />}
-          onLeftIconPress={() => navigation.goBack()}
+        iconLeft={<SVG.BackArrow size={24} fill={'black'} />}
+        onLeftIconPress={() => navigation.goBack()}
           title={LABELS.saved}
-          iconRight={
-            <TouchableOpacity onPress={handleRightIconPress}>
-              <CustomImage
-                source={IMAGES.notificationIcon}
-                size={27}
-                resizeMode={'contain'}
-              />
-            </TouchableOpacity>
-          }
+        iconRight={
+          <TouchableOpacity onPress={handleRightIconPress}>
+            <Image source={IMAGES.notificationIcon} style={styles.Bell_Icon} />
+          </TouchableOpacity>
+        }
         />
       </View>
       <Space mT={20} />

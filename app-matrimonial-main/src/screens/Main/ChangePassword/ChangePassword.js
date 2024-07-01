@@ -6,6 +6,7 @@ import {
   StyleSheet,
   SafeAreaView,
   TextInput,
+  Image,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -23,9 +24,6 @@ const ChangePasswordScreen = () => {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  const handleLeftIconPress = () => {
-    navigation.goBack();
-  };
 
   const handleRightIconPress = () => {
     navigation.navigate('NotificationScreen');
@@ -71,27 +69,22 @@ const ChangePasswordScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.headerContainer}>
-        <AppHeader
-          iconLeft={<SVG.BackArrow fill={'black'} />}
-          onLeftIconPress={handleLeftIconPress}
-          title={'Change Password'}
-          iconRight={
-            <TouchableOpacity onPress={handleRightIconPress}>
-              <CustomImage
-                source={IMAGES.notificationIcon}
-                size={27}
-                resizeMode={'contain'}
-              />
-            </TouchableOpacity>
-          }
-        />
+      <AppHeader
+        iconLeft={<SVG.BackArrow size={24} fill={'black'} />}
+        onLeftIconPress={() => navigation.goBack()}
+        title="Delete Account"
+        iconRight={
+          <TouchableOpacity onPress={handleRightIconPress}>
+            <Image source={IMAGES.notificationIcon} style={styles.Bell_Icon} />
+          </TouchableOpacity>
+        }
+      />
       </View>
-      {/* Gray line below header */}
       <View style={styles.line} />
 
       <View style={styles.contentContainer}>
         <View style={styles.inputContainer}>
-          <Icon name="lock-closed-outline" size={24} color="#F39C12" />
+          <Icon size={24} color="#F39C12" />
           <TextInput
             style={styles.textInput}
             placeholder="Enter your current password"
@@ -102,7 +95,7 @@ const ChangePasswordScreen = () => {
           />
         </View>
         <View style={styles.inputContainer}>
-          <Icon name="lock-closed-outline" size={24} color="#F39C12" />
+          <Icon  size={24} color="#F39C12" />
           <TextInput
             style={styles.textInput}
             placeholder="Type a new password"
@@ -113,7 +106,7 @@ const ChangePasswordScreen = () => {
           />
         </View>
         <View style={styles.inputContainer}>
-          <Icon name="lock-closed-outline" size={24} color="#F39C12" />
+          <Icon size={24}  color="#F39C12" />
           <TextInput
             style={styles.textInput}
             placeholder="Confirm your new password"
@@ -145,19 +138,18 @@ const styles = StyleSheet.create({
   },
   line: {
     height: 1,
-    backgroundColor: '#E0E0E0', // Gray color for the line
+    backgroundColor: '#E0E0E0', 
     marginHorizontal: 16,
   },
   contentContainer: {
     marginTop: 16,
-    paddingHorizontal: 16,
   },
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#f9f9f9',
     padding: 5,
-    borderRadius: 8,
+    borderRadius: 14,
     marginVertical: 8,
     borderColor: '#E0E0E0',
     borderWidth: 1,
@@ -168,16 +160,22 @@ const styles = StyleSheet.create({
     color: '#000',
   },
   button: {
-    marginTop: 30,
-    backgroundColor: 'darkorange',
+    marginTop: 20,
+    backgroundColor: '#F97B22',
     paddingVertical: 16,
-    borderRadius: 8,
+    borderRadius: 16,
     alignItems: 'center',
   },
   buttonText: {
     color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  Bell_Icon: {
+    width: 25,
+    height: 30,
+    resizeMode: 'contain',
+    marginRight: '1%',
   },
 });
 

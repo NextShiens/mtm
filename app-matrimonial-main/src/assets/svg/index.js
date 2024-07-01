@@ -15,5 +15,5 @@ export const SVG = {
   unfilledCircle:require('./unfilledCircle.svg').default,
 
 
-  
+
 };

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, TouchableOpacity, View } from 'react-native';
+import { ScrollView, TouchableOpacity, View, Image } from 'react-native';
 import { Fonts } from '../../../assets/fonts';
 import { IMAGES } from '../../../assets/images';
 import { SVG } from '../../../assets/svg';
@@ -116,15 +116,13 @@ const PartnerReferenceScreen = ({ navigation }) => {
       <View style={style.container}>
         <View style={style.headerContainer}>
           <AppHeader
-            iconLeft={<SVG.BackArrow fill={'black'} />}
-            onLeftIconPress={backNavigationHandler}
+        iconLeft={<SVG.BackArrow size={24} fill={'black'} />}
+        onLeftIconPress={() => navigation.goBack()}
             title={LABELS.partnerPreference}
             iconRight={
-              <CustomImage
-                source={IMAGES.notificationIcon}
-                size={27}
-                resizeMode={'contain'}
-              />
+              <TouchableOpacity onPress={handleRightIconPress}>
+                <Image source={IMAGES.notificationIcon} style={styles.Bell_Icon} />
+              </TouchableOpacity>
             }
           />
         </View>

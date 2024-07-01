@@ -33,4 +33,10 @@ export const styles = StyleSheet.create({
     width: '100%',
     paddingHorizontal: HORIZON_MARGIN,
   },
+  Bell_Icon: {
+    width: 25,
+    height: 30,
+    resizeMode: 'contain',
+    marginRight: '1%',
+  },
 });

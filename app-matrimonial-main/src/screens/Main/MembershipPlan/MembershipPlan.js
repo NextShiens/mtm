@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, TouchableOpacity, View, Text } from 'react-native';
+import { ScrollView, TouchableOpacity, View, Text, Image } from 'react-native';
 import { Fonts } from '../../../assets/fonts';
 import { IMAGES } from '../../../assets/images';
 import { API_URL } from '../../../../constant';
@@ -69,16 +69,12 @@ const MembershipPlan = ({ navigation }) => {
     <ScrollView>
       <View style={style.headerContainer}>
         <AppHeader
-          iconLeft={<SVG.BackArrow fill={'black'} />}
-          onLeftIconPress={bacKNavigationHandler}
+        iconLeft={<SVG.BackArrow size={24} fill={'black'} />}
+        onLeftIconPress={() => navigation.goBack()}
           title={LABELS.membership}
           iconRight={
             <TouchableOpacity onPress={handleRightIconPress}>
-              <CustomImage
-                source={IMAGES.notificationIcon}
-                size={27}
-                resizeMode={'contain'}
-              />
+              <Image source={IMAGES.notificationIcon} style={styles.Bell_Icon} />
             </TouchableOpacity>
           }
         />

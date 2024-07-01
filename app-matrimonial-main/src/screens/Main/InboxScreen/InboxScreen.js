@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, TouchableOpacity, View } from 'react-native';
+import { ScrollView, TouchableOpacity, View, Image } from 'react-native';
 import { IMAGES } from '../../../assets/images';
 import { SVG } from '../../../assets/svg';
 import { COLORS } from '../../../assets/theme';
@@ -14,27 +14,23 @@ import { styles } from './styles';
 
 const InboxScreen = ({navigation}) => {
   const style = styles;
+
   const handleRightIconPress = () => {
     navigation.navigate('NotificationScreen');
   };
+
   return (
     <ScrollView>
       <View style={style.headerContainer}>
         <AppHeader
-          iconLeft={<SVG.BackArrow fill={'black'} />}
-          onLeftIconPress={() => {
-            navigation.goBack();
-          }}
+        iconLeft={<SVG.BackArrow size={24} fill={'black'} />}
+        onLeftIconPress={() => navigation.goBack()}
           title={LABELS.inbox}
-          iconRight={
-            <TouchableOpacity onPress={handleRightIconPress}>
-              <CustomImage
-                source={IMAGES.notificationIcon}
-                size={27}
-                resizeMode={'contain'}
-              />
-            </TouchableOpacity>
-          }
+        iconRight={
+          <TouchableOpacity onPress={handleRightIconPress}>
+            <Image source={IMAGES.notificationIcon} style={styles.Bell_Icon} />
+          </TouchableOpacity>
+        }
         />
       </View>
       <Space mT={20} />
@@ -50,13 +46,13 @@ const InboxScreen = ({navigation}) => {
           }}
           placeholder={LABELS.searchHere}
         />
-        <TouchableOpacity style={style.filterBtn} activeOpacity={0.8}>
+        {/* <TouchableOpacity style={style.filterBtn} activeOpacity={0.8}>
           <CustomImage
             source={IMAGES.filterIcon}
             size={17}
             resizeMode={'contain'}
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
       <Space mT={20} />
       <TouchableOpacity style={style.inboxContainer}>

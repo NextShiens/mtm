@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, ScrollView } from 'react-native';
+import { View, ScrollView, Image } from 'react-native';
 import { TouchableOpacity } from 'react-native';
 import { Fonts } from '../../../assets/fonts';
 import { IMAGES } from '../../../assets/images';
@@ -253,6 +253,10 @@ const ProfileUpdateScreen = ({ navigation }) => {
       console.error('error', error);
     }
   };
+  
+  const handleRightIconPress = () => {
+    navigation.navigate('NotificationScreen');
+  };
 
 
 
@@ -260,19 +264,13 @@ const ProfileUpdateScreen = ({ navigation }) => {
     <ScrollView>
       <View style={style.headerContainer}>
         <AppHeader
-          iconLeft={<SVG.BackArrow fill={COLORS.dark.black} />}
+        iconLeft={<SVG.BackArrow size={24} fill={'black'} />}
+        onLeftIconPress={() => navigation.goBack()}
           title={LABELS.profile}
-          onLeftIconPress={() => {
-            navigation.goBack();
-          }}
           iconRight={
-            <>
-              <CustomImage
-                source={IMAGES.notificationIcon}
-                size={25}
-                resizeMode="contain"
-              />
-            </>
+            <TouchableOpacity onPress={handleRightIconPress}>
+              <Image source={IMAGES.notificationIcon} style={styles.Bell_Icon} />
+            </TouchableOpacity>
           }
         />
       </View>

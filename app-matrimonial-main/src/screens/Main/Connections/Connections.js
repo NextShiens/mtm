@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, TouchableOpacity, ScrollView } from 'react-native';
+import { View, TouchableOpacity, ScrollView, Image } from 'react-native';
 import { IMAGES } from '../../../assets/images';
 import { SVG } from '../../../assets/svg';
 import AppButton from '../../../components/AppButton/AppButton';
@@ -115,18 +115,12 @@ useEffect(async()=>{
       <ScrollView>
         <View style={style.headerContainer}>
           <AppHeader
-            iconLeft={<SVG.BackArrow fill={'black'} />}
-            onLeftIconPress={() => {
-              navigation.goBack();
-            }}
+            iconLeft={<SVG.BackArrow size={24} fill={'black'} />}
+            onLeftIconPress={() => navigation.goBack()}
             title={LABELS.connection}
             iconRight={
               <TouchableOpacity onPress={handleRightIconPress}>
-                <CustomImage
-                  source={IMAGES.notificationIcon}
-                  size={27}
-                  resizeMode={'contain'}
-                />
+                <Image source={IMAGES.notificationIcon} style={styles.Bell_Icon} />
               </TouchableOpacity>
             }
           />

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView ,Image} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import CustomImage from '../../../components/CustomImage/CustomImage';
@@ -8,10 +8,6 @@ import {IMAGES} from '../../../assets/images';
 import { SVG } from '../../../assets/svg';
 
 const AccountSettingsScreen = ({ navigation }) => {
-
-  const handleLeftIconPress = () => {
-    navigation.navigate('DrawerNavigation');
-  };
 
   const handleRightIconPress = () => {
     navigation.navigate('NotificationScreen');
@@ -29,30 +25,26 @@ const AccountSettingsScreen = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       <View style={styles.headerContainer}>
       <AppHeader
-          iconLeft={<SVG.BackArrow fill={'black'} />}
-          onLeftIconPress={() => {
-            navigation.goBack();
-          }}
-          title={'Account Settings'}
-          iconRight={
-            <TouchableOpacity onPress={handleRightIconPress}>
-              <CustomImage
-                source={IMAGES.notificationIcon}
-                size={27}
-                resizeMode={'contain'}
-              />
-            </TouchableOpacity>
-          }
-        />
+        iconLeft={<SVG.BackArrow size={24} fill={'black'} />}
+        onLeftIconPress={() => navigation.goBack()}
+        title="Delete Account"
+        iconRight={
+          <TouchableOpacity onPress={handleRightIconPress}>
+            <Image source={IMAGES.notificationIcon} style={styles.Bell_Icon} />
+          </TouchableOpacity>
+        }
+      />
         <View style={styles.line} />
       </View>
       <TouchableOpacity style={styles.option} 
       onPress={handleDeleteAccountPress}>
         <View style={styles.optionContent}>
           <Icon size={24} color="#F39C12" />
-          <Text style={styles.optionText}>Delete Account</Text>
+          <Text style={styles.optionText}>Delete Account
+          </Text>
         </View>
         <Icon size={24} color="#ccc" />
+        <SVG.vectorIcon height={20} width={20} fill={'black'} />
       </TouchableOpacity>
       <TouchableOpacity style={styles.option} onPress={handleChangePasswordPress}>
         <View style={styles.optionContent}>
@@ -60,6 +52,7 @@ const AccountSettingsScreen = ({ navigation }) => {
           <Text style={styles.optionText}>Change Password</Text>
         </View>
         <Icon size={24} color="#ccc" />
+        <SVG.vectorIcon height={20} width={20} fill={'black'} />
       </TouchableOpacity>
     </SafeAreaView>
   );
@@ -107,6 +100,12 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: '#E0E0E0', // Gray color for the line
     marginHorizontal: 16,
+  },
+  Bell_Icon: {
+    width: 25,
+    height: 30,
+    resizeMode: 'contain',
+    marginRight: '1%',
   },
 });
 

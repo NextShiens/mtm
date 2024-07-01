@@ -187,4 +187,10 @@ export const styles = StyleSheet.create({
     backgroundColor: COLORS.dark.primary,
     borderRadius: 5,
   },
+  Bell_Icon: {
+    width: 25,
+    height: 30,
+    resizeMode: 'contain',
+    marginRight: '1%',
+  },
 });

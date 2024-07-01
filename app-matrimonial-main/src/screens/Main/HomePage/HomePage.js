@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Modal,
   Pressable,
+  Image,
 } from 'react-native';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
 import { IMAGES } from '../../../assets/images';
@@ -170,12 +171,17 @@ const filterStyles = StyleSheet.create({
     borderColor: '#F97B22',
     borderRadius: 30,
     padding: 10,
-  }
+  },
+  Bell_Icon: {
+    width: 25,
+    height: 30,
+    resizeMode: 'contain',
+    marginRight: '1%',
+  },
 });
 
 const HomePage = () => {
   const navigation = useNavigation();
-
   const [selectedCategory, setSelectedCategory] = useState('New Join');
   const [error, setError] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
@@ -244,19 +250,19 @@ const HomePage = () => {
     fetchNewUsers();
     fetchRecentlyViewed();
   }, []);
-  const handleLeftIconPress = () => {
-    console.log('Attempting to open drawer');
-   navigation.openDrawer();
-  };
+  
 
   const handleRightIconPress = () => {
-    console.log('Attempting to navigate to NotificationScreen');
     navigation.navigate('NotificationScreen');
   };
 
-  const handleItemPress = item => {
+  const handleItemPress = (item) => {
     setSelectedCategory(item.value);
     console.log('Selected Category:', item.value);
+    
+    if (item.value === 'Matches') {
+      navigation.navigate('PartnerMatch', { selectedCategory: item.value });
+    }
   };
 
   const handleSearch = query => {
@@ -301,16 +307,8 @@ const HomePage = () => {
               </TouchableOpacity>
             }
             iconRight={
-              <TouchableOpacity onPress={
-                () => {
-                  handleRightIconPress();
-                }
-              }>
-                <CustomImage
-                  source={IMAGES.notificationIcon}
-                  size={27}
-                  resizeMode={'contain'}
-                />
+              <TouchableOpacity onPress={handleRightIconPress}>
+                <Image source={IMAGES.notificationIcon} style={styles.Bell_Icon} />
               </TouchableOpacity>
             }
           />
