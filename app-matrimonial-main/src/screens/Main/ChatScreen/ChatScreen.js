@@ -1,21 +1,23 @@
 import React, { useEffect, useState, useCallback, useContext } from 'react';
-import { View, TouchableOpacity, Image, Text, Alert } from 'react-native';
-import { GiftedChat, Bubble } from 'react-native-gifted-chat';
+import { View, TouchableOpacity, Image, Text, Alert, SafeAreaView, StatusBar } from 'react-native';
+import { GiftedChat, Bubble, Send } from 'react-native-gifted-chat';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
+import Icon from 'react-native-vector-icons/Ionicons';
+import { API_URL } from '../../../../constant';
+import { SocketContext } from '../../../../SocketContext';
+import { SVG } from '../../../assets/svg';
 import { styles } from './styles';
 import { IMAGES } from '../../../assets/images';
 import { COLORS } from '../../../assets/theme';
-import Icon from '../../../components/Icon/Icon';
-import { SVG } from '../../../assets/svg';
 import Space from '../../../components/Space/Space';
-import { API_URL } from '../../../../constant';
-import { SocketContext } from '../../../../SocketContext';
 
-const ChatScreen = ({ navigation, route }) => {
+const ChatScreen = ({ route }) => {
   const [messages, setMessages] = useState([]);
   const { socket } = useContext(SocketContext);
   const { userId, roomId, user } = route.params;
   const [currentUser, setCurrentUser] = useState(null);
+  const navigation = useNavigation();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -24,7 +26,6 @@ const ChatScreen = ({ navigation, route }) => {
         if (userString) {
           const user = JSON.parse(userString);
           setCurrentUser(user);
-          console.log('Current user:', user);
         }
       } catch (error) {
         console.error('Error fetching user data:', error);
@@ -70,7 +71,6 @@ const ChatScreen = ({ navigation, route }) => {
             name: msg.receiverId === currentUser.user._id ? user.name : currentUser.user.name,
           },
         }));
-        console.log('Formatted messages:', formattedMessages);
         setMessages(formattedMessages.reverse());
       } else {
         console.error('Failed to fetch messages:', data.message);
@@ -83,7 +83,6 @@ const ChatScreen = ({ navigation, route }) => {
 
   const onReceiveMessage = useCallback((message) => {
     setMessages(previousMessages => GiftedChat.append(previousMessages, [message]));
-    console.log('New message received:', message);
   }, []);
 
   const onSend = useCallback((newMessages = []) => {
@@ -102,18 +101,44 @@ const ChatScreen = ({ navigation, route }) => {
       };
 
       socket.emit('send_message', messageData);
-      console.log('Message sent:', messageData);
-
       setMessages(previousMessages => GiftedChat.append(previousMessages, [messageData]));
     }
   }, [socket, currentUser, userId, roomId]);
-
   const navigateBack = () => {
     navigation.goBack();
+  }
+
+  const renderBubble = (props) => {
+    return (
+      <Bubble
+        {...props}
+        wrapperStyle={{
+          right: {
+            backgroundColor: '#007AFF',
+          },
+          left: {
+            backgroundColor: '#E5E5EA',
+          },
+        }}
+        textStyle={{
+          right: {
+            color: '#FFFFFF',
+          },
+          left: {
+            color: '#000000',
+          },
+        }}
+      />
+    );
   };
 
+
   if (!currentUser) {
-    return <View style={styles.loadingContainer}><Text>Loading...</Text></View>;
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text>Loading...</Text>
+      </View>
+    );
   }
 
   return (
@@ -154,8 +179,16 @@ const ChatScreen = ({ navigation, route }) => {
           _id: currentUser.user._id,
           name: currentUser.user.name,
         }}
+        renderBubble={renderBubble}
+        renderAvatar={null}
+        alwaysShowSend
+        scrollToBottom
+        scrollToBottomComponent={() => (
+          <Icon name="chevron-down-circle" size={24} color="#007AFF" />
+        )}
       />
     </View>
+
   );
 };
 
