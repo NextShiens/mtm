@@ -13,6 +13,8 @@ import Icon from '../Icon/Icon';
 import Space from '../Space/Space';
 import { useNavigation } from '@react-navigation/native';
 import { styles } from './styles';
+import { subscriptionCheck ,checkLiveChatAvailability} from '../../utils/subscriptionCheck';
+import { Toast } from '../../utils/native';
 
 const SnapCarousel = ({ data }) => {
   const navigation = useNavigation();
@@ -103,14 +105,25 @@ const SnapCarousel = ({ data }) => {
     </>
   );
 
-  const handleSendInterest = () => {
+  const handleSendInterest =async () => {
     const currentItem = data[activeSlide];
-    navigation.navigate('UserDetailsScreen', { userId: currentItem?._id });
+    const isSubscribed = await subscriptionCheck(currentItem);
+    if(isSubscribed){
+      navigation.navigate('UserDetailsScreen', { userId: currentItem?._id });
+    }else{
+      Toast("Your profile view limit exceeded.");
+    }
+   
   };
 
-  const handleChat = () => {
+  const handleChat =async  () => {
     const currentItem = data[activeSlide];
+    const isSubscribed = await checkLiveChatAvailability(currentItem);
+    if(isSubscribed){
     navigation.navigate('ChatScreen', { userId: currentItem?._id, roomId: `${currentItem?._id}_${currentItem._id}`, user: currentItem });
+    }else{
+      Toast("You can't chat buy premium");
+    }
   };
 
   return (

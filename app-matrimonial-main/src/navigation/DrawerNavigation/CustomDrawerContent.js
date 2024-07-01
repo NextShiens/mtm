@@ -1,5 +1,5 @@
 import { DrawerContentScrollView } from '@react-navigation/drawer';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Dimensions, Image, TouchableOpacity, View } from 'react-native';
 import { Fonts } from '../../assets/fonts';
 import { IMAGES } from '../../assets/images';
@@ -33,33 +33,40 @@ const ProfileAvatar = () => (
     />
   </Svg>
 );
+
 const CustomDrawerContent = ({ props, navigation }) => {
-  
-  const [isOnline, setIsOnline] = useState( false);
+  const [isOnline, setIsOnline] = useState(false);
   const [drawerData, setDrawerData] = useState(DrawerListData);
   const [selectedRoute, setSelectedRoute] = useState('User Name');
   const [userName, setUserName] = useState('');
   const [userImage, setUserImage] = useState('');
   const [userProfession, setUserProfession] = useState('Profession');
-  
 
   const style = styles;
   const windowWidth = Dimensions.get('window').width;
-  useEffect(async () => {
-    const userString = await AsyncStorage.getItem('theUser');
-    const user = JSON.parse(userString);
-    setUserName(user.user.name)
-    const image = user.user.userImages[0];
-    setIsOnline(user?.user?.isActive);
-    setUserImage(image);
-    setUserProfession(user.user.occupation)
-  }, [])
-  const handleToggle = async () => {
-  
-    setIsOnline(!isOnline);
-    console.log('isOnline status :', isOnline);
 
+  const fetchUserData = useCallback(async () => {
     try {
+      const userString = await AsyncStorage.getItem('theUser');
+      const user = JSON.parse(userString);
+      setUserName(user.user.name);
+      setIsOnline(user.user.isActive);
+      setUserImage(user.user.userImages[0]);
+      setUserProfession(user.user.occupation);
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchUserData();
+  }, [fetchUserData]);
+
+  const handleToggle = async () => {
+    try {
+      const newStatus = !isOnline;
+      setIsOnline(newStatus);
+
       const token = await AsyncStorage.getItem('AccessToken');
       const response = await fetch(`${API_URL}/user/updateActiveStatus`, {
         method: 'PUT',
@@ -68,7 +75,7 @@ const CustomDrawerContent = ({ props, navigation }) => {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          isActive: isOnline, 
+          isActive: newStatus,
         }),
       });
 
@@ -78,9 +85,18 @@ const CustomDrawerContent = ({ props, navigation }) => {
 
       const result = await response.json();
       console.log('Profile updated successfully:', result);
+
+      // Update local storage with new status
+      const userString = await AsyncStorage.getItem('theUser');
+      const user = JSON.parse(userString);
+      user.user.isActive = newStatus;
+      await AsyncStorage.setItem('theUser', JSON.stringify(user));
+
     } catch (error) {
       console.error('Error updating profile:', error);
-      // Handle error, show toast, etc.
+      // Revert the toggle if there's an error
+      setIsOnline(!newStatus);
+      Toast("Failed to update status. Please try again.");
     }
   };
 
@@ -113,6 +129,7 @@ const CustomDrawerContent = ({ props, navigation }) => {
         });
     }
   };
+
   return (
     <View style={style.container}>
       <DrawerContentScrollView {...props}>
@@ -127,7 +144,6 @@ const CustomDrawerContent = ({ props, navigation }) => {
                 />
               ) : (
                 <ProfileAvatar
-                
                   extraStyle={{ container: STYLES.bR(25) }}
                 />
               )}
@@ -173,28 +189,27 @@ const CustomDrawerContent = ({ props, navigation }) => {
           if (route.name === 'Active Status') {
             return (
               <TouchableOpacity
-              key={route.key}
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                paddingVertical: 10,
-                paddingHorizontal:17
-              }}>
-              <CustomImage
-                source={route.iconName}
-                size={25}
-                resizeMode={'contain'}
-              />
-              <Space mL={10} />
-              <View style={{ flex: 1  }}>
-                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'  }}>
-                  <AppText
-                    title={route.name}
-                    variant={'h6'}
-                    extraStyle={{ fontFamily: Fonts.PoppinsSemiBold }}
-                    color={COLORS.dark.black}
-                  />
-                  {route.name === 'Active Status' && (
+                key={route.key}
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  paddingVertical: 10,
+                  paddingHorizontal: 17
+                }}>
+                <CustomImage
+                  source={route.iconName}
+                  size={25}
+                  resizeMode={'contain'}
+                />
+                <Space mL={10} />
+                <View style={{ flex: 1 }}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <AppText
+                      title={route.name}
+                      variant={'h6'}
+                      extraStyle={{ fontFamily: Fonts.PoppinsSemiBold }}
+                      color={COLORS.dark.black}
+                    />
                     <ToggleSwitch
                       isOn={isOnline}
                       onColor="#F97B22"
@@ -203,17 +218,15 @@ const CustomDrawerContent = ({ props, navigation }) => {
                       onToggle={handleToggle}
                       style={{ marginLeft: 10 }}
                     />
-                  )}
+                  </View>
+                  <AppText
+                    title={route.description}
+                    variant={'body2'}
+                    extraStyle={{ fontFamily: Fonts.PoppinsRegular, marginTop: 5 }}
+                    color={COLORS.dark.inputBorder}
+                  />
                 </View>
-                <AppText
-                  title={route.description}
-                  variant={'body2'}
-                  extraStyle={{ fontFamily: Fonts.PoppinsRegular, marginTop: 5 }}
-                  color={COLORS.dark.inputBorder}
-                />
-              </View>
-            </TouchableOpacity>
-        
+              </TouchableOpacity>
             );
           }
           return (

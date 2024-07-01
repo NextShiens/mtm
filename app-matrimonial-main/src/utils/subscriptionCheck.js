@@ -1,16 +1,15 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 async function subscriptionCheck(user) {
-  debugger
   try {
     const subscriptionsData = await AsyncStorage.getItem('subscriptions');
     const subscriptions = JSON.parse(subscriptionsData);
 
-    if (!subscriptions || subscriptions.length === 0) {
+    if (!subscriptions || !Array.isArray(subscriptions) || subscriptions.length === 0) {
       return false;
     }
 
-    const userSubscription = subscriptions.find(sub => sub.name === user.membership);
+    const userSubscription = subscriptions.find(sub => sub._id === user.membership);
 
     if (!userSubscription) {
       return false;
@@ -35,30 +34,29 @@ async function subscriptionCheck(user) {
   }
 }
 
-
 async function checkLiveChatAvailability(user) {
   try {
     const subscriptionsData = await AsyncStorage.getItem('subscriptions');
     const subscriptions = JSON.parse(subscriptionsData);
+    console.log(subscriptions, 'subscriptions');
 
-    if (!subscriptions || subscriptions.length === 0) {
+    if (!subscriptions || !Array.isArray(subscriptions) || subscriptions.length === 0) {
       return false;
     }
 
-    const userSubscription = subscriptions.find(sub => sub.name === user.membership);
+    const userSubscription = subscriptions.find(sub => sub._id === user.membership);
 
     if (!userSubscription) {
       return false;
     }
-
 
     const currentDate = new Date();
     const expiryDate = new Date(user.membershipExpiry);
     if (currentDate > expiryDate) {
       return false;
     }
-return userSubscription.liveChats == 'YES';
 
+    return userSubscription.liveChats === 'YES';
   } catch (error) {
     console.error('Error in checkLiveChatAvailability:', error);
     return false;

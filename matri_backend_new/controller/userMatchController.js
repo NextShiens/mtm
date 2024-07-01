@@ -52,7 +52,8 @@ const userMatchController = {
         matchedUsers = await User.find({
           _id: { $nin: excludedUserIds },
           gender: gender,
-          createdAt: { $gte: oneYearAgo }
+          createdAt: { $gte: oneYearAgo },
+          isActive: true
         });
   
       } else if (matchType === "match") {
@@ -130,7 +131,8 @@ const userMatchController = {
       const newUsers = await User.find({
         _id: { $nin: excludedUserIds },
         gender: targetGender,
-        createdAt: { $gte: sevenDaysAgo }
+        createdAt: { $gte: sevenDaysAgo },
+        isActive: true
       }).select('-password -__v');
   
       res.json({ newUsers });
