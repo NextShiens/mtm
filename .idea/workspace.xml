@@ -6,18 +6,14 @@
   <component name="ChangeListManager">
     <list default="true" id="65d36aab-a37b-4c85-8af8-c97fc015eff2" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app-matrimonial-main/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-matrimonial-main/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app-matrimonial-main/src/components/AppCard/AppCard.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-matrimonial-main/src/components/AppCard/AppCard.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app-matrimonial-main/src/components/HorizontalCard/HorizontalCard.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-matrimonial-main/src/components/HorizontalCard/HorizontalCard.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app-matrimonial-main/src/components/SnapCarousel/SnapCarousel.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-matrimonial-main/src/components/SnapCarousel/SnapCarousel.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app-matrimonial-main/src/navigation/DrawerNavigation/CustomDrawerContent.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-matrimonial-main/src/navigation/DrawerNavigation/CustomDrawerContent.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app-matrimonial-main/src/screens/Auth/LoginScreen/LoginScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-matrimonial-main/src/screens/Auth/LoginScreen/LoginScreen.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app-matrimonial-main/src/screens/Main/HomePage/HomePage.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-matrimonial-main/src/screens/Main/HomePage/HomePage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app-matrimonial-main/src/screens/Main/ChatScreen/ChatScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-matrimonial-main/src/screens/Main/ChatScreen/ChatScreen.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app-matrimonial-main/src/screens/Main/ParterMatch/PartnerMatch.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-matrimonial-main/src/screens/Main/ParterMatch/PartnerMatch.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app-matrimonial-main/src/utils/pushNotifications.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-matrimonial-main/src/utils/pushNotifications.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app-matrimonial-main/src/screens/Main/SavedUsersScreen/SavedUserScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-matrimonial-main/src/screens/Main/SavedUsersScreen/SavedUserScreen.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app-matrimonial-main/src/screens/Main/UserDetailsScreen/UserDetailsScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-matrimonial-main/src/screens/Main/UserDetailsScreen/UserDetailsScreen.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app-matrimonial-main/src/utils/subscriptionCheck.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-matrimonial-main/src/utils/subscriptionCheck.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/matri_backend_new/controller/userAuthController.js" beforeDir="false" afterPath="$PROJECT_DIR$/matri_backend_new/controller/userAuthController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/matri_backend_new/routes/payment.js" beforeDir="false" afterPath="$PROJECT_DIR$/matri_backend_new/routes/payment.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/matri_backend_new/routes/user.js" beforeDir="false" afterPath="$PROJECT_DIR$/matri_backend_new/routes/user.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/matri_backend_new/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/matri_backend_new/index.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

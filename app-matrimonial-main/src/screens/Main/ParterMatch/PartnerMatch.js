@@ -182,6 +182,7 @@ const PartnerMatch = ({ navigation, route }) => {
   const [selectedLanguage, setSelectedLanguage] = useState('');
   const [range, setRange] = useState([0, 1000000]);
 
+
   useEffect(() => {
     const fetchUser = async () => {
       const userString = await AsyncStorage.getItem('theUser');
@@ -540,8 +541,8 @@ const PartnerMatch = ({ navigation, route }) => {
 
               }}
               onPressBtn2={async () => {
-                if (await checkLiveChatAvailability(JSON.parse(await AsyncStorage.getItem('theUser')))) {
-                  navigation.navigate('ChatScreen', { userId: user?._id, roomId: `${user?._id}_${user._id}`, user: user });
+                if (await checkLiveChatAvailability()) {
+                  navigation.navigate('ChatScreen', { userId: user?._id, roomId: `${user?._id}_${currentUser.user._id}`, user: user });
                 } else {
                   Toast("You can't chat buy premium plan.");
                 }

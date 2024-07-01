@@ -45,20 +45,25 @@ io.on("connection", (socket) => {
     console.log(`User with ID: ${socket.id} joined room: ${data}`);
   });
 
-  socket.on("send_message", (data) => {
+  socket.on("send_message", async (data) => {
     console.log("data....", data);
-    sendchatNotification(data.receiverId, {
-      message: data.text,
-      title: data.author,
-
-    },
-      data.user._id,);
-    checkRoom(data);
-    socket.to(data.roomId);
-    socket.emit("receive_message", data);
-    saveMessage(data);
+    try {
+      await sendchatNotification(data.receiverId, {
+        message: data.text,
+        title: data.user.name, // Assuming the user object has a name property
+      }, data.user._id);
+  
+      await checkRoom(data);
+      await saveMessage(data);
+  
+      // Emit to all clients in the room, including sender
+      io.to(data.roomId).emit("receive_message", data);
+    } catch (error) {
+      console.error("Error processing message:", error);
+      // Optionally, emit an error event back to the sender
+      socket.emit("message_error", { message: "Failed to send message" });
+    }
   });
-
   socket.on("disconnect", () => {
     console.log("User Disconnected", socket.id);
   });

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState,useEffect} from 'react';
 import { ScrollView, TouchableOpacity, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import LinearGradient from 'react-native-linear-gradient';
@@ -16,9 +16,22 @@ import Space from '../Space/Space';
 import { styles } from './styles';
 import { subscriptionCheck, checkLiveChatAvailability } from '../../utils/subscriptionCheck';
 import { Toast } from '../../utils/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const HorizontalCard = ({ data }) => {
   const navigation = useNavigation();
+  const [currentUser, setCurrentUser] = useState({});
+  useEffect(() => {
+    const fetchUser = async () => {
+      const userString = await AsyncStorage.getItem('theUser');
+      if (userString) {
+        const user = JSON.parse(userString);
+        setCurrentUser(user);
+      }
+    };
+
+    fetchUser();
+  }, []);
 
   const handleSendInterest = async (item) => {
     try {
@@ -39,7 +52,7 @@ const HorizontalCard = ({ data }) => {
       if (canChat) {
         navigation.navigate('ChatScreen', { 
           userId: item?._id, 
-          roomId: `${item?._id}_${item._id}`, 
+          roomId: `${item?._id}_${currentUser.user._id}`, 
           user: item 
         });
       } else {

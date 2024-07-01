@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState,useEffect} from 'react';
 import { Dimensions, Image, TouchableOpacity, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
@@ -22,6 +22,18 @@ const SnapCarousel = ({ data }) => {
   const screenWidth = Dimensions.get('window').width;
   const [activeSlide, setActiveSlide] = React.useState(0);
   const style = styles;
+  const [currentUser, setCurrentUser] = useState({});
+  useEffect(() => {
+    const fetchUser = async () => {
+      const userString = await AsyncStorage.getItem('theUser');
+      if (userString) {
+        const user = JSON.parse(userString);
+        setCurrentUser(user);
+      }
+    };
+
+    fetchUser();
+  }, []);
 
   const renderItem = ({ item }) => (
     <>
@@ -121,7 +133,7 @@ const SnapCarousel = ({ data }) => {
     const currentItem = data[activeSlide];
     const isSubscribed = await checkLiveChatAvailability(JSON.parse(await AsyncStorage.getItem('theUser')));
     if (isSubscribed) {
-      navigation.navigate('ChatScreen', { userId: currentItem?._id, roomId: `${currentItem?._id}_${currentItem._id}`, user: currentItem });
+      navigation.navigate('ChatScreen', { userId: currentItem?._id, roomId: `${currentItem?._id}_${currentUser.user._id}`, user: currentItem });
     } else {
       Toast("You can't chat buy premium plan");
     }

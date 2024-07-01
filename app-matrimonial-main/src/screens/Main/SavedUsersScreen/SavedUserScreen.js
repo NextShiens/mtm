@@ -17,6 +17,18 @@ const SavedUserScreen = ({ navigation }) => {
   const [savedUserData, setSavedUserData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [currentUser, setCurrentUser] = useState({});
+  useEffect(() => {
+    const fetchUser = async () => {
+      const userString = await AsyncStorage.getItem('theUser');
+      if (userString) {
+        const user = JSON.parse(userString);
+        setCurrentUser(user);
+      }
+    };
+
+    fetchUser();
+  }, []);
 
   useEffect(() => {
     const fetchSavedUsers = async () => {
@@ -91,7 +103,7 @@ const SavedUserScreen = ({ navigation }) => {
               }}
               onPressBtn2={() => {
                 console.log('Chat button pressed');
-                navigation.navigate('ChatScreen', { userId: user?._id, roomId: `${user?._id}_${user._id}`, user: user });
+                navigation.navigate('ChatScreen', { userId: user?._id, roomId: `${user?._id}_${currentUser.user._id}`, user: user });
               }}
             />
           ))

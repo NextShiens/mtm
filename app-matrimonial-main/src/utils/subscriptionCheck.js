@@ -31,12 +31,12 @@ async function subscriptionCheck() {
   }
 }
 
-async function checkLiveChatAvailability(user) {
+async function checkLiveChatAvailability() {
   try {
-    debugger
     const subscriptionsData = await AsyncStorage.getItem('subscriptions');
     const subscriptions = JSON.parse(subscriptionsData);
-    console.log(subscriptions, 'subscriptions');
+    const user = JSON.parse(await AsyncStorage.getItem('theUser'));
+
 
     const userSubscription = subscriptions.subscriptions.find(sub => sub._id === user.user.membership);
 

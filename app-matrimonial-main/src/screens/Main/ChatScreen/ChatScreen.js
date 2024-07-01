@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useCallback, useContext, useReducer } from 'react';
-import { View, TouchableOpacity, Image } from 'react-native';
+import React, { useEffect, useState, useCallback, useContext } from 'react';
+import { View, TouchableOpacity, Image, Text, Alert } from 'react-native';
 import { GiftedChat, Bubble } from 'react-native-gifted-chat';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { styles } from './styles';
@@ -8,85 +8,48 @@ import { COLORS } from '../../../assets/theme';
 import Icon from '../../../components/Icon/Icon';
 import { SVG } from '../../../assets/svg';
 import Space from '../../../components/Space/Space';
-
 import { API_URL } from '../../../../constant';
 import { SocketContext } from '../../../../SocketContext';
-import { Text } from 'react-native-svg';
-
-// Message reducer for more predictable state management
-const messageReducer = (state, action) => {
-  switch (action.type) {
-    case 'ADD_MESSAGES':
-      return GiftedChat.append(state, action.messages);
-    case 'SET_MESSAGES':
-      return action.messages;
-    default:
-      return state;
-  }
-};
 
 const ChatScreen = ({ navigation, route }) => {
-  const [messages, dispatchMessages] = useReducer(messageReducer, []);
+  const [messages, setMessages] = useState([]);
   const { socket } = useContext(SocketContext);
   const { userId, roomId, user } = route.params;
-  const [currentUser, setCurrentUser] = useState({});
-
-  const renderMessage = (props) => {
-    const { currentMessage } = props;
-    return (
-      <View style={currentMessage.sent ? styles.sentMessage : styles.receivedMessage}>
-        <Bubble
-          {...props}
-          wrapperStyle={{
-            left: {
-              backgroundColor: '#F3F5FE',
-            },
-            right: {
-              backgroundColor: '#1D264D',
-            },
-          }}
-          textStyle={{
-            left: {
-              color: 'black',
-            },
-            right: {
-              color: COLORS.dark.white,
-            },
-          }}
-        />
-      </View>
-    );
-  };
+  const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
     const fetchUser = async () => {
-      const userString = await AsyncStorage.getItem('theUser');
-      if (userString) {
-        const user = JSON.parse(userString);
-        setCurrentUser(user);
-        console.log('Current user:', user);
+      try {
+        const userString = await AsyncStorage.getItem('theUser');
+        if (userString) {
+          const user = JSON.parse(userString);
+          setCurrentUser(user);
+          console.log('Current user:', user);
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+        Alert.alert('Error', 'Failed to load user data');
       }
     };
     fetchUser();
   }, []);
 
   useEffect(() => {
-    if (socket) {
+    if (socket && currentUser) {
       socket.emit('join_room', roomId);
-      socket.on('receive_message', onReceive);
-    }
+      socket.on('receive_message', onReceiveMessage);
 
-
-    return () => {
-      if (socket) {
+      return () => {
         socket.off('receive_message');
-      }
-    };
-  }, [socket, currentUser, messages]);
+      };
+    }
+  }, [socket, currentUser, roomId]);
 
   useEffect(() => {
-    fetchChatHistory();
-  }, [roomId ,]);
+    if (currentUser) {
+      fetchChatHistory();
+    }
+  }, [currentUser, roomId]);
 
   const fetchChatHistory = async () => {
     try {
@@ -103,62 +66,55 @@ const ChatScreen = ({ navigation, route }) => {
           text: msg.text,
           createdAt: new Date(msg.createdAt),
           user: {
-            _id: msg.receiverId,
-            name: msg.receiverName || "Unknown",
-            avatar: msg.receiverAvatar || "default_avatar.png",
+            _id: msg.receiverId === currentUser.user._id ? userId : currentUser.user._id,
+            name: msg.receiverId === currentUser.user._id ? user.name : currentUser.user.name,
           },
-          sent: msg.receiverId === currentUser?.user?._id,
         }));
-        dispatchMessages({ type: 'SET_MESSAGES', messages: formattedMessages });
-        console.log('Fetched chat history:', formattedMessages);
+        console.log('Formatted messages:', formattedMessages);
+        setMessages(formattedMessages.reverse());
+      } else {
+        console.error('Failed to fetch messages:', data.message);
       }
     } catch (error) {
       console.error('Error fetching chat history:', error);
+      Alert.alert('Error', 'Failed to load chat history');
     }
   };
 
-  const onReceive = useCallback((message) => {
-    console.log('Received message:', message);
-    const newMessage = {
-      _id: message._id || Math.random().toString(),
-      text: message.text,
-      createdAt: new Date(message.createdAt),
-      user: {
-        _id: user?._id,
-        name: user?.name,
-        avatar: user?.avatar,
-      },
-      sent: false,
-    };
-    dispatchMessages({ type: 'ADD_MESSAGES', messages: [newMessage] });
-  }, [user]);
+  const onReceiveMessage = useCallback((message) => {
+    setMessages(previousMessages => GiftedChat.append(previousMessages, [message]));
+    console.log('New message received:', message);
+  }, []);
 
   const onSend = useCallback((newMessages = []) => {
-    console.log('Sending messages:', newMessages);
-    const [message] = newMessages;
-    const newMessage = {
-      ...message,
-      sent: true,
-      user: {
-        _id: currentUser?.user?._id,
-        name: currentUser?.user?.name,
-        avatar: currentUser?.user?.avatar,
-      },
-    };
-    if (socket) {
-      socket.emit('send_message', {
+    const [messageToSend] = newMessages;
+    if (socket && currentUser) {
+      const messageData = {
+        _id: Math.random().toString(),
         roomId,
-        ...newMessage,
+        user: {
+          _id: currentUser.user._id,
+          name: currentUser.user.name,
+        },
         receiverId: userId,
-      });
+        text: messageToSend.text,
+        createdAt: new Date(),
+      };
+
+      socket.emit('send_message', messageData);
+      console.log('Message sent:', messageData);
+
+      setMessages(previousMessages => GiftedChat.append(previousMessages, [messageData]));
     }
-    dispatchMessages({ type: 'ADD_MESSAGES', messages: [newMessage] });
-    console.log('Updated messages:', messages);
   }, [socket, currentUser, userId, roomId]);
 
   const navigateBack = () => {
     navigation.goBack();
   };
+
+  if (!currentUser) {
+    return <View style={styles.loadingContainer}><Text>Loading...</Text></View>;
+  }
 
   return (
     <View style={styles.container}>
@@ -195,9 +151,9 @@ const ChatScreen = ({ navigation, route }) => {
         messages={messages}
         onSend={onSend}
         user={{
-          _id: currentUser?.user?._id,
+          _id: currentUser.user._id,
+          name: currentUser.user.name,
         }}
-        renderMessage={renderMessage}
       />
     </View>
   );

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Dimensions,
   Image,
@@ -37,7 +37,18 @@ const UserDetailsScreen = ({ navigation }) => {
   const [activeSlide, setActiveSlide] = React.useState(0);
   const [userDetails, setUserDetails] = React.useState({});
   const style = styles;
+  const [currentUser, setCurrentUser] = useState({});
+  useEffect(() => {
+    const fetchUser = async () => {
+      const userString = await AsyncStorage.getItem('theUser');
+      if (userString) {
+        const user = JSON.parse(userString);
+        setCurrentUser(user);
+      }
+    };
 
+    fetchUser();
+  }, []);
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
@@ -193,8 +204,8 @@ const UserDetailsScreen = ({ navigation }) => {
           iconRight={
             <TouchableOpacity
               style={style.rightIconContainer}
-              onPress={ async() => {
-               await saveUser();
+              onPress={async () => {
+                await saveUser();
                 navigation.navigate('SavedUserScreen');
               }}>
               <CustomImage
@@ -729,7 +740,7 @@ const UserDetailsScreen = ({ navigation }) => {
 
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate('ChatScreen', { userId: userDetails?._id, roomId: `${userDetails?._id}_${userDetails._id}`, user: userDetails });
+              navigation.navigate('ChatScreen', { userId: userDetails?._id, roomId: `${userDetails?._id}_${currentUser.user._id}`, user: userDetails });
             }}
             style={{
               width: '15%',
