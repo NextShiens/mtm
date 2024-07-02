@@ -50,7 +50,7 @@ io.on("connection", (socket) => {
     try {
       await sendchatNotification(data.receiverId, {
         message: data.text,
-        title: data.user.name, // Assuming the user object has a name property
+        title: data?.user?.name || 'Metrimonial',
       }, data.user._id);
   
       await checkRoom(data);

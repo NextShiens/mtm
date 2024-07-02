@@ -1,41 +1,33 @@
 {
   "project_info": {
-    "project_number": "968481960980",
-    "project_id": "matrimonyapp-4d730",
-    "storage_bucket": "matrimonyapp-4d730.appspot.com"
+    "project_number": "150066722698",
+    "project_id": "dukan-db",
+    "storage_bucket": "dukan-db.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:968481960980:android:05adf86f9d8d36e6ad2301",
+        "mobilesdk_app_id": "1:150066722698:android:bf498e7cdb81ce81e6fa73",
         "android_client_info": {
           "package_name": "com.matrimony_app"
         }
       },
       "oauth_client": [
         {
-          "client_id": "968481960980-f29e4p8ga6f6a7sevpf1eno4j8hhadpf.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.matrimony_app",
-            "certificate_hash": "26d846d85ce048f67d8f77199c5e968d7207bfcf"
-          }
-        },
-        {
-          "client_id": "968481960980-t6bsco2qndtbr143s20ao880biqpfdbc.apps.googleusercontent.com",
+          "client_id": "150066722698-o9oktrse31c1t60d2ve36jcrmngudlnt.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAPtMB3SCKFnpfNN39mp412oopc4eVsu6U"
+          "current_key": "AIzaSyAGmSpFVxcsuMUKc4bcaCw6RydGg5hOiFU"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "968481960980-t6bsco2qndtbr143s20ao880biqpfdbc.apps.googleusercontent.com",
+              "client_id": "150066722698-o9oktrse31c1t60d2ve36jcrmngudlnt.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

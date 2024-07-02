@@ -1,6 +1,5 @@
 import React, {useState,useEffect} from 'react';
-import { ScrollView, TouchableOpacity, View } from 'react-native';
-import FastImage from 'react-native-fast-image';
+import { ScrollView, TouchableOpacity, View,Image } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { Svg, Path } from 'react-native-svg';
 import { useNavigation } from '@react-navigation/native';
@@ -67,8 +66,8 @@ const HorizontalCard = ({ data }) => {
   const renderCard = (item, index) => (
     <View style={styles.cardContainer} key={`${item.key}_${index}`}>
       <View style={styles.imgContainer}>
-        {item.userImages?.[0] ? (
-          <FastImage
+        {item.userImages && item.userImages.length> 0 ? (
+          <Image
             source={{ uri: item.userImages[0] }}
             resizeMode="cover"
             style={styles.img}

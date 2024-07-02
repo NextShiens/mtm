@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ScrollView, TouchableOpacity, View, Image } from 'react-native';
+import { ScrollView, TouchableOpacity, View, Image, Text } from 'react-native';
 import { IMAGES } from '../../../assets/images';
 import { SVG } from '../../../assets/svg';
 import { COLORS } from '../../../assets/theme';
@@ -36,7 +36,7 @@ const InboxScreen = ({ navigation }) => {
           const response = await mainresponse.json();
 
           if (response.success) {
-            console.log('response', response);  
+            console.log('Conversations: fromfas', JSON.stringify(response.chats));
             setConversations(response.chats);
           }
         }
@@ -50,6 +50,20 @@ const InboxScreen = ({ navigation }) => {
 
   const handleRightIconPress = () => {
     navigation.navigate('NotificationScreen');
+  };
+
+  const navigateToChatScreen = (conversation) => {
+    console.log('Navigating with conversation:',(conversation));
+    // const otherUserId = conversation.roomId.split("_").find(id => id !== currentUser.user._id);
+    // navigation.navigate('ChatScreen', {
+    //   userId: otherUserId,
+    //   roomId: conversation.roomId,
+    //   user: {
+    //     _id: otherUserId,
+    //     name: conversation.chattedUser.name,
+    //     userImages: conversation.chattedUser.userImages,
+    //   }
+    // });
   };
 
   return (
@@ -81,23 +95,19 @@ const InboxScreen = ({ navigation }) => {
         />
       </View>
       <Space mT={20} />
-      {conversations.map((conversation) => (
-        <TouchableOpacity
-          key={conversation._id}
-          style={style.inboxContainer}
-          onPress={() => navigation.navigate('ChatScreen', {
-            userId: conversation.roomId.split("_")[0],
-            roomId: conversation.roomId,
-            user: {
-              _id: conversation.roomId.split("_")[0],
-              name: conversation.chattedUser.name,
-              profileImage: conversation.chattedUser.userImages[0],
-            }
-          })}
-        >
-          <InboxCard conversation={conversation} />
-        </TouchableOpacity>
-      ))}
+      {Array.isArray(conversations) ? (
+        conversations.map((conversation) => (
+          <TouchableOpacity
+            key={conversation._id}
+            style={style.inboxContainer}
+            onPress={() => navigateToChatScreen(conversation)}
+          >
+            <InboxCard conversation={conversation} />
+          </TouchableOpacity>
+        ))
+      ) : (
+        <Text>No conversations available</Text>
+      )}
     </ScrollView>
   );
 };

@@ -48,6 +48,8 @@ const auth =async (req, res, next) => {
 
       next();
       return;
+    }else{
+      return next();
     }
   } catch (error) {
     return next(error);

@@ -23,6 +23,7 @@ import { loginUser } from '../../../services/firebase';
 import { isValidatedLogin } from '../../../utils/validation';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL } from '../../../../constant';
+import { signInWithGoogle } from '../../../services/authServices';
 
 const LoginScreen = () => {
   const [isChecked, setIsChecked] = useState(false);
@@ -40,8 +41,8 @@ const LoginScreen = () => {
     navigation.goBack();
   };
 
-  const googleAuthHandler = async () => { };
-
+//   const googleAuthHandler = async () => { 
+// };
   const forgotPassHandler = () => {
     navigation.navigate('ForgotPassword');
   };
@@ -241,7 +242,7 @@ const LoginScreen = () => {
             <Space mT={30} />
 
             <SocialAuth
-              onGoogleAuth={googleAuthHandler}
+              onGoogleAuth={signInWithGoogle}
             />
             <Space mT={20} />
             <TouchableOpacity style={[STYLES.rowCenter, STYLES.JCCenter]}>

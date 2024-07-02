@@ -16,7 +16,7 @@ import { styles } from './styles';
 import { subscriptionCheck, checkLiveChatAvailability } from '../../utils/subscriptionCheck';
 import { Toast } from '../../utils/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { API_URL } from '../../../constant';
 const SnapCarousel = ({ data }) => {
   const navigation = useNavigation();
   const screenWidth = Dimensions.get('window').width;
@@ -34,7 +34,48 @@ const SnapCarousel = ({ data }) => {
 
     fetchUser();
   }, []);
+  async function addToRecentlyViewed(viewedUserId) {
+    const apiUrl = `${API_URL}/user/recentlyViewed`;
+    const token = await AsyncStorage.getItem('AccessToken');
 
+    try {
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          userId: viewedUserId
+        })
+      });
+
+      if (!response.ok) {
+        let errorMessage = 'An error occurred while adding user to recently viewed';
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.message || errorMessage;
+        } catch (e) {
+          errorMessage = response.statusText;
+        }
+        throw new Error(errorMessage);
+      }
+
+      const data = await response.json();
+      return {
+        success: true,
+        message: 'User added to recently viewed successfully!',
+        data: data
+      };
+    } catch (error) {
+      console.error('Error adding user to recently viewed:', error);
+      return {
+        success: false,
+        message: error.message || 'An unexpected error occurred',
+        error: error
+      };
+    }
+  }
   const renderItem = ({ item }) => (
     <>
       <View style={style.slideContainer}>
@@ -122,7 +163,9 @@ const SnapCarousel = ({ data }) => {
     const currentItem = data[activeSlide];
     const isSubscribed = await subscriptionCheck(currentItem);
     if (isSubscribed) {
+      await addToRecentlyViewed(currentItem?._id);
       navigation.navigate('UserDetailsScreen', { userId: currentItem?._id });
+   
     } else {
       Toast("Your profile view limit exceeded.");
     }
