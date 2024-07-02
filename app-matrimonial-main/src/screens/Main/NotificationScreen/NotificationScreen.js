@@ -1,7 +1,8 @@
 import React, { useContext, useEffect,useState } from 'react';
-import { ScrollView, TouchableOpacity, View } from 'react-native';
+import { ScrollView, TouchableOpacity, View ,ActivityIndicator} from 'react-native';
 import { IMAGES } from '../../../assets/images';
 import { SVG } from '../../../assets/svg';
+import { COLORS} from '../../../assets/theme';
 import AppHeader from '../../../components/AppHeader/AppHeader';
 import CustomImage from '../../../components/CustomImage/CustomImage';
 import NotificationCard from '../../../components/NotificationCard/NotificationCard';
@@ -15,6 +16,8 @@ import { SocketContext } from '../../../../SocketContext';
 const NotificationScreen = ({ navigation }) => {
   const { notifications, setNotifications } = useContext(SocketContext);
   const [currentUser, setCurrentUser] = useState({});
+  const [loading, setLoading] = useState(true);
+
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -47,6 +50,8 @@ const NotificationScreen = ({ navigation }) => {
       }
     } catch (error) {
       console.error('Error fetching notifications:', error);
+    }finally {
+      setLoading(false);
     }
   };
 
@@ -57,6 +62,18 @@ const NotificationScreen = ({ navigation }) => {
     }
     // Handle other notification types as needed
   };
+
+  if (loading) {
+    return (
+      <View style={{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+      }}>
+        <ActivityIndicator size="xl" color={COLORS.dark.primary} />
+      </View>
+    );
+  }
 
   return (
     <ScrollView>

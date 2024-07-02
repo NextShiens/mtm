@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, ScrollView, Image } from 'react-native';
+import { View, ScrollView, Image ,ActivityIndicator} from 'react-native';
 import { TouchableOpacity } from 'react-native';
 import { Fonts } from '../../../assets/fonts';
 import { IMAGES } from '../../../assets/images';
@@ -34,6 +34,8 @@ const ProfileUpdateScreen = ({ navigation }) => {
   const [selectedMonth, setSelectedMonth] = useState(null);
   const [selectedYear, setSelectedYear] = useState(null);
   const [selectedDay, setSelectedDay] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
 
   const [profileData, setProfileData] = useState({
     name: '',
@@ -233,6 +235,7 @@ const ProfileUpdateScreen = ({ navigation }) => {
    
 
     try {
+      setIsLoading(true);
       const token = await AsyncStorage.getItem('AccessToken');
       const response = await fetch(`${API_URL}/user/updateProfile`, {
         method: 'PUT',
@@ -251,6 +254,8 @@ const ProfileUpdateScreen = ({ navigation }) => {
 
     } catch (error) {
       console.error('error', error);
+    }finally{
+      setIsLoading(false)
     }
   };
   
@@ -440,7 +445,17 @@ const ProfileUpdateScreen = ({ navigation }) => {
               placeholder={profileData.dateOfBirth != ''?profileData.dateOfBirth: selectedDate}
             />
           <Space mT={20} />
-          <AppButton title={LABELS.update} onPress={handleUpdate} />
+          <AppButton
+              title={isLoading ? 'updating' : LABELS.update}
+              variant="filled"
+              textVariant={'h5'}
+              onPress={handleUpdate}
+              disabled={isLoading}
+            >
+              {isLoading && (
+                <ActivityIndicator size="small" color={COLORS.dark.white} style={{ marginLeft: 10 }} />
+              )}
+            </AppButton>
         </View>
       )}
       {selectedBtn == 2 && (

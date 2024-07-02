@@ -410,6 +410,8 @@ const userMatchController = {
         .skip(skip)
         .limit(requestsPerPage)
         .populate("receiverId");
+
+        const user = await User.findById(senderId)
       let previousPage = page > 1 ? page - 1 : null;
       let nextPage = page < totalPages ? page + 1 : null;
       return res.status(200).json({
@@ -417,6 +419,7 @@ const userMatchController = {
         auth: true,
         previousPage: previousPage,
         nextPage: nextPage,
+        user:user,
       });
     } catch (error) {
       return next(error);

@@ -213,6 +213,7 @@ const PartnerMatch = ({ navigation, route }) => {
 
   const fetchMatchedUsers = async () => {
     try {
+      setLoading(true)
       const token = await AsyncStorage.getItem('AccessToken');
       if (!token) {
         throw new Error('Access token not found');

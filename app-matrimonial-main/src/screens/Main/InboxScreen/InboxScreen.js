@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from 'react';
+<<<<<<< Updated upstream
 import { ScrollView, TouchableOpacity, View, Image, Text } from 'react-native';
+=======
+import { ScrollView, TouchableOpacity, View, Image,ActivityIndicator } from 'react-native';
+>>>>>>> Stashed changes
 import { IMAGES } from '../../../assets/images';
 import { SVG } from '../../../assets/svg';
 import { COLORS } from '../../../assets/theme';
@@ -16,6 +20,8 @@ const InboxScreen = ({ navigation }) => {
   const style = styles;
   const [currentUser, setCurrentUser] = useState({});
   const [conversations, setConversations] = useState([]);
+  const [loading, setLoading] = useState(true);
+
 
   useEffect(() => {
     const fetchUserAndConversations = async () => {
@@ -42,6 +48,8 @@ const InboxScreen = ({ navigation }) => {
         }
       } catch (error) {
         console.error('Error fetching user or conversations:', error);
+      }finally {
+        setLoading(false);
       }
     };
 
@@ -51,6 +59,7 @@ const InboxScreen = ({ navigation }) => {
   const handleRightIconPress = () => {
     navigation.navigate('NotificationScreen');
   };
+<<<<<<< Updated upstream
 
   const navigateToChatScreen = (conversation) => {
     console.log('Navigating with conversation:',(conversation));
@@ -66,6 +75,19 @@ const InboxScreen = ({ navigation }) => {
     // });
   };
 
+=======
+  if (loading) {
+    return (
+      <View style={{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+      }}>
+        <ActivityIndicator size="xl" color={COLORS.dark.primary} />
+      </View>
+    );
+  }
+>>>>>>> Stashed changes
   return (
     <ScrollView>
       <View style={style.headerContainer}>

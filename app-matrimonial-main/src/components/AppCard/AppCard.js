@@ -57,12 +57,13 @@ const AppCard = ({ isBtnShown, btnType, data, onPressBtn1, onPressBtn2 }) => {
       : onChatBtnPress;
 
   const renderCard = (item) => {
+    console.log(item)
     return (
       <View style={style.cardContainer(isBtnShown)} key={item?.id}>
         <View style={style.imgContainer}>
-          {item?.userImages?.length > 0 ? (
+          {item?.receiverId.userImages?.length > 0 ? (
             <FastImage
-              source={{ uri: item.userImages[0] }}
+              source={{ uri: item.receiverId.userImages[0] }}
               resizeMode="cover"
               style={style.img}
             />
@@ -72,7 +73,7 @@ const AppCard = ({ isBtnShown, btnType, data, onPressBtn1, onPressBtn2 }) => {
             </View>
           )}
           <AppText
-            title={item?.occupation || 'N/A'}
+            title={item?.receiverId.occupation || 'N/A'}
             color={'white'}
             alignSelf={'center'}
             variant={'h4'}
@@ -87,7 +88,7 @@ const AppCard = ({ isBtnShown, btnType, data, onPressBtn1, onPressBtn2 }) => {
         <View style={style.contentContainer}>
           <View style={STYLES.rowCenterBt}>
             <AppText
-              title={item?.name || 'Unknown'}
+              title={item?.receiverId.name || 'Unknown'}
               variant={'h4'}
               color={COLORS.dark.black}
               extraStyle={STYLES.fontFamily(Fonts.PoppinsRegular)}
@@ -95,7 +96,7 @@ const AppCard = ({ isBtnShown, btnType, data, onPressBtn1, onPressBtn2 }) => {
           </View>
 
           <AppText
-            title={`Age ${item?.age || 'N/A'} , ${item?.height || 'N/A'}`}
+            title={`Age ${item?.receiverId.age || 'N/A'} , ${item?.receiverId.height || 'N/A'}`}
             color={COLORS.dark.inputBorder}
             extraStyle={STYLES.fontFamily(Fonts.PoppinsRegular)}
           />
@@ -104,7 +105,7 @@ const AppCard = ({ isBtnShown, btnType, data, onPressBtn1, onPressBtn2 }) => {
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <LocationIcon size={16} />
               <AppText
-                title={item?.city || 'N/A'}
+                title={item?.receiverId.city || 'N/A'}
                 variant={'h5'}
                 extraStyle={STYLES.fontFamily(Fonts.PoppinsRegular)}
               />
@@ -112,7 +113,7 @@ const AppCard = ({ isBtnShown, btnType, data, onPressBtn1, onPressBtn2 }) => {
           </View>
           <View style={style.btnShownContainer(isBtnShown)}>
             <AppText
-              title={item?.motherTongue || 'N/A'}
+              title={item?.receiverId.motherTongue || 'N/A'}
               variant={'h5'}
               color={COLORS.dark.inputBorder}
               extraStyle={[
@@ -121,7 +122,7 @@ const AppCard = ({ isBtnShown, btnType, data, onPressBtn1, onPressBtn2 }) => {
               ]}
             />
             <AppText
-              title={item?.sect || 'N/A'}
+              title={item?.receiverId.sect || 'N/A'}
               variant={'h5'}
               color={COLORS.dark.inputBorder}
               extraStyle={[
