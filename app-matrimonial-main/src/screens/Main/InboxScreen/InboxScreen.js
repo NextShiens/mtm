@@ -1,9 +1,5 @@
 import React, { useEffect, useState } from 'react';
-<<<<<<< Updated upstream
-import { ScrollView, TouchableOpacity, View, Image, Text } from 'react-native';
-=======
-import { ScrollView, TouchableOpacity, View, Image,ActivityIndicator } from 'react-native';
->>>>>>> Stashed changes
+import { ScrollView, TouchableOpacity, View, Image,ActivityIndicator ,Text} from 'react-native';
 import { IMAGES } from '../../../assets/images';
 import { SVG } from '../../../assets/svg';
 import { COLORS } from '../../../assets/theme';
@@ -59,8 +55,6 @@ const InboxScreen = ({ navigation }) => {
   const handleRightIconPress = () => {
     navigation.navigate('NotificationScreen');
   };
-<<<<<<< Updated upstream
-
   const navigateToChatScreen = (conversation) => {
     console.log('Navigating with conversation:',(conversation));
     // const otherUserId = conversation.roomId.split("_").find(id => id !== currentUser.user._id);
@@ -75,7 +69,6 @@ const InboxScreen = ({ navigation }) => {
     // });
   };
 
-=======
   if (loading) {
     return (
       <View style={{
@@ -87,7 +80,6 @@ const InboxScreen = ({ navigation }) => {
       </View>
     );
   }
->>>>>>> Stashed changes
   return (
     <ScrollView>
       <View style={style.headerContainer}>
