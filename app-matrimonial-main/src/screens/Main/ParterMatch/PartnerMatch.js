@@ -315,7 +315,6 @@ const PartnerMatch = ({ navigation, route }) => {
         user.religion?.toLowerCase().includes(lowercasedSearch) ||
         user.highestDegree?.toLowerCase().includes(lowercasedSearch) ||
         user.maritalStatus?.toLowerCase().includes(lowercasedSearch) ||
-        user.annualIncome?.toLowerCase().includes(lowercasedSearch) ||
         user.workLocation?.toLowerCase().includes(lowercasedSearch)
       );
     });

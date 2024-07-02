@@ -22,7 +22,6 @@ const InitialScreen = ({ navigation }) => {
     };
     checkLogin();
     let currentUser = getCurrentUser();
-    let mango = getCurrentUserWithToken();
     if (currentUser) {
     } else {
       console.log("No user is currently signed in.");
@@ -35,6 +34,7 @@ const InitialScreen = ({ navigation }) => {
   };
   const loginNavigation = () => {
     if (loginToken) {
+      console.log("Login Token is available", loginToken);
       navigation.navigate('DrawerNavigation');
     } else {
       navigation.navigate('LoginScreen');

@@ -22,9 +22,8 @@ import { useRoute } from '@react-navigation/native';
 const OTPScreen = () => {
   const route = useRoute();
   const userEmailParams = route.params?.email || '';
-  setUserEmail(userEmailParams);
+  
   console.log('userEmail from otp page ', userEmailParams);
-  const [userEmail, setUserEmail] = useState('');
   const [otp, setOtp] = useState(['', '', '', '']);
   const navigation = useNavigation();
   const style = styles;
@@ -42,7 +41,7 @@ const OTPScreen = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({email:userEmail }),
+        body: JSON.stringify({email:userEmailParams }),
       });
       const data = await response.json();
       console.log(data);
@@ -61,7 +60,7 @@ const OTPScreen = () => {
           },
           body: JSON.stringify({
             code: enteredOTP,
-            email: `${userEmail}`
+            email: `${userEmailParams}`
           })
         });
         const data = await response.json();

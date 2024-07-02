@@ -88,19 +88,17 @@ const PartnerReferenceScreen = ({ navigation }) => {
   const nextPageNavigationHandler = async () => {
     console.log('All profile data:', allProfileData);
     try {
-      const token = await AsyncStorage.getItem('AccessToken') ;
-      console.log('Token:', token );
       const response = await fetch(`${API_URL}/user/completeProfile`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          "authorization": `Bearer ${token}`
+          "authorization": `Bearer ${await AsyncStorage.getItem('AccessToken')}`
         },
         body: JSON.stringify(allProfileData),
       });
   
       if (!response.ok) {
-        console.error('Failed to update profile:', response.statusText);
+        console.error('Failed to update profile:', response.message);
         return;
       }
   
@@ -120,7 +118,10 @@ const PartnerReferenceScreen = ({ navigation }) => {
         onLeftIconPress={() => navigation.goBack()}
             title={LABELS.partnerPreference}
             iconRight={
-              <TouchableOpacity onPress={handleRightIconPress}>
+              <TouchableOpacity onPress={()=>{
+                navigation.navigate('NotificationScreen');
+              
+              }}>
                 <Image source={IMAGES.notificationIcon} style={styles.Bell_Icon} />
               </TouchableOpacity>
             }

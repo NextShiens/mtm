@@ -22,10 +22,8 @@ export const saveCurrentUser = async () => {
       await AsyncStorage.setItem('theUser', JSON.stringify(jsonResponse));
       console.log('User saved successfully');
     } else {
-      console.error('Failed to fetch current user:', jsonResponse.message);
     }
   } catch (error) {
-    console.error('Error fetching current user:', error);
   }
 };
 

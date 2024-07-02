@@ -11,6 +11,7 @@ import { styles } from './styles';
 import { IMAGES } from '../../../assets/images';
 import { COLORS } from '../../../assets/theme';
 import Space from '../../../components/Space/Space';
+import { Toast } from '../../../utils/native';
 
 const ChatScreen = ({ route }) => {
   const [messages, setMessages] = useState([]);
@@ -77,7 +78,7 @@ const ChatScreen = ({ route }) => {
       }
     } catch (error) {
       console.error('Error fetching chat history:', error);
-      Alert.alert('Error', 'Failed to load chat history');
+      Toast('Failed to fetch chat history');
     }
   };
 

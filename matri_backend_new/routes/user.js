@@ -95,7 +95,7 @@ router.get("/user/getSavedUsers", auth, userMatchController.getSavedUsers);
 //
 router.get(
   "/user/getAllConversation",
-  // auth,
+  auth,
   chatController.getAllConversations
 );
 router.get("/user/getMessages", chatController.getMessages);

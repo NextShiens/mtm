@@ -1,19 +1,52 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { ScrollView, TouchableOpacity, View, Image } from 'react-native';
 import { IMAGES } from '../../../assets/images';
 import { SVG } from '../../../assets/svg';
 import { COLORS } from '../../../assets/theme';
 import AppHeader from '../../../components/AppHeader/AppHeader';
 import AppInput from '../../../components/AppInput/AppInput';
-import CustomImage from '../../../components/CustomImage/CustomImage';
 import InboxCard from '../../../components/InboxCard/InboxCard';
 import Space from '../../../components/Space/Space';
-import { inboxData } from '../../../data/appData';
 import { LABELS } from '../../../labels';
 import { styles } from './styles';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { API_URL } from '../../../../constant';
 
-const InboxScreen = ({navigation}) => {
+const InboxScreen = ({ navigation }) => {
   const style = styles;
+  const [currentUser, setCurrentUser] = useState({});
+  const [conversations, setConversations] = useState([]);
+
+  useEffect(() => {
+    const fetchUserAndConversations = async () => {
+      try {
+        const userString = await AsyncStorage.getItem('theUser');
+        const token = await AsyncStorage.getItem('AccessToken');
+        if (userString) {
+          const user = JSON.parse(userString);
+          setCurrentUser(user);
+
+          const mainresponse = await fetch(`${API_URL}/user/getAllConversation`, {
+            method: 'GET',
+            headers: {
+              Authorization: `Bearer ${token}`,
+            }
+          });
+
+          const response = await mainresponse.json();
+
+          if (response.success) {
+            console.log('response', response);  
+            setConversations(response.chats);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching user or conversations:', error);
+      }
+    };
+
+    fetchUserAndConversations();
+  }, []);
 
   const handleRightIconPress = () => {
     navigation.navigate('NotificationScreen');
@@ -23,14 +56,14 @@ const InboxScreen = ({navigation}) => {
     <ScrollView>
       <View style={style.headerContainer}>
         <AppHeader
-        iconLeft={<SVG.BackArrow size={24} fill={'black'} />}
-        onLeftIconPress={() => navigation.goBack()}
+          iconLeft={<SVG.BackArrow size={24} fill={'black'} />}
+          onLeftIconPress={() => navigation.goBack()}
           title={LABELS.inbox}
-        iconRight={
-          <TouchableOpacity onPress={handleRightIconPress}>
-            <Image source={IMAGES.notificationIcon} style={styles.Bell_Icon} />
-          </TouchableOpacity>
-        }
+          iconRight={
+            <TouchableOpacity onPress={handleRightIconPress}>
+              <Image source={IMAGES.notificationIcon} style={styles.Bell_Icon} />
+            </TouchableOpacity>
+          }
         />
       </View>
       <Space mT={20} />
@@ -46,18 +79,25 @@ const InboxScreen = ({navigation}) => {
           }}
           placeholder={LABELS.searchHere}
         />
-        {/* <TouchableOpacity style={style.filterBtn} activeOpacity={0.8}>
-          <CustomImage
-            source={IMAGES.filterIcon}
-            size={17}
-            resizeMode={'contain'}
-          />
-        </TouchableOpacity> */}
       </View>
       <Space mT={20} />
-      <TouchableOpacity style={style.inboxContainer}>
-        <InboxCard data={inboxData} />
-      </TouchableOpacity>
+      {conversations.map((conversation) => (
+        <TouchableOpacity
+          key={conversation._id}
+          style={style.inboxContainer}
+          onPress={() => navigation.navigate('ChatScreen', {
+            userId: conversation.roomId.split("_")[0],
+            roomId: conversation.roomId,
+            user: {
+              _id: conversation.roomId.split("_")[0],
+              name: conversation.chattedUser.name,
+              profileImage: conversation.chattedUser.userImages[0],
+            }
+          })}
+        >
+          <InboxCard conversation={conversation} />
+        </TouchableOpacity>
+      ))}
     </ScrollView>
   );
 };

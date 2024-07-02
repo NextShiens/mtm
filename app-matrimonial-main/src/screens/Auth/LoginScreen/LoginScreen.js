@@ -1,7 +1,7 @@
 import auth from '@react-native-firebase/auth';
 import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
-import { ScrollView, TouchableOpacity, View } from 'react-native';
+import { Alert, ScrollView, TouchableOpacity, View, ActivityIndicator } from 'react-native';
 import { Fonts } from '../../../assets/fonts';
 import { IMAGES } from '../../../assets/images';
 import { SVG } from '../../../assets/svg';
@@ -28,21 +28,25 @@ const LoginScreen = () => {
   const [isChecked, setIsChecked] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const navigation = useNavigation();
   const style = styles;
 
   const toggleCheckbox = () => {
     setIsChecked(!isChecked);
   };
+
   const backNavigationHandler = () => {
     navigation.goBack();
   };
 
   const googleAuthHandler = async () => { };
+
   const forgotPassHandler = () => {
     navigation.navigate('ForgotPassword');
   };
-  const getSubscriptions = async () => { 
+
+  const getSubscriptions = async () => {
     try {
       const response = await fetch(`${API_URL}/user/getSubscription`, {
         method: 'GET',
@@ -53,11 +57,12 @@ const LoginScreen = () => {
       const data = await response.json();
       await AsyncStorage.setItem('subscriptions', JSON.stringify(data));
     } catch (error) {
-      console.error(error.message);
+      console.log(error.message);
     } finally {
       console.log('done');
     }
   };
+
   const loginAndGetAccessToken = async () => {
     const data = await fetch(
       `${API_URL}/user/login`,
@@ -80,24 +85,30 @@ const LoginScreen = () => {
     await AsyncStorage.setItem('theUser', JSON.stringify(content));
     console.log(content, 'content');
   };
+
   const loginHandler = async () => {
     if (!email && !password) {
       Toast(ERRORS.emptyForm);
     } else {
       if (isValidatedLogin({ email, password })) {
-        await loginUser(email, password).then(res => {
+        setIsLoading(true);
+        try {
+          const res = await loginUser(email, password);
           if (res) {
-            const setUid = async () => {
-              await AsyncStorage.setItem('loginToken', res);
-              await loginAndGetAccessToken();
-              await  getSubscriptions();
-              navigation.navigate('DrawerNavigation');
-            };
-            setUid();
+            await loginAndGetAccessToken();
+            await AsyncStorage.setItem('loginToken', res);
+            await getSubscriptions();
+            navigation.navigate('DrawerNavigation');
           } else {
+            Alert.alert('Error', 'Failed to login invalid credentials');
             console.log('There is an error');
           }
-        });
+        } catch (error) {
+          console.error('Login error:', error);
+          Alert.alert('Error', 'An error occurred during login');
+        } finally {
+          setIsLoading(false);
+        }
       }
     }
   };
@@ -105,6 +116,7 @@ const LoginScreen = () => {
   const onEnterEmail = item => {
     setEmail(item);
   };
+
   const onPasswordEnter = item => {
     setPassword(item);
   };
@@ -204,11 +216,16 @@ const LoginScreen = () => {
             <Space mT={20} />
 
             <AppButton
-              title={LABELS.login}
+              title={isLoading ? 'Logging in...' : LABELS.login}
               variant="filled"
               textVariant={'h5'}
               onPress={loginHandler}
-            />
+              disabled={isLoading}
+            >
+              {isLoading && (
+                <ActivityIndicator size="small" color={COLORS.dark.white} style={{ marginLeft: 10 }} />
+              )}
+            </AppButton>
             <Space mT={20} />
 
             <View style={style.hrContainer}>

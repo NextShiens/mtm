@@ -44,7 +44,7 @@ const SavedUserScreen = ({ navigation }) => {
         });
         if (!response.ok) {
           const errorData = await response.json();
-          throw new Error(errorData.message || 'Failed to fetch saved users');
+        console.log(errorData.message || 'Failed to fetch saved users');
         }
         const data = await response.json();
         if (data.success && Array.isArray(data.savedUsers)) {

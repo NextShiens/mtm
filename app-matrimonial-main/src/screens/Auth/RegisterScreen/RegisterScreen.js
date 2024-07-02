@@ -73,9 +73,9 @@ const RegisterScreen = ({ navigation }) => {
       }),
     });
     const data = await res.json();
-    // await AsyncStorage.setItem('AccessToken', data.token);
+    await AsyncStorage.setItem('AccessToken', data.token);
     if (data.error) {
-      Toast(data.error);
+     console.log('Error:', data.error);
     } else {
       Toast('User registered successfully');
       navigation.navigate('OTPScreen' , {email: formData.email});
@@ -89,7 +89,7 @@ const RegisterScreen = ({ navigation }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({emal:formData.email }),
+        body: JSON.stringify({email:formData.email }),
       });
       const data = await response.json();
       console.log(data);
@@ -116,13 +116,12 @@ const RegisterScreen = ({ navigation }) => {
         try {
           const userFirebaseId = await RegisterUser(email, password);
           console.log('User Firebase Id: line103', userFirebaseId);
-          Toast('User registered successfully');
           await userFirstTimeReg(userFirebaseId)
           await verifyUserEmail();
           navigation.navigate('OTPScreen');
         }
         catch (error) {
-          Toast(error);
+          console.error('Error:', error);
         }
       }
     }

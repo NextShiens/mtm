@@ -63,7 +63,7 @@ const UserDetailsScreen = ({ navigation }) => {
         const data = await response.json();
         setUserDetails(data.user);
       } catch (error) {
-        console.error("Failed to fetch user details:", error); Play
+        console.error("Failed to fetch user details:", error);
       }
     };
 
