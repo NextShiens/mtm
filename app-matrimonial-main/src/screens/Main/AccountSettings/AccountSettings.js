@@ -40,6 +40,7 @@ const AccountSettingsScreen = ({ navigation }) => {
       onPress={handleDeleteAccountPress}>
         <View style={styles.optionContent}>
           <Icon size={24} color="#F39C12" />
+          <SVG.WarningIcon height={20} width={20} fill={'black'} />
           <Text style={styles.optionText}>Delete Account
           </Text>
         </View>
@@ -49,6 +50,7 @@ const AccountSettingsScreen = ({ navigation }) => {
       <TouchableOpacity style={styles.option} onPress={handleChangePasswordPress}>
         <View style={styles.optionContent}>
           <Icon size={24} color="#F39C12" />
+          <SVG.LockIcon height={24} width={21.14} fill={'black'} />
           <Text style={styles.optionText}>Change Password</Text>
         </View>
         <Icon size={24} color="#ccc" />
@@ -93,8 +95,9 @@ const styles = StyleSheet.create({
   },
   optionText: {
     marginLeft: 8,
-    fontSize: 16,
+    fontSize: 18,
     color: 'black',
+    fontWeight: 'bold',
   },
   line: {
     height: 1,

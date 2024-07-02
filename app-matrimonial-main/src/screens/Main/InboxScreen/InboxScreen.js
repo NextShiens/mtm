@@ -86,7 +86,7 @@ const InboxScreen = ({ navigation }) => {
           iconLeft={<SVG.magnifyingGlass fill={'black'} />}
           extraStyle={{
             textInputCont: {
-              width: '80%',
+              width: '100%',
               backgroundColor: COLORS.dark.searchBox,
               borderWidth: 0,
             },

@@ -9,21 +9,52 @@ import {
   Image,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/Ionicons';
-import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
-import { Toast } from '../../../utils/native'; // Import Toast utility
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Toast } from '../../../utils/native';
 import AppHeader from '../../../components/AppHeader/AppHeader';
 import { IMAGES } from '../../../assets/images';
 import { SVG } from '../../../assets/svg';
+import Icon from 'react-native-vector-icons/Ionicons';
 import CustomImage from '../../../components/CustomImage/CustomImage';
-import { API_URL } from '../../../../constant'; 
+import { API_URL } from '../../../../constant';
+import { Svg , Path } from 'react-native-svg';
 
 const ChangePasswordScreen = () => {
   const navigation = useNavigation();
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [showOldPassword, setShowOldPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
+  const PasswordEyeIcon = ({ showPassword}) => {
+     return showPassword ? (
+    <Svg width={24} height={24} viewBox="0 0 24 24" fill="black">
+      <Path
+      d="M1 12S4 4 12 4s11 8 11 8-3 8-11 8-11-8-11-8z"
+      fill="black"
+      />
+      <Path
+        d="M12 15a3 3 0 100-6 3 3 0 000 6z"
+        stroke="#A9A9A9"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      </Svg>
+    ) : (
+    <Svg width={24} height={24} viewBox="0 0 24 24" fill="black">
+      <Path
+        d="M17.94 17.94L1 1M22 12S19 4 12 4a11.8 11.8 0 00-5.66 1.34M12 20c-1.3 0-2.58-.21-3.76-.63M7.47 7.47C6.5 8.24 5.67 9.1 5 10M12 4v0M3 3l18 18"
+        stroke="black"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </Svg>
+  );
+};
 
   const handleRightIconPress = () => {
     navigation.navigate('NotificationScreen');
@@ -33,8 +64,7 @@ const ChangePasswordScreen = () => {
     try {
       const token = await AsyncStorage.getItem('AccessToken');
       const theUser = await AsyncStorage.getItem('theUser');
-        const user = JSON.parse(theUser);
-    
+      const user = JSON.parse(theUser);
 
       const response = await fetch(`${API_URL}/user/changePassword`, {
         method: 'POST',
@@ -43,7 +73,7 @@ const ChangePasswordScreen = () => {
           "authorization": `Bearer ${token}`,
         },
         body: JSON.stringify({
-            userId:user.user._id,
+          userId: user.user._id,
           password: oldPassword,
           newPassword: newPassword,
         }),
@@ -59,7 +89,7 @@ const ChangePasswordScreen = () => {
       console.log('Password changed successfully:', result);
       Toast('Password changed successfully');
       navigation.navigate('LoginScreen')
-   
+
     } catch (error) {
       console.error('Error changing password:', error);
       Toast('Failed to change password');
@@ -69,52 +99,61 @@ const ChangePasswordScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.headerContainer}>
-      <AppHeader
-        iconLeft={<SVG.BackArrow size={24} fill={'black'} />}
-        onLeftIconPress={() => navigation.goBack()}
-        title="Delete Account"
-        iconRight={
-          <TouchableOpacity onPress={handleRightIconPress}>
-            <Image source={IMAGES.notificationIcon} style={styles.Bell_Icon} />
-          </TouchableOpacity>
-        }
-      />
+        <AppHeader
+          iconLeft={<SVG.BackArrow size={24} fill={'black'} />}
+          onLeftIconPress={() => navigation.goBack()}
+          title="Change Password"
+          iconRight={
+            <TouchableOpacity onPress={handleRightIconPress}>
+              <Image source={IMAGES.notificationIcon} style={styles.Bell_Icon} />
+            </TouchableOpacity>
+          }
+        />
       </View>
       <View style={styles.line} />
 
       <View style={styles.contentContainer}>
         <View style={styles.inputContainer}>
-          <Icon size={24} color="#F39C12" />
+          <SVG.LockIcon height={20} width={20} fill={'black'} />
           <TextInput
             style={styles.textInput}
             placeholder="Enter your current password"
             placeholderTextColor="#A9A9A9"
-            secureTextEntry
+            secureTextEntry={!showOldPassword}
             value={oldPassword}
             onChangeText={setOldPassword}
           />
+          <TouchableOpacity onPress={() => setShowOldPassword(!showOldPassword)} style={styles.PasswordEyeIcon}>
+            <PasswordEyeIcon showPassword={showOldPassword} />
+          </TouchableOpacity>
         </View>
         <View style={styles.inputContainer}>
-          <Icon  size={24} color="#F39C12" />
+          <SVG.LockIcon height={20} width={20} fill={'black'} />
           <TextInput
             style={styles.textInput}
             placeholder="Type a new password"
             placeholderTextColor="#A9A9A9"
-            secureTextEntry
+            secureTextEntry={!showNewPassword}
             value={newPassword}
             onChangeText={setNewPassword}
           />
+          <TouchableOpacity onPress={() => setShowNewPassword(!showNewPassword)} style={styles.PasswordEyeIcon}>
+            <PasswordEyeIcon showPassword={showNewPassword} />
+          </TouchableOpacity>
         </View>
         <View style={styles.inputContainer}>
-          <Icon size={24}  color="#F39C12" />
+          <SVG.LockIcon height={20} width={20} fill={'black'} />
           <TextInput
             style={styles.textInput}
             placeholder="Confirm your new password"
             placeholderTextColor="#A9A9A9"
-            secureTextEntry
+            secureTextEntry={!showConfirmPassword}
             value={confirmPassword}
             onChangeText={setConfirmPassword}
           />
+          <TouchableOpacity onPress={() => setShowConfirmPassword(!showConfirmPassword)} style={styles.PasswordEyeIcon}>
+            <PasswordEyeIcon showPassword={showConfirmPassword} />
+          </TouchableOpacity>
         </View>
         <TouchableOpacity style={styles.button} onPress={handleChangePassword}>
           <Text style={styles.buttonText}>Done</Text>
@@ -138,7 +177,7 @@ const styles = StyleSheet.create({
   },
   line: {
     height: 1,
-    backgroundColor: '#E0E0E0', 
+    backgroundColor: '#E0E0E0',
     marginHorizontal: 16,
   },
   contentContainer: {
@@ -176,6 +215,10 @@ const styles = StyleSheet.create({
     height: 30,
     resizeMode: 'contain',
     marginRight: '1%',
+  },
+  PasswordEyeIcon: {
+    position: 'absolute',
+    right: 10,
   },
 });
 
