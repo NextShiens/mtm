@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, ScrollView, Image ,ActivityIndicator} from 'react-native';
+import { View, ScrollView, Image, ActivityIndicator } from 'react-native';
 import { TouchableOpacity } from 'react-native';
 import { Fonts } from '../../../assets/fonts';
 import { IMAGES } from '../../../assets/images';
@@ -20,6 +20,7 @@ import { API_URL } from '../../../../constant';
 import CustomCountryCodePicker from '../../../libraries/CustomCountryCodePicker/CustomCountryCodePicker';
 import { Toast } from '../../../utils/native';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import CustomImageGallery from './CustomImageGallery';
 
 
 const ProfileUpdateScreen = ({ navigation }) => {
@@ -97,7 +98,12 @@ const ProfileUpdateScreen = ({ navigation }) => {
   };
 
   const uploadImage = async (imageFile) => {
+
     try {
+      if (profileData.profilePicture.length >= 3) {
+        Toast('You can upload only 3 images');
+        return;
+      }
       const token = await AsyncStorage.getItem('AccessToken');
       if (!token) {
         throw new Error('No access token found');
@@ -132,7 +138,7 @@ const ProfileUpdateScreen = ({ navigation }) => {
 
       setProfileData(prevData => ({
         ...prevData,
-        profilePicture: [result.fileUrl],
+        profilePicture: [...(prevData.profilePicture || []), result.fileUrl],
       }));
       Toast('Profile picture uploaded successfully');
     } catch (error) {
@@ -180,7 +186,7 @@ const ProfileUpdateScreen = ({ navigation }) => {
     setSelectedMonth(month);
     setSelectedDay(newDate);
     setSelectedDate(`${newDate}/${month}/${year}`);
-    setProfileData({...profileData, dateOfBirth: `${newDate}/${month}/${year}`});
+    setProfileData({ ...profileData, dateOfBirth: `${newDate}/${month}/${year}` });
   };
 
   const onDateOpen = () => {
@@ -198,6 +204,7 @@ const ProfileUpdateScreen = ({ navigation }) => {
       });
 
       const result = await response.json();
+      console.log('result', result);
 
       if (response.ok) {
         setProfileData({
@@ -215,8 +222,9 @@ const ProfileUpdateScreen = ({ navigation }) => {
           maritalStatus: result.user.maritalStatus ? result.user.maritalStatus.toString() : '',
           employedIn: result.user.employedIn ? result.user.employedIn.toString() : '',
           annualIncome: result.user.annualIncome ? result.user.annualIncome.toString() : '',
+          profilePicture: result.user.userImages ? result.user.userImages : [],
         });
-        
+
       } else {
         Toast(result.message);
       }
@@ -229,10 +237,10 @@ const ProfileUpdateScreen = ({ navigation }) => {
   useEffect(() => {
     getUserData();
   }, []);
-
+  console.log('profileData', profileData)
   const handleUpdate = async () => {
-    const { name, email, phone, dateOfBirth: DOB, gender, height, location: city, motherTongue,  highestDegree, occupation, maritalStatus, employedIn, annualIncome, profilePicture: userImages } = profileData;
-   
+    const { name, email, phone, dateOfBirth: DOB, gender, height, location: city, motherTongue, highestDegree, occupation, maritalStatus, employedIn, annualIncome, profilePicture: userImages } = profileData;
+
 
     try {
       setIsLoading(true);
@@ -254,11 +262,11 @@ const ProfileUpdateScreen = ({ navigation }) => {
 
     } catch (error) {
       console.error('error', error);
-    }finally{
+    } finally {
       setIsLoading(false)
     }
   };
-  
+
   const handleRightIconPress = () => {
     navigation.navigate('NotificationScreen');
   };
@@ -269,8 +277,8 @@ const ProfileUpdateScreen = ({ navigation }) => {
     <ScrollView>
       <View style={style.headerContainer}>
         <AppHeader
-        iconLeft={<SVG.BackArrow size={24} fill={'black'} />}
-        onLeftIconPress={() => navigation.goBack()}
+          iconLeft={<SVG.BackArrow size={24} fill={'black'} />}
+          onLeftIconPress={() => navigation.goBack()}
           title={LABELS.profile}
           iconRight={
             <TouchableOpacity onPress={handleRightIconPress}>
@@ -300,27 +308,15 @@ const ProfileUpdateScreen = ({ navigation }) => {
             <></>
           )}
 
-          {profileData.profilePicture ? (
-            profileData.profilePicture.map(item => (
+          {
+            profileData?.profilePicture &&  (
+              <CustomImageGallery
+                imageUrls={profileData?.profilePicture}
+                onPress={openImageLibrary}
+              />
+            )
+          }
 
-              <CustomImage
-                source={item}
-                size={100}
-                resizeMode={'cover'}
-                onPress={openImageLibrary}
-              />
-            ))
-          ) : (
-            profilePictures.map(item => (
-              <CustomImage
-                source={item.img}
-                size={100}
-                resizeMode={'contain'}
-                key={item.key}
-                onPress={openImageLibrary}
-              />
-            ))
-          )}
         </View>
       </ScrollView>
       <Space mT={14} />
@@ -436,26 +432,26 @@ const ProfileUpdateScreen = ({ navigation }) => {
               setOpen(true);
             }}
           />
-             <BirthDatePicker
-              open={open}
-              selectedDate={date}
-              onConfirm={dateConfirmationHandler}
-              onCancel={onDateCancel}
-              onOpen={onDateOpen}
-              placeholder={profileData.dateOfBirth != ''?profileData.dateOfBirth: selectedDate}
-            />
+          <BirthDatePicker
+            open={open}
+            selectedDate={date}
+            onConfirm={dateConfirmationHandler}
+            onCancel={onDateCancel}
+            onOpen={onDateOpen}
+            placeholder={profileData.dateOfBirth != '' ? profileData.dateOfBirth : selectedDate}
+          />
           <Space mT={20} />
           <AppButton
-              title={isLoading ? 'updating' : LABELS.update}
-              variant="filled"
-              textVariant={'h5'}
-              onPress={handleUpdate}
-              disabled={isLoading}
-            >
-              {isLoading && (
-                <ActivityIndicator size="small" color={COLORS.dark.white} style={{ marginLeft: 10 }} />
-              )}
-            </AppButton>
+            title={isLoading ? 'updating' : LABELS.update}
+            variant="filled"
+            textVariant={'h5'}
+            onPress={handleUpdate}
+            disabled={isLoading}
+          >
+            {isLoading && (
+              <ActivityIndicator size="small" color={COLORS.dark.white} style={{ marginLeft: 10 }} />
+            )}
+          </AppButton>
         </View>
       )}
       {selectedBtn == 2 && (

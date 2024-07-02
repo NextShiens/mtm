@@ -10,7 +10,7 @@ const { PORT } = require("./config/index");
 const userRouter = require("./routes/user");
 const adminRouter = require("./routes/admin");
 const paymentRouter = require("./routes/payment");
-const { checkRoom, saveMessage } = require("./services/chatRoom");
+const { checkRoom, saveMessage, saveNotification } = require("./services/chatRoom");
 const { sendchatNotification } = require("./firebase/service");
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
@@ -52,10 +52,12 @@ io.on("connection", (socket) => {
         message: data.text,
         title: data?.user?.name || 'Metrimonial',
       }, data.user._id);
-  
+
       await checkRoom(data);
       await saveMessage(data);
-  
+      await saveNotification(data);
+
+
       // Emit to all clients in the room, including sender
       io.to(data.roomId).emit("receive_message", data);
     } catch (error) {

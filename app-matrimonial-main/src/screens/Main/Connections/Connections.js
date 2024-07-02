@@ -76,10 +76,9 @@ const Connections = ({ navigation }) => {
   };
 
   const getMyRequests = async () => {
-    debugger
-    const user = await AsyncStorage.getItem("theUser");
-    const userS = JSON.parse(user);
-    const userId = userS._id||"667f15b03ddfe81b61a7d161"; 
+    const theUser = await AsyncStorage.getItem('theUser');
+    const user = JSON.parse(theUser);
+    const userId = user.user._id;
     const token = await AsyncStorage.getItem('AccessToken');
 
     try {

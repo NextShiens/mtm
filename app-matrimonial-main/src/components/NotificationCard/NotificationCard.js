@@ -1,16 +1,16 @@
 import React from 'react';
-import {View, TouchableOpacity, ScrollView} from 'react-native';
+import { View, TouchableOpacity, ScrollView } from 'react-native';
 import AppText from '../AppText/AppText';
-import {COLORS, STYLES} from '../../assets/theme';
-import {Fonts} from '../../assets/fonts';
+import { COLORS, STYLES } from '../../assets/theme';
+import { Fonts } from '../../assets/fonts';
 import CustomImage from '../CustomImage/CustomImage';
-import {IMAGES} from '../../assets/images';
+import { IMAGES } from '../../assets/images';
 import Space from '../Space/Space';
-import {styles} from './styles';
+import { styles } from './styles';
 
 const style = styles;
 
-const groupNotificationsByDate = (data, handleNotificationPress) => {
+const groupNotificationsByDate = (data) => {
   const today = new Date();
   const yesterday = new Date(today);
   yesterday.setDate(today.getDate() - 1);
@@ -22,7 +22,7 @@ const groupNotificationsByDate = (data, handleNotificationPress) => {
   };
 
   data && data.forEach(item => {
-    const notificationDate = new Date(item.timestamp);
+    const notificationDate = new Date(item.createdAt);
 
     if (notificationDate.toDateString() === today.toDateString()) {
       groupedNotifications.today.push(item);
@@ -36,11 +36,11 @@ const groupNotificationsByDate = (data, handleNotificationPress) => {
   return groupedNotifications;
 };
 
-const NotificationCard = ({data}) => {
+const NotificationCard = ({ data, onPress }) => {
   const groupedNotifications = groupNotificationsByDate(data);
 
   return (
-    <TouchableOpacity style={style.cardContainer}>
+    <View style={style.cardContainer}>
       <ScrollView>
         {groupedNotifications.today.length > 0 && (
           <>
@@ -53,7 +53,7 @@ const NotificationCard = ({data}) => {
               <NotificationItem
                 key={index}
                 item={item}
-                onPress={handleNotificationPress(item)}
+                onPress={() => onPress(item)}
               />
             ))}
             <Space mT={20} />
@@ -68,7 +68,11 @@ const NotificationCard = ({data}) => {
               extraStyle={STYLES.fontFamily(Fonts.PoppinsRegular)}
             />
             {groupedNotifications.yesterday.map((item, index) => (
-              <NotificationItem key={index} item={item} />
+              <NotificationItem
+                key={index}
+                item={item}
+                onPress={() => onPress(item)}
+              />
             ))}
             <Space mT={20} />
           </>
@@ -82,30 +86,48 @@ const NotificationCard = ({data}) => {
               extraStyle={STYLES.fontFamily(Fonts.PoppinsRegular)}
             />
             {groupedNotifications.older.map((item, index) => (
-              <NotificationItem key={index} item={item} />
+              <NotificationItem
+                key={index}
+                item={item}
+                onPress={() => onPress(item)}
+              />
             ))}
             <Space mT={20} />
           </>
         )}
       </ScrollView>
-    </TouchableOpacity>
+    </View>
   );
 };
 
-const NotificationItem = ({item}) => {
+const NotificationItem = ({ item, onPress }) => {
+  const getTimeAgo = (createdAt) => {
+    const now = new Date();
+    const created = new Date(createdAt);
+    const diffInMinutes = Math.floor((now - created) / (1000 * 60));
+
+    if (diffInMinutes < 60) {
+      return `${diffInMinutes} min`;
+    } else if (diffInMinutes < 1440) {
+      return `${Math.floor(diffInMinutes / 60)} hours`;
+    } else {
+      return `${Math.floor(diffInMinutes / 1440)} days`;
+    }
+  };
+
   return (
-    <TouchableOpacity>
+    <TouchableOpacity onPress={onPress}>
       <View style={style.contentContainer}>
         <View style={style.profileContainer}>
           <CustomImage
-            source={IMAGES.carousel1}
+            source={item.senderId.userImages[0] ? { uri: item.senderId.userImages[0] } : { uri: 'https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png' }}
             size={40}
-            extraStyle={{container: STYLES.bR(20)}}
+            extraStyle={{ container: STYLES.bR(20) }}
           />
         </View>
         <View style={style.messageContainer}>
           <AppText
-            title={item.message}
+            title={item.title == 'Chat' ? `${item?.senderId?.name} have sent you a Message` : item.message}
             numberOfLines={2}
             elipsizeMode="tail"
             variant={'h5'}
@@ -114,7 +136,7 @@ const NotificationItem = ({item}) => {
         </View>
         <View style={style.timeStampContainer}>
           <AppText
-            title={'7 min'}
+            title={getTimeAgo(item.createdAt)}
             extraStyle={[
               STYLES.fontFamily(Fonts.PoppinsRegular),
               STYLES.bottom(10),

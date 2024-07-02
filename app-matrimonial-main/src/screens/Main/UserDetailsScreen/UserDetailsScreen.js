@@ -24,10 +24,13 @@ import { API_URL } from '../../../../constant';
 import { SvgXml } from 'react-native-svg';
 
 const defaultProfileSvg = `
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-  <circle cx="12" cy="7" r="4"></circle>
-</svg>
+   <Svg height={size} width={size} viewBox="0 0 100 100">
+      <Circle cx="50" cy="50" r="50" fill={backgroundColor} />
+      <Path
+        d="M50 48C58.8366 48 66 40.8366 66 32C66 23.1634 58.8366 16 50 16C41.1634 16 34 23.1634 34 32C34 40.8366 41.1634 48 50 48ZM50 54C39.3178 54 18 59.3178 18 70V76C18 79.3137 20.6863 82 24 82H76C79.3137 82 82 79.3137 82 76V70C82 59.3178 60.6822 54 50 54Z"
+        fill={iconColor}
+      />
+    </Svg>
 `;
 
 const UserDetailsScreen = ({ navigation }) => {
