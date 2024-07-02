@@ -48,8 +48,8 @@ const AppCard = ({ isBtnShown, btnType, data, onPressBtn1, onPressBtn2 }) => {
   };
   const onPressFunction =
     isBtnShown && btnType === 'requestAcception'
-      ? onSendRequest
-      : onAcceptRequest;
+      ? onAcceptRequest
+      :  onSendRequest;
 
   const onSecondBtnPress =
     isBtnShown && btnType === 'requestAcception'
@@ -57,13 +57,12 @@ const AppCard = ({ isBtnShown, btnType, data, onPressBtn1, onPressBtn2 }) => {
       : onChatBtnPress;
 
   const renderCard = (item) => {
-    console.log(item)
     return (
       <View style={style.cardContainer(isBtnShown)} key={item?.id}>
         <View style={style.imgContainer}>
-          {item?.receiverId.userImages?.length > 0 ? (
+          {item?.userImages?.length > 0 ? (
             <FastImage
-              source={{ uri: item.receiverId.userImages[0] }}
+              source={{ uri: item.userImages[0] }}
               resizeMode="cover"
               style={style.img}
             />
@@ -73,7 +72,7 @@ const AppCard = ({ isBtnShown, btnType, data, onPressBtn1, onPressBtn2 }) => {
             </View>
           )}
           <AppText
-            title={item?.receiverId.occupation || 'N/A'}
+            title={item?.occupation || 'N/A'}
             color={'white'}
             alignSelf={'center'}
             variant={'h4'}
@@ -88,7 +87,7 @@ const AppCard = ({ isBtnShown, btnType, data, onPressBtn1, onPressBtn2 }) => {
         <View style={style.contentContainer}>
           <View style={STYLES.rowCenterBt}>
             <AppText
-              title={item?.receiverId.name || 'Unknown'}
+              title={item?.name || 'Unknown'}
               variant={'h4'}
               color={COLORS.dark.black}
               extraStyle={STYLES.fontFamily(Fonts.PoppinsRegular)}
@@ -96,7 +95,7 @@ const AppCard = ({ isBtnShown, btnType, data, onPressBtn1, onPressBtn2 }) => {
           </View>
 
           <AppText
-            title={`Age ${item?.receiverId.age || 'N/A'} , ${item?.receiverId.height || 'N/A'}`}
+            title={`Age ${item?.age || 'N/A'} , ${item?.height || 'N/A'}`}
             color={COLORS.dark.inputBorder}
             extraStyle={STYLES.fontFamily(Fonts.PoppinsRegular)}
           />
@@ -105,7 +104,7 @@ const AppCard = ({ isBtnShown, btnType, data, onPressBtn1, onPressBtn2 }) => {
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <LocationIcon size={16} />
               <AppText
-                title={item?.receiverId.city || 'N/A'}
+                title={item?.city || 'N/A'}
                 variant={'h5'}
                 extraStyle={STYLES.fontFamily(Fonts.PoppinsRegular)}
               />
@@ -113,7 +112,7 @@ const AppCard = ({ isBtnShown, btnType, data, onPressBtn1, onPressBtn2 }) => {
           </View>
           <View style={style.btnShownContainer(isBtnShown)}>
             <AppText
-              title={item?.receiverId.motherTongue || 'N/A'}
+              title={item?.motherTongue || 'N/A'}
               variant={'h5'}
               color={COLORS.dark.inputBorder}
               extraStyle={[
@@ -122,7 +121,7 @@ const AppCard = ({ isBtnShown, btnType, data, onPressBtn1, onPressBtn2 }) => {
               ]}
             />
             <AppText
-              title={item?.receiverId.sect || 'N/A'}
+              title={item?.sect || 'N/A'}
               variant={'h5'}
               color={COLORS.dark.inputBorder}
               extraStyle={[
@@ -142,6 +141,9 @@ const AppCard = ({ isBtnShown, btnType, data, onPressBtn1, onPressBtn2 }) => {
                         container: [style.acceptBtn],
                       }}
                       title={btnType === 'requestAcception' ? "Accept" : 'View Profile'}
+                      onPress={() => {
+                        onPressFunction(item);
+                      }}
                     />
                     <CustomImage
                       source={IMAGES.sendIcon}
@@ -179,9 +181,7 @@ const AppCard = ({ isBtnShown, btnType, data, onPressBtn1, onPressBtn2 }) => {
                   color={COLORS.dark.white}
                   extraStyle={STYLES.fontFamily(Fonts.PoppinsRegular)}
                   variant={'h5'}
-                  onPress={() => {
-                    onPressFunction(item);
-                  }}
+      
                 />
               </TouchableOpacity>
 

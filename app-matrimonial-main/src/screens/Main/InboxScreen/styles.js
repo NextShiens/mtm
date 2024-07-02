@@ -16,6 +16,12 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-between',
     flexDirection: 'row',
   },
+  noConversationsText: {
+    textAlign: 'center',
+    fontSize: 16,
+    color: COLORS.dark.gray,
+    marginTop: 20,
+  },
   searchBox: {
     height: 50,
     width: '75%',

@@ -1,8 +1,8 @@
-import React, { useContext, useEffect,useState } from 'react';
-import { ScrollView, TouchableOpacity, View ,ActivityIndicator} from 'react-native';
+import React, { useContext, useEffect, useState } from 'react';
+import { ScrollView, TouchableOpacity, View, ActivityIndicator } from 'react-native';
 import { IMAGES } from '../../../assets/images';
 import { SVG } from '../../../assets/svg';
-import { COLORS} from '../../../assets/theme';
+import { COLORS } from '../../../assets/theme';
 import AppHeader from '../../../components/AppHeader/AppHeader';
 import CustomImage from '../../../components/CustomImage/CustomImage';
 import NotificationCard from '../../../components/NotificationCard/NotificationCard';
@@ -11,26 +11,12 @@ import { LABELS } from '../../../labels';
 import { styles } from './styles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL } from '../../../../constant';
-import { SocketContext } from '../../../../SocketContext';
+import { checkLiveChatAvailability } from '../../../utils/subscriptionCheck';
+
 
 const NotificationScreen = ({ navigation }) => {
-  const { notifications, setNotifications } = useContext(SocketContext);
-  const [currentUser, setCurrentUser] = useState({});
+  const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
-
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      const userString = await AsyncStorage.getItem('theUser');
-      if (userString) {
-        const user = JSON.parse(userString);
-        setCurrentUser(user);
-      }
-    };
-  
-    fetchUser();
-  }, []);
-
 
   useEffect(() => {
     fetchNotifications();
@@ -45,32 +31,38 @@ const NotificationScreen = ({ navigation }) => {
         },
       });
       const data = await response.json();
-      if (data.success) {
+      console.log('Notifications:', data);
+      if (data.auth) {
         setNotifications(data.notifications);
       }
     } catch (error) {
       console.error('Error fetching notifications:', error);
-    }finally {
+    } finally {
       setLoading(false);
     }
   };
 
-  const handleNotificationPress = (notification) => {
-    // Navigate to appropriate screen based on notification type
-    if (notification.type === 'chat') {
-      navigation.navigate('ChatScreen', { userId: notification.senderId, roomId: notification.roomId });
+  const handleNotificationPress = async (notification) => {
+    console.log('Notification pressed:', notification);
+    if (notification.title === 'Chat') {
+    const isSubscribed = await checkLiveChatAvailability(JSON.parse(await AsyncStorage.getItem('theUser')));
+    if (isSubscribed) {
+      navigation.navigate('ChatScreen', { userId: notification?.senderId._id, roomId: `${notification?.senderId._id}_${notification?.receiverId}`, user: notification?.senderId });
+    } else {
+      Toast("You can't chat buy premium plan");
+    }
+  }
+
+    if (notification.title === 'Matrimonial') {
+      navigation.navigate('UserDetailsScreen', {userId: notification?.senderId._id })
     }
     // Handle other notification types as needed
   };
 
   if (loading) {
     return (
-      <View style={{
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center'
-      }}>
-        <ActivityIndicator size="xl" color={COLORS.dark.primary} />
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color={COLORS.dark.primary} />
       </View>
     );
   }
@@ -80,9 +72,7 @@ const NotificationScreen = ({ navigation }) => {
       <View style={styles.headerContainer}>
         <AppHeader
           iconLeft={<SVG.BackArrow fill={'black'} />}
-          onLeftIconPress={() => {
-            navigation.goBack();
-          }}
+          onLeftIconPress={() => navigation.goBack()}
           title={LABELS.notification}
           iconRight={
             <TouchableOpacity>

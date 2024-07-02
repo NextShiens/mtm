@@ -12,6 +12,9 @@ import { IMAGES } from '../../../assets/images';
 import { COLORS } from '../../../assets/theme';
 import Space from '../../../components/Space/Space';
 import { Toast } from '../../../utils/native';
+import AppHeader from '../../../components/AppHeader/AppHeader';
+import { LABELS } from '../../../labels';
+import Svg, { Path } from 'react-native-svg';
 
 const ChatScreen = ({ route }) => {
   const [messages, setMessages] = useState([]);
@@ -144,33 +147,24 @@ const ChatScreen = ({ route }) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.Header_Cont}>
-        <View style={styles.Header}>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <TouchableOpacity onPress={navigateBack}>
-              <Icon
-                SVGIcon={<SVG.BackArrow fill={'black'} />}
-                onPress={navigateBack}
-              />
-            </TouchableOpacity>
-            <Space mL={10} />
-            <View style={styles.User_Cont}>
-              <Image
-                style={{ height: 50, width: 50, borderRadius: 25 }}
-                source={user?.userImages?.[0] ? { uri: user?.userImages?.[0] } : IMAGES.userIcon}
-              />
-              <Space mL={10} />
-              <View style={styles.UserDetail}>
-                <Text style={styles.User_name}>{user.name}</Text>
-              </View>
-            </View>
+
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <View style={styles.headerContainer}>
+          <AppHeader
+            iconLeft={<SVG.BackArrow size={24} fill={'black'} />}
+            onLeftIconPress={() => navigation.goBack()}
+          />
+        </View>
+        <Space mL={10} />
+        <View style={styles.User_Cont}>
+          <Image
+            style={{ height: 50, width: 50, borderRadius: 25 }}
+            source={user?.userImages?.[0] ? { uri: user?.userImages?.[0] } : IMAGES.userIcon}
+          />
+          <Space mL={10} />
+          <View style={styles.UserDetail}>
+            <Text style={styles.User_name}>{user.name}</Text>
           </View>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate('NotificationScreen');
-            }}>
-            <Image source={IMAGES.notificationIcon} style={styles.Bell_Icon} />
-          </TouchableOpacity>
         </View>
       </View>
       <GiftedChat
@@ -185,7 +179,9 @@ const ChatScreen = ({ route }) => {
         alwaysShowSend
         scrollToBottom
         scrollToBottomComponent={() => (
-          <Icon name="chevron-down-circle" size={24} color="#007AFF" />
+          <Svg width={24} height={24} viewBox="0 0 24 24" fill="#007AFF">
+          <Path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-2-5l4-4 4 4H10z"/>
+        </Svg>
         )}
       />
     </View>

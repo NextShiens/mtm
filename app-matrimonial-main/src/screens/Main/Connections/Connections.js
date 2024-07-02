@@ -24,15 +24,69 @@ const Connections = ({ navigation }) => {
   const [selectedBtn, setSelectedBtn] = useState(1);
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [acceptedRequests, setAcceptedRequests] = useState([]);
 
   useEffect(() => {
     fetchRequests();
-  }, [selectedBtn]); 
+  }, [selectedBtn]);
 
   useEffect(() => {
-    // Any additional setup if needed
   }, []);
+  const rejectRequest = async (requestId) => {
+    try {
+      const token = await AsyncStorage.getItem('AccessToken');
+      const response = await fetch(`${API_URL}/user/rejectRequest?requestId=${requestId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
+      if (!response.ok) {
+        if (response.status === 404) {
+          Toast('Request not found');
+        } else {
+          Toast('Something went wrong');
+        }
+      }
+
+      const { requests } = await response.json();
+    } catch (error) {
+      console.error('Error rejecting request:', error);
+      Toast('Error rejecting request');
+      throw error;
+    }
+  };
+  const acceptRequest = async (requestId) => {
+    try {
+
+      const token = await AsyncStorage.getItem('AccessToken');
+      const response = await fetch(`${API_URL}/user/acceptRequest?requestId=${requestId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        if (response.status === 404) {
+          Toast('Request not found');
+        } else if (response.status === 409) {
+          Toast('Request already accepted');
+        } else {
+          Toast('Something went wrong');
+        }
+      }
+
+      const { requests } = await response.json();
+      return { requests };
+    } catch (error) {
+      console.error('Error accepting request:', error);
+      throw error;
+    }
+  };
   const fetchRequests = async () => {
     setLoading(true);
     try {
@@ -42,8 +96,7 @@ const Connections = ({ navigation }) => {
       } else if (selectedBtn === 2 || selectedBtn === 3) {
         data = await getMyRequests();
       }
-      setRequests(data.requests); 
-      console.log(requests ,"requests from us ")
+      setRequests(data.requests);
     } catch (error) {
       console.error('Error fetching requests:', error);
     } finally {
@@ -68,18 +121,27 @@ const Connections = ({ navigation }) => {
 
       const data = await response.json();
       console.log('Accepted requests:', data);
-      return data;
+      setAcceptedRequests(data)
     } catch (error) {
       console.error('There was a problem with the fetch operation:', error);
       throw error;
     }
   };
 
+  const handleAcceptRequest = (requestId) => {
+    acceptRequest(requestId);
+    Toast('Request accepted');
+  };
+
+  const handleRejectRequest = (requestId) => {
+    rejectRequest(requestId);
+    Toast('Request rejected');
+  };
+
   const getMyRequests = async () => {
-    debugger
-    const user = await AsyncStorage.getItem("theUser");
-    const userS = JSON.parse(user);
-    const userId = userS._id||"667f15b03ddfe81b61a7d161"; 
+    const theUser = await AsyncStorage.getItem('theUser');
+    const user = JSON.parse(theUser);
+    const userId = user.user._id;
     const token = await AsyncStorage.getItem('AccessToken');
 
     try {
@@ -98,7 +160,7 @@ const Connections = ({ navigation }) => {
 
       const data = await response.json();
       console.log('My requests:', data);
-      console.log("requests"+ data.requests)
+      console.log("requests" + data.requests)
       return data;
     } catch (error) {
       console.error('There was a problem with the fetch operation:', error);
@@ -118,138 +180,143 @@ const Connections = ({ navigation }) => {
 
   return (
     <>
-    <ScrollView>
-      <View style={style.headerContainer}>
-        <AppHeader
-          iconLeft={<SVG.BackArrow size={24} fill={'black'} />}
-          onLeftIconPress={() => navigation.goBack()}
-          title={LABELS.connection}
-          iconRight={
-            <TouchableOpacity onPress={handleRightIconPress}>
-              <Image source={IMAGES.notificationIcon} style={styles.Bell_Icon} />
-            </TouchableOpacity>
-          }
-        />
-      </View>
-      <Space mT={20} />
-      <View style={[STYLES.container]}>
-        <View style={style.mapContainer}>
-          {connectionStatus.map((item) => (
-            <AppButton
-              key={item.key}
-              variant="filled"
-              extraStyle={{
-                container: [
-                  selectedBtn === item.key
-                    ? style.selectedBtn
-                    : style.unSelectedBtn,
-                ],
-                text: [
-                  selectedBtn === item.key
-                    ? style.selectedText
-                    : style.unSelectedText,
-                ],
-              }}
-              title={item.value}
-              onPress={() => {
-                handleProfileUpdate(item);
-              }}
-            />
-          ))}
+      <ScrollView>
+        <View style={style.headerContainer}>
+          <AppHeader
+            iconLeft={<SVG.BackArrow size={24} fill={'black'} />}
+            onLeftIconPress={() => navigation.goBack()}
+            title={LABELS.connection}
+            iconRight={
+              <TouchableOpacity onPress={handleRightIconPress}>
+                <Image source={IMAGES.notificationIcon} style={styles.Bell_Icon} />
+              </TouchableOpacity>
+            }
+          />
         </View>
-      </View>
-      <Space mT={20} />
-
-      {loading ? (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <ActivityIndicator size="large" color={COLORS.dark.primary} />
-        </View>
-      ) : (
-        <>
-          {selectedBtn === 1 ? (
-            <ConnectionsInboxCard data={requests} /> // Render accepted requests
-          ) : selectedBtn === 2 || selectedBtn === 3 ? (
-            <View style={STYLES.pH(HORIZON_MARGIN)}>
-              <AppCard
-                data={requests}
-                isBtnShown={true}
-                btnType={'requestAcception'}
-                onPressBtn1={() => {
-                  Toast('Request accepted');
+        <Space mT={20} />
+        <View style={[STYLES.container]}>
+          <View style={style.mapContainer}>
+            {connectionStatus.map((item) => (
+              <AppButton
+                key={item.key}
+                variant="filled"
+                extraStyle={{
+                  container: [
+                    selectedBtn === item.key
+                      ? style.selectedBtn
+                      : style.unSelectedBtn,
+                  ],
+                  text: [
+                    selectedBtn === item.key
+                      ? style.selectedText
+                      : style.unSelectedText,
+                  ],
                 }}
-                onPressBtn2={() => {
-                  Toast('Request rejected');
+                title={item.value}
+                onPress={() => {
+                  handleProfileUpdate(item);
                 }}
               />
-            </View>
-          ) : (
-            requests.map((item) => (
-              <View style={STYLES.pH(HORIZON_MARGIN)} key={item.receiverId._id}>
-                <View style={style.cardContainer}>
-                  <View style={style.imgContainer}>
-                    <FastImage
-                      source={IMAGES.profile1} // Replace with actual image source logic
-                      resizeMode="cover"
-                      style={style.img}
+            ))}
+          </View>
+        </View>
+        <Space mT={20} />
+
+        {loading ? (
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <ActivityIndicator size="large" color={COLORS.dark.primary} />
+          </View>
+        ) : (
+          <>
+            {selectedBtn === 1 ? (
+              <ConnectionsInboxCard data={acceptedRequests} />
+            ) : selectedBtn === 2 || selectedBtn === 3 ? (
+              <View style={STYLES.pH(HORIZON_MARGIN)}>
+                {requests && requests.length > 0 ? (
+                  requests.map((item) => (
+                    <AppCard
+                      key={item._id}
+                      data={item.receiverId}
+                      isBtnShown={true}
+                      btnType={'requestAcception'}
+                      onPressBtn1={() => handleAcceptRequest(item._id)}
+                      onPressBtn2={() => handleRejectRequest(item._id)}
                     />
-                    <LinearGradient
-                      colors={['transparent', COLORS.dark.secondary]}
-                      style={style.gradientOverlay}
-                    />
-                  </View>
-                  <View style={style.contentContainer}>
-                    <View style={STYLES.rowCenterBt}>
-                      <AppText
-                        title={item.receiverId.name}
-                        variant={'h4'}
-                        color={COLORS.dark.black}
-                        extraStyle={STYLES.fontFamily(Fonts.PoppinsRegular)}
-                      />
-                      <View style={style.verifyIconContainer}>
-                        <CustomImage
-                          source={IMAGES.verifyIcon}
-                          size={12}
-                          resizeMode={'cover'}
+                  ))
+                ) : (
+                  <AppText title="No requests found" variant="h3" />
+                )}
+              </View>
+            ) : (
+              <View style={STYLES.pH(HORIZON_MARGIN)}>
+                {requests && requests.length>0 && requests.map((item) => (
+                  <View style={STYLES.pH(HORIZON_MARGIN)} key={item.receiverId._id}>
+                    <View style={style.cardContainer}>
+                      <View style={style.imgContainer}>
+                        <FastImage
+                          source={{ uri: item.receiverId.userImages[0] }}
+                          resizeMode="cover"
+                          style={style.img}
+                        />
+                        <LinearGradient
+                          colors={['transparent', COLORS.dark.secondary]}
+                          style={style.gradientOverlay}
                         />
                       </View>
-                    </View>
-                    <AppText
-                      title={`Age ${item.receiverId.age}, ${item.receiverId.height}`}
-                      color={COLORS.dark.inputBorder}
-                      extraStyle={STYLES.fontFamily(Fonts.PoppinsRegular)}
-                    />
-                    <View style={STYLES.rowCenter}>
-                      <AppText
-                        title={item.receiverId.city}
-                        variant={'h5'}
-                        extraStyle={STYLES.fontFamily(Fonts.PoppinsRegular)}
-                      />
-                    </View>
-                    <View style={style.btnShownContainer}>
-                      <AppText
-                        title={item.receiverId.motherTongue}
-                        variant={'h5'}
-                        color={COLORS.dark.inputBorder}
-                        extraStyle={STYLES.fontFamily(Fonts.PoppinsRegular)}
-                      />
-                      <AppText
-                        title={item.receiverId.sect}
-                        variant={'h5'}
-                        color={COLORS.dark.inputBorder}
-                        extraStyle={STYLES.fontFamily(Fonts.PoppinsRegular)}
-                      />
+                      <View style={style.contentContainer}>
+                        <View style={STYLES.rowCenterBt}>
+                          <AppText
+                            title={item.receiverId.name}
+                            variant={'h4'}
+                            color={COLORS.dark.black}
+                            extraStyle={STYLES.fontFamily(Fonts.PoppinsRegular)}
+                          />
+                          <View style={style.verifyIconContainer}>
+                            <CustomImage
+                              source={IMAGES.verifyIcon}
+                              size={12}
+                              resizeMode={'cover'}
+                            />
+                          </View>
+                        </View>
+                        <AppText
+                          title={`Age ${item.receiverId.age}, ${item.receiverId.height}`}
+                          color={COLORS.dark.inputBorder}
+                          extraStyle={STYLES.fontFamily(Fonts.PoppinsRegular)}
+                        />
+                        <View style={STYLES.rowCenter}>
+                          <AppText
+                            title={item.receiverId.city}
+                            variant={'h5'}
+                            extraStyle={STYLES.fontFamily(Fonts.PoppinsRegular)}
+                          />
+                        </View>
+                        <View style={style.btnShownContainer}>
+                          <AppText
+                            title={item.receiverId.motherTongue}
+                            variant={'h5'}
+                            color={COLORS.dark.inputBorder}
+                            extraStyle={STYLES.fontFamily(Fonts.PoppinsRegular)}
+                          />
+                          <AppText
+                            title={item.receiverId.sect}
+                            variant={'h5'}
+                            color={COLORS.dark.inputBorder}
+                            extraStyle={STYLES.fontFamily(Fonts.PoppinsRegular)}
+                          />
+                        </View>
+                      </View>
+                      <Space mT={10} />
                     </View>
                   </View>
-                  <Space mT={10} />
-                </View>
+                ))}
               </View>
-            ))
-          )}
-        </>
-      )}
-    </ScrollView>
-  </>
-);
+            )}
+          </>
+        )}
+      </ScrollView>
+    </>
+  );
 };
 
 export default Connections;

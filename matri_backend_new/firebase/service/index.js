@@ -7,7 +7,7 @@ const {
 
 // Check if the app is already initialized
 if (!admin.apps.length) {
-  const serviceAccount = require('../../vaishakhi-matrimony-firebase-adminsdk-mjr6h-34a24c9c5e.json');
+  const serviceAccount = require('../../dukan-db-firebase-adminsdk-xyqcs-f2ca085157.json');
   admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
     storageBucket:"gs://dukan-db.appspot.com"
@@ -27,7 +27,7 @@ async function sendchatNotification(userId, messageData, senderId) {
     }
 
     let message = {
-      token: userToken.toString(),
+      token: userToken,
       notification: {
         title: messageData.title || "Matrimonial",
         body: messageData?.message,
