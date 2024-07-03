@@ -120,7 +120,7 @@ const LoginScreen = () => {
         return;
       }
       if (!content.user.isActive) {
-        setAlertMessage('Your account is not active. Please contact support.');
+        setAlertMessage('Your account is not active. Please wait for the admin to activate it.');
         setAlertVisible(true);
         return 'userIactive';
       }
