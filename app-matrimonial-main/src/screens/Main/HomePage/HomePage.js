@@ -279,34 +279,10 @@ const HomePage = () => {
 
   const handleItemPress = async item => {
     setSelectedCategory(item.value);
-    console.log('Selected Category:', item.value);
 
-    if (item.value === 'Matches') {
-      navigation.navigate('PartnerMatch', {selectedCategory: item.value});
-    } else if (item.value === 'Nearest Me') {
-      try {
-        const userString = await AsyncStorage.getItem('theUser');
-        if (userString) {
-          const user = JSON.parse(userString);
-          if (user.city) {
-            navigation.navigate('PartnerMatch', {
-              selectedCategory: item.value,
-              searchTerm: user.city,
-            });
-          } else {
-            // Handle case where user doesn't have a city set
-            Toast('Please set your city in your profile.');
-          }
-        } else {
-          // Handle case where user data is not available
-          Toast(' Userdata not available. Please log in again.');
-        }
-      } catch (error) {
-        console.error('Error retrieving user data:', error);
-        Toast('An error occurred. Please try again.');
-      }
-    }
-    // Add other conditions for different filter options if needed
+    if (item.value == 'Matches' || item.value == 'Nearest me') { 
+      navigation.navigate('PartnerMatch');
+    } 
   };
 
   const handleSearch = query => {

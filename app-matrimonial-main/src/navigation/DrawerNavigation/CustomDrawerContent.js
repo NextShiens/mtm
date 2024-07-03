@@ -281,6 +281,54 @@ const CustomDrawerContent = ({ props, navigation }) => {
               </TouchableOpacity>
             );
           }
+          if (route.name == 'Log Out') {
+            return(
+            <TouchableOpacity
+            key={route.key}
+            style={
+              route.name === selectedRoute
+                ? style.activeDrawerItem
+                : style.inactiveDrawerItem
+            }
+            onPress={() => {
+              handleItemClick(route);
+            }}>
+            <CustomImage
+              source={route.iconName}
+              size={25}
+              resizeMode={'contain'}
+              onPress={() => {
+                handleItemClick(route);
+              }}
+            />
+            <Space mL={10} />
+            <View
+              style={{ maxWidth: '90%' }}
+              onPress={() => {
+                handleItemClick(route);
+              }}>
+              <AppText
+                title={route.name}
+                variant={'h6'}
+                extraStyle={style.drawerItemText}
+                color={COLORS.dark.black}
+                onPress={() => {
+                  handleItemClick(route);
+                }}
+              />
+              <AppText
+                title={userEmail}
+                variant={'body2'}
+                extraStyle={style.drawerItemDescription}
+                color={COLORS.dark.inputBorder}
+                onPress={() => {
+                  handleItemClick(route);
+                }}
+              />
+            </View>
+          </TouchableOpacity>
+          )
+          }
           return (
             <TouchableOpacity
               key={route.key}
@@ -316,7 +364,7 @@ const CustomDrawerContent = ({ props, navigation }) => {
                   }}
                 />
                 <AppText
-                  title={userEmail}
+                  title={route.description}
                   variant={'body2'}
                   extraStyle={style.drawerItemDescription}
                   color={COLORS.dark.inputBorder}
