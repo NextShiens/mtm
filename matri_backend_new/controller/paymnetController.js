@@ -50,6 +50,8 @@ const verifyPayment = async (req, res) => {
       membership: mongoose.Types.ObjectId(membership),
       userId: mongoose.Types.ObjectId(userId),
       orderId: razorpay_order_id,
+      paymentId: razorpay_payment_id,
+      signature: razorpay_signature,
       amount,
     });
 

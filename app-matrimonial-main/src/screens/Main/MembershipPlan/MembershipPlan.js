@@ -17,10 +17,21 @@ import { UseSelector, useDispatch } from 'react-redux/es/hooks/useSelector';
 import Svg, { Path, Circle } from 'react-native-svg';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+const SvgIcon = () => {
+  return (
+    <Svg width={20} height={20} viewBox="0 0 24 24" fill="green">
+      <Circle cx="12" cy="12" r="10" fill="green" />
+      <Path d="M20.3 4.3a1 1 0 0 0-1.4 0L9 14.6 4.7 10.3a1 1 0 0 0-1.4 1.4l5 5a1 1 0 0 0 1.4 0l11-11a1 1 0 0 0 0-1.4z" fill="white" />
+    </Svg>
+  );
+};
+
+
+
 const MembershipPlan = ({ navigation }) => {
   const [subscription, setSubscription] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  
+
   // Added loading st
   const membershipSelectionHandler = async plan => {
     await AsyncStorage.setItem('memberShipPlan', JSON.stringify(plan));
@@ -33,7 +44,7 @@ const MembershipPlan = ({ navigation }) => {
     navigation.goBack();
   };
   const getSubscriptions = async () => {
-    setIsLoading(true); 
+    setIsLoading(true);
     try {
       const token = await AsyncStorage.getItem('AccessToken');
       const response = await fetch(`${API_URL}/user/getSubscription`, {
@@ -49,7 +60,7 @@ const MembershipPlan = ({ navigation }) => {
     } catch (error) {
       console.error(error.message);
     } finally {
-      setIsLoading(false); 
+      setIsLoading(false);
     }
   };
 
@@ -57,6 +68,9 @@ const MembershipPlan = ({ navigation }) => {
     getSubscriptions();
   }, []);
   const style = styles;
+  const HorizontalLine = () => {
+    return <View style={style.line} />;
+  };
 
   if (isLoading) {
     return (
@@ -69,8 +83,8 @@ const MembershipPlan = ({ navigation }) => {
     <ScrollView>
       <View style={style.headerContainer}>
         <AppHeader
-        iconLeft={<SVG.BackArrow size={24} fill={'black'} />}
-        onLeftIconPress={() => navigation.goBack()}
+          iconLeft={<SVG.BackArrow size={24} fill={'black'} />}
+          onLeftIconPress={() => navigation.goBack()}
           title={LABELS.membership}
           iconRight={
             <TouchableOpacity onPress={handleRightIconPress}>
@@ -88,13 +102,29 @@ const MembershipPlan = ({ navigation }) => {
         />
       </View>
       <ScrollView>
-        { subscription && subscription.length>0 &&  subscription.map((plan, index) => (
+        {subscription && subscription.length > 0 && subscription.map((plan, index) => (
           <View key={plan._id} style={style.planContainer}>
             <Text style={style.planName}>{plan.name}</Text>
-            <Text style={style.feature}><Text style={{ color: 'green' }}>✓ </Text>Duration: {plan.duration}</Text>
-            <Text style={style.feature}><Text style={{ color: 'green' }}>✓ </Text>Messages: {plan.messages}</Text>
-            <Text style={style.feature}><Text style={{ color: 'green' }}>✓ </Text>Live Chats: {plan.liveChats}</Text>
-            <Text style={style.feature}><Text style={{ color: 'green' }}>✓ </Text>Profile Views: {plan.profileViews}</Text>
+            <HorizontalLine />
+            <View style={style.featureContainer}>
+              <View style={style.featureItem}>
+                <SvgIcon style={style.icon} />
+                <Text style={style.feature}>Duration: {plan.duration}</Text>
+              </View>
+              <View style={style.featureItem}>
+                <SvgIcon style={style.icon} />
+                <Text style={style.feature}>Messages: {plan.messages}</Text>
+              </View>
+              <View style={style.featureItem}>
+                <SvgIcon style={style.icon} />
+                <Text style={style.feature}>Live Chats: {plan.liveChats}</Text>
+              </View>
+              <View style={style.featureItem}>
+                <SvgIcon style={style.icon} />
+                <Text style={style.feature}>Profile Views: {plan.profileViews}</Text>
+              </View>
+            </View>
+            <HorizontalLine />
             <Text style={style.price}>₹{plan.price}</Text>
             <TouchableOpacity style={style.button} onPress={() => membershipSelectionHandler(plan)}>
               <Text style={style.buttonText}>Start Now</Text>
