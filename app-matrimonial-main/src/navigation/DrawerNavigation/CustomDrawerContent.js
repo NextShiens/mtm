@@ -112,6 +112,8 @@ const CustomDrawerContent = ({ props, navigation }) => {
       navigation.navigate('MembershipPlan');
     } else if (item.name === 'Account Setting') {
       navigation.navigate('AccountSettingsScreen');
+    } else if (item.name === 'Privacy & Policy') {
+      navigation.navigate('PrivacyPolicyScreen');
     } else if (item.name === 'User Name') {
       navigation.navigate('ProfileUpdateScreen');
     } else if (item.name === 'Upgrade to Pro') {

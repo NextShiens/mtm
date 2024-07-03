@@ -25,6 +25,7 @@ import SavedUserScreen from '../screens/Main/SavedUsersScreen/SavedUserScreen';
 import ChatScreen from '../screens/Main/ChatScreen/ChatScreen';
 import DeleteAccount from '../screens/Main/DeleteAccount/DeleteAccount';
 import ChangePasswordScreen from '../screens/Main/ChangePassword/ChangePassword';
+import PrivacyPolicyScreen from '../screens/Main/PrivacyPolicy/PrivacyPolicy';
 
 
 const Stack = createNativeStackNavigator();
@@ -163,7 +164,11 @@ const HomeStack = () => {
         component={ChangePasswordScreen}
         options={options} 
       />
-
+      <Stack.Screen
+        name="PrivacyPolicyScreen"
+        component={PrivacyPolicyScreen}
+        options={options}
+      />
       <Stack.Screen
         name="ChatScreen"
         component={ChatScreen}

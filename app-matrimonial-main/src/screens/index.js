@@ -23,3 +23,4 @@ export {default as UserDetailsScreen} from './Main/UserDetailsScreen/UserDetails
 export {default as SavedUserScreen} from './Main/SavedUsersScreen/SavedUserScreen';
 export {default as AccountSettingsScreen} from './Main/AccountSettings/AccountSettings';
 export {default as DeleteAccount} from './Main/DeleteAccount/DeleteAccount';
+export {default as PrivacyPolicyScreen} from './Main/PrivacyPolicy/PrivacyPolicy';
