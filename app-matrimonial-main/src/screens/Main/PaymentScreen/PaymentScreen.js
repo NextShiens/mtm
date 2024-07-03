@@ -427,6 +427,41 @@ const PaymentScreen = ({ navigation, route }) => {
   const { plan } = route.params;
   const [selectedMethod, setSelectedMethod] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [keyId, setKeyId] = useState();
+  const fetchKeyId = async () => {
+    try {
+      const token = await AsyncStorage.getItem('AccessToken');
+      const response = await fetch(`${API_URL}/get-keyid`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          "authorization": `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(
+          `Failed to fetch key ID: ${response.status} ${response.statusText}`,
+        );
+      }
+
+      const data = await response.json();
+      console.log('Key ID:', data);
+      if (!data.keyId) {
+        throw new Error('KeyId is not present in the response');
+      }
+
+      setKeyId(data.keyId);
+    } catch (error) {
+      console.error('Error fetching key ID:', error);
+      Alert.alert('Error', 'Unable to initialize payment. Please try again.');
+    }
+  };
+
+  useEffect(() => {
+    fetchKeyId();
+  }, []);
+
 
   const SvgIcon = () => (
     <Svg width={20} height={20} viewBox="0 0 24 24" fill="green">
@@ -463,8 +498,8 @@ const PaymentScreen = ({ navigation, route }) => {
   const verifyPayment = async (paymentData) => {
     try {
       const token = await AsyncStorage.getItem('AccessToken');
-      const currentUser=await AsyncStorage.getItem('theUser');
-      const user=JSON.parse(currentUser);
+      const currentUser = await AsyncStorage.getItem('theUser');
+      const user = JSON.parse(currentUser);
       const response = await fetch(`${API_URL}/verify-payment`, {
         method: 'POST',
         headers: {
@@ -496,19 +531,19 @@ const PaymentScreen = ({ navigation, route }) => {
       const orderData = await createOrder(plan.price);
       console.log('Order data:', orderData);
 
-      const currentUser=await AsyncStorage.getItem('theUser');
-      const user=JSON.parse(currentUser);
+      const currentUser = await AsyncStorage.getItem('theUser');
+      const user = JSON.parse(currentUser);
       const options = {
-        key: 'rzp_test_FIno2mP3rGvz9W', 
+        key: keyId,
         amount: orderData.amount,
         currency: orderData.currency,
-        name: "Flex Flow",
-        description: "Test Transaction",
+        name: "MTM",
+        description: "MTM Transaction",
         image: "https://www.vaishakhimatrimony.in/img/80ff7b0e-7d2f-4cf0-8505-53cbb66c2f28.jpg",
         order_id: orderData.id,
         prefill: {
-          name:user.user?.name,
-          email:user.user?.email ,
+          name: user.user?.name,
+          email: user.user?.email,
           contact: user.user?.phone,
         },
         theme: {
@@ -525,20 +560,29 @@ const PaymentScreen = ({ navigation, route }) => {
             razorpay_signature: data.razorpay_signature,
             amount: orderData.amount,
           });
-          
+
           if (verificationResult.success) {
             Toast('Success', 'Payment successful!');
-            setLoading(false);
           } else {
             Toast('Error', 'Payment verification failed!');
-            setLoading(false);
           }
         })
- 
+        .catch((error) => {
+          console.error('Payment failed:', error);
+          if (error.code === 'PAYMENT_CANCELLED') {
+            Toast('Info', 'Payment cancelled by user');
+          } else {
+            Toast('Error', 'Payment failed. Please try again.');
+          }
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+
     } catch (error) {
       console.error('Error handling payment:', error);
-      setLoading(false);
       Toast('Error', 'Error initiating payment. Please try again.');
+      setLoading(false);
     }
   };
 
@@ -572,9 +616,9 @@ const PaymentScreen = ({ navigation, route }) => {
           }
         />
       </View>
-      
+
       <Space mT={20} />
-      
+
       {plan && (
         <View style={styles.planContainer}>
           <Text style={styles.planName}>{plan.name}</Text>
@@ -601,11 +645,11 @@ const PaymentScreen = ({ navigation, route }) => {
           <Text style={styles.price}>₹{plan.price}</Text>
         </View>
       )}
-      
+
       <Space mT={20} />
-      
+
       <Text style={styles.sectionTitle}>Select Payment Method</Text>
-      
+
       {paymentMethods && paymentMethods.map((item, index) => (
         <TouchableOpacity
           key={item.key}
@@ -628,9 +672,9 @@ const PaymentScreen = ({ navigation, route }) => {
           </View>
         </TouchableOpacity>
       ))}
-      
-      <TouchableOpacity 
-        style={[styles.button, (loading || !selectedMethod) && styles.disabledButton]} 
+
+      <TouchableOpacity
+        style={[styles.button, (loading || !selectedMethod) && styles.disabledButton]}
         onPress={handlePayment}
         disabled={loading || !selectedMethod}
       >
@@ -638,7 +682,7 @@ const PaymentScreen = ({ navigation, route }) => {
           {loading ? 'Processing...' : 'Subscribe'}
         </Text>
       </TouchableOpacity>
-      
+
       <Space mT={20} />
     </ScrollView>
   );

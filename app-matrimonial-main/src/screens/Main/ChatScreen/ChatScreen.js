@@ -1,9 +1,8 @@
 import React, { useEffect, useState, useCallback, useContext } from 'react';
-import { View, TouchableOpacity, Image, Text, Alert, SafeAreaView, StatusBar } from 'react-native';
-import { GiftedChat, Bubble, Send } from 'react-native-gifted-chat';
+import { View, Image, Text, SafeAreaView, StatusBar, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { GiftedChat, Bubble } from 'react-native-gifted-chat';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/Ionicons';
 import { API_URL } from '../../../../constant';
 import { SocketContext } from '../../../../SocketContext';
 import { SVG } from '../../../assets/svg';
@@ -14,13 +13,30 @@ import Space from '../../../components/Space/Space';
 import { Toast } from '../../../utils/native';
 import AppHeader from '../../../components/AppHeader/AppHeader';
 import { LABELS } from '../../../labels';
-import Svg, { Path } from 'react-native-svg';
+import { Svg, Path } from 'react-native-svg';
+
+const SendIcon = () => (
+  <Svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+    <Path d="M22 2L11 13" stroke="#F86F03" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    <Path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="#F86F03" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+  </Svg>
+);
+
+const EmojiIcon = () => (
+  <Svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+    <Path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="#ADB5BD" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    <Path d="M8 14C8 14 9.5 16 12 16C14.5 16 16 14 16 14" stroke="#ADB5BD" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    <Path d="M9 9H9.01" stroke="#ADB5BD" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    <Path d="M15 9H15.01" stroke="#ADB5BD" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+  </Svg>
+);
 
 const ChatScreen = ({ route }) => {
   const [messages, setMessages] = useState([]);
   const { socket } = useContext(SocketContext);
   const { userId, roomId, user } = route.params;
   const [currentUser, setCurrentUser] = useState(null);
+  const [inputText, setInputText] = useState('');
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -33,7 +49,6 @@ const ChatScreen = ({ route }) => {
         }
       } catch (error) {
         console.error('Error fetching user data:', error);
-        Alert.alert('Error', 'Failed to load user data');
       }
     };
     fetchUser();
@@ -75,22 +90,22 @@ const ChatScreen = ({ route }) => {
             name: msg.receiverId === currentUser.user._id ? user.name : currentUser.user.name,
           },
         }));
-        setMessages(formattedMessages.reverse());
+        setMessages(formattedMessages);
       } else {
         console.error('Failed to fetch messages:', data.message);
       }
     } catch (error) {
       console.error('Error fetching chat history:', error);
-      Toast('Failed to fetch chat history');
     }
   };
 
   const onReceiveMessage = useCallback((message) => {
-    setMessages(previousMessages => GiftedChat.append(previousMessages, [message]));
+    setMessages(previousMessages => [...previousMessages, message]);
   }, []);
 
-  const onSend = useCallback((newMessages = []) => {
-    const [messageToSend] = newMessages;
+  const onSend = useCallback(() => {
+    if (inputText.trim() === '') return;
+
     if (socket && currentUser) {
       const messageData = {
         _id: Math.random().toString(),
@@ -100,17 +115,15 @@ const ChatScreen = ({ route }) => {
           name: currentUser.user.name,
         },
         receiverId: userId,
-        text: messageToSend.text,
+        text: inputText.trim(),
         createdAt: new Date(),
       };
 
       socket.emit('send_message', messageData);
-      setMessages(previousMessages => GiftedChat.append(previousMessages, [messageData]));
+      setMessages(previousMessages => [...previousMessages, messageData]);
+      setInputText('');
     }
-  }, [socket, currentUser, userId, roomId]);
-  const navigateBack = () => {
-    navigation.goBack();
-  }
+  }, [socket, currentUser, userId, roomId, inputText]);
 
   const renderBubble = (props) => {
     return (
@@ -118,10 +131,14 @@ const ChatScreen = ({ route }) => {
         {...props}
         wrapperStyle={{
           right: {
-            backgroundColor: '#007AFF',
+            backgroundColor: '#0F1828',
+            borderRadius: 8,
+            padding: 7,
           },
           left: {
-            backgroundColor: '#E5E5EA',
+            backgroundColor: '#F2F7FB',
+            borderRadius: 8,
+            padding: 7,
           },
         }}
         textStyle={{
@@ -129,17 +146,16 @@ const ChatScreen = ({ route }) => {
             color: '#FFFFFF',
           },
           left: {
-            color: '#000000',
+            color: '#0F1828',
           },
         }}
       />
     );
   };
 
-
   if (!currentUser) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <View style={styles.loadingContainer}>
         <Text>Loading...</Text>
       </View>
     );
@@ -147,7 +163,6 @@ const ChatScreen = ({ route }) => {
 
   return (
     <View style={styles.container}>
-
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <View style={styles.headerContainer}>
           <AppHeader
@@ -169,24 +184,32 @@ const ChatScreen = ({ route }) => {
       </View>
       <GiftedChat
         messages={messages}
-        onSend={onSend}
+        renderBubble={renderBubble}
         user={{
           _id: currentUser.user._id,
           name: currentUser.user.name,
         }}
-        renderBubble={renderBubble}
-        renderAvatar={null}
-        alwaysShowSend
-        scrollToBottom
-        scrollToBottomComponent={() => (
-          <Svg width={24} height={24} viewBox="0 0 24 24" fill="#007AFF">
-          <Path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-2-5l4-4 4 4H10z"/>
-        </Svg>
-        )}
+        renderInputToolbar={() => null}
+        inverted={false}
       />
+      <View style={styles.inputContainer}>
+        <TouchableOpacity>
+          <EmojiIcon />
+        </TouchableOpacity>
+        <TextInput
+          style={styles.input}
+          placeholder="Write a message..."
+          placeholderTextColor="#ADB5BD"
+          value={inputText}
+          onChangeText={setInputText}
+        />
+        <TouchableOpacity onPress={onSend}>
+          <SendIcon />
+        </TouchableOpacity>
+      </View>
     </View>
-
   );
 };
+
 
 export default ChatScreen;

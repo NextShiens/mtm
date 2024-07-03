@@ -73,7 +73,7 @@ export const LABELS = {
   height: 'Height',
   education: 'Education',
   motherToungue: 'Mother Tongue',
-  sect: 'Sect',
+  sect: 'Cast',
   city: 'City',
   save: 'Save',
   searchHere: 'Search here...',

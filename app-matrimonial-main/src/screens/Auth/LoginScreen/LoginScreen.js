@@ -25,6 +25,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL } from '../../../../constant';
 import { signInWithGoogle } from '../../../services/authServices';
 import { Svg, Path } from 'react-native-svg';
+import CustomAlert from '../../../components/globalAlert';
 
 const LoginScreen = () => {
   const [isChecked, setIsChecked] = useState(false);
@@ -32,6 +33,8 @@ const LoginScreen = () => {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [alertVisible, setAlertVisible] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
   const navigation = useNavigation();
   const style = styles;
 
@@ -73,7 +76,7 @@ const LoginScreen = () => {
     navigation.goBack();
   };
   //   const googleAuthHandler = async () => { 
- // };
+  // };
   const forgotPassHandler = () => {
     navigation.navigate('ForgotPassword');
   };
@@ -94,11 +97,9 @@ const LoginScreen = () => {
       console.log('done');
     }
   };
-
   const loginAndGetAccessToken = async () => {
-    const data = await fetch(
-      `${API_URL}/user/login`,
-      {
+    try {
+      const response = await fetch(`${API_URL}/user/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -109,47 +110,82 @@ const LoginScreen = () => {
           password: password,
           fcmToken: await AsyncStorage.getItem('fcmToken'),
         }),
-      },
-    );
+      });
 
-    const content = await data.json();
-    await AsyncStorage.setItem('AccessToken', content.token);
-    await AsyncStorage.setItem('theUser', JSON.stringify(content));
-    console.log(content, 'content');
+      const content = await response.json();
+
+      if (!response.ok) {
+        setAlertMessage(content.message || 'An error occurred during login.');
+        setAlertVisible(true);
+        return;
+      }
+      if (!content.user.isActive) {
+        setAlertMessage('Your account is not active. Please contact support.');
+        setAlertVisible(true);
+        return 'userIactive';
+      }
+
+      await AsyncStorage.setItem('AccessToken', content.token);
+      await AsyncStorage.setItem('theUser', JSON.stringify(content.user));
+    } catch (error) {
+      console.error('Login error:', error);
+      setAlertMessage('An error occurred during login. Please try again.');
+      setAlertVisible(true);
+    }
   };
 
   const loginHandler = async () => {
     if (!email || !password) {
-      Toast(ERRORS.emptyForm);
+      setAlertMessage(ERRORS.emptyForm);
+      setAlertVisible(true);
       return;
     }
-  
+
     if (!isValidatedLogin({ email, password })) {
+      setAlertMessage('Invalid email or password');
+      setAlertVisible(true);
       return;
     }
-  
+
     setIsLoading(true);
-  
+
     try {
       const res = await loginUser(email, password);
       if (!res) {
-        Toast('Error', 'Failed to login with invalid credentials');
+        setAlertMessage('Failed to login with invalid credentials');
+        setAlertVisible(true);
         return;
       }
-      const { status } = res;
-  
-      if (status !== 'active') {
-        Toast('Your profile in under Review'+ 'Please wait for the admin to approve your profile');
+      const userCheck = await loginAndGetAccessToken();
+      if (userCheck === 'userIactive') {
+        setIsLoading(false);
         return;
       }
-  
-      await loginAndGetAccessToken();
       await AsyncStorage.setItem('loginToken', res);
       await getSubscriptions();
       navigation.navigate('DrawerNavigation');
     } catch (error) {
       console.error('Login error:', error);
-      Toast('Error', 'An error occurred during login');
+      setAlertMessage('An error occurred during login');
+      setAlertVisible(true);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  const handleGoogleSignIn = async () => {
+    try {
+      setIsLoading(true);
+      const { user } = await signInWithGoogle();
+      if (user) {
+        console.log('Google Sign-In success:', user);
+        await loginAndGetAccessToken();
+        await getSubscriptions();
+        navigation.navigate('DrawerNavigation');
+      }
+    } catch (error) {
+      console.error('Google Sign-In error:', error);
+      setAlertMessage('An error occurred during Google Sign-In');
+      setAlertVisible(true);
     } finally {
       setIsLoading(false);
     }
@@ -169,7 +205,14 @@ const LoginScreen = () => {
 
   return (
     <ScrollView style={STYLES.bgColor(COLORS.dark.white)}>
+      <CustomAlert
+        visible={alertVisible}
+        title="Notice"
+        message={alertMessage}
+        onClose={() => setAlertVisible(false)}
+      />
       <View style={[style.container]}>
+
         <LayoutImage imgSrc={IMAGES.theme2} />
         <AppHeader
           iconLeft={<SVG.BackArrow fill={'black'} />}
@@ -289,7 +332,7 @@ const LoginScreen = () => {
             <Space mT={30} />
 
             <SocialAuth
-              onGoogleAuth={signInWithGoogle}
+              onGoogleAuth={handleGoogleSignIn}
             />
             <Space mT={20} />
             <TouchableOpacity style={[STYLES.rowCenter, STYLES.JCCenter]}>

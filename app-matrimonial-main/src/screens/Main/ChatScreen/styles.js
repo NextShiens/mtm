@@ -3,10 +3,6 @@ import { COLORS } from '../../../assets/theme';
 import { Fonts } from '../../../assets/fonts';
 
 export const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#FFFFFF',
-  },
   sentMessage: {
     alignSelf: 'flex-end',
   },
@@ -216,8 +212,52 @@ export const styles = StyleSheet.create({
     marginRight: '50%',
     left: 0,
   },
-  line:{
+  line: {
     height: 1,
     marginHorizontal: 16,
+  },
+  container: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E5E5E5',
+  },
+  avatar: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    marginLeft: 15,
+  },
+  userName: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginLeft: 10,
+    flex: 1,
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F2F7FB',
+    borderRadius: 25,
+    margin: 5,
+    paddingHorizontal: 15,
+    paddingVertical: 5,
+    marginTop: 0,
+  },
+  input: {
+    flex: 1,
+    height: 40,
+    marginHorizontal: 10,
+    color: '#0F1828',
   },
 });

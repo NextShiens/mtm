@@ -60,7 +60,6 @@ export const loginUser = async (email, password) => {
 export const getCurrentUser = () => {
   const user = auth().currentUser;
   if (user) {
-
     return user;
   } else {
     return null;

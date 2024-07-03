@@ -1,35 +1,35 @@
 import { StyleSheet } from 'react-native';
 import { COLORS } from '../../../assets/theme';
 
-export const styles = 
+export const styles =
   StyleSheet.create({
-    container:{
+    container: {
       flex: 1,
       position: 'relative',
       backgroundColor: '#FFFFFF',
     },
-    contentContainer:{
+    contentContainer: {
       flex: 1,
       backgroundColor: '#FFFFFF',
       borderTopLeftRadius: 31,
       borderTopRightRadius: 31,
       bottom: 20,
     },
-    formContainer:{
+    formContainer: {
       flex: 1,
       paddingHorizontal: 18,
     },
-    hrContainer:{
+    hrContainer: {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
     },
-    hr:{
+    hr: {
       height: 1,
       width: '30%',
       backgroundColor: 'black',
     },
-    countrySelectContainer:{
+    countrySelectContainer: {
       height: 50,
       width: '100%',
       flexDirection: 'row',
@@ -42,6 +42,6 @@ export const styles =
     },
     PasswordEyeIcon: {
       bottom: 38,
-      left: 285,
+      left: 330,
     },
   });
