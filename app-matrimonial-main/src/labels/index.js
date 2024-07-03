@@ -21,6 +21,8 @@ export const LABELS = {
   profileCreatedFor: 'Profile Created For',
   new: 'New',
   createAccount: 'Create an account',
+  next: 'Next',
+  verify: 'Verify',
   login: 'Log in',
   initialMessage: 'Find your perfect match on this ',
   continueInitialMsg: 'matrimony app',

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   ScrollView,
   TouchableOpacity,
@@ -11,9 +11,9 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
-import {IMAGES} from '../../../assets/images';
-import {SVG} from '../../../assets/svg';
-import {COLORS, HORIZON_MARGIN, STYLES} from '../../../assets/theme';
+import { IMAGES } from '../../../assets/images';
+import { SVG } from '../../../assets/svg';
+import { COLORS, HORIZON_MARGIN, STYLES } from '../../../assets/theme';
 import AppHeader from '../../../components/AppHeader/AppHeader';
 import AppInput from '../../../components/AppInput/AppInput';
 import CustomImage from '../../../components/CustomImage/CustomImage';
@@ -21,21 +21,20 @@ import HorizontalCard from '../../../components/HorizontalCard/HorizontalCard';
 import HorizontalScreen from '../../../components/HorizontalScroll/HorizontalScreen';
 import SnapCarousel from '../../../components/SnapCarousel/SnapCarousel';
 import Space from '../../../components/Space/Space';
-import {API_URL} from '../../../../constant';
+import { API_URL } from '../../../../constant';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useNavigation} from '@react-navigation/native';
-import Svg, {Path} from 'react-native-svg';
-
+import { useNavigation } from '@react-navigation/native';
+import Svg, { Path } from 'react-native-svg';
 import {
   HorizontalCardData,
   carouselData,
   filterOptions,
   usersData,
 } from '../../../data/appData';
-import {LABELS} from '../../../labels';
-import {Toast} from '../../../utils/native';
-import {styles} from './styles';
-const MenuIcon = ({size = 24, color = 'black'}) => (
+import { LABELS } from '../../../labels';
+import { Toast } from '../../../utils/native';
+import { styles } from './styles';
+const MenuIcon = ({ size = 24, color = 'black' }) => (
   <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
     <Path
       d="M3 12h18M3 6h18M3 18h18"
@@ -59,7 +58,7 @@ const filterStyles = StyleSheet.create({
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
@@ -208,11 +207,13 @@ const HomePage = () => {
   const [recentlyViewed, setRecentlyViewed] = useState([]);
   const [newUsers, setNewUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [recentlyViewedLoading, setRecentlyViewedLoading] = useState(true);
+  const [newUsersLoading, setNewUsersLoading] = useState(true);
 
   useEffect(() => {
     const fetchRecentlyViewed = async () => {
       try {
-        setLoading(true)
+        setRecentlyViewedLoading(true);
         const token = await AsyncStorage.getItem('AccessToken');
         const response = await fetch(`${API_URL}/user/getRecentViewed`, {
           method: 'GET',
@@ -230,19 +231,19 @@ const HomePage = () => {
           }
         }
 
-        const {recentlyViewed} = await response.json();
+        const { recentlyViewed } = await response.json();
         console.log('Recently Viewed:', recentlyViewed);
         setRecentlyViewed(recentlyViewed);
       } catch (error) {
         setError(error.message);
-      }finally{
-        setLoading(false)
+      } finally {
+        setRecentlyViewedLoading(false);
       }
     };
+
     const fetchNewUsers = async () => {
       try {
-      setLoading(true)
-
+        setNewUsersLoading(true);
         const token = await AsyncStorage.getItem('AccessToken');
         const response = await fetch(`${API_URL}/user/newUsers`, {
           method: 'GET',
@@ -260,17 +261,19 @@ const HomePage = () => {
           }
         }
 
-        const {newUsers} = await response.json();
+        const { newUsers } = await response.json();
         setNewUsers(newUsers);
       } catch (error) {
         console.error('Error fetching new users:', error);
         throw error;
       } finally {
-        setLoading(false);
+        setNewUsersLoading(false);
       }
     };
-    fetchNewUsers();
-    fetchRecentlyViewed();
+
+    Promise.all([fetchNewUsers(), fetchRecentlyViewed()]).then(() => {
+      setLoading(false);
+    });
   }, []);
 
   const handleRightIconPress = () => {
@@ -280,9 +283,9 @@ const HomePage = () => {
   const handleItemPress = async item => {
     setSelectedCategory(item.value);
 
-    if (item.value == 'Matches' || item.value == 'Nearest me') { 
+    if (item.value == 'Matches' || item.value == 'Nearest me') {
       navigation.navigate('PartnerMatch');
-    } 
+    }
   };
 
   const handleSearch = query => {
@@ -318,277 +321,275 @@ const HomePage = () => {
   };
 
   return (
-    <ScrollView style={[STYLES.flex1, {backgroundColor: 'white'}]}>
-      <View style={styles.container}>
-        <View style={styles.headerContainer}>
-          <AppHeader
+    <ScrollView style={[STYLES.flex1, { backgroundColor: 'white' }]}>
+      <View style={styles.headerContainer}>
+        <AppHeader
+          iconLeft={
+            <TouchableOpacity
+              onPress={() => {
+                navigation.openDrawer();
+              }}>
+              <MenuIcon />
+            </TouchableOpacity>
+          }
+          iconRight={
+            <TouchableOpacity onPress={handleRightIconPress}>
+              <Image
+                source={IMAGES.notificationIcon}
+                style={styles.Bell_Icon}
+              />
+            </TouchableOpacity>
+          }
+        />
+      </View>
+
+      <Space mT={20} />
+      <View style={styles.contentContainer}>
+        <View style={styles.searchBoxContainer}>
+          <AppInput
             iconLeft={
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.openDrawer();
-                }}>
-                <MenuIcon />
-              </TouchableOpacity>
+              <SVG.magnifyingGlass
+                fill={COLORS.dark.inputBorder}
+                height={15}
+                width={15}
+              />
             }
-            iconRight={
-              <TouchableOpacity onPress={handleRightIconPress}>
-                <Image
-                  source={IMAGES.notificationIcon}
-                  style={styles.Bell_Icon}
-                />
-              </TouchableOpacity>
-            }
+            extraStyle={{ textInputCont: [styles.searchInputCont] }}
+            placeholder={LABELS.searchHere}
+            onChangeText={handleSearch}
           />
+          <TouchableOpacity
+            style={styles.filterBtn}
+            activeOpacity={0.8}
+            onPress={() => setShowFilters(true)}>
+            <CustomImage
+              source={IMAGES.filterIcon}
+              size={17}
+              resizeMode={'contain'}
+            />
+          </TouchableOpacity>
         </View>
 
         <Space mT={20} />
-        <View style={styles.contentContainer}>
-          <View style={styles.searchBoxContainer}>
-            <AppInput
-              iconLeft={
-                <SVG.magnifyingGlass
-                  fill={COLORS.dark.inputBorder}
-                  height={15}
-                  width={15}
-                />
-              }
-              extraStyle={{textInputCont: [styles.searchInputCont]}}
-              placeholder={LABELS.searchHere}
-              onChangeText={handleSearch}
-            />
-            <TouchableOpacity
-              style={styles.filterBtn}
-              activeOpacity={0.8}
-              onPress={() => setShowFilters(true)}>
-              <CustomImage
-                source={IMAGES.filterIcon}
-                size={17}
-                resizeMode={'contain'}
-              />
-            </TouchableOpacity>
-          </View>
 
-          <Space mT={20} />
-
-          <Modal
-            animationType="slide"
-            transparent={true}
-            visible={showFilters}
-            onRequestClose={() => setShowFilters(false)}>
-            <View style={filterStyles.container}>
-              <View style={filterStyles.modalContent}>
-                <ScrollView>
-                  <View style={filterStyles.ChildContainer}>
-                    <Text style={filterStyles.sectionTitle}>Gender</Text>
-                    <View style={filterStyles.buttonRow}>
-                      <TouchableOpacity
-                        style={
-                          selectedGender === 'male'
-                            ? filterStyles.selectedButton
-                            : filterStyles.button
-                        }
-                        onPress={() => setSelectedGender('male')}>
-                        <Text
-                          style={{
-                            color: '#F97B22',
-                            textAlign: 'center',
-                            fontWeight: 'bold',
-                          }}>
-                          Male
-                        </Text>
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        style={
-                          selectedGender === 'female'
-                            ? filterStyles.selectedButton
-                            : filterStyles.button
-                        }
-                        onPress={() => setSelectedGender('female')}>
-                        <Text
-                          style={{
-                            color: '#F97B22',
-                            textAlign: 'center',
-                            fontWeight: 'bold',
-                          }}>
-                          Female
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={showFilters}
+          onRequestClose={() => setShowFilters(false)}>
+          <View style={filterStyles.container}>
+            <View style={filterStyles.modalContent}>
+              <ScrollView>
+                <View style={filterStyles.ChildContainer}>
+                  <Text style={filterStyles.sectionTitle}>Gender</Text>
+                  <View style={filterStyles.buttonRow}>
+                    <TouchableOpacity
+                      style={
+                        selectedGender === 'male'
+                          ? filterStyles.selectedButton
+                          : filterStyles.button
+                      }
+                      onPress={() => setSelectedGender('male')}>
+                      <Text
+                        style={{
+                          color: '#F97B22',
+                          textAlign: 'center',
+                          fontWeight: 'bold',
+                        }}>
+                        Male
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={
+                        selectedGender === 'female'
+                          ? filterStyles.selectedButton
+                          : filterStyles.button
+                      }
+                      onPress={() => setSelectedGender('female')}>
+                      <Text
+                        style={{
+                          color: '#F97B22',
+                          textAlign: 'center',
+                          fontWeight: 'bold',
+                        }}>
+                        Female
+                      </Text>
+                    </TouchableOpacity>
                   </View>
-                  <View style={filterStyles.ChildContainer1}>
-                    <Text style={filterStyles.sectionTitle}>
-                      Marital Status
-                    </Text>
-                    <View style={filterStyles.buttonRow}>
-                      <TouchableOpacity
-                        style={
-                          selectedMaritalStatus === 'married'
-                            ? filterStyles.selectedButton
-                            : filterStyles.button
-                        }
-                        onPress={() => setSelectedMaritalStatus('married')}>
-                        <Text
-                          style={{
-                            color: '#F97B22',
-                            textAlign: 'center',
-                            fontWeight: 'bold',
-                          }}>
-                          Married
-                        </Text>
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        style={
-                          selectedMaritalStatus === 'unmarried'
-                            ? filterStyles.selectedButton
-                            : filterStyles.button
-                        }
-                        onPress={() => setSelectedMaritalStatus('unmarried')}>
-                        <Text
-                          style={{
-                            color: '#F97B22',
-                            textAlign: 'center',
-                            fontWeight: 'bold',
-                          }}>
-                          Unmarried
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
-                  </View>
-                  <View style={filterStyles.ChildContainer2}>
-                    <Text style={filterStyles.sectionTitle}>Language</Text>
-                    <View style={filterStyles.buttonRow2}>
-                      <TouchableOpacity
-                        style={
-                          selectedLanguage === 'english'
-                            ? filterStyles.selectedButton2
-                            : filterStyles.button2
-                        }
-                        onPress={() => setSelectedLanguage('english')}>
-                        <Text
-                          style={{
-                            color: '#F97B22',
-                            textAlign: 'center',
-                            fontWeight: 'bold',
-                          }}>
-                          English
-                        </Text>
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        style={
-                          selectedLanguage === 'urdu'
-                            ? filterStyles.selectedButton2
-                            : filterStyles.button2
-                        }
-                        onPress={() => setSelectedLanguage('urdu')}>
-                        <Text
-                          style={{
-                            color: '#F97B22',
-                            textAlign: 'center',
-                            fontWeight: 'bold',
-                          }}>
-                          Urdu
-                        </Text>
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        style={
-                          selectedLanguage === 'hindi'
-                            ? filterStyles.selectedButton2
-                            : filterStyles.button2
-                        }
-                        onPress={() => setSelectedLanguage('hindi')}>
-                        <Text
-                          style={{
-                            color: '#F97B22',
-                            textAlign: 'center',
-                            fontWeight: 'bold',
-                          }}>
-                          Hindi
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
-                  </View>
-                  <Text style={filterStyles.sectionTitle}>Salary Range</Text>
-                  <Text style={filterStyles.salaryText}>
-                    {range[0]} - {range[1]}
+                </View>
+                <View style={filterStyles.ChildContainer1}>
+                  <Text style={filterStyles.sectionTitle}>
+                    Marital Status
                   </Text>
-                  <View style={filterStyles.sliderContainer}>
-                    <MultiSlider
-                      values={range}
-                      min={0}
-                      max={1000000}
-                      step={100}
-                      onValuesChange={setRange}
-                      selectedStyle={{
-                        backgroundColor: '#F97B22',
-                      }}
-                      trackStyle={{
-                        height: 6,
-                      }}
-                      markerStyle={{
-                        backgroundColor: 'white',
-                        borderWidth: 2,
-                        borderColor: '#F97B22',
-                        padding: 5,
-                      }}
-                    />
+                  <View style={filterStyles.buttonRow}>
+                    <TouchableOpacity
+                      style={
+                        selectedMaritalStatus === 'married'
+                          ? filterStyles.selectedButton
+                          : filterStyles.button
+                      }
+                      onPress={() => setSelectedMaritalStatus('married')}>
+                      <Text
+                        style={{
+                          color: '#F97B22',
+                          textAlign: 'center',
+                          fontWeight: 'bold',
+                        }}>
+                        Married
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={
+                        selectedMaritalStatus === 'unmarried'
+                          ? filterStyles.selectedButton
+                          : filterStyles.button
+                      }
+                      onPress={() => setSelectedMaritalStatus('unmarried')}>
+                      <Text
+                        style={{
+                          color: '#F97B22',
+                          textAlign: 'center',
+                          fontWeight: 'bold',
+                        }}>
+                        Unmarried
+                      </Text>
+                    </TouchableOpacity>
                   </View>
-                  <TouchableOpacity
-                    style={filterStyles.applyButton}
-                    onPress={onSubmitFilter}>
-                    <Text style={filterStyles.applyButtonText}>
-                      Apply Filter
-                    </Text>
-                  </TouchableOpacity>
-                </ScrollView>
-
-                <Pressable
-                  style={filterStyles.closeButton}
-                  onPress={() => setShowFilters(false)}>
-                  <Text style={filterStyles.closeButtonText}>
-                    Close Filters
+                </View>
+                <View style={filterStyles.ChildContainer2}>
+                  <Text style={filterStyles.sectionTitle}>Language</Text>
+                  <View style={filterStyles.buttonRow2}>
+                    <TouchableOpacity
+                      style={
+                        selectedLanguage === 'english'
+                          ? filterStyles.selectedButton2
+                          : filterStyles.button2
+                      }
+                      onPress={() => setSelectedLanguage('english')}>
+                      <Text
+                        style={{
+                          color: '#F97B22',
+                          textAlign: 'center',
+                          fontWeight: 'bold',
+                        }}>
+                        English
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={
+                        selectedLanguage === 'urdu'
+                          ? filterStyles.selectedButton2
+                          : filterStyles.button2
+                      }
+                      onPress={() => setSelectedLanguage('urdu')}>
+                      <Text
+                        style={{
+                          color: '#F97B22',
+                          textAlign: 'center',
+                          fontWeight: 'bold',
+                        }}>
+                        Urdu
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={
+                        selectedLanguage === 'hindi'
+                          ? filterStyles.selectedButton2
+                          : filterStyles.button2
+                      }
+                      onPress={() => setSelectedLanguage('hindi')}>
+                      <Text
+                        style={{
+                          color: '#F97B22',
+                          textAlign: 'center',
+                          fontWeight: 'bold',
+                        }}>
+                        Hindi
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+                <Text style={filterStyles.sectionTitle}>Salary Range</Text>
+                <Text style={filterStyles.salaryText}>
+                  {range[0]} - {range[1]}
+                </Text>
+                <View style={filterStyles.sliderContainer}>
+                  <MultiSlider
+                    values={range}
+                    min={0}
+                    max={1000000}
+                    step={100}
+                    onValuesChange={setRange}
+                    selectedStyle={{
+                      backgroundColor: '#F97B22',
+                    }}
+                    trackStyle={{
+                      height: 6,
+                    }}
+                    markerStyle={{
+                      backgroundColor: 'white',
+                      borderWidth: 2,
+                      borderColor: '#F97B22',
+                      padding: 5,
+                    }}
+                  />
+                </View>
+                <TouchableOpacity
+                  style={filterStyles.applyButton}
+                  onPress={onSubmitFilter}>
+                  <Text style={filterStyles.applyButtonText}>
+                    Apply Filter
                   </Text>
-                </Pressable>
-              </View>
+                </TouchableOpacity>
+              </ScrollView>
+
+              <Pressable
+                style={filterStyles.closeButton}
+                onPress={() => setShowFilters(false)}>
+                <Text style={filterStyles.closeButtonText}>
+                  Close Filters
+                </Text>
+              </Pressable>
             </View>
-          </Modal>
+          </View>
+        </Modal>
 
-          <Space mT={20} />
+        <Space mT={20} />
 
-          <HorizontalScreen
-            data={filterOptions}
-            onPress={handleItemPress}
-            initialSelectedItem={selectedFilter}
-          />
-          <Space mT={20} />
+        <HorizontalScreen
+          data={filterOptions}
+          onPress={handleItemPress}
+          initialSelectedItem={selectedFilter}
+        />
 
-          <View style={{paddingHorizontal: 15, borderRadius: 20}}>
+        <Space mT={20} />
+
+        <View style={{ paddingHorizontal: 15, borderRadius: 20 }}>
+          {newUsersLoading ? (
+            <ActivityIndicator size="large" color={COLORS.dark.primary} />
+          ) : (
             <SnapCarousel data={newUsers} />
-          </View>
+          )}
+        </View>
 
-          <Space mT={20} />
+        <Space mT={20} />
 
-          <View style={[STYLES.pL(6)]}>
-            {recentlyViewed && recentlyViewed.length > 0 ? (
-              <HorizontalCard
-                data={recentlyViewed}
-                onLinkPress={showMoreUserHandler}
-                onSendInterest={sendInterestHandler}
-                onChatBtnClick={chatPressHandler}
-                onVerifyBtnClick={() => {
-                  Toast('This account is verified');
-                }}
-              />
-            ) : (
-              <View
-                style={{
-                  flex: 1,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
-                <ActivityIndicator size="xl" color={COLORS.dark.primary} />
-              </View>
-            )}
-          </View>
+        <View style={[STYLES.pL(6)]}>
+          {recentlyViewedLoading ? (
+            <ActivityIndicator size="large" color={COLORS.dark.primary} />
+          ) : recentlyViewed && recentlyViewed.length > 0 ? (
+            <HorizontalCard
+              data={recentlyViewed}
+              onLinkPress={showMoreUserHandler}
+              onSendInterest={sendInterestHandler}
+              onChatBtnClick={chatPressHandler}
+              onVerifyBtnClick={() => {
+                Toast('This account is verified');
+              }}
+            />
+          ) : (
+            <Text style={styles.noDataText}>No recently viewed users</Text>
+          )}
         </View>
       </View>
     </ScrollView>

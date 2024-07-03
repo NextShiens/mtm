@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, TouchableOpacity, View, Image } from 'react-native';
+import { ScrollView, TouchableOpacity, View, Image, ActivityIndicator } from 'react-native';
 import { Fonts } from '../../../assets/fonts';
 import { IMAGES } from '../../../assets/images';
 import { SVG } from '../../../assets/svg';
@@ -17,11 +17,12 @@ import { LABELS } from '../../../labels';
 import { styles } from './styles';
 import { useRoute } from '@react-navigation/native';
 import { API_URL } from '../../../../constant';
-import AsyncStorage from '@react-native-async-storage/async-storage'; 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Toast } from '../../../utils/native';
 
 const headData = {
   partnerAge: ['18-25', '26-35', '36-45', '46+'],
-  partnerMaritalStatus: ['Single', 'Divorced','Married', 'Widowed'],
+  partnerMaritalStatus: ['Single', 'Divorced', 'Married', 'Widowed'],
 };
 
 const demoData = {
@@ -33,6 +34,7 @@ const demoData = {
   partnerSect: indianCastes,
   partnerCity: workLocationList,
 };
+
 const PartnerReferenceScreen = ({ navigation }) => {
   const route = useRoute();
   const previousProfileData = route.params?.profileData || {};
@@ -69,6 +71,8 @@ const PartnerReferenceScreen = ({ navigation }) => {
     }
   });
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const style = styles;
 
   const backNavigationHandler = () => {
@@ -87,6 +91,7 @@ const PartnerReferenceScreen = ({ navigation }) => {
 
   const nextPageNavigationHandler = async () => {
     console.log('All profile data:', allProfileData);
+    setIsLoading(true);
     try {
       const response = await fetch(`${API_URL}/user/completeProfile`, {
         method: 'PUT',
@@ -96,31 +101,35 @@ const PartnerReferenceScreen = ({ navigation }) => {
         },
         body: JSON.stringify(allProfileData),
       });
-  
+
       if (!response.ok) {
-        console.error('Failed to update profile:', response.message);
+        console.error('Failed to update profile:', response.statusText);
+        Toast('Failed to update profile. Please try again.');
         return;
       }
-  
+
       const responseData = await response.json();
-      console.log('Profile update response:', responseData);
+      Toast('Account Created successfully!');
       navigation.navigate('LoginScreen');
     } catch (error) {
       console.error('Error updating profile:', error.message);
+      Toast('An error occurred. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
+
   return (
     <ScrollView>
       <View style={style.container}>
         <View style={style.headerContainer}>
           <AppHeader
-        iconLeft={<SVG.BackArrow size={24} fill={'black'} />}
-        onLeftIconPress={() => navigation.goBack()}
+            iconLeft={<SVG.BackArrow size={24} fill={'black'} />}
+            onLeftIconPress={backNavigationHandler}
             title={LABELS.partnerPreference}
             iconRight={
-              <TouchableOpacity onPress={()=>{
+              <TouchableOpacity onPress={() => {
                 navigation.navigate('NotificationScreen');
-              
               }}>
                 <Image source={IMAGES.notificationIcon} style={styles.Bell_Icon} />
               </TouchableOpacity>
@@ -135,7 +144,7 @@ const PartnerReferenceScreen = ({ navigation }) => {
             extraStyle={{ fontFamily: Fonts.PoppinsMedium }}
           />
           <Space mT={20} />
-          <View >
+          <View>
             {Object.entries(headData).map(([field, data]) => (
               <View key={field}>
                 <CustomDropdown
@@ -146,7 +155,6 @@ const PartnerReferenceScreen = ({ navigation }) => {
                     updatePartnerPreference(field, val);
                   }}
                   searchPlaceholder={`Search ${field}`}
-
                 />
                 <View style={style.hr}></View>
               </View>
@@ -167,7 +175,7 @@ const PartnerReferenceScreen = ({ navigation }) => {
             extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
           />
           <Space mT={20} />
-          <View >
+          <View>
             {Object.entries(demoData).map(([field, data]) => (
               <View key={field}>
                 <CustomDropdown
@@ -184,15 +192,19 @@ const PartnerReferenceScreen = ({ navigation }) => {
             ))}
           </View>
           <Space mT={20} />
-          <AppButton
-            variant="filled"
-            title={LABELS.save}
-            extraStyle={{
-              text: [STYLES.fontFamily(Fonts.PoppinsMedium)],
-            }}
-            textVariant={'h5'}
-            onPress={nextPageNavigationHandler}
-          />
+          {isLoading ? (
+            <ActivityIndicator size="large" color={COLORS.dark.primary} />
+          ) : (
+            <AppButton
+              variant="filled"
+              title={LABELS.save}
+              extraStyle={{
+                text: [STYLES.fontFamily(Fonts.PoppinsMedium)],
+              }}
+              textVariant={'h5'}
+              onPress={nextPageNavigationHandler}
+            />
+          )}
           <Space mT={20} />
         </View>
       </View>

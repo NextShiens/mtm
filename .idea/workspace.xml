@@ -6,27 +6,12 @@
   <component name="ChangeListManager">
     <list default="true" id="65d36aab-a37b-4c85-8af8-c97fc015eff2" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app-matrimonial-main/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/app-matrimonial-main/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app-matrimonial-main/constant.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-matrimonial-main/constant.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app-matrimonial-main/src/components/AppCard/AppCard.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-matrimonial-main/src/components/AppCard/AppCard.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app-matrimonial-main/src/components/InboxCard/InboxCard.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-matrimonial-main/src/components/InboxCard/InboxCard.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app-matrimonial-main/src/components/NotificationCard/NotificationCard.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-matrimonial-main/src/components/NotificationCard/NotificationCard.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app-matrimonial-main/src/screens/Main/ChatScreen/ChatScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-matrimonial-main/src/screens/Main/ChatScreen/ChatScreen.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app-matrimonial-main/src/screens/Main/Connections/Connections.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-matrimonial-main/src/screens/Main/Connections/Connections.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app-matrimonial-main/src/screens/Main/InboxScreen/InboxScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-matrimonial-main/src/screens/Main/InboxScreen/InboxScreen.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app-matrimonial-main/src/screens/Main/InboxScreen/styles.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-matrimonial-main/src/screens/Main/InboxScreen/styles.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app-matrimonial-main/src/screens/Main/NotificationScreen/NotificationScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-matrimonial-main/src/screens/Main/NotificationScreen/NotificationScreen.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app-matrimonial-main/src/screens/Main/NotificationScreen/styles.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-matrimonial-main/src/screens/Main/NotificationScreen/styles.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app-matrimonial-main/src/screens/Main/ProfileUpdateScreen/ProfileUpdateScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-matrimonial-main/src/screens/Main/ProfileUpdateScreen/ProfileUpdateScreen.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app-matrimonial-main/src/screens/Main/UserDetailsScreen/UserDetailsScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-matrimonial-main/src/screens/Main/UserDetailsScreen/UserDetailsScreen.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/matri_backend_new/controller/uploadFileController.js" beforeDir="false" afterPath="$PROJECT_DIR$/matri_backend_new/controller/uploadFileController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/matri_backend_new/controller/userNotificationController.js" beforeDir="false" afterPath="$PROJECT_DIR$/matri_backend_new/controller/userNotificationController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/matri_backend_new/firebase/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/matri_backend_new/firebase/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/matri_backend_new/firebase/service/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/matri_backend_new/firebase/service/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/matri_backend_new/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/matri_backend_new/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/matri_backend_new/routes/user.js" beforeDir="false" afterPath="$PROJECT_DIR$/matri_backend_new/routes/user.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/matri_backend_new/services/chatRoom.js" beforeDir="false" afterPath="$PROJECT_DIR$/matri_backend_new/services/chatRoom.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/matri_backend_new/vaishakhi-matrimony-firebase-adminsdk-mjr6h-34a24c9c5e.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app-matrimonial-main/src/labels/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-matrimonial-main/src/labels/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app-matrimonial-main/src/screens/Auth/OTPScreen/OTPScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-matrimonial-main/src/screens/Auth/OTPScreen/OTPScreen.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app-matrimonial-main/src/screens/Auth/PartnerReferenceScreen/PartnerReferenceScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-matrimonial-main/src/screens/Auth/PartnerReferenceScreen/PartnerReferenceScreen.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app-matrimonial-main/src/screens/Auth/RegisterScreen/RegisterScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-matrimonial-main/src/screens/Auth/RegisterScreen/RegisterScreen.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app-matrimonial-main/src/screens/Main/HomePage/HomePage.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-matrimonial-main/src/screens/Main/HomePage/HomePage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app-matrimonial-main/src/services/firebase.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-matrimonial-main/src/services/firebase.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

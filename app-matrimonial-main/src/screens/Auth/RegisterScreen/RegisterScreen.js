@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ScrollView, View } from 'react-native';
+import { ScrollView, View, ActivityIndicator } from 'react-native';
 import { CountryPicker } from 'react-native-country-codes-picker';
 import { Fonts } from '../../../assets/fonts';
 import { IMAGES } from '../../../assets/images';
@@ -29,18 +29,24 @@ const RegisterScreen = ({ navigation }) => {
   const [selectedCountry, setSelectedCountry] = useState('IN');
   const [countryShow, setCountryShow] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const style = styles;
+
   const toggleCheckbox = () => {
     setIsChecked(!isChecked);
   };
+
   const backNavigationHandler = () => {
     navigation.goBack();
   };
+
   const termsHandler = () => { };
   const privacyHandler = () => { };
+
   const openCountryModal = () => {
     setCountryShow(true);
   };
+
   const onSelectCountry = item => {
     setCountryCode(item.dial_code);
     setSelectedCountry(item.code);
@@ -55,9 +61,10 @@ const RegisterScreen = ({ navigation }) => {
     isChecked: isChecked,
   });
 
-  const handleInputChange = async (key, value) => {
+  const handleInputChange = (key, value) => {
     setFormData({ ...formData, [key]: value });
   };
+
   const userFirstTimeReg = async (userFirebaseId) => {
     const res = await fetch(`${API_URL}/user/register`, {
       method: 'POST',
@@ -73,59 +80,66 @@ const RegisterScreen = ({ navigation }) => {
       }),
     });
     const data = await res.json();
-    await AsyncStorage.setItem('AccessToken', data.token);
     if (data.error) {
-     console.log('Error:', data.error);
+      console.log('Error:', data.error);
+      Toast(data.error);
     } else {
+      await AsyncStorage.setItem('AccessToken', data.token);
       Toast('User registered successfully');
-      navigation.navigate('OTPScreen' , {email: formData.email});
+      navigation.navigate('OTPScreen', { email: formData.email });
     }
   };
+
   const verifyUserEmail = async () => {
     try {
-
       const response = await fetch(`${API_URL}/user/verifyEmail`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({email:formData.email }),
+        body: JSON.stringify({ email: formData.email }),
       });
       const data = await response.json();
       console.log(data);
     } catch (error) {
       console.error(error);
+      Toast('Failed to send verification email. Please try again.');
     }
   };
+
   const onRegisterPress = async () => {
-    const { name, email, phoneNumber, password, isAgreed } = formData;
-    if (!name && !email && !password && !phoneNumber && !isChecked) {
+    const { name, email, phoneNumber, password } = formData;
+    if (!name || !email || !password || !phoneNumber || !isChecked) {
       Toast(ERRORS.emptyForm);
-    } else {
-      if (
-        isValidatedSignup({
-          name,
-          email,
-          phoneNumber,
-          countryCode,
-          selectedCountry,
-          password,
-          isChecked,
-        })
-      ) {
-        try {
-          const userFirebaseId = await RegisterUser(email, password);
-          console.log('User Firebase Id: line103', userFirebaseId);
-          await userFirstTimeReg(userFirebaseId)
+      return;
+    }
+
+    if (isValidatedSignup({
+      name,
+      email,
+      phoneNumber,
+      countryCode,
+      selectedCountry,
+      password,
+      isChecked,
+    })) {
+      setIsLoading(true);
+      try {
+        const userFirebaseId = await RegisterUser(email, password);
+        if (userFirebaseId) {
+          console.log('User Firebase Id:', userFirebaseId);
+          await userFirstTimeReg(userFirebaseId);
           await verifyUserEmail();
-          navigation.navigate('OTPScreen');
         }
-        catch (error) {
-          console.error('Error:', error);
-        }
+      } catch (error) {
+        console.error('Error:', error);
+        Toast('An unexpected error occurred. Please try again.');
+      } finally {
+        setIsLoading(false);
       }
     }
   };
+
   return (
     <ScrollView style={{ backgroundColor: 'white' }}>
       <View style={[style.container]}>
@@ -252,16 +266,21 @@ const RegisterScreen = ({ navigation }) => {
               />
             </View>
             <Space mT={20} />
-            <AppButton
-              title={LABELS.createAccount}
-              variant="filled"
-              textVariant={'h5'}
-              onPress={onRegisterPress}
-            />
+            {isLoading ? (
+              <ActivityIndicator size="large" color={COLORS.dark.primary} />
+            ) : (
+              <AppButton
+                title={LABELS.next}
+                variant="filled"
+                textVariant={'h5'}
+                onPress={onRegisterPress}
+              />
+            )}
           </View>
         </View>
       </View>
     </ScrollView>
   );
 };
+
 export default RegisterScreen;

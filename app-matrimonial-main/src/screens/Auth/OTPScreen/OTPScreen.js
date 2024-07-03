@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
-import { ScrollView, View } from 'react-native';
+import { ScrollView, View, ActivityIndicator } from 'react-native';
 import { Fonts } from '../../../assets/fonts';
 import { IMAGES } from '../../../assets/images';
 import { SVG } from '../../../assets/svg';
@@ -15,16 +15,16 @@ import { LABELS } from '../../../labels';
 import OTPTextInput from '../../../libraries/OTPTextInput/OTPTextInput';
 import { Toast } from '../../../utils/native';
 import { styles } from './styles';
-import { API_URL } from '../../../../constant'; 
+import { API_URL } from '../../../../constant';
 import { useRoute } from '@react-navigation/native';
-
 
 const OTPScreen = () => {
   const route = useRoute();
   const userEmailParams = route.params?.email || '';
-  
+
   console.log('userEmail from otp page ', userEmailParams);
   const [otp, setOtp] = useState(['', '', '', '']);
+  const [isLoading, setIsLoading] = useState(false);
   const navigation = useNavigation();
   const style = styles;
 
@@ -33,25 +33,32 @@ const OTPScreen = () => {
     updatedOTP[index] = text;
     setOtp(updatedOTP);
   };
-  const verifyUserEmail = async () => {
-    try {
 
+  const verifyUserEmail = async () => {
+    setIsLoading(true);
+    try {
       const response = await fetch(`${API_URL}/user/verifyEmail`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({email:userEmailParams }),
+        body: JSON.stringify({ email: userEmailParams }),
       });
       const data = await response.json();
       console.log(data);
+      Toast('Verification email sent successfully');
     } catch (error) {
       console.error(error);
+      Toast('Failed to send verification email');
+    } finally {
+      setIsLoading(false);
     }
   };
+
   const handleSubmit = async () => {
     const enteredOTP = otp.join('');
     if (enteredOTP.length > 3) {
+      setIsLoading(true);
       try {
         const response = await fetch(`${API_URL}/user/confirmEmail`, {
           method: 'POST',
@@ -72,6 +79,9 @@ const OTPScreen = () => {
         }
       } catch (error) {
         console.error('Error:', error);
+        Toast('An unexpected error occurred');
+      } finally {
+        setIsLoading(false);
       }
     } else if (enteredOTP.length === 0) {
       Toast('Please enter OTP');
@@ -83,6 +93,7 @@ const OTPScreen = () => {
   const resendCodeHandler = () => {
     verifyUserEmail();
   };
+
   const backNavigationHandler = () => {
     navigation.goBack();
   };
@@ -93,12 +104,12 @@ const OTPScreen = () => {
         <LayoutImage imgSrc={IMAGES.theme2} />
         <AppHeader
           iconLeft={<SVG.BackArrow fill={'black'} />}
-          extraStyle={{container: STYLES.position('absolute')}}
+          extraStyle={{ container: STYLES.position('absolute') }}
           onLeftIconPress={backNavigationHandler}
         />
 
         <View style={[style.contentContainer]}>
-          <AppLogo extraStyle={{container: [STYLES.bottom('10%')]}} />
+          <AppLogo extraStyle={{ container: [STYLES.bottom('10%')] }} />
           <View style={[style.formContainer]}>
             <AppText
               title={LABELS.enterVeification}
@@ -126,12 +137,16 @@ const OTPScreen = () => {
             />
 
             <Space mT={20} />
-            <AppButton
-              title={LABELS.createAccount}
-              variant="filled"
-              textVariant={'h5'}
-              onPress={handleSubmit}
-            />
+            {isLoading ? (
+              <ActivityIndicator size="large" color={COLORS.dark.primary} />
+            ) : (
+              <AppButton
+                title={LABELS.verify}
+                variant="filled"
+                textVariant={'h5'}
+                onPress={handleSubmit}
+              />
+            )}
             <Space mT={20} />
             <AppText
               title={LABELS.resendCode}
