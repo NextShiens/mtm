@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState} from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, TextInput, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -8,14 +8,20 @@ import { IMAGES } from '../../../assets/images';
 import { SVG } from '../../../assets/svg';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL } from '../../../../constant';
+import { LABELS } from '../../../labels';
+import { Toast } from '../../../utils/native';
+
 
 const DeleteAccount = () => {
   const navigation = useNavigation();
+  const [isLoading, setIsLoading] = useState(false);
+
   
   const handleDeleteAccount = async () => {
 
     const user = await AsyncStorage.getItem('theUser');
     try {
+      setIsLoading(true);
       const token = await AsyncStorage.getItem('AccessToken');
       const theUser = await AsyncStorage.getItem('theUser');
       const user = JSON.parse(theUser);
@@ -45,6 +51,8 @@ const DeleteAccount = () => {
     } catch (error) {
       console.error('Error deleting account:', error);
       Toast('Failed to delete account');
+    } finally {
+      setIsLoading(false)
     }
   };
 
@@ -75,7 +83,7 @@ const DeleteAccount = () => {
           placeholder="Your Explanation Is Entirely Optional.."
           multiline
         />
-        <TouchableOpacity style={styles.button} onPress={handleDeleteAccount}>
+        <TouchableOpacity style={styles.button} title={isLoading ? 'Deleting...' : LABELS.delete} disabled={isLoading} onPress={handleDeleteAccount}>
           <Text style={styles.buttonText}>Confirm Deletion</Text>
         </TouchableOpacity>
       </View>

@@ -119,4 +119,6 @@ export const LABELS = {
   confirm: 'Confirm',
   back: 'Back',
   signUp: 'Sign Up',
+  delete : 'Delete Account',
+  ChangingPassword: 'Changing Password',
 };

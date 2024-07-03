@@ -200,7 +200,7 @@ const UserDetailsScreen = ({ navigation }) => {
           <SvgXml xml={defaultProfileSvg} width="50%" height="50%" />
         </View>
       )}
-      <View style={style.gradient}>
+      {/* <View style={style.gradient}>
         <AppHeader
           iconLeft={<SVG.BackArrow size={24} fill={'black'} />}
           onLeftIconPress={() => navigation.goBack()}
@@ -224,12 +224,38 @@ const UserDetailsScreen = ({ navigation }) => {
             container: { width: '100%' },
           }}
         />
-      </View>
+      </View> */}
     </View>
   );
 
   return (
     <ScrollView style={[STYLES.bgColor(COLORS.dark.white)]}>
+       <View style={styles.container}>
+        <AppHeader
+          iconLeft={<SVG.BackArrow size={24} fill={'black'} />}
+          onLeftIconPress={() => navigation.goBack()}
+          textColor="white"
+          iconRight={
+            <TouchableOpacity
+              style={styles.rightIconContainer}
+              onPress={async () => {
+                await saveUser();
+                navigation.navigate('SavedUserScreen');
+              }}>
+              <CustomImage
+                source={IMAGES.savedIcon}
+                size={18}
+                resizeMode={'contain'}
+              />
+            </TouchableOpacity>
+          }
+          title={LABELS.matches}
+          extraStyle={{
+            container: { width: '100%', position: 'absolute', zIndex: 1 },
+          }}
+        />
+      </View>
+
       <View style={style.container}>
         <View style={style.carouselContainer}>
           <Carousel

@@ -24,14 +24,46 @@ import { isValidatedLogin } from '../../../utils/validation';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL } from '../../../../constant';
 import { signInWithGoogle } from '../../../services/authServices';
+import { Svg, Path } from 'react-native-svg';
 
 const LoginScreen = () => {
   const [isChecked, setIsChecked] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const navigation = useNavigation();
   const style = styles;
+
+  const PasswordEyeIcon = ({ showPassword }) => {
+    return showPassword ? (
+      <Svg width={24} height={24} viewBox="0 0 24 24" fill="black">
+        <Path
+          d="M1 12S4 4 12 4s11 8 11 8-3 8-11 8-11-8-11-8z"
+          fill="black"
+        />
+        <Path
+          d="M12 15a3 3 0 100-6 3 3 0 000 6z"
+          stroke="#A9A9A9"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </Svg>
+    ) : (
+      <Svg width={24} height={24} viewBox="0 0 24 24" fill="none">
+        <Path
+          d="M12 4.5C7.78 4.5 4.3 7.5 3 12c1.3 4.5 4.78 7.5 9 7.5s7.7-3 9-7.5c-1.3-4.5-4.78-7.5-9-7.5z
+          M12 15c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3z
+          M-1 1L25 25"
+          stroke="black"
+          strokeWidth="1"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </Svg>
+    );
+  };
 
   const toggleCheckbox = () => {
     setIsChecked(!isChecked);
@@ -40,9 +72,8 @@ const LoginScreen = () => {
   const backNavigationHandler = () => {
     navigation.goBack();
   };
-
-//   const googleAuthHandler = async () => { 
-// };
+  //   const googleAuthHandler = async () => { 
+ // };
   const forgotPassHandler = () => {
     navigation.navigate('ForgotPassword');
   };
@@ -88,29 +119,39 @@ const LoginScreen = () => {
   };
 
   const loginHandler = async () => {
-    if (!email && !password) {
+    if (!email || !password) {
       Toast(ERRORS.emptyForm);
-    } else {
-      if (isValidatedLogin({ email, password })) {
-        setIsLoading(true);
-        try {
-          const res = await loginUser(email, password);
-          if (res) {
-            await loginAndGetAccessToken();
-            await AsyncStorage.setItem('loginToken', res);
-            await getSubscriptions();
-            navigation.navigate('DrawerNavigation');
-          } else {
-            Alert.alert('Error', 'Failed to login invalid credentials');
-            console.log('There is an error');
-          }
-        } catch (error) {
-          console.error('Login error:', error);
-          Alert.alert('Error', 'An error occurred during login');
-        } finally {
-          setIsLoading(false);
-        }
+      return;
+    }
+  
+    if (!isValidatedLogin({ email, password })) {
+      return;
+    }
+  
+    setIsLoading(true);
+  
+    try {
+      const res = await loginUser(email, password);
+      if (!res) {
+        Toast('Error', 'Failed to login with invalid credentials');
+        return;
       }
+      const { status } = res;
+  
+      if (status !== 'active') {
+        Toast('Your profile in under Review'+ 'Please wait for the admin to approve your profile');
+        return;
+      }
+  
+      await loginAndGetAccessToken();
+      await AsyncStorage.setItem('loginToken', res);
+      await getSubscriptions();
+      navigation.navigate('DrawerNavigation');
+    } catch (error) {
+      console.error('Login error:', error);
+      Toast('Error', 'An error occurred during login');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -186,10 +227,16 @@ const LoginScreen = () => {
 
             <AppInput
               placeholder={LABELS.passwordPlaceholder}
-              secureTextEntry={true}
+              secureTextEntry={!showPassword}
               keyboardType={'default'}
               onChangeText={onPasswordEnter}
             />
+            <TouchableOpacity
+              onPress={() => setShowPassword(!showPassword)}
+              style={style.PasswordEyeIcon}>
+              <PasswordEyeIcon showPassword={showPassword} />
+            </TouchableOpacity>
+
             <Space mT={10} />
 
             <View style={[STYLES.row]}>

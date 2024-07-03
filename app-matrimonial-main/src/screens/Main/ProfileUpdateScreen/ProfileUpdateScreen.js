@@ -442,7 +442,7 @@ const ProfileUpdateScreen = ({ navigation }) => {
           />
           <Space mT={20} />
           <AppButton
-            title={isLoading ? 'updating' : LABELS.update}
+            title={isLoading ? 'updating...' : LABELS.update}
             variant="filled"
             textVariant={'h5'}
             onPress={handleUpdate}
@@ -540,6 +540,17 @@ const ProfileUpdateScreen = ({ navigation }) => {
             value={profileData.partner}
           /> */}
           <Space mT={20} />
+          <AppButton
+            title={isLoading ? 'updating...' : LABELS.update}
+            variant="filled"
+            textVariant={'h5'}
+            onPress={handleUpdate}
+            disabled={isLoading}
+          >
+            {isLoading && (
+              <ActivityIndicator size="small" color={COLORS.dark.white} style={{ marginLeft: 10 }} />
+            )}
+          </AppButton>
         </View>
       )}
       {selectedBtn == 3 && (
@@ -626,6 +637,17 @@ const ProfileUpdateScreen = ({ navigation }) => {
             value={profileData.annualIncome}
           />
           <Space mT={20} />
+          <AppButton
+            title={isLoading ? 'updating...' : LABELS.update}
+            variant="filled"
+            textVariant={'h5'}
+            onPress={handleUpdate}
+            disabled={isLoading}
+          >
+            {isLoading && (
+              <ActivityIndicator size="small" color={COLORS.dark.white} style={{ marginLeft: 10 }} />
+            )}
+          </AppButton>
         </View>
       )}
     </ScrollView>

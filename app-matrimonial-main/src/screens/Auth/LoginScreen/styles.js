@@ -40,4 +40,8 @@ export const styles =
       borderRadius: 6,
       borderColor: COLORS.dark.inputBorder,
     },
+    PasswordEyeIcon: {
+      bottom: 38,
+      left: 285,
+    },
   });

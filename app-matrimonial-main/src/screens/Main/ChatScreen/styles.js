@@ -14,6 +14,7 @@ export const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   headerContainer: {
+    color: 'black',
     padding: '3%',
     paddingBottom: '0%',
     borderBottomWidth: 1,
@@ -33,6 +34,7 @@ export const styles = StyleSheet.create({
   User_Cont: {
     flexDirection: 'row',
     alignItems: 'center',
+    right: 30,
   },
   User_name: {
     fontSize: 14,
@@ -56,7 +58,6 @@ export const styles = StyleSheet.create({
     height: 50,
     marginRight: '5%',
   },
-
   footer: {
     height: 35,
     backgroundColor: 'white',
@@ -65,7 +66,6 @@ export const styles = StyleSheet.create({
     left: 0,
     right: 0,
   },
-
   mainContainer: {
     flex: 1,
     marginBottom: '1%',
@@ -97,12 +97,12 @@ export const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
     width: '100%',
-
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    // backgroundColor: 'rgba(0, 0, 0, 0.5)',
     marginLeft: '5%',
     marginRight: '5%',
     alignSelf: 'center',
+    color: 'black',
   },
   modalChildContainer: {
     height: '8%',
@@ -113,7 +113,6 @@ export const styles = StyleSheet.create({
     left: '10%',
     flexDirection: 'row',
   },
-
   InputOuter_View: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -121,8 +120,8 @@ export const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: '#FFFFFF',
   },
-
   InputContainer: {
+    color: 'black',
     flexDirection: 'row',
     width: '75%',
     backgroundColor: '#F0F2FB',
@@ -135,6 +134,7 @@ export const styles = StyleSheet.create({
   },
   inputToolbar: {
     width: '100%',
+    color: 'black',
     alignItems: 'center',
   },
   VectorImage: {
@@ -208,5 +208,16 @@ export const styles = StyleSheet.create({
     lineHeight: 22,
     color: 'black',
     marginVertical: '3%',
+  },
+  Bell_Icon: {
+    width: 25,
+    height: 30,
+    resizeMode: 'contain',
+    marginRight: '50%',
+    left: 0,
+  },
+  line:{
+    height: 1,
+    marginHorizontal: 16,
   },
 });

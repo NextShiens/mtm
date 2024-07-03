@@ -64,43 +64,43 @@ const CustomDrawerContent = ({ props, navigation }) => {
     fetchUserData();
   }, [fetchUserData]);
 
-  const handleToggle = async () => {
-    try {
-      const newStatus = !isOnline;
-      setIsOnline(newStatus);
+  // const handleToggle = async () => {
+  //   try {
+  //     const newStatus = !isOnline;
+  //     setIsOnline(newStatus);
 
-      const token = await AsyncStorage.getItem('AccessToken');
-      const response = await fetch(`${API_URL}/user/updateActiveStatus`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          isActive: newStatus,
-        }),
-      });
+  //     const token = await AsyncStorage.getItem('AccessToken');
+  //     const response = await fetch(`${API_URL}/user/updateActiveStatus`, {
+  //       method: 'PUT',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //       body: JSON.stringify({
+  //         isActive: newStatus,
+  //       }),
+  //     });
 
-      if (!response.ok) {
-        throw new Error('Failed to update profile');
-      }
+  //     if (!response.ok) {
+  //       throw new Error('Failed to update profile');
+  //     }
 
-      const result = await response.json();
-      console.log('Profile updated successfully:', result);
+  //     const result = await response.json();
+  //     console.log('Profile updated successfully:', result);
 
-      // Update local storage with new status
-      const userString = await AsyncStorage.getItem('theUser');
-      const user = JSON.parse(userString);
-      user.user.isActive = newStatus;
-      await AsyncStorage.setItem('theUser', JSON.stringify(user));
+  //     // Update local storage with new status
+  //     const userString = await AsyncStorage.getItem('theUser');
+  //     const user = JSON.parse(userString);
+  //     user.user.isActive = newStatus;
+  //     await AsyncStorage.setItem('theUser', JSON.stringify(user));
 
-    } catch (error) {
-      console.error('Error updating profile:', error);
-      // Revert the toggle if there's an error
-      setIsOnline(!newStatus);
-      Toast("Failed to update status. Please try again.");
-    }
-  };
+  //   } catch (error) {
+  //     console.error('Error updating profile:', error);
+  //     // Revert the toggle if there's an error
+  //     setIsOnline(!newStatus);
+  //     Toast("Failed to update status. Please try again.");
+  //   }
+  // };
 
   const handleItemClick = item => {
     setSelectedRoute(item.name);
@@ -109,11 +109,13 @@ const CustomDrawerContent = ({ props, navigation }) => {
     } else if (item.name === 'Membership') {
       navigation.navigate('MembershipPlan');
     } else if (item.name === 'Payment Method') {
-      navigation.navigate('PaymentScreen');
+      navigation.navigate('MembershipPlan');
     } else if (item.name === 'Account Setting') {
       navigation.navigate('AccountSettingsScreen');
     } else if (item.name === 'User Name') {
       navigation.navigate('ProfileUpdateScreen');
+    } else if (item.name === 'Upgrade to Pro') {
+      navigation.navigate('MembershipPlan');
     } else if (item.name === 'Log Out') {
       const logout = async () => {
         await AsyncStorage.removeItem('AccessToken');
@@ -219,7 +221,7 @@ const CustomDrawerContent = ({ props, navigation }) => {
                       onColor="#F97B22"
                       offColor="#F3F5FE"
                       size="small"
-                      onToggle={handleToggle}
+                      onToggle={() => {}}
                       style={{ marginLeft: 10 }}
                     />
                   </View>
@@ -396,6 +398,9 @@ const CustomDrawerContent = ({ props, navigation }) => {
                 left: 20,
                 top: 20,
                 fontFamily: Fonts.PoppinsSemiBold,
+              }}
+              onPress={() => {
+                navigation.navigate('MembershipPlan');
               }}
               color={COLORS.dark.white}
             />

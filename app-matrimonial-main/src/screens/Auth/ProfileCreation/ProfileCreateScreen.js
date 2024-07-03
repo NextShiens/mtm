@@ -26,7 +26,6 @@ const heightOptions = [
  const maritalStatusOptions = ['Single', 'Divorced', 'Married', 'Widowed'];
  const religionsInIndia = [
   "Hinduism",
-  "Islam",
   "Christianity",
   "Sikhism",
   "Buddhism",
@@ -56,7 +55,7 @@ const ProfileCreateScreen = () => {
     dateOfBirth: '',
     religion: '',
     motherTongue: '',
-    sect: '',
+    cast: '',
     city: '',
 
   });
@@ -106,9 +105,9 @@ const ProfileCreateScreen = () => {
   };
 
   const registrationHandler = () => {
-    const { age, height, gender, maritalStatus, dateOfBirth, religion, motherTongue, sect, city } = formData;
+    const { age, height, gender, maritalStatus, dateOfBirth, religion, motherTongue, cast, city } = formData;
 
-    if (!age || !height || !gender || !maritalStatus || !dateOfBirth ||  !religion || !motherTongue || !sect || !city) {
+    if (!age || !height || !gender || !maritalStatus || !dateOfBirth ||  !religion || !motherTongue || !cast || !city) {
       Toast(ERRORS.emptyForm);
     } else {
       const isValid = isValidProfileData({
@@ -204,7 +203,7 @@ const ProfileCreateScreen = () => {
 
             <CustomDropdown
               search={false}
-              data={['male','female']}
+              data={['Male','Female']}
               placeholder={LABELS.Gender}
               setSelected={val => {
                 setFormData({ ...formData, gender: val });

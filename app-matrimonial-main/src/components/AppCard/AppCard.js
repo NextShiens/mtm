@@ -190,12 +190,7 @@ const AppCard = ({ isBtnShown, btnType, data, onPressBtn1, onPressBtn2 }) => {
                 onPress={() => {
                   onSecondBtnPress(item);
                 }}>
-                <AppText
-                  title={LABELS.chat}
-                  color={COLORS.dark.white}
-                  extraStyle={STYLES.fontFamily(Fonts.PoppinsRegular)}
-                  variant={'h5'}
-                />
+              <CustomImage source={IMAGES.chatIcon} size={12} />
               </TouchableOpacity>
             </View>
           )}

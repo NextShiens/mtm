@@ -18,6 +18,8 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import CustomImage from '../../../components/CustomImage/CustomImage';
 import { API_URL } from '../../../../constant';
 import { Svg , Path } from 'react-native-svg';
+import { LABELS } from '../../../labels';
+
 
 const ChangePasswordScreen = () => {
   const navigation = useNavigation();
@@ -27,6 +29,7 @@ const ChangePasswordScreen = () => {
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const PasswordEyeIcon = ({ showPassword}) => {
      return showPassword ? (
@@ -64,6 +67,7 @@ const ChangePasswordScreen = () => {
 
   const handleChangePassword = async () => {
     try {
+      setIsLoading(true);
       const token = await AsyncStorage.getItem('AccessToken');
       const theUser = await AsyncStorage.getItem('theUser');
       const user = JSON.parse(theUser);
@@ -95,6 +99,9 @@ const ChangePasswordScreen = () => {
     } catch (error) {
       console.error('Error changing password:', error);
       Toast('Failed to change password');
+    }
+    finally {
+      setIsLoading(false);
     }
   };
 
@@ -153,11 +160,11 @@ const ChangePasswordScreen = () => {
             value={confirmPassword}
             onChangeText={setConfirmPassword}
           />
-          <TouchableOpacity onPress={() => setShowConfirmPassword(!showConfirmPassword)} style={styles.PasswordEyeIcon}>
+          <TouchableOpacity onPress={() => setShowConfirmPassword(!showConfirmPassword)}  style={styles.PasswordEyeIcon}>
             <PasswordEyeIcon showPassword={showConfirmPassword} />
           </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.button} onPress={handleChangePassword}>
+        <TouchableOpacity style={styles.button} title={isLoading ? 'Changing Passwrod...' : LABELS.ChangingPassword} onPress={handleChangePassword}>
           <Text style={styles.buttonText}>Done</Text>
         </TouchableOpacity>
       </View>

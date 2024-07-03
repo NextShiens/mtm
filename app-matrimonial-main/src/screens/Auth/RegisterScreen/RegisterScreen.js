@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ScrollView, View, ActivityIndicator } from 'react-native';
+import { ScrollView, View, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { CountryPicker } from 'react-native-country-codes-picker';
 import { Fonts } from '../../../assets/fonts';
 import { IMAGES } from '../../../assets/images';
@@ -23,6 +23,7 @@ import { isValidatedSignup } from '../../../utils/validation';
 import { API_URL } from '../../../../constant';
 import { styles } from './styles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Svg, Path } from 'react-native-svg';
 
 const RegisterScreen = ({ navigation }) => {
   const [countryCode, setCountryCode] = useState('+91');
@@ -30,7 +31,38 @@ const RegisterScreen = ({ navigation }) => {
   const [countryShow, setCountryShow] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const style = styles;
+
+  const PasswordEyeIcon = ({ showPassword}) => {
+    return showPassword ? (
+   <Svg width={24} height={24} viewBox="0 0 24 24" fill="black">
+     <Path
+     d="M1 12S4 4 12 4s11 8 11 8-3 8-11 8-11-8-11-8z"
+     fill="black"
+     />
+     <Path
+       d="M12 15a3 3 0 100-6 3 3 0 000 6z"
+       stroke="#A9A9A9"
+       strokeWidth="2"
+       strokeLinecap="round"
+       strokeLinejoin="round"
+     />
+     </Svg>
+   ) : (
+   <Svg width={24} height={24} viewBox="0 0 24 24" fill="none">
+     <Path
+        d="M12 4.5C7.78 4.5 4.3 7.5 3 12c1.3 4.5 4.78 7.5 9 7.5s7.7-3 9-7.5c-1.3-4.5-4.78-7.5-9-7.5z
+        M12 15c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3z
+        M-1 1L25 25"
+       stroke="black"
+       strokeWidth="1"
+       strokeLinecap="round"
+       strokeLinejoin="round"
+     />
+   </Svg>
+ );
+};
 
   const toggleCheckbox = () => {
     setIsChecked(!isChecked);
@@ -141,17 +173,17 @@ const RegisterScreen = ({ navigation }) => {
   };
 
   return (
-    <ScrollView style={{ backgroundColor: 'white' }}>
+    <ScrollView style={{backgroundColor: 'white'}}>
       <View style={[style.container]}>
         <LayoutImage imgSrc={IMAGES.theme2} />
         <AppHeader
           iconLeft={<SVG.BackArrow fill={'black'} />}
-          extraStyle={{ container: STYLES.position('absolute') }}
+          extraStyle={{container: STYLES.position('absolute')}}
           onLeftIconPress={backNavigationHandler}
         />
 
         <View style={[style.contentContainer]}>
-          <AppLogo extraStyle={{ container: STYLES.bottom('10%') }} />
+          <AppLogo extraStyle={{container: STYLES.bottom('10%')}} />
           <View style={[style.formContainer]}>
             <AppText
               title={LABELS.register}
@@ -236,7 +268,7 @@ const RegisterScreen = ({ navigation }) => {
             </View>
 
             <Space mT={10} />
-
+            {/* <View> */}
             <AppText
               title={LABELS.Password}
               variant={'h5'}
@@ -248,11 +280,18 @@ const RegisterScreen = ({ navigation }) => {
 
             <AppInput
               placeholder={LABELS.passwordPlaceholder}
-              secureTextEntry={true}
+              secureTextEntry={!showPassword} // Modify this line to use showNewPassword
               keyboardType={'default'}
               onChangeText={text => handleInputChange('password', text)}
             />
-            <Space mT={15} />
+
+            <Space mT={10} />
+
+            <TouchableOpacity
+              onPress={() => setShowPassword(!showPassword)}
+              style={styles.PasswordEyeIcon}>
+              <PasswordEyeIcon showPassword={showPassword} />
+            </TouchableOpacity>
 
             <View style={[STYLES.row]}>
               <CustomCheckbox
@@ -270,7 +309,7 @@ const RegisterScreen = ({ navigation }) => {
               <ActivityIndicator size="large" color={COLORS.dark.primary} />
             ) : (
               <AppButton
-                title={LABELS.next}
+                title={isLoading ? 'Logging in...' : LABELS.next}
                 variant="filled"
                 textVariant={'h5'}
                 onPress={onRegisterPress}

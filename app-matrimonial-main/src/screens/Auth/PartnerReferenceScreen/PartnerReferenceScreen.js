@@ -197,7 +197,7 @@ const PartnerReferenceScreen = ({ navigation }) => {
           ) : (
             <AppButton
               variant="filled"
-              title={LABELS.save}
+              title={isLoading ? 'Logging in...' : LABELS.save}
               extraStyle={{
                 text: [STYLES.fontFamily(Fonts.PoppinsMedium)],
               }}

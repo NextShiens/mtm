@@ -33,4 +33,8 @@ export const styles = StyleSheet.create({
     borderRadius: 6,
     borderColor: COLORS.dark.inputBorder,
   },
+  PasswordEyeIcon: {
+    bottom: 45,
+    left: 285,
+  },
 });

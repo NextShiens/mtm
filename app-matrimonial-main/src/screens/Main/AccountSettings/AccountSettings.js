@@ -96,8 +96,7 @@ const styles = StyleSheet.create({
   optionText: {
     marginLeft: 8,
     fontSize: 18,
-    color: 'black',
-    fontWeight: 'bold',
+    color: '#434343',
   },
   line: {
     height: 1,
