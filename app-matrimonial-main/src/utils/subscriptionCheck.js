@@ -1,10 +1,15 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
 async function subscriptionCheck() {
   try {
     const subscriptionsData = await AsyncStorage.getItem('subscriptions');
     const subscriptions = JSON.parse(subscriptionsData);
     const user = JSON.parse(await AsyncStorage.getItem('theUser'));
+
+
+    if (!user.user.membership) {
+      const profileViewCount = user.user.recentlyViewed.length;
+      return profileViewCount < 5;
+    }
 
     const userSubscription = subscriptions.subscriptions.find(sub => sub._id === user.user.membership);
 

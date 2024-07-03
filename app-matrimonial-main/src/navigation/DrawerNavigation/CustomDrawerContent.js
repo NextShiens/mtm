@@ -49,7 +49,9 @@ const CustomDrawerContent = ({ props, navigation }) => {
   const fetchUserData = useCallback(async () => {
     try {
       const userString = await AsyncStorage.getItem('theUser');
+      console.log('User data:', userString);
       const user = JSON.parse(userString);
+      console.log('User:', user)
       setUserName(user.user.name);
       setIsOnline(user.user.isActive);
       setUserImage(user.user.userImages[0]);

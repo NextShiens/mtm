@@ -113,6 +113,7 @@ const LoginScreen = () => {
       });
 
       const content = await response.json();
+      console.log(content);
 
       if (!response.ok) {
         setAlertMessage(content.message || 'An error occurred during login.');
@@ -126,7 +127,7 @@ const LoginScreen = () => {
       }
 
       await AsyncStorage.setItem('AccessToken', content.token);
-      await AsyncStorage.setItem('theUser', JSON.stringify(content.user));
+      await AsyncStorage.setItem('theUser', JSON.stringify(content));
     } catch (error) {
       console.error('Login error:', error);
       setAlertMessage('An error occurred during login. Please try again.');
