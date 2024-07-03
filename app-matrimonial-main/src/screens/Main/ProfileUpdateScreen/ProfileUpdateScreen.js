@@ -21,6 +21,7 @@ import CustomCountryCodePicker from '../../../libraries/CustomCountryCodePicker/
 import { Toast } from '../../../utils/native';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import CustomImageGallery from './CustomImageGallery';
+import CustomDropdown from '../../../libraries/Dropdown/Dropdown';
 
 
 const ProfileUpdateScreen = ({ navigation }) => {
@@ -241,7 +242,7 @@ const ProfileUpdateScreen = ({ navigation }) => {
   const handleUpdate = async () => {
     const { name, email, phone, dateOfBirth: DOB, gender, height, location: city, motherTongue, highestDegree, occupation, maritalStatus, employedIn, annualIncome, profilePicture: userImages } = profileData;
 
-
+    const lowercaseGender = gender.toLowerCase();
     try {
       setIsLoading(true);
       const token = await AsyncStorage.getItem('AccessToken');
@@ -251,7 +252,7 @@ const ProfileUpdateScreen = ({ navigation }) => {
           'Content-Type': 'application/json',
           "authorization": ` Bearer ${token}`
         },
-        body: JSON.stringify({ name, email, phone, DOB, gender, height, city, motherTongue, highestDegree, occupation, maritalStatus, employedIn, annualIncome, userImages }),
+        body: JSON.stringify({ name, email, phone, DOB, gender: lowercaseGender, height, city, motherTongue, highestDegree, occupation, maritalStatus, employedIn, annualIncome, userImages }),
       });
 
       const result = await response.json();
@@ -309,7 +310,7 @@ const ProfileUpdateScreen = ({ navigation }) => {
           )}
 
           {
-            profileData?.profilePicture &&  (
+            profileData?.profilePicture && (
               <CustomImageGallery
                 imageUrls={profileData?.profilePicture}
                 onPress={openImageLibrary}
@@ -465,13 +466,22 @@ const ProfileUpdateScreen = ({ navigation }) => {
           />
           <Space mT={10} />
 
-          <AppInput
+          {/* <AppInput
             placeholder={profileData.gender != '' ? profileData.gender : "e.g Male"}
             onChangeText={(value) => onTextEnter('gender', value)}
             placeholderTextColor={COLORS.dark.black}
             value={profileData.gender}
+          /> */}
+          <CustomDropdown
+            placeholder={'Select Your Gender'}
+            data={['male', 'female'].map(s => s.charAt(0).toUpperCase() + s.slice(1))}
+            field={'gender'}
+            defaultOption={profileData.gender.charAt(0).toUpperCase() + profileData.gender.slice(1)}
+            setSelected={val => {
+              onTextEnter('gender', val);
+            }}
+            searchPlaceholder={`Search gender`}
           />
-
           <Space mT={10} />
 
           <AppText

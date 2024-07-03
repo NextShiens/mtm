@@ -6,9 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="65d36aab-a37b-4c85-8af8-c97fc015eff2" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app-matrimonial-main/src/navigation/DrawerNavigation/CustomDrawerContent.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-matrimonial-main/src/navigation/DrawerNavigation/CustomDrawerContent.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app-matrimonial-main/src/screens/Auth/LoginScreen/LoginScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-matrimonial-main/src/screens/Auth/LoginScreen/LoginScreen.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app-matrimonial-main/src/utils/subscriptionCheck.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-matrimonial-main/src/utils/subscriptionCheck.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app-matrimonial-main/src/screens/Auth/PartnerReferenceScreen/PartnerReferenceScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-matrimonial-main/src/screens/Auth/PartnerReferenceScreen/PartnerReferenceScreen.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app-matrimonial-main/src/screens/Main/ProfileUpdateScreen/ProfileUpdateScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-matrimonial-main/src/screens/Main/ProfileUpdateScreen/ProfileUpdateScreen.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

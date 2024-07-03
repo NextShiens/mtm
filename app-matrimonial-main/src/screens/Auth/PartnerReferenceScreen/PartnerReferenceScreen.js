@@ -178,7 +178,7 @@ const PartnerReferenceScreen = ({ navigation }) => {
           <View>
             {Object.entries(demoData).map(([field, data]) => (
               <View key={field}>
-                <CustomDropdown
+                <Custopdown
                   placeholder={LABELS[field] || field}
                   data={data}
                   field={field}
