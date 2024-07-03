@@ -283,7 +283,7 @@ const HomePage = () => {
 
     if (item.value === 'Matches') {
       navigation.navigate('PartnerMatch', {selectedCategory: item.value});
-    } else if (item.value === 'Near Me') {
+    } else if (item.value === 'Nearest Me') {
       try {
         const userString = await AsyncStorage.getItem('theUser');
         if (userString) {
