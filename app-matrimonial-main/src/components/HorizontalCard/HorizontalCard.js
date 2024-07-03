@@ -150,22 +150,24 @@ const HorizontalCard = ({ data }) => {
           style={styles.linkContainer} 
           onPress={() => navigation.navigate('PartnerMatch')}
         >
-          <AppText
-            title={LABELS.seeMore}
-            variant="h5"
-            extraStyle={[STYLES.fontFamily(Fonts.PoppinsRegular)]}
-            color={COLORS.dark.primary}
+         <AppText
+              title={LABELS.seeMore}
+              variant={'h5'}
+              extraStyle={[STYLES.fontFamily(Fonts.PoppinsRegular)]}
+              color={COLORS.dark.primary}
+            />
+            <View>
+              <Icon
+                SVGIcon={
+                  <SVG.vectorIcon
+                    fill={COLORS.dark.primary}
+                    iconLeft={true}
+                    height={'10'}
+                    width={'10'}
+                  />
+                }
           />
-          <Icon
-            SVGIcon={
-              <SVG.vectorIcon
-                fill={COLORS.dark.primary}
-                iconLeft={true}
-                height="10"
-                width="10"
-              />
-            }
-          />
+          </View>
         </TouchableOpacity>
       </View>
 

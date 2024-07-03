@@ -13,7 +13,7 @@ export const styles = StyleSheet.create({
   receivedMessage: {
     alignSelf: 'flex-start',
   },
-  Header_Cont: {
+  headerContainer: {
     padding: '3%',
     paddingBottom: '0%',
     borderBottomWidth: 1,

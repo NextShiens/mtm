@@ -202,7 +202,8 @@ const UserDetailsScreen = ({ navigation }) => {
       )}
       <View style={style.gradient}>
         <AppHeader
-          iconLeft={<SVG.BackArrow fill={'black'} />}
+          iconLeft={<SVG.BackArrow size={24} fill={'black'} />}
+          onLeftIconPress={() => navigation.goBack()}
           textColor="white"
           iconRight={
             <TouchableOpacity

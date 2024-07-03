@@ -316,7 +316,7 @@ const CustomDrawerContent = ({ props, navigation }) => {
                   }}
                 />
                 <AppText
-                  title={route.description}
+                  title={userEmail}
                   variant={'body2'}
                   extraStyle={style.drawerItemDescription}
                   color={COLORS.dark.inputBorder}

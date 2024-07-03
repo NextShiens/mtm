@@ -44,11 +44,13 @@ const ChangePasswordScreen = () => {
       />
       </Svg>
     ) : (
-    <Svg width={24} height={24} viewBox="0 0 24 24" fill="black">
+    <Svg width={24} height={24} viewBox="0 0 24 24" fill="none">
       <Path
-        d="M17.94 17.94L1 1M22 12S19 4 12 4a11.8 11.8 0 00-5.66 1.34M12 20c-1.3 0-2.58-.21-3.76-.63M7.47 7.47C6.5 8.24 5.67 9.1 5 10M12 4v0M3 3l18 18"
+         d="M12 4.5C7.78 4.5 4.3 7.5 3 12c1.3 4.5 4.78 7.5 9 7.5s7.7-3 9-7.5c-1.3-4.5-4.78-7.5-9-7.5z
+         M12 15c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3z
+         M-1 1L25 25"
         stroke="black"
-        strokeWidth="2"
+        strokeWidth="1"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
