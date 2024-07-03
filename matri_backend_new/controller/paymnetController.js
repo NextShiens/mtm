@@ -35,11 +35,9 @@ const verifyPayment = async (req, res) => {
     razorpay_order_id,
     razorpay_payment_id,
     razorpay_signature,
-    userId,
     membership,
-    amount,
-  } = req.body;
-
+    userId
+  } = req.body;  
   if (!mongoose.Types.ObjectId.isValid(userId) || !mongoose.Types.ObjectId.isValid(membership)) {
     return res.status(400).json({ success: false, message: 'Invalid userId or membership' });
   }
@@ -50,7 +48,8 @@ const verifyPayment = async (req, res) => {
       membership: mongoose.Types.ObjectId(membership),
       userId: mongoose.Types.ObjectId(userId),
       orderId: razorpay_order_id,
-      amount,
+      paymentId: razorpay_payment_id,
+      signature: razorpay_signature,
     });
 
     // Update user membership and order history
@@ -65,7 +64,6 @@ const verifyPayment = async (req, res) => {
     }
     console.log("updatedUser", updatedUser)
     return res.status(200).json({ success: true, newOrder });
-    console.log("updatedUser", updatedUser)
   } catch (error) {
     console.error('Error updating user membership:', error);
     return res.status(500).json({ success: false, error: error.message });
