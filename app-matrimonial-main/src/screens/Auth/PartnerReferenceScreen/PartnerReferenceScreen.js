@@ -26,7 +26,15 @@ const headData = {
 };
 
 const demoData = {
-  partnerHeight: ['4ft - 4.5ft', '4.6ft - 5ft', '5.1ft - 5.5ft', '5.6ft - 6ft', '6ft+'],
+  partnerHeight: [
+    '4 feet 0 inches', '4 feet 1 inch', '4 feet 2 inches', '4 feet 3 inches', '4 feet 4 inches', '4 feet 5 inches',
+    '4 feet 6 inches', '4 feet 7 inches', '4 feet 8 inches', '4 feet 9 inches', '4 feet 10 inches', '4 feet 11 inches',
+    '5 feet 0 inches', '5 feet 1 inch', '5 feet 2 inches', '5 feet 3 inches', '5 feet 4 inches', '5 feet 5 inches',
+    '5 feet 6 inches', '5 feet 7 inches', '5 feet 8 inches', '5 feet 9 inches', '5 feet 10 inches', '5 feet 11 inches',
+    '6 feet 0 inches', '6 feet 1 inch', '6 feet 2 inches', '6 feet 3 inches', '6 feet 4 inches', '6 feet 5 inches',
+    '6 feet 6 inches', '6 feet 7 inches', '6 feet 8 inches', '6 feet 9 inches', '6 feet 10 inches', '6 feet 11 inches',
+    '7 feet 0 inches'
+  ],
   education: QualificationList,
   partnerOccupation: occupationList,
   partnerMotherTongue: indianMotherTongues,
@@ -34,6 +42,7 @@ const demoData = {
   partnerSect: indianCastes,
   partnerCity: workLocationList,
 };
+
 
 const PartnerReferenceScreen = ({ navigation }) => {
   const route = useRoute();
