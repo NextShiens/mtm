@@ -209,6 +209,7 @@ const HomePage = () => {
   const [loading, setLoading] = useState(true);
   const [recentlyViewedLoading, setRecentlyViewedLoading] = useState(true);
   const [newUsersLoading, setNewUsersLoading] = useState(true);
+  const [salaryRange, setSalaryRange] = useState([0, 1000000]);
 
   useEffect(() => {
     const fetchRecentlyViewed = async () => {
@@ -320,6 +321,18 @@ const HomePage = () => {
     setShowFilters(false);
   };
 
+  const clearFilters = () => {
+    setSelectedGender('');
+    setSelectedMaritalStatus('');
+    setSelectedLanguage('');
+    setSalaryRange([0, 1000000]);
+  };
+
+  const closeFilters = () => {
+    clearFilters();
+    setShowFilters(false);
+  };
+
   return (
     <ScrollView style={[STYLES.flex1, { backgroundColor: 'white' }]}>
       <View style={styles.headerContainer}>
@@ -374,9 +387,11 @@ const HomePage = () => {
 
         <Modal
           animationType="slide"
+          onRequestClose={closeFilters}
           transparent={true}
           visible={showFilters}
-          onRequestClose={() => setShowFilters(false)}>
+          // onRequestClose={() => setShowFilters(false)}
+          >
           <View style={filterStyles.container}>
             <View style={filterStyles.modalContent}>
               <ScrollView>
@@ -545,7 +560,7 @@ const HomePage = () => {
 
               <Pressable
                 style={filterStyles.closeButton}
-                onPress={() => setShowFilters(false)}>
+                onPress={closeFilters}>
                 <Text style={filterStyles.closeButtonText}>
                   Close Filters
                 </Text>
@@ -566,7 +581,7 @@ const HomePage = () => {
 
         <View style={{ paddingHorizontal: 15, borderRadius: 20 }}>
           {newUsersLoading ? (
-            <ActivityIndicator size="large" color={COLORS.dark.primary} />
+            <ActivityIndicator size="large" style={{objectFit :'cover'}} color={COLORS.dark.primary} />
           ) : (
             <SnapCarousel data={newUsers} />
           )}

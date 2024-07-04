@@ -64,6 +64,8 @@ export const styles = StyleSheet.create({
   img: {
     flex: 1,
     borderRadius: 10,
+    width: '100%',
+    height: '100%',
   },
   sendIconBtn: {
     height: 25,

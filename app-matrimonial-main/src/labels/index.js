@@ -121,4 +121,5 @@ export const LABELS = {
   signUp: 'Sign Up',
   delete : 'Delete Account',
   ChangingPassword: 'Changing Password',
+  confirmPassword: 'Confirm Password',
 };

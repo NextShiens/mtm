@@ -178,7 +178,7 @@ const PartnerReferenceScreen = ({ navigation }) => {
           <View>
             {Object.entries(demoData).map(([field, data]) => (
               <View key={field}>
-                <Custopdown
+                <CustomDropdown
                   placeholder={LABELS[field] || field}
                   data={data}
                   field={field}
@@ -197,7 +197,7 @@ const PartnerReferenceScreen = ({ navigation }) => {
           ) : (
             <AppButton
               variant="filled"
-              title={isLoading ? 'Logging in...' : LABELS.save}
+              title={isLoading ? 'Registering...' : LABELS.save}
               extraStyle={{
                 text: [STYLES.fontFamily(Fonts.PoppinsMedium)],
               }}

@@ -20,11 +20,11 @@ import { isValidProfileData } from '../../../utils/validation';
 import CustomCountryCodePicker from '../../../libraries/CustomCountryCodePicker/CustomCountryCodePicker';
 import { Toast } from '../../../utils/native';
 import { ERRORS } from '../../../labels/error';
-import { indianCastes,workLocationList,indianMotherTongues } from '../../../data/appData';  
-const heightOptions = [
- '4ft - 4.5ft', '4.6ft - 5ft', '5.1ft - 5.5ft', '5.6ft - 6ft', '6ft+']
- const maritalStatusOptions = ['Single', 'Divorced', 'Married', 'Widowed'];
- const religionsInIndia = [
+import { indianCastes, workLocationList, indianMotherTongues } from '../../../data/appData';
+
+const heightOptions = ['4ft - 4.5ft', '4.6ft - 5ft', '5.1ft - 5.5ft', '5.6ft - 6ft', '6ft+'];
+const maritalStatusOptions = ['Single', 'Divorced', 'Married', 'Widowed'];
+const religionsInIndia = [
   "Hinduism",
   "Christianity",
   "Sikhism",
@@ -55,9 +55,8 @@ const ProfileCreateScreen = () => {
     dateOfBirth: '',
     religion: '',
     motherTongue: '',
-    cast: '',
+    sect: '',
     city: '',
-
   });
 
   const navigation = useNavigation();
@@ -66,7 +65,6 @@ const ProfileCreateScreen = () => {
   const backNavigationHandler = () => {
     navigation.goBack();
   };
-
 
   const openCountryModal = () => {
     setCountryShow(true);
@@ -105,42 +103,43 @@ const ProfileCreateScreen = () => {
   };
 
   const registrationHandler = () => {
-    const { age, height, gender, maritalStatus, dateOfBirth, religion, motherTongue, cast, city } = formData;
+    const { age, height, gender, maritalStatus, dateOfBirth, religion, motherTongue, sect, city } = formData;
 
-    if (!age || !height || !gender || !maritalStatus || !dateOfBirth ||  !religion || !motherTongue || !cast || !city) {
+    // Check if any field is empty
+    if (!age || !height || !gender || !maritalStatus || !dateOfBirth || !religion || !motherTongue || !sect || !city) {
       Toast(ERRORS.emptyForm);
-    } else {
-      const isValid = isValidProfileData({
-        age,
-        height,
-        gender,
-        maritalStatus,
-        dateOfBirth,
-        religion,
-        motherTongue,
-        sect,
-        city,
-      });
+      return; // Exit the function if any field is empty
+    }
 
-      if (isValid) {
-        Toast('Just one step left in your profile completion');
-        navigation.navigate('ProfileDetailsScreen', {
-          profileData: {
-            age,
-            height,
-            gender,
-            maritalStatus,
-            dateOfBirth,
-            religion,
-            motherTongue,
-            sect,
-            city,
-          },
-        });
-      }
+    const isValid = isValidProfileData({
+      age,
+      height,
+      gender,
+      maritalStatus,
+      dateOfBirth,
+      religion,
+      motherTongue,
+      sect,
+      city,
+    });
+
+    if (isValid) {
+      Toast('Just one step left in your profile completion');
+      navigation.navigate('ProfileDetailsScreen', {
+        profileData: {
+          age,
+          height,
+          gender,
+          maritalStatus,
+          dateOfBirth,
+          religion,
+          motherTongue,
+          sect,
+          city,
+        },
+      });
     }
   };
-
 
   return (
     <ScrollView style={STYLES.bgColor(COLORS.dark.white)}>
@@ -203,12 +202,12 @@ const ProfileCreateScreen = () => {
 
             <CustomDropdown
               search={false}
-              data={['Male','Female']}
+              data={['Male', 'Female']}
               placeholder={LABELS.Gender}
               setSelected={val => {
                 setFormData({ ...formData, gender: val });
               }}
-               searchPlaceholder="Search gender..."
+              searchPlaceholder="Search gender..."
             />
             <Space mT={10} />
 
@@ -262,18 +261,18 @@ const ProfileCreateScreen = () => {
             />
             <Space mT={10} />
 
-            <CustomDropdown 
-              data={maritalStatusOptions} 
+            <CustomDropdown
+              data={maritalStatusOptions}
               search={false}
               placeholder={LABELS.maritalStatus}
               setSelected={val => {
                 setFormData({ ...formData, maritalStatus: val });
               }}
-               searchPlaceholder="Search maritalStatus..."
+              searchPlaceholder="Search maritalStatus..."
             />
             <Space mT={10} />
-                <AppText
-              title={"Religion"}  
+            <AppText
+              title={"Religion"}
               variant={'h5'}
               extraStyle={STYLES.fontFamily(Fonts.PoppinsRegular)}
               alignSelf={'flex-start'}
@@ -281,17 +280,17 @@ const ProfileCreateScreen = () => {
             />
             <Space mT={10} />
 
-            <CustomDropdown 
-              data={religionsInIndia} 
+            <CustomDropdown
+              data={religionsInIndia}
               search={false}
-              placeholder={"Religion"}  
+              placeholder={"Religion"}
               setSelected={val => {
                 setFormData({ ...formData, religion: val });
               }}
               searchPlaceholder="Search religion..."
             />
-             <Space mT={10} />
-                <AppText
+            <Space mT={10} />
+            <AppText
               title={"MotherTongue"}
               variant={'h5'}
               extraStyle={STYLES.fontFamily(Fonts.PoppinsRegular)}
@@ -300,8 +299,8 @@ const ProfileCreateScreen = () => {
             />
             <Space mT={10} />
 
-            <CustomDropdown 
-              data={indianMotherTongues} 
+            <CustomDropdown
+              data={indianMotherTongues}
               search={false}
               placeholder={"MotherTongue"}
               setSelected={val => {
@@ -309,8 +308,8 @@ const ProfileCreateScreen = () => {
               }}
               searchPlaceholder="Search motherTongue..."
             />
-             <Space mT={10} />
-                <AppText
+            <Space mT={10} />
+            <AppText
               title={LABELS.sect}
               variant={'h5'}
               extraStyle={STYLES.fontFamily(Fonts.PoppinsRegular)}
@@ -319,17 +318,17 @@ const ProfileCreateScreen = () => {
             />
             <Space mT={10} />
 
-            <CustomDropdown 
-              data={indianCastes} 
+            <CustomDropdown
+              data={indianCastes}
               search={false}
               placeholder={LABELS.sect}
               setSelected={val => {
                 setFormData({ ...formData, sect: val });
               }}
-               searchPlaceholder="Search sect..."
+              searchPlaceholder="Search sect..."
             />
-                   <Space mT={10} />
-                <AppText
+            <Space mT={10} />
+            <AppText
               title={LABELS.city}
               variant={'h5'}
               extraStyle={STYLES.fontFamily(Fonts.PoppinsRegular)}
@@ -338,15 +337,14 @@ const ProfileCreateScreen = () => {
             />
             <Space mT={10} />
 
-            <CustomDropdown 
-              data={workLocationList} 
+            <CustomDropdown
+              data={workLocationList}
               search={false}
               placeholder={LABELS.city}
               setSelected={val => {
                 setFormData({ ...formData, city: val });
               }}
               searchPlaceholder="Search city..."
-
             />
             <Space mT={20} />
             <AppButton

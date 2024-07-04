@@ -137,16 +137,12 @@ const OTPScreen = () => {
             />
 
             <Space mT={20} />
-            {isLoading ? (
-              <ActivityIndicator size="large" color={COLORS.dark.primary} />
-            ) : (
               <AppButton
-                title={LABELS.verify}
+                title={isLoading ? 'Varifying...' : LABELS.verify}
                 variant="filled"
                 textVariant={'h5'}
                 onPress={handleSubmit}
               />
-            )}
             <Space mT={20} />
             <AppText
               title={LABELS.resendCode}

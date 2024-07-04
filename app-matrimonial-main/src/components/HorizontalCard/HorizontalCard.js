@@ -64,12 +64,13 @@ const HorizontalCard = ({ data }) => {
   };
 
   const renderCard = (item, index) => (
+    console.log('item',item.userImages[0]),
     <View style={styles.cardContainer} key={`${item.key}_${index}`}>
       <View style={styles.imgContainer}>
         {item.userImages && item.userImages.length> 0 ? (
           <Image
-            source={{ uri: item.userImages[0] }}
-            resizeMode="cover"
+            source={{ uri: item.userImages[0]}}
+            resizeMode="contain"
             style={styles.img}
           />
         ) : (

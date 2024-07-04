@@ -76,6 +76,11 @@ const AuthStack = () => {
         component={ForgotPassword}
         options={options}
       />
+      <Stack.Screen
+        name="PrivacyPolicyScreen"
+        component={PrivacyPolicyScreen}
+        options={options}
+      />
     </Stack.Navigator>
   );
 };
@@ -164,11 +169,11 @@ const HomeStack = () => {
         component={ChangePasswordScreen}
         options={options} 
       />
-      <Stack.Screen
+      {/* <Stack.Screen
         name="PrivacyPolicyScreen"
         component={PrivacyPolicyScreen}
         options={options}
-      />
+      /> */}
       <Stack.Screen
         name="ChatScreen"
         component={ChatScreen}

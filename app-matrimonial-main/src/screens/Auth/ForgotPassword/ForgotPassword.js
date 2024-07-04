@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ScrollView, View, Alert } from 'react-native';
+import { ScrollView, View, Alert , TouchableOpacity } from 'react-native';
 import { Fonts } from '../../../assets/fonts';
 import { IMAGES } from '../../../assets/images';
 import { SVG } from '../../../assets/svg';
@@ -15,11 +15,14 @@ import { LABELS } from '../../../labels';
 import { styles } from './styles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL } from '../../../../constant';
+import { Path, Svg } from 'react-native-svg';
 
 const ForgotPassword = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleInputChange = (field, value) => {
     if (field === 'email') setEmail(value);
@@ -71,6 +74,35 @@ const ForgotPassword = ({ navigation }) => {
   const backNavigationHandler = () => {
     navigation.goBack();
   };
+  const PasswordEyeIcon = ({ showPassword}) => {
+    return showPassword ? (
+   <Svg width={24} height={24} viewBox="0 0 24 24" fill="black">
+     <Path
+     d="M1 12S4 4 12 4s11 8 11 8-3 8-11 8-11-8-11-8z"
+     fill="black"
+     />
+     <Path
+       d="M12 15a3 3 0 100-6 3 3 0 000 6z"
+       stroke="#A9A9A9"
+       strokeWidth="2"
+       strokeLinecap="round"
+       strokeLinejoin="round"
+     />
+     </Svg>
+   ) : (
+   <Svg width={24} height={24} viewBox="0 0 24 24" fill="none">
+     <Path
+        d="M12 4.5C7.78 4.5 4.3 7.5 3 12c1.3 4.5 4.78 7.5 9 7.5s7.7-3 9-7.5c-1.3-4.5-4.78-7.5-9-7.5z
+        M12 15c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3z
+        M-1 1L25 25"
+       stroke="black"
+       strokeWidth="1"
+       strokeLinecap="round"
+       strokeLinejoin="round"
+     />
+   </Svg>
+ );
+};
 
   return (
     <ScrollView style={{ backgroundColor: 'white' }}>
@@ -128,29 +160,36 @@ const ForgotPassword = ({ navigation }) => {
               alignSelf={'flex-start'}
               color={COLORS.dark.black}
             />
-            <Space mT={10} />
-
+            <View style={styles.inputContainer}>
             <AppInput
               placeholder={LABELS.passwordPlaceholder}
-              secureTextEntry={true}
+              secureTextEntry={!showNewPassword}
               keyboardType={'default'}
               onChangeText={text => handleInputChange('newPassword', text)}
             />
-            <Space mT={10} />
+            <TouchableOpacity onPress={() => setShowNewPassword(!showNewPassword)}  style={styles.PasswordEyeIcon}>
+            <PasswordEyeIcon showPassword={showNewPassword} />
+          </TouchableOpacity>
+            </View>
+            <Space mT={5} />
             <AppText
-              title={LABELS.confirmPass}
+              title={LABELS.confirmPassword}
               variant={'h5'}
               extraStyle={STYLES.fontFamily(Fonts.PoppinsRegular)}
               alignSelf={'flex-start'}
               color={COLORS.dark.black}
             />
-            <Space mT={10} />
+            <View style={styles.inputContainer}>
             <AppInput
               placeholder={LABELS.passwordPlaceholder}
-              secureTextEntry={true}
+              secureTextEntry={!showConfirmPassword}
               keyboardType={'default'}
               onChangeText={text => handleInputChange('confirmPassword', text)}
             />
+            <TouchableOpacity onPress={() => setShowConfirmPassword(!showConfirmPassword)}  style={styles.PasswordEyeIcon}>
+            <PasswordEyeIcon showPassword={showConfirmPassword} />
+          </TouchableOpacity>
+            </View>
             <Space mT={20} />
             <AppButton
               title={LABELS.changePass}
