@@ -606,17 +606,14 @@ const PaymentScreen = ({ navigation, route }) => {
           title={LABELS.Payment}
           iconRight={
             <TouchableOpacity onPress={handleRightIconPress}>
-              <CustomImage
-                source={IMAGES.notificationIcon}
-                size={27}
-                resizeMode={'contain'}
-              />
+              <Image source={IMAGES.notificationIcon} style={styles.Bell_Icon} />
             </TouchableOpacity>
           }
         />
       </View>
 
       <Space mT={20} />
+    
 
       {plan && (
         <View style={styles.planContainer}>
@@ -694,7 +691,9 @@ const styles = StyleSheet.create({
   },
   headerContainer: {
     paddingHorizontal: 16,
-    paddingTop: 16,
+    paddingTop: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.dark.lightGrey,
   },
   planContainer: {
     backgroundColor: 'white',
@@ -714,6 +713,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 8,
+    color: 'black',
   },
   line: {
     height: 1,
@@ -731,17 +731,20 @@ const styles = StyleSheet.create({
   feature: {
     marginLeft: 8,
     fontSize: 14,
+    color: 'black',
   },
   price: {
     fontSize: 24,
     fontWeight: 'bold',
     marginTop: 8,
+    color: 'black',
   },
   sectionTitle: {
     fontSize: 16,
     fontWeight: 'bold',
     marginLeft: 16,
     marginBottom: 8,
+    color: 'black',
   },
   optionContainer: {
     flexDirection: 'row',

@@ -10,6 +10,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL } from '../../../../constant';
 import { LABELS } from '../../../labels';
 import { Toast } from '../../../utils/native';
+import { Header } from 'react-native/Libraries/NewAppScreen';
+import { COLORS } from '../../../assets/theme';
 
 
 const DeleteAccount = () => {
@@ -62,6 +64,7 @@ const DeleteAccount = () => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <View style={styles.HeaderContainer}>
       <AppHeader
         iconLeft={<SVG.BackArrow size={24} fill={'black'} />}
         onLeftIconPress={() => navigation.goBack()}
@@ -72,7 +75,8 @@ const DeleteAccount = () => {
           </TouchableOpacity>
         }
       />
-      <View style={styles.line} />
+      </View>
+      {/* <View style={styles.line} /> */}
       <View style={styles.contentContainer}>
         <Text style={styles.title}>Delete Account</Text>
         <Text style={styles.subtitle}>
@@ -143,6 +147,10 @@ const styles = StyleSheet.create({
     height: 30,
     resizeMode: 'contain',
     marginRight: '1%',
+  },
+  HeaderContainer: {
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.dark.lightGrey,
   },
 });
 

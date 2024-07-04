@@ -41,7 +41,7 @@ export const styles =
       borderColor: COLORS.dark.inputBorder,
     },
     PasswordEyeIcon: {
-      bottom: 38,
-      left: 330,
+      bottom: 37,
+      left: 285,
     },
   });
