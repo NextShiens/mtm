@@ -427,7 +427,7 @@ const PaymentScreen = ({ navigation, route }) => {
   const { plan } = route.params;
   const [selectedMethod, setSelectedMethod] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [keyId, setKeyId] = useState();
+  const [keyId, setKeyId] = useState('rzp_test_FIno2mP3rGvz9W');
   const fetchKeyId = async () => {
     try {
       const token = await AsyncStorage.getItem('AccessToken');
@@ -449,9 +449,8 @@ const PaymentScreen = ({ navigation, route }) => {
       console.log('Key ID:', data);
       if (!data.keyId) {
         throw new Error('KeyId is not present in the response');
-      }
-
-      setKeyId(data.keyId);
+      }+
+      setKeyId('rzp_test_FIno2mP3rGvz9W');
     } catch (error) {
       console.error('Error fetching key ID:', error);
       Alert.alert('Error', 'Unable to initialize payment. Please try again.');
@@ -749,8 +748,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     backgroundColor: 'white',
-    padding: 16,
+    
     marginHorizontal: 16,
+    paddingRight: 15,
     marginBottom: 8,
     borderRadius: 8,
   },
@@ -759,8 +759,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   payIcons: {
-    width: 40,
-    height: 40,
+    width: 130,
+    height: 60,
     marginRight: 12,
   },
   paymentMethodName: {

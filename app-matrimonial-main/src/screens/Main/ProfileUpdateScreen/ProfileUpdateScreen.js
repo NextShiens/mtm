@@ -11,7 +11,7 @@ import AppInput from '../../../components/AppInput/AppInput';
 import AppText from '../../../components/AppText/AppText';
 import CustomImage from '../../../components/CustomImage/CustomImage';
 import Space from '../../../components/Space/Space';
-import { profilePictures, profileUpdateData } from '../../../data/appData';
+import { profilePictures,QualificationList,occupationList,indianMotherTongues,indianCastes,workLocationList, profileUpdateData } from '../../../data/appData';
 import { LABELS } from '../../../labels';
 import BirthDatePicker from '../../../libraries/DatePicker/DatePicker';
 import { styles } from './styles';
@@ -23,7 +23,20 @@ import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import CustomImageGallery from './CustomImageGallery';
 import CustomDropdown from '../../../libraries/Dropdown/Dropdown';
 
+const headData = {
+  partnerAge: ['18-25', '26-35', '36-45', '46+'],
+  partnerMaritalStatus: ['Single', 'Divorced', 'Married', 'Widowed'],
+};
 
+const demoData = {
+  Height: ['4ft - 4.5ft', '4.6ft - 5ft', '5.1ft - 5.5ft', '5.6ft - 6ft', '6ft+'],
+  education: QualificationList,
+  Occupation: occupationList,
+  MotherTongue: indianMotherTongues,
+  AnnualIncome: ['0-5 Lac', '5-10 Lac', '10-20 Lac', '20+ Lac'],
+  Sect: indianCastes,
+  City: workLocationList,
+};
 const ProfileUpdateScreen = ({ navigation }) => {
   const [isCameraShown, setIsCameraShown] = useState(true);
   const [selectedBtn, setSelectedBtn] = useState(1);
@@ -443,7 +456,7 @@ const ProfileUpdateScreen = ({ navigation }) => {
           />
           <Space mT={20} />
           <AppButton
-            title={isLoading ? 'updating...' : LABELS.update}
+            title={isLoading ? 'Updating...' : LABELS.update}
             variant="filled"
             textVariant={'h5'}
             onPress={handleUpdate}
@@ -455,211 +468,216 @@ const ProfileUpdateScreen = ({ navigation }) => {
           </AppButton>
         </View>
       )}
-      {selectedBtn == 2 && (
-        <View style={[STYLES.pH(HORIZON_MARGIN)]}>
-          <AppText
-            title="Gender"
-            variant={'h5'}
-            extraStyle={STYLES.fontFamily(Fonts.PoppinsRegular)}
-            alignSelf={'flex-start'}
-            color={COLORS.dark.inputBorder}
-          />
-          <Space mT={10} />
+   {selectedBtn == 2 && (
+  <View style={[STYLES.pH(HORIZON_MARGIN)]}>
+    <AppText
+      title="Gender"
+      variant={'h5'}
+      extraStyle={STYLES.fontFamily(Fonts.PoppinsRegular)}
+      alignSelf={'flex-start'}
+      color={COLORS.dark.inputBorder}
+    />
+    <Space mT={10} />
 
-          {/* <AppInput
-            placeholder={profileData.gender != '' ? profileData.gender : "e.g Male"}
-            onChangeText={(value) => onTextEnter('gender', value)}
-            placeholderTextColor={COLORS.dark.black}
-            value={profileData.gender}
-          /> */}
-          <CustomDropdown
-            placeholder={'Select Your Gender'}
-            data={['male', 'female'].map(s => s.charAt(0).toUpperCase() + s.slice(1))}
-            field={'gender'}
-            defaultOption={profileData.gender.charAt(0).toUpperCase() + profileData.gender.slice(1)}
-            setSelected={val => {
-              onTextEnter('gender', val);
-            }}
-            searchPlaceholder={`Search gender`}
-          />
-          <Space mT={10} />
+    <CustomDropdown
+      placeholder={'Select Your Gender'}
+      data={['male', 'female'].map(s => s.charAt(0).toUpperCase() + s.slice(1))}
+      field={'gender'}
+      defaultOption={profileData.gender.charAt(0).toUpperCase() + profileData.gender.slice(1)}
+      setSelected={val => {
+        onTextEnter('gender', val);
+      }}
+      searchPlaceholder={`Search gender`}
+    />
+    <Space mT={10} />
 
-          <AppText
-            color={COLORS.dark.inputBorder}
-            title="Height"
-            variant={'h5'}
-            extraStyle={STYLES.fontFamily(Fonts.PoppinsRegular)}
-            alignSelf={'flex-start'}
-          />
-          <Space mT={10} />
+    <AppText
+      color={COLORS.dark.inputBorder}
+      title="Height"
+      variant={'h5'}
+      extraStyle={STYLES.fontFamily(Fonts.PoppinsRegular)}
+      alignSelf={'flex-start'}
+    />
+    <Space mT={10} />
 
-          <AppInput
-            placeholder={profileData.height != '' ? profileData.height : "5.6 feet"}
-            placeholderTextColor={COLORS.dark.black}
-            onChangeText={(value) => onTextEnter('height', value)}
-            value={profileData.height.toString()}
-          />
+    <CustomDropdown
+      placeholder={'Select Your Height'}
+      data={demoData.Height}
+      field={'height'}
+      defaultOption={profileData.height}
+      setSelected={val => {
+        onTextEnter('height', val);
+      }}
+      searchPlaceholder={`Search height`}
+    />
 
-          <Space mT={10} />
-          <AppText
-            color={COLORS.dark.inputBorder}
-            title="Location"
-            variant={'h5'}
-            extraStyle={STYLES.fontFamily(Fonts.PoppinsRegular)}
-            alignSelf={'flex-start'}
-          />
-          <Space mT={10} />
+    <Space mT={10} />
+    <AppText
+      color={COLORS.dark.inputBorder}
+      title="Location"
+      variant={'h5'}
+      extraStyle={STYLES.fontFamily(Fonts.PoppinsRegular)}
+      alignSelf={'flex-start'}
+    />
+    <Space mT={10} />
 
-          <AppInput
-            placeholder={profileData.location != '' ? profileData.location : "location"}
-            placeholderTextColor={COLORS.dark.black}
-            onChangeText={(value) => onTextEnter('location', value)}
-            value={profileData.location}
-          />
-          <Space mT={10} />
+    <CustomDropdown
+      placeholder={'Select Your Location'}
+      data={workLocationList} // Assume you have a list of locations in demoData
+      field={'location'}
+      defaultOption={profileData.location}
+      setSelected={val => {
+        onTextEnter('location', val);
+      }}
+      searchPlaceholder={`Search location`}
+    />
+    <Space mT={10} />
 
-          <AppText
-            color={COLORS.dark.inputBorder}
-            title="Mother Tongue"
-            variant={'h5'}
-            extraStyle={STYLES.fontFamily(Fonts.PoppinsRegular)}
-            alignSelf={'flex-start'}
-          />
+    <AppText
+      color={COLORS.dark.inputBorder}
+      title="Mother Tongue"
+      variant={'h5'}
+      extraStyle={STYLES.fontFamily(Fonts.PoppinsRegular)}
+      alignSelf={'flex-start'}
+    />
 
-          <Space mT={10} />
+    <Space mT={10} />
 
-          <AppInput
-            placeholder={profileData.motherTongue != '' ? profileData.motherTongue : "hindi"}
-            placeholderTextColor={COLORS.dark.black}
-            onChangeText={(value) => onTextEnter('motherTongue', value)}
-            value={profileData.motherTongue}
-          />
-          {/* <Space mT={10} />
-          <AppText
-            color={COLORS.dark.inputBorder}
-            title="Partner"
-            variant={'h5'}
-            extraStyle={STYLES.fontFamily(Fonts.PoppinsRegular)}
-            alignSelf={'flex-start'}
-          />
-          <Space mT={10} />
-          <AppInput
-            placeholder={profileData.partner != '' ? profileData.partner : "partner"}
-            placeholderTextColor={COLORS.dark.black}
-            onChangeText={(value) => onTextEnter('partner', value)}
-            value={profileData.partner}
-          /> */}
-          <Space mT={20} />
-          <AppButton
-            title={isLoading ? 'updating...' : LABELS.update}
-            variant="filled"
-            textVariant={'h5'}
-            onPress={handleUpdate}
-            disabled={isLoading}
-          >
-            {isLoading && (
-              <ActivityIndicator size="small" color={COLORS.dark.white} style={{ marginLeft: 10 }} />
-            )}
-          </AppButton>
-        </View>
+    <CustomDropdown
+      placeholder={'Select Your Mother Tongue'}
+      data={indianMotherTongues} // Assume you have a list of languages in demoData
+      field={'motherTongue'}
+      defaultOption={profileData.motherTongue}
+      setSelected={val => {
+        onTextEnter('motherTongue', val);
+      }}
+      searchPlaceholder={`Search mother tongue`}
+    />
+
+    <Space mT={20} />
+    <AppButton
+      title={isLoading ? 'updating...' : LABELS.update}
+      variant="filled"
+      textVariant={'h5'}
+      onPress={handleUpdate}
+      disabled={isLoading}
+    >
+      {isLoading && (
+        <ActivityIndicator size="small" color={COLORS.dark.white} style={{ marginLeft: 10 }} />
       )}
-      {selectedBtn == 3 && (
-        <View style={[STYLES.pH(HORIZON_MARGIN)]}>
-          <AppText
-            title="Highest Degree"
-            variant={'h5'}
-            extraStyle={STYLES.fontFamily(Fonts.PoppinsRegular)}
-            alignSelf={'flex-start'}
-            color={COLORS.dark.inputBorder}
-          />
-          <Space mT={10} />
+    </AppButton>
+  </View>
+)}
+ {selectedBtn == 3 && (
+  <View style={[STYLES.pH(HORIZON_MARGIN)]}>
+    <AppText
+      title="Highest Degree"
+      variant={'h5'}
+      extraStyle={STYLES.fontFamily(Fonts.PoppinsRegular)}
+      alignSelf={'flex-start'}
+      color={COLORS.dark.inputBorder}
+    />
+    <Space mT={10} />
 
-          <AppInput
-            placeholder={profileData.highestDegree != '' ? profileData.highestDegree : "e.g B.tech"}
-            onChangeText={(value) => onTextEnter('highestDegree', value)}
-            placeholderTextColor={COLORS.dark.black}
-            value={profileData.highestDegree}
-          />
+    <CustomDropdown
+      placeholder={'Highest Degree'}
+      data={QualificationList} // Assume you have this list in demoData
+      field={'highestDegree'}
+      defaultOption={profileData.highestDegree}
+      setSelected={val => {
+        onTextEnter('highestDegree', val);
+      }}
+      searchPlaceholder={`Search highest degree`}
+    />
 
-          <Space mT={10} />
+    <Space mT={10} />
 
-          <AppText
-            color={COLORS.dark.inputBorder}
-            title="Occupation"
-            variant={'h5'}
-            extraStyle={STYLES.fontFamily(Fonts.PoppinsRegular)}
-            alignSelf={'flex-start'}
-          />
-          <Space mT={10} />
+    <AppText
+      color={COLORS.dark.inputBorder}
+      title="Occupation"
+      variant={'h5'}
+      extraStyle={STYLES.fontFamily(Fonts.PoppinsRegular)}
+      alignSelf={'flex-start'}
+    />
+    <Space mT={10} />
 
-          <AppInput
-            placeholder={profileData.occupation != '' ? profileData.occupation : "Software Engineer"}
-            placeholderTextColor={COLORS.dark.black}
-            onChangeText={(value) => onTextEnter('occupation', value)}
-            value={profileData.occupation}
-          />
+    <CustomDropdown
+      placeholder={'Your Occupation'}
+      data={occupationList} // Assume you have this list in demoData
+      field={'occupation'}
+      defaultOption={profileData.occupation}
+      setSelected={val => {
+        onTextEnter('occupation', val);
+      }}
+      searchPlaceholder={`Search occupation`}
+    />
 
-          <Space mT={10} />
-          <AppText
-            color={COLORS.dark.inputBorder}
-            title="Marital Status"
-            variant={'h5'}
-            extraStyle={STYLES.fontFamily(Fonts.PoppinsRegular)}
-            alignSelf={'flex-start'}
-          />
+    <Space mT={10} />
+    <AppText
+      color={COLORS.dark.inputBorder}
+      title="Marital Status"
+      variant={'h5'}
+      extraStyle={STYLES.fontFamily(Fonts.PoppinsRegular)}
+      alignSelf={'flex-start'}
+    />
 
-          <Space mT={10} />
+    <Space mT={10} />
 
-          <AppInput
-            placeholder={profileData.maritalStatus != '' ? profileData.maritalStatus : "Married"}
-            placeholderTextColor={COLORS.dark.black}
-            onChangeText={(value) => onTextEnter('maritalStatus', value)}
-            value={profileData.maritalStatus}
-          />
-          <Space mT={10} />
-          <AppText
-            color={COLORS.dark.inputBorder}
-            title="Employed in"
-            variant={'h5'}
-            extraStyle={STYLES.fontFamily(Fonts.PoppinsRegular)}
-            alignSelf={'flex-start'}
-          />
-          <Space mT={10} />
-          <AppInput
-            placeholder={profileData.employedIn != '' ? profileData.employedIn : "AX Technology"}
-            placeholderTextColor={COLORS.dark.black}
-            onChangeText={(value) => onTextEnter('employedIn', value)}
-            value={profileData.employedIn}
-          />
-          <Space mT={10} />
-          <AppText
-            color={COLORS.dark.inputBorder}
-            title="Annual Income"
-            variant={'h5'}
-            extraStyle={STYLES.fontFamily(Fonts.PoppinsRegular)}
-            alignSelf={'flex-start'}
-          />
-          <Space mT={10} />
-          <AppInput
-            placeholder={profileData.annualIncome != '' ? profileData.annualIncome : "100000"}
-            placeholderTextColor={COLORS.dark.black}
-            onChangeText={(value) => onTextEnter('annualIncome', value)}
-            value={profileData.annualIncome}
-          />
-          <Space mT={20} />
-          <AppButton
-            title={isLoading ? 'updating...' : LABELS.update}
-            variant="filled"
-            textVariant={'h5'}
-            onPress={handleUpdate}
-            disabled={isLoading}
-          >
-            {isLoading && (
-              <ActivityIndicator size="small" color={COLORS.dark.white} style={{ marginLeft: 10 }} />
-            )}
-          </AppButton>
-        </View>
+    <CustomDropdown
+      placeholder={' Marital Status'}
+      data={['Single', 'Married', 'Divorced', 'Widowed']} 
+      field={'maritalStatus'}
+      defaultOption={profileData.maritalStatus}
+      setSelected={val => {
+        onTextEnter('maritalStatus', val);
+      }}
+      searchPlaceholder={`Search marital status`}
+    />
+
+    <Space mT={10} />
+    <AppText
+      color={COLORS.dark.inputBorder}
+      title="Employed in"
+      variant={'h5'}
+      extraStyle={STYLES.fontFamily(Fonts.PoppinsRegular)}
+      alignSelf={'flex-start'}
+    />
+    <Space mT={10} />
+    <AppInput
+      placeholder={profileData.employedIn != '' ? profileData.employedIn : "AX Technology"}
+      placeholderTextColor={COLORS.dark.black}
+      onChangeText={(value) => onTextEnter('employedIn', value)}
+      value={profileData.employedIn}
+    />
+    <Space mT={10} />
+    <AppText
+      color={COLORS.dark.inputBorder}
+      title="Annual Income"
+      variant={'h5'}
+      extraStyle={STYLES.fontFamily(Fonts.PoppinsRegular)}
+      alignSelf={'flex-start'}
+    />
+    <Space mT={10} />
+    <AppInput
+      placeholder={profileData.annualIncome != '' ? profileData.annualIncome : "Enter your Income"}
+      placeholderTextColor={COLORS.dark.black}
+      onChangeText={(value) => onTextEnter('annualIncome', value)}
+      value={profileData.annualIncome}
+    />
+    <Space mT={20} />
+    <AppButton
+      title={isLoading ? 'Updating...' : LABELS.update}
+      variant="filled"
+      textVariant={'h5'}
+      onPress={handleUpdate}
+      disabled={isLoading}
+    >
+      {isLoading && (
+        <ActivityIndicator size="small" color={COLORS.dark.white} style={{ marginLeft: 10 }} />
       )}
+    </AppButton>
+  </View>
+)}
     </ScrollView>
   );
 };

@@ -1,10 +1,6 @@
 import {StyleSheet} from 'react-native';
 import {COLORS, HORIZON_MARGIN} from '../../../assets/theme';
 export const styles = StyleSheet.create({
-  payIcons: {
-    height: '100%',
-    width: '40%',
-  },
   main:{
     backgroundColor:'white',
     paddingHorizontal: 10,

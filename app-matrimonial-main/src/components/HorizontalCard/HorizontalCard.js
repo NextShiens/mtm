@@ -165,7 +165,7 @@ const HorizontalCard = ({ data }) => {
                     iconLeft={true}
                     height={'10'}
                     width={'10'}
-                  />
+                  /> 
                 }
           />
           </View>
