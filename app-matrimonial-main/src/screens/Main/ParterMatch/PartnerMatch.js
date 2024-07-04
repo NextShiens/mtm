@@ -741,7 +741,7 @@ const PartnerMatch = ({ navigation, route }) => {
   const [selectedGender, setSelectedGender] = useState('');
   const [selectedMaritalStatus, setSelectedMaritalStatus] = useState('');
   const [selectedLanguage, setSelectedLanguage] = useState('');
-  const [salaryRange, setSalaryRange] = useState([0, 1000000]);
+  const [salaryRange, setSalaryRange] = useState([0, 10000000]);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -863,7 +863,7 @@ const PartnerMatch = ({ navigation, route }) => {
     setSelectedGender('');
     setSelectedMaritalStatus('');
     setSelectedLanguage('');
-    setSalaryRange([0, 1000000]);
+    setSalaryRange([0, 10000000]);
   };
 
   const closeFilters = () => {
@@ -1051,7 +1051,7 @@ const PartnerMatch = ({ navigation, route }) => {
                 <MultiSlider
                   values={salaryRange}
                   min={0}
-                  max={1000000}
+                  max={10000000}
                   step={100}
                   onValuesChange={setSalaryRange}
                   selectedStyle={{

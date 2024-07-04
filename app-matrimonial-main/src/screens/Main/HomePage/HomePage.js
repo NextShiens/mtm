@@ -209,7 +209,7 @@ const HomePage = () => {
   const [loading, setLoading] = useState(true);
   const [recentlyViewedLoading, setRecentlyViewedLoading] = useState(true);
   const [newUsersLoading, setNewUsersLoading] = useState(true);
-  const [salaryRange, setSalaryRange] = useState([0, 1000000]);
+  const [salaryRange, setSalaryRange] = useState([0, 10000000]);
 
   useEffect(() => {
     const fetchRecentlyViewed = async () => {
@@ -325,7 +325,8 @@ const HomePage = () => {
     setSelectedGender('');
     setSelectedMaritalStatus('');
     setSelectedLanguage('');
-    setSalaryRange([0, 1000000]);
+    setSalaryRange([0, 10000000
+    ]);
   };
 
   const closeFilters = () => {
@@ -532,7 +533,7 @@ const HomePage = () => {
                   <MultiSlider
                     values={range}
                     min={0}
-                    max={1000000}
+                    max={10000000}
                     step={100}
                     onValuesChange={setRange}
                     selectedStyle={{

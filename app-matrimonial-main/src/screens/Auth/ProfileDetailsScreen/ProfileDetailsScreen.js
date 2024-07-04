@@ -38,6 +38,18 @@ const ProfileDetailsScreen = () => {
     workLocation: '',
   });
 
+  const annualIncomeList = [
+    '50,000', '2,50,000', '4,50,000', '6,50,000', '8,50,000', '10,50,000',
+    '12,50,000', '14,50,000', '16,50,000', '18,50,000', '20,50,000', '22,50,000',
+    '24,50,000', '26,50,000', '28,50,000', '30,50,000', '32,50,000', '34,50,000',
+    '36,50,000', '38,50,000', '40,50,000', '42,50,000', '44,50,000', '46,50,000',
+    '48,50,000', '50,50,000', '52,50,000', '54,50,000', '56,50,000', '58,50,000',
+    '60,50,000', '62,50,000', '64,50,000', '66,50,000', '68,50,000', '70,50,000',
+    '72,50,000', '74,50,000', '76,50,000', '78,50,000', '80,50,000', '82,50,000',
+    '84,50,000', '86,50,000', '88,50,000', '90,50,000', '92,50,000', '94,50,000',
+    '96,50,000', '98,50,000', '1,00,00,000'
+  ];
+
   const backNavigationHandler = () => {
     navigation.goBack();
   };
@@ -164,11 +176,16 @@ const ProfileDetailsScreen = () => {
               color={COLORS.dark.black}
             />
             <Space mT={10} />
-                 <AppInput
+            
+            <CustomDropdown
+              data={annualIncomeList}
               placeholder={LABELS.incomePlaceholder}
-              onChangeText={text => setFormData({...formData, annualIncome: text})}
-              keyboardType={'default'}
+              setSelected={val => {
+                setFormData({...formData, annualIncome: val});
+              }}
+              searchPlaceholder="Search income..."
             />
+
             <Space mT={15} />
 
             <AppText
