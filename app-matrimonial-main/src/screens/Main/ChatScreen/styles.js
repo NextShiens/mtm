@@ -11,15 +11,15 @@ export const styles = StyleSheet.create({
   },
   headerContainer: {
     color: 'black',
-    padding: '3%',
     paddingBottom: '0%',
-    borderBottomWidth: 1,
     borderBottomColor: 'lightgrey',
   },
   Header: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginVertical: '2%',
+    alignItems: 'center',
+    padding: 5,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E5E5E5',
   },
   Go_Back_Icon: {
     width: 30,
@@ -42,13 +42,13 @@ export const styles = StyleSheet.create({
     fontFamily: Fonts.PoppinsRegular,
     color: '#626262',
   },
-  Bell_Icon: {
-    width: 35,
-    height: 35,
-    tintColor: '#000000',
-    resizeMode: 'contain',
-    marginRight: '1%',
-  },
+  // Bell_Icon: {
+  //   width: 25,
+  //   height: 30,
+  //   // tintColor: '#000000',
+  //   resizeMode: 'contain',
+  //   // marginRight: '1%',
+  // },
   UserImg: {
     width: 50,
     height: 50,
@@ -210,7 +210,7 @@ export const styles = StyleSheet.create({
     height: 30,
     resizeMode: 'contain',
     marginRight: '50%',
-    left: 0,
+    left: 50,
   },
   line: {
     height: 1,
@@ -219,19 +219,20 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFFFFF',
+    width: '100%',
   },
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#E5E5E5',
-  },
+  // header: {
+  //   flexDirection: 'row',
+  //   alignItems: 'center',
+  //   padding: 10,
+  //   borderBottomWidth: 1,
+  //   borderBottomColor: '#E5E5E5',
+  // },
   avatar: {
     width: 40,
     height: 40,
@@ -242,14 +243,13 @@ export const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     marginLeft: 10,
-    flex: 1,
   },
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#F2F7FB',
     borderRadius: 25,
-    margin: 5,
+    margin: 10,
     paddingHorizontal: 15,
     paddingVertical: 5,
     marginTop: 0,

@@ -100,9 +100,14 @@ const ChatScreen = ({ route }) => {
   };
 
   const onReceiveMessage = useCallback((message) => {
-    setMessages(previousMessages => [...previousMessages, message]);
-  }, []);
-
+    setMessages(previousMessages => {
+        if (previousMessages.some(msg => msg._id === message._id)) {
+            return previousMessages; // If duplicate, return current messages
+        } else {
+            return [...previousMessages, message]; // Append the new message
+        }
+    });
+}, []);
   const onSend = useCallback(() => {
     if (inputText.trim() === '') return;
 
@@ -125,18 +130,22 @@ const ChatScreen = ({ route }) => {
     }
   }, [socket, currentUser, userId, roomId, inputText]);
 
+  const handleRightIconPress = () => {
+    navigation.navigate('NotificationScreen');
+  };
+
   const renderBubble = (props) => {
     return (
       <Bubble
         {...props}
         wrapperStyle={{
           right: {
-            backgroundColor: '#0F1828',
+            backgroundColor: '#1D264D',
             borderRadius: 8,
             padding: 7,
           },
           left: {
-            backgroundColor: '#F2F7FB',
+            backgroundColor: '#F3F5FE',
             borderRadius: 8,
             padding: 7,
           },
@@ -163,24 +172,32 @@ const ChatScreen = ({ route }) => {
 
   return (
     <View style={styles.container}>
-      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <View style={styles.headerContainer}>
+      {/* <View style={{ flexDirection: 'row', alignItems: 'center' }}> */}
+        <View style={styles.Header}>
           <AppHeader
             iconLeft={<SVG.BackArrow size={24} fill={'black'} />}
             onLeftIconPress={() => navigation.goBack()}
           />
-        </View>
+        {/* </View> */}
         <Space mL={10} />
         <View style={styles.User_Cont}>
           <Image
-            style={{ height: 50, width: 50, borderRadius: 25 }}
+            style={styles.avatar}
             source={user?.userImages?.[0] ? { uri: user?.userImages?.[0] } : IMAGES.userIcon}
           />
           <Space mL={10} />
-          <View style={styles.UserDetail}>
+          <View >
             <Text style={styles.User_name}>{user.name}</Text>
+
           </View>
+          <AppHeader
+          iconRight={
+              <TouchableOpacity onPress={handleRightIconPress} >
+                <Image source={IMAGES.notificationIcon} style={styles.Bell_Icon} />
+              </TouchableOpacity>
+            } />
         </View>
+        {/* </View> */}
       </View>
       <GiftedChat
         messages={messages}

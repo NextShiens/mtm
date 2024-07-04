@@ -180,11 +180,11 @@ const RegisterScreen = ({ navigation }) => {
     <ScrollView style={{backgroundColor: 'white'}}>
       <View style={[style.container]}>
         <LayoutImage imgSrc={IMAGES.theme2} />
-        <AppHeader
+        {/* <AppHeader
           iconLeft={<SVG.BackArrow fill={'black'} />}
           extraStyle={{container: STYLES.position('absolute')}}
           onLeftIconPress={backNavigationHandler}
-        />
+        /> */}
 
         <View style={[style.contentContainer]}>
           <AppLogo extraStyle={{container: STYLES.bottom('10%')}} />
