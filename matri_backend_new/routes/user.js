@@ -11,10 +11,15 @@ const uploadFileController = require("../controller/uploadFileController");
 const multer = require("multer");
 const chatController = require("../controller/chatController");
 const router = express.Router();
+const path = require('path');
 // const upload = multer({ dest: "/temp" });
 
 const storage = multer.diskStorage({
   destination: "./temp", // Update the destination path
+  filename: function (req, file, cb) {
+    // Use the original file name and extension
+    cb(null, file.originalname);
+  }
 });
 
 const upload = multer({ storage: storage });
@@ -33,7 +38,7 @@ router.post(
 );
 
 // router.post("/user/completeSignup", userAuthController.completeSignup);
-router.put("/user/completeProfile",auth, userAuthController.completeProfile);
+router.put("/user/completeProfile", auth, userAuthController.completeProfile);
 router.put("/user/updateProfile", auth, userAuthController.updateProfile);
 router.put(
   "/user/updateActiveStatus",
@@ -56,7 +61,8 @@ router.post("/user/recentlyViewed", auth, userMatchController.recentlyViewed);
 router.get("/user/getRecentViewed", auth, userMatchController.getRecentViewed);
 
 //................match user....................
-router.get("/user/userMatch",auth,  userMatchController.userMatch);
+router.get("/user/userMatch", auth, userMatchController.userMatch);
+router.get("/user/newUsers", auth, userMatchController.newUsers);
 
 router.get(
   "/user/getPendingRequestsReceiver",
@@ -87,12 +93,14 @@ router.get(
 //................................Interests..................................//
 
 router.post("/user/sendInterest", auth, userMatchController.sendInterest);
+router.post("/user/saveUser", auth, userMatchController.saveUser);
+router.get("/user/getSavedUsers", auth, userMatchController.getSavedUsers);
 
 //................................Chat..................................//
 //
 router.get(
   "/user/getAllConversation",
-  // auth,
+  auth,
   chatController.getAllConversations
 );
 router.get("/user/getMessages", chatController.getMessages);
@@ -101,7 +109,7 @@ router.get("/user/getMessages", chatController.getMessages);
 router.post("/user/searchUser", auth, userAuthController.searchUser);
 
 // ---------------------subscription----------------------
-router.get("/user/getSubscription", auth, userAuthController.getSubscriptions);
+router.get("/user/getSubscription", userAuthController.getSubscriptions);
 
 // ---------------------user details----------------------
 router.get("/user/userDetails/:id", auth, userAuthController.userDetails);
@@ -110,4 +118,6 @@ router.get("/user/userDetails/:id", auth, userAuthController.userDetails);
 router.post("/user/userPreferences/", auth, userAuthController.userPreferences);
 
 router.get("/user/profile", auth, userAuthController.userProfile);
+
+router.get('/user/current-user', auth, userAuthController.currentUser)
 module.exports = router;

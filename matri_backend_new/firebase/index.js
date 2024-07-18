@@ -1,5 +1,5 @@
 const firebase = require("firebase-admin");
-const serviceAccount = require("../vaishakhi-matrimony-firebase-adminsdk-mjr6h-34a24c9c5e.json");
+const serviceAccount = require("../dukan-db-firebase-adminsdk-xyqcs-f2ca085157.json");
 
 firebase.initializeApp({
     credential: firebase.credential.cert(serviceAccount),

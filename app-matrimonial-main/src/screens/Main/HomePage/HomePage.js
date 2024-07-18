@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   ScrollView,
   TouchableOpacity,
@@ -7,11 +7,13 @@ import {
   StyleSheet,
   Modal,
   Pressable,
+  Image,
+  ActivityIndicator,
 } from 'react-native';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
-import {IMAGES} from '../../../assets/images';
-import {SVG} from '../../../assets/svg';
-import {COLORS, HORIZON_MARGIN, STYLES} from '../../../assets/theme';
+import { IMAGES } from '../../../assets/images';
+import { SVG } from '../../../assets/svg';
+import { COLORS, HORIZON_MARGIN, STYLES } from '../../../assets/theme';
 import AppHeader from '../../../components/AppHeader/AppHeader';
 import AppInput from '../../../components/AppInput/AppInput';
 import CustomImage from '../../../components/CustomImage/CustomImage';
@@ -19,16 +21,30 @@ import HorizontalCard from '../../../components/HorizontalCard/HorizontalCard';
 import HorizontalScreen from '../../../components/HorizontalScroll/HorizontalScreen';
 import SnapCarousel from '../../../components/SnapCarousel/SnapCarousel';
 import Space from '../../../components/Space/Space';
+import { API_URL } from '../../../../constant';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
+import Svg, { Path } from 'react-native-svg';
 import {
   HorizontalCardData,
   carouselData,
   filterOptions,
   usersData,
 } from '../../../data/appData';
-import {LABELS} from '../../../labels';
-import {Toast} from '../../../utils/native';
-import {styles} from './styles';
-
+import { LABELS } from '../../../labels';
+import { Toast } from '../../../utils/native';
+import { styles } from './styles';
+const MenuIcon = ({ size = 24, color = 'black' }) => (
+  <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+    <Path
+      d="M3 12h18M3 6h18M3 18h18"
+      stroke={color}
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </Svg>
+);
 const filterStyles = StyleSheet.create({
   container: {
     flex: 1,
@@ -42,7 +58,7 @@ const filterStyles = StyleSheet.create({
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
@@ -58,14 +74,14 @@ const filterStyles = StyleSheet.create({
     justifyContent: 'space-between',
     backgroundColor: 'white',
     borderRadius: 30,
-    padding: 10,  
+    padding: 10,
     paddingLeft: 10,
     paddingRight: 10,
   },
   button: {
     borderRadius: 30,
-    width: '50%', 
-    padding:0,
+    width: '50%',
+    padding: 0,
     margin: 0,
     paddingHorizontal: 20,
     paddingVertical: 10,
@@ -75,22 +91,22 @@ const filterStyles = StyleSheet.create({
   },
   selectedButton: {
     backgroundColor: 'rgba(249, 123, 34, 0.1)',
-    borderColor:'orange',
+    borderColor: '#F97B22',
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 30,
     width: '50%',
     borderWidth: 2,
-    fontSize: 16, 
+    fontSize: 16,
     fontWeight: 'bold',
   },
-  
+
   sliderContainer: {
     marginBottom: 15,
   },
   salaryText: {
     fontSize: 16,
-    color: 'orange',
+    color: '#F97B22',
   },
   closeButton: {
     marginTop: 20,
@@ -133,7 +149,7 @@ const filterStyles = StyleSheet.create({
     position: 'absolute',
     right: 0,
   },
-  ChildContainer: { 
+  ChildContainer: {
     margin: 5,
     backgroundColor: '#F8F8F8',
     paddingBottom: 25,
@@ -141,55 +157,136 @@ const filterStyles = StyleSheet.create({
     padding: 10,
   },
   ChildContainer1: {
-    backgroundColor:'#F8F8F8',
+    backgroundColor: '#F8F8F8',
     margin: 5,
     paddingBottom: 25,
     borderRadius: 10,
     padding: 10,
   },
-buttonRow2: {
-  width: '100%',
-  flexDirection: 'row',
-},
-button2: { 
-  width: '30%',
-  backgroundColor: '#F8F8F8',
-  marginLeft: 10,
-  borderRadius: 30,
-  padding: 10,
-  borderWidth: 2,
-  borderColor: 'white',
-},
-selectedButton2: { 
-  width: '30%',
-  backgroundColor: 'rgba(249, 123, 34, 0.1)',
-  borderWidth: 2,
-  borderColor:'orange',
-  borderRadius: 30,
-  padding: 10,
-}
+  buttonRow2: {
+    width: '100%',
+    flexDirection: 'row',
+  },
+  button2: {
+    width: '30%',
+    backgroundColor: '#F8F8F8',
+    marginLeft: 10,
+    borderRadius: 30,
+    padding: 10,
+    borderWidth: 2,
+    borderColor: 'white',
+  },
+  selectedButton2: {
+    width: '30%',
+    backgroundColor: 'rgba(249, 123, 34, 0.1)',
+    borderWidth: 2,
+    borderColor: '#F97B22',
+    borderRadius: 30,
+    padding: 10,
+  },
+  Bell_Icon: {
+    width: 25,
+    height: 30,
+    resizeMode: 'contain',
+    marginRight: '1%',
+  },
 });
 
-const HomePage = ({navigation}) => {
+const HomePage = () => {
+  const navigation = useNavigation();
+  const [selectedFilter, setSelectedFilter] = useState('1');
   const [selectedCategory, setSelectedCategory] = useState('New Join');
+  const [error, setError] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredData, setFilteredData] = useState(usersData);
   const [showFilters, setShowFilters] = useState(false);
   const [selectedGender, setSelectedGender] = useState('');
   const [selectedMaritalStatus, setSelectedMaritalStatus] = useState('');
   const [selectedLanguage, setSelectedLanguage] = useState('');
-  const [range, setRange] = useState([0, 27000]);
+  const [range, setRange] = useState([0, 1000000]);
+  const [recentlyViewed, setRecentlyViewed] = useState([]);
+  const [newUsers, setNewUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [recentlyViewedLoading, setRecentlyViewedLoading] = useState(true);
+  const [newUsersLoading, setNewUsersLoading] = useState(true);
+  const [salaryRange, setSalaryRange] = useState([0, 10000000]);
 
-  const handleLeftIconPress = () => {
-    navigation.openDrawer();
-  };
+  useEffect(() => {
+    const fetchRecentlyViewed = async () => {
+      try {
+        setRecentlyViewedLoading(true);
+        const token = await AsyncStorage.getItem('AccessToken');
+        const response = await fetch(`${API_URL}/user/getRecentViewed`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          if (response.status === 404) {
+            throw new Error('Users not found');
+          } else {
+            throw new Error('Something went wrong');
+          }
+        }
+
+        const { recentlyViewed } = await response.json();
+        console.log('Recently Viewed:', recentlyViewed);
+        setRecentlyViewed(recentlyViewed);
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setRecentlyViewedLoading(false);
+      }
+    };
+
+    const fetchNewUsers = async () => {
+      try {
+        setNewUsersLoading(true);
+        const token = await AsyncStorage.getItem('AccessToken');
+        const response = await fetch(`${API_URL}/user/newUsers`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          if (response.status === 404) {
+            throw new Error('No new users found');
+          } else {
+            throw new Error('Something went wrong');
+          }
+        }
+
+        const { newUsers } = await response.json();
+        setNewUsers(newUsers);
+      } catch (error) {
+        console.error('Error fetching new users:', error);
+        throw error;
+      } finally {
+        setNewUsersLoading(false);
+      }
+    };
+
+    Promise.all([fetchNewUsers(), fetchRecentlyViewed()]).then(() => {
+      setLoading(false);
+    });
+  }, []);
 
   const handleRightIconPress = () => {
     navigation.navigate('NotificationScreen');
   };
 
-  const handleItemPress = item => {
+  const handleItemPress = async item => {
     setSelectedCategory(item.value);
+
+    if (item.value == 'Matches' || item.value == 'Nearest me') {
+      navigation.navigate('PartnerMatch');
+    }
   };
 
   const handleSearch = query => {
@@ -213,79 +310,93 @@ const HomePage = ({navigation}) => {
   };
 
   const onSubmitFilter = () => {
-    console.log(
-      'Filtered with:',
-      selectedGender,
-      selectedMaritalStatus,
-      selectedLanguage,
-    );
+    navigation.navigate('PartnerMatch', {
+      filteredData: {
+        selectedGender,
+        selectedMaritalStatus,
+        selectedLanguage,
+        range,
+      },
+    });
+    setShowFilters(false);
+  };
+
+  const clearFilters = () => {
+    setSelectedGender('');
+    setSelectedMaritalStatus('');
+    setSelectedLanguage('');
+    setSalaryRange([0, 10000000
+    ]);
+  };
+
+  const closeFilters = () => {
+    clearFilters();
     setShowFilters(false);
   };
 
   return (
-    <ScrollView style={[STYLES.flex1, {backgroundColor: 'white'}]}>
-      <View style={styles.container}>
-        <View style={styles.headerContainer}>
-          <AppHeader
+    <ScrollView style={[STYLES.flex1, { backgroundColor: 'white' }]}>
+      <View style={styles.headerContainer}>
+        <AppHeader
+          iconLeft={
+            <TouchableOpacity
+              onPress={() => {
+                navigation.openDrawer();
+              }}>
+              <MenuIcon />
+            </TouchableOpacity>
+          }
+          iconRight={
+            <TouchableOpacity onPress={handleRightIconPress}>
+              <Image
+                source={IMAGES.notificationIcon}
+                style={styles.Bell_Icon}
+              />
+            </TouchableOpacity>
+          }
+        />
+      </View>
+
+      <Space mT={20} />
+      <View style={styles.contentContainer}>
+        <View style={styles.searchBoxContainer}>
+          <AppInput
             iconLeft={
-              <TouchableOpacity onPress={handleLeftIconPress}>
-                <CustomImage
-                  source={IMAGES.menuIcon}
-                  size={17}
-                  resizeMode={'contain'}
-                />
-              </TouchableOpacity>
+              <SVG.magnifyingGlass
+                fill={COLORS.dark.inputBorder}
+                height={15}
+                width={15}
+              />
             }
-            iconRight={
-              <TouchableOpacity onPress={handleRightIconPress}>
-                <CustomImage
-                  source={IMAGES.notificationIcon}
-                  size={27}
-                  resizeMode={'contain'}
-                />
-              </TouchableOpacity>
-            }
+            extraStyle={{ textInputCont: [styles.searchInputCont] }}
+            placeholder={LABELS.searchHere}
+            onChangeText={handleSearch}
           />
+          <TouchableOpacity
+            style={styles.filterBtn}
+            activeOpacity={0.8}
+            onPress={() => setShowFilters(true)}>
+            <CustomImage
+              source={IMAGES.filterIcon}
+              size={17}
+              resizeMode={'contain'}
+            />
+          </TouchableOpacity>
         </View>
 
         <Space mT={20} />
-        <View style={styles.contentContainer}>
-          <View style={styles.searchBoxContainer}>
-            <AppInput
-              iconLeft={
-                <SVG.magnifyingGlass
-                  fill={COLORS.dark.inputBorder}
-                  height={15}
-                  width={15}
-                />
-              }
-              extraStyle={{textInputCont: [styles.searchInputCont]}}
-              placeholder={LABELS.searchHere}
-              onChangeText={handleSearch}
-            />
-            <TouchableOpacity
-              style={styles.filterBtn}
-              activeOpacity={0.8}
-              onPress={() => setShowFilters(true)}>
-              <CustomImage
-                source={IMAGES.filterIcon}
-                size={17}
-                resizeMode={'contain'}
-              />
-            </TouchableOpacity>
-          </View>
 
-          <Space mT={20} />
-
-          <Modal
-            animationType="slide"
-            transparent={true}
-            visible={showFilters}
-            onRequestClose={() => setShowFilters(false)}>
-            <View style={filterStyles.container}>
-              <View style={filterStyles.modalContent}>
-                <ScrollView>
-                  <View style={filterStyles.ChildContainer}>
+        <Modal
+          animationType="slide"
+          onRequestClose={closeFilters}
+          transparent={true}
+          visible={showFilters}
+          // onRequestClose={() => setShowFilters(false)}
+          >
+          <View style={filterStyles.container}>
+            <View style={filterStyles.modalContent}>
+              <ScrollView>
+                <View style={filterStyles.ChildContainer}>
                   <Text style={filterStyles.sectionTitle}>Gender</Text>
                   <View style={filterStyles.buttonRow}>
                     <TouchableOpacity
@@ -293,10 +404,16 @@ const HomePage = ({navigation}) => {
                         selectedGender === 'male'
                           ? filterStyles.selectedButton
                           : filterStyles.button
-                        
                       }
                       onPress={() => setSelectedGender('male')}>
-                      <Text style={{color:'orange', textAlign:'center', fontWeight: 'bold',}}>Male</Text>
+                      <Text
+                        style={{
+                          color: '#F97B22',
+                          textAlign: 'center',
+                          fontWeight: 'bold',
+                        }}>
+                        Male
+                      </Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                       style={
@@ -305,12 +422,21 @@ const HomePage = ({navigation}) => {
                           : filterStyles.button
                       }
                       onPress={() => setSelectedGender('female')}>
-                      <Text style={{color:'orange', textAlign:'center', fontWeight: 'bold',}}>Female</Text>
+                      <Text
+                        style={{
+                          color: '#F97B22',
+                          textAlign: 'center',
+                          fontWeight: 'bold',
+                        }}>
+                        Female
+                      </Text>
                     </TouchableOpacity>
                   </View>
-                  </View>
-                   <View style={filterStyles.ChildContainer1}>
-                  <Text style={filterStyles.sectionTitle}>Marital Status</Text>
+                </View>
+                <View style={filterStyles.ChildContainer1}>
+                  <Text style={filterStyles.sectionTitle}>
+                    Marital Status
+                  </Text>
                   <View style={filterStyles.buttonRow}>
                     <TouchableOpacity
                       style={
@@ -319,7 +445,14 @@ const HomePage = ({navigation}) => {
                           : filterStyles.button
                       }
                       onPress={() => setSelectedMaritalStatus('married')}>
-                      <Text style={{color:'orange', textAlign:'center', fontWeight: 'bold', }}>Married</Text>
+                      <Text
+                        style={{
+                          color: '#F97B22',
+                          textAlign: 'center',
+                          fontWeight: 'bold',
+                        }}>
+                        Married
+                      </Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                       style={
@@ -328,11 +461,18 @@ const HomePage = ({navigation}) => {
                           : filterStyles.button
                       }
                       onPress={() => setSelectedMaritalStatus('unmarried')}>
-                      <Text style={{color:'orange',  textAlign:'center',fontWeight: 'bold',}}>Unmarried</Text>
+                      <Text
+                        style={{
+                          color: '#F97B22',
+                          textAlign: 'center',
+                          fontWeight: 'bold',
+                        }}>
+                        Unmarried
+                      </Text>
                     </TouchableOpacity>
                   </View>
-                  </View>
-                  <View style={filterStyles.ChildContainer2}>
+                </View>
+                <View style={filterStyles.ChildContainer2}>
                   <Text style={filterStyles.sectionTitle}>Language</Text>
                   <View style={filterStyles.buttonRow2}>
                     <TouchableOpacity
@@ -342,7 +482,14 @@ const HomePage = ({navigation}) => {
                           : filterStyles.button2
                       }
                       onPress={() => setSelectedLanguage('english')}>
-                      <Text style={{color:'orange' , textAlign:'center',fontWeight: 'bold',}}>English</Text>
+                      <Text
+                        style={{
+                          color: '#F97B22',
+                          textAlign: 'center',
+                          fontWeight: 'bold',
+                        }}>
+                        English
+                      </Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                       style={
@@ -351,7 +498,14 @@ const HomePage = ({navigation}) => {
                           : filterStyles.button2
                       }
                       onPress={() => setSelectedLanguage('urdu')}>
-                      <Text style={{color:'orange',  textAlign:'center',fontWeight: 'bold',}}>Urdu</Text>
+                      <Text
+                        style={{
+                          color: '#F97B22',
+                          textAlign: 'center',
+                          fontWeight: 'bold',
+                        }}>
+                        Urdu
+                      </Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                       style={
@@ -360,70 +514,88 @@ const HomePage = ({navigation}) => {
                           : filterStyles.button2
                       }
                       onPress={() => setSelectedLanguage('hindi')}>
-                      <Text style={{color:'orange', textAlign:'center',fontWeight: 'bold',}}>Hindi</Text>
+                      <Text
+                        style={{
+                          color: '#F97B22',
+                          textAlign: 'center',
+                          fontWeight: 'bold',
+                        }}>
+                        Hindi
+                      </Text>
                     </TouchableOpacity>
                   </View>
-                  </View>
-                  <Text style={filterStyles.sectionTitle}>Salary Range</Text>
-                  <Text style={filterStyles.salaryText}>
-                    {range[0]} - ${range[1]}
+                </View>
+                <Text style={filterStyles.sectionTitle}>Salary Range</Text>
+                <Text style={filterStyles.salaryText}>
+                  {range[0]} - {range[1]}
+                </Text>
+                <View style={filterStyles.sliderContainer}>
+                  <MultiSlider
+                    values={range}
+                    min={0}
+                    max={10000000}
+                    step={100}
+                    onValuesChange={setRange}
+                    selectedStyle={{
+                      backgroundColor: '#F97B22',
+                    }}
+                    trackStyle={{
+                      height: 6,
+                    }}
+                    markerStyle={{
+                      backgroundColor: 'white',
+                      borderWidth: 2,
+                      borderColor: '#F97B22',
+                      padding: 5,
+                    }}
+                  />
+                </View>
+                <TouchableOpacity
+                  style={filterStyles.applyButton}
+                  onPress={onSubmitFilter}>
+                  <Text style={filterStyles.applyButtonText}>
+                    Apply Filter
                   </Text>
-                  <View style={filterStyles.sliderContainer}>
-                    <MultiSlider
-                      values={range}
-                      min={0} 
-                      max={27000}
-                      step={100}
-                      onValuesChange={setRange}
-                      selectedStyle={{
-                        backgroundColor: 'orange',
-                      }}
-                      trackStyle={{
-                        height: 6,
-                      }}
-                      markerStyle={{
-                        backgroundColor: 'white',
-                        borderWidth: 2,
-                        borderColor: 'orange',
-                        padding: 5,
+                </TouchableOpacity>
+              </ScrollView>
 
-                      }}
-                    />
-                  </View>
-                  <TouchableOpacity
-                    style={filterStyles.applyButton}
-                    onPress={onSubmitFilter}>
-                    <Text style={filterStyles.applyButtonText}>
-                      Apply Filter
-                    </Text>
-                  </TouchableOpacity>
-                </ScrollView>
-
-                <Pressable
-                  style={filterStyles.closeButton}
-                  onPress={() => setShowFilters(false)}>
-                  <Text style={filterStyles.closeButtonText}>
-                    Close Filters
-                  </Text>
-                </Pressable>
-              </View>
+              <Pressable
+                style={filterStyles.closeButton}
+                onPress={closeFilters}>
+                <Text style={filterStyles.closeButtonText}>
+                  Close Filters
+                </Text>
+              </Pressable>
             </View>
-          </Modal>
-
-          <Space mT={20} />
-
-          <HorizontalScreen data={filterOptions} onPress={handleItemPress} />
-          <Space mT={20} />
-
-          <View style={{paddingHorizontal: 15, borderRadius: 20}}>
-            <SnapCarousel data={carouselData} />
           </View>
+        </Modal>
 
-          <Space mT={20} />
+        <Space mT={20} />
 
-          <View style={[STYLES.pL()]}>
+        <HorizontalScreen
+          data={filterOptions}
+          onPress={handleItemPress}
+          initialSelectedItem={selectedFilter}
+        />
+
+        <Space mT={20} />
+
+        <View style={{ paddingHorizontal: 15, borderRadius: 20 }}>
+          {newUsersLoading ? (
+            <ActivityIndicator size="large" style={{objectFit :'cover'}} color={COLORS.dark.primary} />
+          ) : (
+            <SnapCarousel data={newUsers} />
+          )}
+        </View>
+
+        <Space mT={20} />
+
+        <View style={[STYLES.pL(6)]}>
+          {recentlyViewedLoading ? (
+            <ActivityIndicator size="large" color={COLORS.dark.primary} />
+          ) : recentlyViewed && recentlyViewed.length > 0 ? (
             <HorizontalCard
-              data={HorizontalCardData}
+              data={recentlyViewed}
               onLinkPress={showMoreUserHandler}
               onSendInterest={sendInterestHandler}
               onChatBtnClick={chatPressHandler}
@@ -431,7 +603,9 @@ const HomePage = ({navigation}) => {
                 Toast('This account is verified');
               }}
             />
-          </View>
+          ) : (
+            <Text style={styles.noDataText}>No recently viewed users</Text>
+          )}
         </View>
       </View>
     </ScrollView>

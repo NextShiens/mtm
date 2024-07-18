@@ -1,3 +1,5 @@
+import { AccountSettingsScreen } from "../screens";
+
 export const LABELS = {
   cancel:'Cancel',
   newPass: 'New Password',
@@ -19,6 +21,8 @@ export const LABELS = {
   profileCreatedFor: 'Profile Created For',
   new: 'New',
   createAccount: 'Create an account',
+  next: 'Next',
+  verify: 'Verify',
   login: 'Log in',
   initialMessage: 'Find your perfect match on this ',
   continueInitialMsg: 'matrimony app',
@@ -55,7 +59,7 @@ export const LABELS = {
   workLocation: 'Work Location',
   select: 'Select',
   employePlaceholder: 'AX Technlogy',
-  incomePlaceholder: '12 Lac',
+  incomePlaceholder: '120000',
   workLocationPlaceholder: 'Mumbai',
   partnerPreference: 'Partner Preference',
   dateOfBirth: 'Date of Birth',
@@ -69,7 +73,7 @@ export const LABELS = {
   height: 'Height',
   education: 'Education',
   motherToungue: 'Mother Tongue',
-  sect: 'Sect',
+  sect: 'Cast',
   city: 'City',
   save: 'Save',
   searchHere: 'Search here...',
@@ -78,7 +82,7 @@ export const LABELS = {
   nearestMe: 'Nearest me',
   recentlyViewed: 'Recently Viewed',
   seeMore: 'See More',
-  sendInterest: 'Send Interest',
+  sendInterest: 'View Profile',
   chat: 'Chat',
   mumbaiIndia: 'Mumbai, India',
   exampleLanguage: 'Hindi, Bengali',
@@ -98,6 +102,7 @@ export const LABELS = {
   notification: 'Notifications',
   profile: 'Profile',
   connection: 'Connections',
+  AccountSettingsScreen: 'Account Settings',
   accept: 'Accept',
   reject: 'Reject',
   update: 'Update',
@@ -114,4 +119,7 @@ export const LABELS = {
   confirm: 'Confirm',
   back: 'Back',
   signUp: 'Sign Up',
+  delete : 'Delete Account',
+  ChangingPassword: 'Changing Password',
+  confirmPassword: 'Confirm Password',
 };

@@ -90,12 +90,13 @@ export const styles = StyleSheet.create({
   planContainer: {
     width: '90%',
     padding: 20,
-    borderRadius: 10,
-    borderWidth: 1,
+    borderRadius: 15,
     borderColor: '#ccc',
     backgroundColor: '#fff',
     marginVertical: 15,
     alignSelf: 'center',
+    marginBottom: 10,
+    elevation: 5,
   },
   planName: {
     fontSize: 20,
@@ -104,6 +105,13 @@ export const styles = StyleSheet.create({
     color: '#333',
   },
   featureContainer: {
+    flexDirection: 'colomn',
+    alignItems: 'left',
+    paddingTop: 10,
+    paddingHorizontal: 10,
+    marginBottom: 10,
+  },
+  featureItem: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 5,
@@ -113,10 +121,14 @@ export const styles = StyleSheet.create({
     color: '#333',
     marginLeft: 15,
   },
+  icon: {
+    marginRight: 10,
+    color: 'green',
+  },
   price: {
     fontSize: 20,
     fontWeight: 'bold',
-    marginVertical: 20,
+    marginVertical: 10,
     color: '#333',
     textAlign: 'center',
   },
@@ -124,7 +136,7 @@ export const styles = StyleSheet.create({
     backgroundColor: '#ff7f50',
     paddingVertical: 10,
     paddingHorizontal: 20,
-    borderRadius: 10,
+    borderRadius: 20,
     alignItems: 'center',
     alignSelf: 'stretch',
   },
@@ -132,5 +144,17 @@ export const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  Bell_Icon: {
+    width: 25,
+    height: 30,
+    resizeMode: 'contain',
+    marginRight: '1%',
+  },
+  line: {
+    borderBottomColor: 'lightgrey',
+    borderBottomWidth: 2,
+    marginVertical: 10,
+    width: '100%',
   },
 });

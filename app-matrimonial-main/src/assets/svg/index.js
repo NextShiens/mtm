@@ -13,7 +13,6 @@ export const SVG = {
   homeIcon:require('./HomeIcon.svg').default,
   circleFilled:require('./filledCircle.svg').default,
   unfilledCircle:require('./unfilledCircle.svg').default,
-
-
-  
+  WarningIcon:require('./WarningIcon.svg').default,
+  LockIcon:require('./LockIcon.svg').default,
 };

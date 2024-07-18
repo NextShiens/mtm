@@ -1,20 +1,31 @@
 import auth from '@react-native-firebase/auth';
 import {Toast} from '../utils/native';
-import {useNavigation} from '@react-navigation/native';
 
 export const RegisterUser = async (email, password) => {
   try {
     const userCredential = await auth().createUserWithEmailAndPassword(email, password);
     return userCredential.user.uid;
   } catch (error) {
-    if (error.code === 'auth/email-already-in-use') {
-      return 'That email address is already in use!';
-    } else if (error.code === 'auth/invalid-email') {
-      return 'That email address is invalid!';
-    } else {
-      console.error(error);
-      return 'Failed to create user account. Please try again later.';
+    let errorMessage = 'Failed to create user account. Please try again later.';
+
+    switch (error.code) {
+      case 'auth/email-already-in-use':
+        errorMessage = 'This email is already registered. Please use a different email or try logging in.';
+        break;
+      case 'auth/invalid-email':
+        errorMessage = 'The email address is invalid. Please enter a valid email.';
+        break;
+      case 'auth/weak-password':
+        errorMessage = 'The password is too weak. Please choose a stronger password.';
+        break;
+      case 'auth/network-request-failed':
+        errorMessage = 'Network error. Please check your internet connection and try again.';
+        break;
     }
+
+    Toast(errorMessage);
+    console.error('Registration error:', error);
+    return null;
   }
 };
 
@@ -49,7 +60,6 @@ export const loginUser = async (email, password) => {
 export const getCurrentUser = () => {
   const user = auth().currentUser;
   if (user) {
-
     return user;
   } else {
     return null;

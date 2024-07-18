@@ -18,16 +18,14 @@ const InitialScreen = ({ navigation }) => {
     const checkLogin = async () => {
       const AccessToken = await AsyncStorage.getItem('AccessToken');
       setLoginToken(AccessToken);
-      // console.log(AccessToken, "AccessToken from line 23");
+      let currentUser = getCurrentUser();
+      if (currentUser && AccessToken) {
+        navigation.navigate('DrawerNavigation');
+      } else {
+        console.log("No user is currently signed in.");
+      }
     };
     checkLogin();
-    let currentUser = getCurrentUser();
-    let mango = getCurrentUserWithToken();
-    if (currentUser) {
-    } else {
-      console.log("No user is currently signed in.");
-    }
-
   }, []);
   const styles = styling;
   const signUpNavigation = () => {
@@ -35,6 +33,7 @@ const InitialScreen = ({ navigation }) => {
   };
   const loginNavigation = () => {
     if (loginToken) {
+      console.log("Login Token is available", loginToken);
       navigation.navigate('DrawerNavigation');
     } else {
       navigation.navigate('LoginScreen');

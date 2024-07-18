@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ScrollView, View } from 'react-native';
+import { ScrollView, View, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { CountryPicker } from 'react-native-country-codes-picker';
 import { Fonts } from '../../../assets/fonts';
 import { IMAGES } from '../../../assets/images';
@@ -23,24 +23,66 @@ import { isValidatedSignup } from '../../../utils/validation';
 import { API_URL } from '../../../../constant';
 import { styles } from './styles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Svg, Path } from 'react-native-svg';
 
 const RegisterScreen = ({ navigation }) => {
   const [countryCode, setCountryCode] = useState('+91');
   const [selectedCountry, setSelectedCountry] = useState('IN');
   const [countryShow, setCountryShow] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const style = styles;
+
+  const PasswordEyeIcon = ({ showPassword}) => {
+    return showPassword ? (
+      <Svg width={24} height={24} viewBox="0 0 24 24" fill="black">
+        <Path
+          d="M1 12S4 4 12 4s11 8 11 8-3 8-11 8-11-8-11-8z"
+          fill="black"
+        />
+        <Path
+          d="M12 15a3 3 0 100-6 3 3 0 000 6z"
+          stroke="#A9A9A9"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </Svg>
+    ) : (
+      <Svg width={24} height={24} viewBox="0 0 24 24" fill="none">
+        <Path
+          d="M12 4.5C7.78 4.5 4.3 7.5 3 12c1.3 4.5 4.78 7.5 9 7.5s7.7-3 9-7.5c-1.3-4.5-4.78-7.5-9-7.5z
+          M12 15c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3z
+          M-1 1L25 25"
+          stroke="black"
+          strokeWidth="1"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </Svg>
+    );
+  };
+
   const toggleCheckbox = () => {
     setIsChecked(!isChecked);
   };
+
   const backNavigationHandler = () => {
     navigation.goBack();
   };
-  const termsHandler = () => { };
-  const privacyHandler = () => { };
+
+  const termsHandler = () => { 
+    navigation.navigate('PrivacyPolicyScreen');
+  };
+  const privacyHandler = () => {
+    navigation.navigate('PrivacyPolicyScreen');
+   };
+
   const openCountryModal = () => {
     setCountryShow(true);
   };
+
   const onSelectCountry = item => {
     setCountryCode(item.dial_code);
     setSelectedCountry(item.code);
@@ -55,11 +97,11 @@ const RegisterScreen = ({ navigation }) => {
     isChecked: isChecked,
   });
 
-  const handleInputChange = async (key, value) => {
+  const handleInputChange = (key, value) => {
     setFormData({ ...formData, [key]: value });
   };
+
   const userFirstTimeReg = async (userFirebaseId) => {
-    console.log('User Firebase Id: line61', userFirebaseId);
     const res = await fetch(`${API_URL}/user/register`, {
       method: 'POST',
       headers: {
@@ -74,56 +116,78 @@ const RegisterScreen = ({ navigation }) => {
       }),
     });
     const data = await res.json();
-    await AsyncStorage.setItem('AccessToken', data.token);
     if (data.error) {
+      console.log('Error:', data.error);
       Toast(data.error);
     } else {
+      await AsyncStorage.setItem('AccessToken', data.token);
       Toast('User registered successfully');
-      navigation.navigate('ProfileCreateScreen');
+      navigation.navigate('OTPScreen', { email: formData.email });
+    }
+  };
+
+  const verifyUserEmail = async () => {
+    try {
+      const response = await fetch(`${API_URL}/user/verifyEmail`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: formData.email }),
+      });
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      console.error(error);
+      Toast('Failed to send verification email. Please try again.');
     }
   };
 
   const onRegisterPress = async () => {
-    const { name, email, phoneNumber, password, isAgreed } = formData;
-    if (!name && !email && !password && !phoneNumber && !isChecked) {
+    const { name, email, phoneNumber, password } = formData;
+    if (!name || !email || !password || !phoneNumber || !isChecked) {
       Toast(ERRORS.emptyForm);
-    } else {
-      if (
-        isValidatedSignup({
-          name,
-          email,
-          phoneNumber,
-          countryCode,
-          selectedCountry,
-          password,
-          isChecked,
-        })
-      ) {
-        try {
-          const userFirebaseId = await RegisterUser(email, password);
-          console.log('User Firebase Id: line103', userFirebaseId);
-          Toast('User registered successfully');
-          await userFirstTimeReg(userFirebaseId)
-          navigation.navigate('ProfileCreateScreen');
+      return;
+    }
+
+    if (isValidatedSignup({
+      name,
+      email,
+      phoneNumber,
+      countryCode,
+      selectedCountry,
+      password,
+      isChecked,
+    })) {
+      setIsLoading(true);
+      try {
+        const userFirebaseId = await RegisterUser(email, password);
+        if (userFirebaseId) {
+          console.log('User Firebase Id:', userFirebaseId);
+          await userFirstTimeReg(userFirebaseId);
+          await verifyUserEmail();
         }
-        catch (error) {
-          Toast(error);
-        }
+      } catch (error) {
+        console.error('Error:', error);
+        Toast('An unexpected error occurred. Please try again.');
+      } finally {
+        setIsLoading(false);
       }
     }
   };
+
   return (
-    <ScrollView style={{ backgroundColor: 'white' }}>
+    <ScrollView style={{backgroundColor: 'white'}}>
       <View style={[style.container]}>
         <LayoutImage imgSrc={IMAGES.theme2} />
-        <AppHeader
+        {/* <AppHeader
           iconLeft={<SVG.BackArrow fill={'black'} />}
-          extraStyle={{ container: STYLES.position('absolute') }}
+          extraStyle={{container: STYLES.position('absolute')}}
           onLeftIconPress={backNavigationHandler}
-        />
+        /> */}
 
         <View style={[style.contentContainer]}>
-          <AppLogo extraStyle={{ container: STYLES.bottom('10%') }} />
+          <AppLogo extraStyle={{container: STYLES.bottom('10%')}} />
           <View style={[style.formContainer]}>
             <AppText
               title={LABELS.register}
@@ -208,7 +272,6 @@ const RegisterScreen = ({ navigation }) => {
             </View>
 
             <Space mT={10} />
-
             <AppText
               title={LABELS.Password}
               variant={'h5'}
@@ -220,11 +283,18 @@ const RegisterScreen = ({ navigation }) => {
 
             <AppInput
               placeholder={LABELS.passwordPlaceholder}
-              secureTextEntry={true}
+              secureTextEntry={!showPassword}
               keyboardType={'default'}
               onChangeText={text => handleInputChange('password', text)}
             />
-            <Space mT={15} />
+
+            <Space mT={10} />
+
+            <TouchableOpacity
+              onPress={() => setShowPassword(!showPassword)}
+              style={styles.PasswordEyeIcon}>
+              <PasswordEyeIcon showPassword={showPassword} />
+            </TouchableOpacity>
 
             <View style={[STYLES.row]}>
               <CustomCheckbox
@@ -238,16 +308,18 @@ const RegisterScreen = ({ navigation }) => {
               />
             </View>
             <Space mT={20} />
-            <AppButton
-              title={LABELS.createAccount}
-              variant="filled"
-              textVariant={'h5'}
-              onPress={onRegisterPress}
-            />
+              <AppButton
+                title={isLoading ? 'Nexting...' : LABELS.next}
+                disabled={isLoading}
+                variant="filled"
+                textVariant={'h5'}
+                onPress={onRegisterPress}
+              />
           </View>
         </View>
       </View>
     </ScrollView>
   );
 };
+
 export default RegisterScreen;

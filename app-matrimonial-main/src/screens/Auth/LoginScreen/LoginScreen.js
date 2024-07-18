@@ -1,11 +1,11 @@
 import auth from '@react-native-firebase/auth';
-import {useNavigation} from '@react-navigation/native';
-import React, {useState} from 'react';
-import {ScrollView, TouchableOpacity, View} from 'react-native';
-import {Fonts} from '../../../assets/fonts';
-import {IMAGES} from '../../../assets/images';
-import {SVG} from '../../../assets/svg';
-import {COLORS, STYLES} from '../../../assets/theme';
+import { useNavigation } from '@react-navigation/native';
+import React, { useState } from 'react';
+import { Alert, ScrollView, TouchableOpacity, View, ActivityIndicator } from 'react-native';
+import { Fonts } from '../../../assets/fonts';
+import { IMAGES } from '../../../assets/images';
+import { SVG } from '../../../assets/svg';
+import { COLORS, STYLES } from '../../../assets/theme';
 import AppButton from '../../../components/AppButton/AppButton';
 import AppHeader from '../../../components/AppHeader/AppHeader';
 import AppInput from '../../../components/AppInput/AppInput';
@@ -14,53 +14,92 @@ import AppText from '../../../components/AppText/AppText';
 import LayoutImage from '../../../components/LayoutImage/LayoutImage';
 import SocialAuth from '../../../components/SocialAuth/SocialAuth';
 import Space from '../../../components/Space/Space';
-import {LABELS} from '../../../labels';
-import {ERRORS} from '../../../labels/error';
+import { LABELS } from '../../../labels';
+import { ERRORS } from '../../../labels/error';
 import CustomCheckbox from '../../../libraries/Checkbox/Checkbox';
-import {Toast} from '../../../utils/native';
-import {styles} from './styles';
-import {loginUser} from '../../../services/firebase';
-import {isValidatedLogin} from '../../../utils/validation';
+import { Toast } from '../../../utils/native';
+import { styles } from './styles';
+import { loginUser } from '../../../services/firebase';
+import { isValidatedLogin } from '../../../utils/validation';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL } from '../../../../constant';
+import { signInWithGoogle } from '../../../services/authServices';
+import { Svg, Path } from 'react-native-svg';
+import CustomAlert from '../../../components/globalAlert';
 
 const LoginScreen = () => {
   const [isChecked, setIsChecked] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [alertVisible, setAlertVisible] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
   const navigation = useNavigation();
   const style = styles;
+
+  const PasswordEyeIcon = ({ showPassword }) => {
+    return showPassword ? (
+      <Svg width={24} height={24} viewBox="0 0 24 24" fill="black">
+        <Path
+          d="M1 12S4 4 12 4s11 8 11 8-3 8-11 8-11-8-11-8z"
+          fill="black"
+        />
+        <Path
+          d="M12 15a3 3 0 100-6 3 3 0 000 6z"
+          stroke="#A9A9A9"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </Svg>
+    ) : (
+      <Svg width={24} height={24} viewBox="0 0 24 24" fill="none">
+        <Path
+          d="M12 4.5C7.78 4.5 4.3 7.5 3 12c1.3 4.5 4.78 7.5 9 7.5s7.7-3 9-7.5c-1.3-4.5-4.78-7.5-9-7.5z
+          M12 15c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3z
+          M-1 1L25 25"
+          stroke="black"
+          strokeWidth="1"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </Svg>
+    );
+  };
 
   const toggleCheckbox = () => {
     setIsChecked(!isChecked);
   };
+
   const backNavigationHandler = () => {
     navigation.goBack();
   };
-
-  const googleAuthHandler = async () => {};
+  //   const googleAuthHandler = async () => { 
+  // };
   const forgotPassHandler = () => {
     navigation.navigate('ForgotPassword');
   };
-  const verifyUserEmail = async () => {
+
+  const getSubscriptions = async () => {
     try {
-      const response = await fetch(`${API_URL}/user/verifyEmail`, {
-        method: 'POST',
+      const response = await fetch(`${API_URL}/user/getSubscription`, {
+        method: 'GET',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email }),
       });
       const data = await response.json();
-      console.log(data);
+      await AsyncStorage.setItem('subscriptions', JSON.stringify(data));
     } catch (error) {
-      console.error(error);
+      console.log(error.message);
+    } finally {
+      console.log('done');
     }
-   };
-const loginAndGetAccessToken = async () => { 
-    const data = await fetch(
-      `${API_URL}/user/login`,
-      {
+  };
+  const loginAndGetAccessToken = async () => {
+    try {
+      const response = await fetch(`${API_URL}/user/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -69,49 +108,94 @@ const loginAndGetAccessToken = async () => {
         body: JSON.stringify({
           email: email,
           password: password,
+          fcmToken: await AsyncStorage.getItem('fcmToken'),
         }),
-      },
-    );
+      });
 
-    const content = await data.json();
-    await AsyncStorage.setItem('AccessToken', content.token);
-    console.log("Access token set" + content.token);
-  };
-  const loginHandler = async () => {
-    if (!email && !password) {
-      Toast(ERRORS.emptyForm);
-    } else {
-      if (isValidatedLogin({email, password})) {
-        await loginUser(email, password).then(res => {
-          if (res) {
-            const setUid = async () => {
-              // fcm token
-              await AsyncStorage.setItem('loginToken', res);
-              await loginAndGetAccessToken();
-              await verifyUserEmail();
-              // navigation.navigate('OTPScreen', {email});
-              navigation.navigate('ProfileCreateScreen');
-            };
-            setUid();
-          } else {
-            console.log('There is an error');
-          }
-        });
+      const content = await response.json();
+      console.log(content);
 
-        // if (message) {
-        //   Toast(message);
-        // } else {
-        //   Toast('Signed in!');
-        // await AsyncStorage.setItem('loginToken',)
-        //   navigation.navigate('OTPScreen');
-        // }
+      if (!response.ok) {
+        setAlertMessage(content.message || 'An error occurred during login.');
+        setAlertVisible(true);
+        return;
       }
+      if (!content.user.isActive) {
+        setAlertMessage('Your account is not active. Please wait for the admin to activate it.');
+        setAlertVisible(true);
+        return 'userIactive';
+      }
+
+      await AsyncStorage.setItem('AccessToken', content.token);
+      await AsyncStorage.setItem('theUser', JSON.stringify(content));
+    } catch (error) {
+      console.error('Login error:', error);
+      setAlertMessage('An error occurred during login. Please try again.');
+      setAlertVisible(true);
+    }
+  };
+
+  const loginHandler = async () => {
+    if (!email || !password) {
+      setAlertMessage(ERRORS.emptyForm);
+      setAlertVisible(true);
+      return;
+    }
+
+    if (!isValidatedLogin({ email, password })) {
+      setAlertMessage('Invalid email or password');
+      setAlertVisible(true);
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const res = await loginUser(email, password);
+      if (!res) {
+        setAlertMessage('Failed to login with invalid credentials');
+        setAlertVisible(true);
+        return;
+      }
+      const userCheck = await loginAndGetAccessToken();
+      if (userCheck === 'userIactive') {
+        setIsLoading(false);
+        return;
+      }
+      await AsyncStorage.setItem('loginToken', res);
+      await getSubscriptions();
+      navigation.navigate('DrawerNavigation');
+    } catch (error) {
+      console.error('Login error:', error);
+      setAlertMessage('An error occurred during login');
+      setAlertVisible(true);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  const handleGoogleSignIn = async () => {
+    try {
+      setIsLoading(true);
+      const { user } = await signInWithGoogle();
+      if (user) {
+        console.log('Google Sign-In success:', user);
+        await loginAndGetAccessToken();
+        await getSubscriptions();
+        navigation.navigate('DrawerNavigation');
+      }
+    } catch (error) {
+      console.error('Google Sign-In error:', error);
+      setAlertMessage('An error occurred during Google Sign-In');
+      setAlertVisible(true);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const onEnterEmail = item => {
     setEmail(item);
   };
+
   const onPasswordEnter = item => {
     setPassword(item);
   };
@@ -122,16 +206,23 @@ const loginAndGetAccessToken = async () => {
 
   return (
     <ScrollView style={STYLES.bgColor(COLORS.dark.white)}>
+      <CustomAlert
+        visible={alertVisible}
+        title="Notice"
+        message={alertMessage}
+        onClose={() => setAlertVisible(false)}
+      />
       <View style={[style.container]}>
+
         <LayoutImage imgSrc={IMAGES.theme2} />
         <AppHeader
           iconLeft={<SVG.BackArrow fill={'black'} />}
-          extraStyle={{container: {position: 'absolute'}}}
+          extraStyle={{ container: { position: 'absolute' } }}
           onLeftIconPress={backNavigationHandler}
         />
 
         <View style={[style.contentContainer]}>
-          <AppLogo extraStyle={{container: [STYLES.bottom('10%')]}} />
+          <AppLogo extraStyle={{ container: [STYLES.bottom('10%')] }} />
           <View style={[style.formContainer]}>
             <AppText
               title={LABELS.welcomeBack}
@@ -180,10 +271,16 @@ const loginAndGetAccessToken = async () => {
 
             <AppInput
               placeholder={LABELS.passwordPlaceholder}
-              secureTextEntry={true}
+              secureTextEntry={!showPassword}
               keyboardType={'default'}
               onChangeText={onPasswordEnter}
             />
+            <TouchableOpacity
+              onPress={() => setShowPassword(!showPassword)}
+              style={style.PasswordEyeIcon}>
+              <PasswordEyeIcon showPassword={showPassword} />
+            </TouchableOpacity>
+
             <Space mT={10} />
 
             <View style={[STYLES.row]}>
@@ -211,11 +308,16 @@ const loginAndGetAccessToken = async () => {
             <Space mT={20} />
 
             <AppButton
-              title={LABELS.login}
+              title={isLoading ? 'Logging in...' : LABELS.login}
               variant="filled"
               textVariant={'h5'}
               onPress={loginHandler}
-            />
+              disabled={isLoading}
+            >
+              {isLoading && (
+                <ActivityIndicator size="small" color={COLORS.dark.white} style={{ marginLeft: 10 }} />
+              )}
+            </AppButton>
             <Space mT={20} />
 
             <View style={style.hrContainer}>
@@ -231,7 +333,7 @@ const loginAndGetAccessToken = async () => {
             <Space mT={30} />
 
             <SocialAuth
-              onGoogleAuth={googleAuthHandler}
+              onGoogleAuth={handleGoogleSignIn}
             />
             <Space mT={20} />
             <TouchableOpacity style={[STYLES.rowCenter, STYLES.JCCenter]}>

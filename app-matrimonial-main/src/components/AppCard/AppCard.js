@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, TouchableOpacity, View } from 'react-native';
+import { ScrollView, TouchableOpacity, View, Text } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import LinearGradient from 'react-native-linear-gradient';
 import { Svg, Circle, Path } from 'react-native-svg';
@@ -10,11 +10,21 @@ import AppButton from '../AppButton/AppButton';
 import AppText from '../AppText/AppText';
 import Space from '../Space/Space';
 import { styles } from './styles';
+import CustomImage from '../CustomImage/CustomImage';
+import { IMAGES } from '../../assets/images';
 
+const LocationIcon = ({ size = 24, color = 'black' }) => (
+  <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+    <Path
+      d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7Zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5Z"
+      fill={color}
+    />
+  </Svg>
+);
 const ProfileIcon = () => (
-  <Svg width="60" height="60" viewBox="0 0 50 50">
-    <Circle cx="25" cy="25" r="24" fill="#E0E0E0" />
-    <Circle cx="25" cy="18" r="8" fill="#BDBDBD" />
+  <Svg width="20" height="20" viewBox="0 0 20 20">
+    <Circle cx="10" cy="10" r="15" fill="#E0E0E0" />
+    <Circle cx="10" cy="10" r="4" fill="#BDBDBD" />
     <Path
       d="M25 28c-7.18 0-13 5.82-13 13 0 1.1.9 2 2 2h22c1.1 0 2-.9 2-2 0-7.18-5.82-13-13-13z"
       fill="#BDBDBD"
@@ -38,8 +48,8 @@ const AppCard = ({ isBtnShown, btnType, data, onPressBtn1, onPressBtn2 }) => {
   };
   const onPressFunction =
     isBtnShown && btnType === 'requestAcception'
-      ? onSendRequest
-      : onAcceptRequest;
+      ? onAcceptRequest
+      :  onSendRequest;
 
   const onSecondBtnPress =
     isBtnShown && btnType === 'requestAcception'
@@ -48,21 +58,21 @@ const AppCard = ({ isBtnShown, btnType, data, onPressBtn1, onPressBtn2 }) => {
 
   const renderCard = (item) => {
     return (
-      <View style={style.cardContainer(isBtnShown)} key={item?.id || Math.random().toString()}>
+      <View style={style.cardContainer(isBtnShown)} key={item?.id}>
         <View style={style.imgContainer}>
-          {item?.profileImage ? (
+          {item?.userImages?.length > 0 ? (
             <FastImage
-              source={{ uri: item.profileImage }}
+              source={{ uri: item.userImages[0] }}
               resizeMode="cover"
               style={style.img}
             />
           ) : (
             <View style={style.profileIconContainer}>
-            <ProfileIcon />
-          </View>
+              <ProfileIcon />
+            </View>
           )}
           <AppText
-            title={item?.profession || 'N/A'}
+            title={item?.occupation || 'N/A'}
             color={'white'}
             alignSelf={'center'}
             variant={'h4'}
@@ -90,16 +100,19 @@ const AppCard = ({ isBtnShown, btnType, data, onPressBtn1, onPressBtn2 }) => {
             extraStyle={STYLES.fontFamily(Fonts.PoppinsRegular)}
           />
           <View style={STYLES.rowCenter}>
-            <Space mL={10} />
-            <AppText
-              title={item?.location || 'N/A'}
-              variant={'h5'}
-              extraStyle={STYLES.fontFamily(Fonts.PoppinsRegular)}
-            />
+
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <LocationIcon size={16} />
+              <AppText
+                title={item?.city || 'N/A'}
+                variant={'h5'}
+                extraStyle={STYLES.fontFamily(Fonts.PoppinsRegular)}
+              />
+            </View>
           </View>
           <View style={style.btnShownContainer(isBtnShown)}>
             <AppText
-              title={item?.language || 'N/A'}
+              title={item?.motherTongue || 'N/A'}
               variant={'h5'}
               color={COLORS.dark.inputBorder}
               extraStyle={[
@@ -108,7 +121,7 @@ const AppCard = ({ isBtnShown, btnType, data, onPressBtn1, onPressBtn2 }) => {
               ]}
             />
             <AppText
-              title={item?.castName || 'N/A'}
+              title={item?.sect || 'N/A'}
               variant={'h5'}
               color={COLORS.dark.inputBorder}
               extraStyle={[
@@ -121,23 +134,23 @@ const AppCard = ({ isBtnShown, btnType, data, onPressBtn1, onPressBtn2 }) => {
           {btnType && btnType == 'requestAcception' ? (
             <>
               <View style={style.acceptBtnContainer}>
-                <TouchableOpacity
-                  onPress={() => {
-                    onPressFunction(item);
-                  }}>
-                  <AppButton
-                    extraStyle={{
-                      container: [style.acceptBtn],
-                    }}
-                    title={
-                      btnType === 'requestAcception'
-                        ? LABELS.accept
-                        : LABELS.sendInterest
-                    }
-                    onPress={() => {
-                      onPressFunction(item);
-                    }}
-                  />
+                <TouchableOpacity onPress={() => onPressFunction(item)}>
+                  <View>
+                    <AppButton
+                      extraStyle={{
+                        container: [style.acceptBtn],
+                      }}
+                      title={btnType === 'requestAcception' ? "Accept" : 'View Profile'}
+                      onPress={() => {
+                        onPressFunction(item);
+                      }}
+                    />
+                    <CustomImage
+                      source={IMAGES.sendIcon}
+                      size={11}
+                      resizeMode={'contain'}
+                    />
+                  </View>
                 </TouchableOpacity>
 
                 <TouchableOpacity
@@ -168,9 +181,7 @@ const AppCard = ({ isBtnShown, btnType, data, onPressBtn1, onPressBtn2 }) => {
                   color={COLORS.dark.white}
                   extraStyle={STYLES.fontFamily(Fonts.PoppinsRegular)}
                   variant={'h5'}
-                  onPress={() => {
-                    onPressFunction(item);
-                  }}
+      
                 />
               </TouchableOpacity>
 
@@ -179,12 +190,7 @@ const AppCard = ({ isBtnShown, btnType, data, onPressBtn1, onPressBtn2 }) => {
                 onPress={() => {
                   onSecondBtnPress(item);
                 }}>
-                <AppText
-                  title={LABELS.chat}
-                  color={COLORS.dark.white}
-                  extraStyle={STYLES.fontFamily(Fonts.PoppinsRegular)}
-                  variant={'h5'}
-                />
+              <CustomImage source={IMAGES.chatIcon} size={12} />
               </TouchableOpacity>
             </View>
           )}

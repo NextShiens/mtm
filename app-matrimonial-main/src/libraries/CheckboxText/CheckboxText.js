@@ -3,8 +3,15 @@ import AppText from '../../components/AppText/AppText';
 import {COLORS, STYLES} from '../../assets/theme';
 import {View, TouchableOpacity} from 'react-native';
 import {Fonts} from '../../assets/fonts';
+import {useNavigation} from '@react-navigation/native';
 
-const CheckboxText = ({onPressTerms, onPressPrivacy}) => {
+const CheckboxText = ({ onPressPrivacy}) => {
+  const navigation = useNavigation();
+
+  const onPressTerms = () => {
+    navigation.navigate('PrivacyPolicyScreen');
+  }
+
   return (
     <View style={STYLES.row}>
       <AppText
@@ -26,7 +33,7 @@ const CheckboxText = ({onPressTerms, onPressPrivacy}) => {
         color={COLORS.dark.black}
         extraStyle={[{fontFamily: Fonts.PoppinsRegular}]}
       />
-      <TouchableOpacity onPress={onPressPrivacy}>
+      <TouchableOpacity onPress={onPressTerms}>
         <AppText
           title={'Privacy Policy'}
           color={COLORS.dark.primary}

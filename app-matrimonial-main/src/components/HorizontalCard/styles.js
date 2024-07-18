@@ -23,6 +23,10 @@ export const styles = StyleSheet.create({
     marginTop: 10,
   },
   imgContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    
     width: '35%',
     borderRadius: 20,
   },
@@ -60,6 +64,8 @@ export const styles = StyleSheet.create({
   img: {
     flex: 1,
     borderRadius: 10,
+    width: '100%',
+    height: '100%',
   },
   sendIconBtn: {
     height: 25,

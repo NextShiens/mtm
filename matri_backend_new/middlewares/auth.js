@@ -8,7 +8,7 @@ const AccessToken = require("../models/accessToken");
 const auth =async (req, res, next) => {
   try {
     // 1. refresh, access token validation
-    const authHeader = req.headers["authorization"];
+    const authHeader = req.headers["authorization"];  
     const accessToken = authHeader && authHeader.split(" ")[1];
     const ifTokenExists = await AccessToken.find({ token: accessToken });
     if (ifTokenExists == "") {
@@ -48,6 +48,8 @@ const auth =async (req, res, next) => {
 
       next();
       return;
+    }else{
+      return next();
     }
   } catch (error) {
     return next(error);

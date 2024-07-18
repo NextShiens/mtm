@@ -2,6 +2,8 @@ const Conversation = require("../models/conversation");
 const User = require("../models/user");
 const Message = require("../models/message");
 const message = require("../models/message");
+const Notification = require("../models/notification");
+
 
 const checkRoom = async (data) => {
   const conversation = await Conversation.findOne({ roomId: data.roomId });
@@ -10,12 +12,12 @@ const checkRoom = async (data) => {
     try {
       const conversationToSave = new Conversation({
         roomId: data.roomId,
-        members: [data.authorId, data.receiverId],
+        members: [data.user._id, data.receiverId],
       });
 
       await conversationToSave.save();
 
-      const user = await User.findById(data.authorId);
+      const user = await User.findById(data.user._id);
       let newObject = {
         roomId: data.roomId,
         chatedId: data.receiverId,
@@ -46,5 +48,17 @@ const saveMessage = async (data) => {
   console.log("saved data...", messageToSave);
   await messageToSave.save();
 };
+const saveNotification = async (data) => {
+  console.log("data in notification....", data);
+  const notification = new Notification({
+    senderId: data.roomId.split("_")[1],
+    receiverId: data.receiverId,
+    title: "Chat",
+    message: data.text,
+    createdAt: new Date(),
+  });
 
-module.exports = { checkRoom, saveMessage };
+  await notification.save();
+}
+
+module.exports = { checkRoom, saveMessage, saveNotification };

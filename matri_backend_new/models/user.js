@@ -129,6 +129,10 @@ const userSchema = new mongoose.Schema(
     sentInterests: [String],
     receivedInterests: [String],
     friends: [String],
+    savedUsers: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    }],
   },
 
   {

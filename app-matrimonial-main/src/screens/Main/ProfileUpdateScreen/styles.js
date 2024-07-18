@@ -66,4 +66,10 @@ export const styles =  StyleSheet.create({
       unSelectedText: {
         color: 'black',
       },
+      Bell_Icon: {
+        width: 25,
+        height: 30,
+        resizeMode: 'contain',
+        marginRight: '1%',
+      },
 })

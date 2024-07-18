@@ -160,6 +160,7 @@ export const STYLES = StyleSheet.create({
   selfLeft: {alignSelf: 'flex-start'},
   selfCenter: {alignSelf: 'center'},
   row: {flexDirection: 'row'},
+  gap: {gap: 10 },
   middle: {
     flex: 1,
     justifyContent: 'center',

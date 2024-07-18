@@ -8,7 +8,6 @@ export const memberShipSlice = createSlice({
   reducers: {
     selectMemberShip: (state, action) => {
       state.memberShip = action.payload;
-      console.log(state);
     },
   },
 });

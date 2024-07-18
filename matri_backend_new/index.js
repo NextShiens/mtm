@@ -10,7 +10,7 @@ const { PORT } = require("./config/index");
 const userRouter = require("./routes/user");
 const adminRouter = require("./routes/admin");
 const paymentRouter = require("./routes/payment");
-const { checkRoom, saveMessage } = require("./services/chatRoom");
+const { checkRoom, saveMessage, saveNotification } = require("./services/chatRoom");
 const { sendchatNotification } = require("./firebase/service");
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
@@ -45,18 +45,27 @@ io.on("connection", (socket) => {
     console.log(`User with ID: ${socket.id} joined room: ${data}`);
   });
 
-  socket.on("send_message", (data) => {
-    console.log("data....", data.receiverId);
-    sendchatNotification(data.receiverId, {
-      message: data.text,
-      title: data.author,
-    });
-    checkRoom(data);
-    socket.to(data.roomId);
-    socket.emit("receive_message", data);
-    saveMessage(data);
-  });
+  socket.on("send_message", async (data) => {
+    console.log("data....", data);
+    try {
+      await sendchatNotification(data.receiverId, {
+        message: data.text,
+        title: data?.user?.name || 'Metrimonial',
+      }, data.user._id);
 
+      await checkRoom(data);
+      await saveMessage(data);
+      await saveNotification(data);
+
+
+      // Emit to all clients in the room, including sender
+      io.to(data.roomId).emit("receive_message", data);
+    } catch (error) {
+      console.error("Error processing message:", error);
+      // Optionally, emit an error event back to the sender
+      socket.emit("message_error", { message: "Failed to send message" });
+    }
+  });
   socket.on("disconnect", () => {
     console.log("User Disconnected", socket.id);
   });

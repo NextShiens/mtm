@@ -6,6 +6,8 @@ export const styles = StyleSheet.create({
       height: size,
       alignSelf: 'center',
       width: size,
+      borderRadius: size / 2,
+      // borderradius:'50%',
     }),
   });
   

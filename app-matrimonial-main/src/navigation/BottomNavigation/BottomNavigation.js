@@ -1,21 +1,44 @@
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {useIsFocused} from '@react-navigation/native';
-import React from 'react';
-import {TouchableOpacity} from 'react-native';
-import {SVG} from '../../assets/svg';
-import {COLORS} from '../../assets/theme';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { useIsFocused } from '@react-navigation/native';
+import React, { useState, useEffect } from 'react';
+import { TouchableOpacity, Keyboard } from 'react-native';
+import { SVG } from '../../assets/svg';
+import { COLORS } from '../../assets/theme';
 import Icon from '../../components/Icon/Icon';
-import {InboxScreen, SavedUserScreen} from '../../screens';
+import { InboxScreen } from '../../screens';
 import HomePage from '../../screens/Main/HomePage/HomePage';
 import NotificationScreen from '../../screens/Main/NotificationScreen/NotificationScreen';
 import PartnerMatch from '../../screens/Main/ParterMatch/PartnerMatch';
 import ProfileUpdateScreen from '../../screens/Main/ProfileUpdateScreen/ProfileUpdateScreen';
-import {styles} from './styles';
+import { styles } from './styles';
 
 const Tab = createBottomTabNavigator();
-const BottomNavigation = ({navigation}) => {
+
+const BottomNavigation = ({ navigation }) => {
   const style = styles;
   const focused = useIsFocused();
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        setKeyboardVisible(true);
+      }
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setKeyboardVisible(false);
+      }
+    );
+
+    return () => {
+      keyboardDidHideListener.remove();
+      keyboardDidShowListener.remove();
+    };
+  }, []);
+
   return (
     <Tab.Navigator
       screenOptions={() => ({
@@ -26,6 +49,9 @@ const BottomNavigation = ({navigation}) => {
           backgroundColor: 'white',
         },
         tabBarLabelPosition: 'below-icon',
+        tabBarStyle: {
+          display: isKeyboardVisible ? 'none' : 'flex',
+        },
       })}>
       <Tab.Screen
         name="HomePage"
@@ -33,29 +59,23 @@ const BottomNavigation = ({navigation}) => {
         options={{
           tabBarLabel: 'Home',
           tabBarLabelStyle: [style.tabBarLabel],
-
-          tabBarIcon: ({focused}) => (
-            <>
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate('HomePage');
-                }}>
-                <Icon
-                  SVGIcon={
-                    <SVG.homeIcon
-                      fill={
-                        focused ? COLORS.dark.primary : COLORS.dark.inputBorder
-                      }
-                      height={22}
-                      width={22}
-                    />
-                  }
-                  onPress={() => {
-                    navigation.navigate('HomePage');
-                  }}
-                />
-              </TouchableOpacity>
-            </>
+          tabBarIcon: ({ focused }) => (
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('HomePage');
+              }}>
+              <Icon
+                SVGIcon={
+                  <SVG.homeIcon
+                    fill={
+                      focused ? COLORS.dark.primary : COLORS.dark.inputBorder
+                    }
+                    height={22}
+                    width={22}
+                  />
+                }
+              />
+            </TouchableOpacity>
           ),
         }}
       />
@@ -65,28 +85,23 @@ const BottomNavigation = ({navigation}) => {
         options={{
           tabBarLabel: 'Matches',
           tabBarLabelStyle: [style.tabBarLabel],
-          tabBarIcon: ({focused, route}) => (
-            <>
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate('PartnerMatch');
-                }}>
-                <Icon
-                  SVGIcon={
-                    <SVG.heartIcon
-                      fill={
-                        focused ? COLORS.dark.primary : COLORS.dark.inputBorder
-                      }
-                      height={22}
-                      width={22}
-                    />
-                  }
-                  onPress={() => {
-                    navigation.navigate('PartnerMatch');
-                  }}
-                />
-              </TouchableOpacity>
-            </>
+          tabBarIcon: ({ focused }) => (
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('PartnerMatch');
+              }}>
+              <Icon
+                SVGIcon={
+                  <SVG.heartIcon
+                    fill={
+                      focused ? COLORS.dark.primary : COLORS.dark.inputBorder
+                    }
+                    height={22}
+                    width={22}
+                  />
+                }
+              />
+            </TouchableOpacity>
           ),
         }}
       />
@@ -96,28 +111,23 @@ const BottomNavigation = ({navigation}) => {
         options={{
           tabBarLabel: 'Inbox',
           tabBarLabelStyle: [style.tabBarLabel],
-          tabBarIcon: ({focused}) => (
-            <>
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate('InboxScreen');
-                }}>
-                <Icon
-                  SVGIcon={
-                    <SVG.envelopeIcon
-                      fill={
-                        focused ? COLORS.dark.primary : COLORS.dark.inputBorder
-                      }
-                      height={22}
-                      width={22}
-                      onPress={() => {
-                        navigation.navigate('InboxScreen');
-                      }}
-                    />
-                  }
-                />
-              </TouchableOpacity>
-            </>
+          tabBarIcon: ({ focused }) => (
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('InboxScreen');
+              }}>
+              <Icon
+                SVGIcon={
+                  <SVG.envelopeIcon
+                    fill={
+                      focused ? COLORS.dark.primary : COLORS.dark.inputBorder
+                    }
+                    height={22}
+                    width={22}
+                  />
+                }
+              />
+            </TouchableOpacity>
           ),
         }}
       />
@@ -127,28 +137,23 @@ const BottomNavigation = ({navigation}) => {
         options={{
           tabBarLabel: 'Notification',
           tabBarLabelStyle: [style.tabBarLabel],
-          tabBarIcon: ({focused}) => (
-            <>
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate('NotificationScreen');
-                }}>
-                <Icon
-                  SVGIcon={
-                    <SVG.bell
-                      fill={
-                        focused ? COLORS.dark.primary : COLORS.dark.inputBorder
-                      }
-                      height={22}
-                      width={22}
-                    />
-                  }
-                  onPress={() => {
-                    navigation.navigate('NotificationScreen');
-                  }}
-                />
-              </TouchableOpacity>
-            </>
+          tabBarIcon: ({ focused }) => (
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('NotificationScreen');
+              }}>
+              <Icon
+                SVGIcon={
+                  <SVG.bell
+                    fill={
+                      focused ? COLORS.dark.primary : COLORS.dark.inputBorder
+                    }
+                    height={22}
+                    width={22}
+                  />
+                }
+              />
+            </TouchableOpacity>
           ),
         }}
       />
@@ -158,32 +163,26 @@ const BottomNavigation = ({navigation}) => {
         options={{
           tabBarLabel: 'Profile',
           tabBarLabelStyle: [style.tabBarLabel],
-          tabBarIcon: ({focused}) => (
-            <>
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate('ProfileUpdateScreen');
-                }}>
-                <Icon
-                  SVGIcon={
-                    <SVG.userIcon
-                      fill={
-                        focused ? COLORS.dark.primary : COLORS.dark.inputBorder
-                      }
-                      height={22}
-                      width={22}
-                    />
-                  }
-                  onPress={() => {
-                    navigation.navigate('ProfileUpdateScreen');
-                  }}
-                />
-              </TouchableOpacity>
-            </>
+          tabBarIcon: ({ focused }) => (
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('ProfileUpdateScreen');
+              }}>
+              <Icon
+                SVGIcon={
+                  <SVG.userIcon
+                    fill={
+                      focused ? COLORS.dark.primary : COLORS.dark.inputBorder
+                    }
+                    height={22}
+                    width={22}
+                  />
+                }
+              />
+            </TouchableOpacity>
           ),
         }}
       />
-      
     </Tab.Navigator>
   );
 };

@@ -1,22 +1,25 @@
-import {StyleSheet} from 'react-native';
-import {COLORS} from '../../../assets/theme';
-import {Fonts} from '../../../assets/fonts';
+import { StyleSheet } from 'react-native';
+import { COLORS } from '../../../assets/theme';
+import { Fonts } from '../../../assets/fonts';
 
 export const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#FFFFFF',
+  sentMessage: {
+    alignSelf: 'flex-end',
   },
-  Header_Cont: {
-    padding: '3%',
+  receivedMessage: {
+    alignSelf: 'flex-start',
+  },
+  headerContainer: {
+    color: 'black',
     paddingBottom: '0%',
-    borderBottomWidth: 1,
     borderBottomColor: 'lightgrey',
   },
   Header: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginVertical: '2%',
+    alignItems: 'center',
+    padding: 5,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E5E5E5',
   },
   Go_Back_Icon: {
     width: 30,
@@ -27,6 +30,7 @@ export const styles = StyleSheet.create({
   User_Cont: {
     flexDirection: 'row',
     alignItems: 'center',
+    right: 30,
   },
   User_name: {
     fontSize: 14,
@@ -38,19 +42,18 @@ export const styles = StyleSheet.create({
     fontFamily: Fonts.PoppinsRegular,
     color: '#626262',
   },
-  Bell_Icon: {
-    width: 35,
-    height: 35,
-    tintColor: '#000000',
-    resizeMode: 'contain',
-    marginRight: '1%',
-  },
+  // Bell_Icon: {
+  //   width: 25,
+  //   height: 30,
+  //   // tintColor: '#000000',
+  //   resizeMode: 'contain',
+  //   // marginRight: '1%',
+  // },
   UserImg: {
     width: 50,
     height: 50,
     marginRight: '5%',
   },
-
   footer: {
     height: 35,
     backgroundColor: 'white',
@@ -59,7 +62,6 @@ export const styles = StyleSheet.create({
     left: 0,
     right: 0,
   },
-
   mainContainer: {
     flex: 1,
     marginBottom: '1%',
@@ -91,12 +93,12 @@ export const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
     width: '100%',
-
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    // backgroundColor: 'rgba(0, 0, 0, 0.5)',
     marginLeft: '5%',
     marginRight: '5%',
     alignSelf: 'center',
+    color: 'black',
   },
   modalChildContainer: {
     height: '8%',
@@ -107,7 +109,6 @@ export const styles = StyleSheet.create({
     left: '10%',
     flexDirection: 'row',
   },
-
   InputOuter_View: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -115,8 +116,8 @@ export const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: '#FFFFFF',
   },
-
   InputContainer: {
+    color: 'black',
     flexDirection: 'row',
     width: '75%',
     backgroundColor: '#F0F2FB',
@@ -129,6 +130,7 @@ export const styles = StyleSheet.create({
   },
   inputToolbar: {
     width: '100%',
+    color: 'black',
     alignItems: 'center',
   },
   VectorImage: {
@@ -202,5 +204,60 @@ export const styles = StyleSheet.create({
     lineHeight: 22,
     color: 'black',
     marginVertical: '3%',
+  },
+  Bell_Icon: {
+    width: 25,
+    height: 30,
+    resizeMode: 'contain',
+    marginRight: '50%',
+    left: 50,
+  },
+  line: {
+    height: 1,
+    marginHorizontal: 16,
+  },
+  container: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+    width: '100%',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  // header: {
+  //   flexDirection: 'row',
+  //   alignItems: 'center',
+  //   padding: 10,
+  //   borderBottomWidth: 1,
+  //   borderBottomColor: '#E5E5E5',
+  // },
+  avatar: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    marginLeft: 15,
+  },
+  userName: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginLeft: 10,
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F2F7FB',
+    borderRadius: 25,
+    margin: 10,
+    paddingHorizontal: 15,
+    paddingVertical: 5,
+    marginTop: 0,
+  },
+  input: {
+    flex: 1,
+    height: 40,
+    marginHorizontal: 10,
+    color: '#0F1828',
   },
 });
