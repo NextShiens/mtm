@@ -34,6 +34,8 @@ async function sendchatNotification(userId, messageData, senderId) {
       },
       data: {
         senderId: senderId.toString(),
+        screen: messageData.screen || "ChatScreen", 
+        color: messageData.color || "#FFFFFF", 
       },
     };
     console.log("Constructed message object:", JSON.stringify(message, null, 2));
