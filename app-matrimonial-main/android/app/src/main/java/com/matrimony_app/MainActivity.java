@@ -1,4 +1,4 @@
-package com.matrimony_app;
+package com.metrimoni;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;

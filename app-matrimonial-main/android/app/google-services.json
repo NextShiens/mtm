@@ -1,33 +1,49 @@
 {
   "project_info": {
-    "project_number": "150066722698",
-    "project_id": "dukan-db",
-    "storage_bucket": "dukan-db.appspot.com"
+    "project_number": "530738306887",
+    "project_id": "vaishakhi-matrimony",
+    "storage_bucket": "vaishakhi-matrimony.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:150066722698:android:bf498e7cdb81ce81e6fa73",
+        "mobilesdk_app_id": "1:530738306887:android:3e6fce453d928e23733662",
         "android_client_info": {
-          "package_name": "com.matrimony_app"
+          "package_name": "com.metrimoni"
         }
       },
       "oauth_client": [
         {
-          "client_id": "150066722698-o9oktrse31c1t60d2ve36jcrmngudlnt.apps.googleusercontent.com",
+          "client_id": "530738306887-v3dgsfp2bdi9dv3t7fvet5p0ludnsp18.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.metrimoni",
+            "certificate_hash": "92ff6da52db4f90f19903d45268f21cf7e9d417f"
+          }
+        },
+        {
+          "client_id": "530738306887-vaerkvj2ch0v663jihln50k5g8tol2m7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.metrimoni",
+            "certificate_hash": "0a71673fbd58b06045982fb6264cfea0428051ef"
+          }
+        },
+        {
+          "client_id": "530738306887-ksu0qo2ct9dtlm4158ojup9ru3ae7hrj.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAGmSpFVxcsuMUKc4bcaCw6RydGg5hOiFU"
+          "current_key": "AIzaSyCoSzvv2jllFREOTa31dLpV0yvYSXzSbZs"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "150066722698-o9oktrse31c1t60d2ve36jcrmngudlnt.apps.googleusercontent.com",
+              "client_id": "530738306887-ksu0qo2ct9dtlm4158ojup9ru3ae7hrj.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

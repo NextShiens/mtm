@@ -7,10 +7,10 @@ const {
 
 // Check if the app is already initialized
 if (!admin.apps.length) {
-  const serviceAccount = require('../../dukan-db-firebase-adminsdk-xyqcs-f2ca085157.json');
+  const serviceAccount = require('../../vaishakhi-matrimony-firebase-adminsdk-mjr6h-33d857fb90.json');
   admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
-    storageBucket:"gs://dukan-db.appspot.com"
+    storageBucket:"gs://vaishakhi-matrimony.appspot.com"
     // If you're using other Firebase services, include their configs here
   });
 }

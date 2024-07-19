@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const serviceAccount = require("../dukan-db-firebase-adminsdk-xyqcs-f2ca085157.json");
+const serviceAccount = require("../vaishakhi-matrimony-firebase-adminsdk-mjr6h-33d857fb90.json");
 const fs = require("fs");
 const admin = require("firebase-admin");
 

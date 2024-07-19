@@ -74,9 +74,9 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace "com.matrimony_app"
+    namespace "com.metrimoni"
     defaultConfig {
-        applicationId "com.matrimony_app"
+        applicationId "com.metrimoni"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

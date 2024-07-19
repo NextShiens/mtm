@@ -1,4 +1,4 @@
-package com.matrimony_app;
+package com.metrimoni;
 
 import android.app.Application;
 import com.facebook.react.PackageList;
