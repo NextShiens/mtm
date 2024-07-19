@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const Url = process.env.MONGODB_CONNECTION_STRING;
+const Url = process.env.MONGODB_CONNECTION_STRING || "mongodb+srv://umerfarooqdev:hireon123713@cluster0.sy63jcm.mongodb.net/";
 const dbConnect = async () => {
   try {
     // process.env.MONGODB_CONNECTION_STRING
