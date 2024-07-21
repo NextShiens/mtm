@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { ScrollView, TouchableOpacity, View, Image, ActivityIndicator } from 'react-native';
 import { Fonts } from '../../../assets/fonts';
 import { IMAGES } from '../../../assets/images';
@@ -7,18 +7,12 @@ import { COLORS, STYLES } from '../../../assets/theme';
 import AppButton from '../../../components/AppButton/AppButton';
 import AppHeader from '../../../components/AppHeader/AppHeader';
 import AppText from '../../../components/AppText/AppText';
-import CustomImage from '../../../components/CustomImage/CustomImage';
 import CustomDropdown from '../../../libraries/Dropdown/Dropdown';
 import Space from '../../../components/Space/Space';
-import UserDetailsCard from '../../../components/UserDetailsCard/UserDetailsCard';
 import { QualificationList, indianCastes, indianMotherTongues, workLocationList, occupationList } from '../../../data/appData';
-import { preferDetails } from '../../../data/appData';
 import { LABELS } from '../../../labels';
 import { styles } from './styles';
 import { useRoute } from '@react-navigation/native';
-import { API_URL } from '../../../../constant';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Toast } from '../../../utils/native';
 
 const headData = {
   partnerAge: ['18-25', '26-35', '36-45', '46+'],
@@ -50,7 +44,6 @@ const demoData = {
   partnerSect: indianCastes,
   partnerCity: workLocationList,
 };
-
 
 const PartnerReferenceScreen = ({ navigation }) => {
   const route = useRoute();
@@ -96,6 +89,11 @@ const PartnerReferenceScreen = ({ navigation }) => {
     navigation.goBack();
   };
 
+  const handlenext = () => {
+    console.log('allProfileData', allProfileData);
+    navigation.navigate('BasicPreferenceForm', { profileData: allProfileData });
+  };
+
   const updatePartnerPreference = (field, value) => {
     setAllProfileData(prevData => ({
       ...prevData,
@@ -104,36 +102,6 @@ const PartnerReferenceScreen = ({ navigation }) => {
         [field]: value
       }
     }));
-  };
-
-  const nextPageNavigationHandler = async () => {
-    console.log('All profile data:', allProfileData);
-    setIsLoading(true);
-    try {
-      const response = await fetch(`${API_URL}/user/completeProfile`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          "authorization": `Bearer ${await AsyncStorage.getItem('AccessToken')}`
-        },
-        body: JSON.stringify(allProfileData),
-      });
-
-      if (!response.ok) {
-        console.error('Failed to update profile:', response.statusText);
-        Toast('Failed to update profile. Please try again.');
-        return;
-      }
-
-      const responseData = await response.json();
-      Toast('Account Created successfully!');
-      navigation.navigate('LoginScreen');
-    } catch (error) {
-      console.error('Error updating profile:', error.message);
-      Toast('An error occurred. Please try again.');
-    } finally {
-      setIsLoading(false);
-    }
   };
 
   return (
@@ -219,7 +187,7 @@ const PartnerReferenceScreen = ({ navigation }) => {
                 text: [STYLES.fontFamily(Fonts.PoppinsMedium)],
               }}
               textVariant={'h5'}
-              onPress={nextPageNavigationHandler}
+              onPress={handlenext}
             />
           )}
           <Space mT={20} />

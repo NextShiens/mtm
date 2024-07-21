@@ -26,6 +26,11 @@ import ChatScreen from '../screens/Main/ChatScreen/ChatScreen';
 import DeleteAccount from '../screens/Main/DeleteAccount/DeleteAccount';
 import ChangePasswordScreen from '../screens/Main/ChangePassword/ChangePassword';
 import PrivacyPolicyScreen from '../screens/Main/PrivacyPolicy/PrivacyPolicy';
+import HoroscopeForm from '../screens/Main/Horoscope/HoroscopeForm';
+import FamilyDetailsScreen from '../screens/Main/Familyupdate/Familyupdate';
+import BasicPreferenceForm from '../screens/Main/BasicPrefferences/BasicPreffences';
+import Education from '../screens/Main/Education/Education';
+import PartnerExpectation from '../screens/Main/PartnerExpection/PartnerExpectationForm';
 
 
 const Stack = createNativeStackNavigator();
@@ -65,7 +70,31 @@ const AuthStack = () => {
         component={PartnerReferenceScreen}
         options={options}
       />
-
+      <Stack.Screen 
+        name="HoroscopeForm"
+        component={HoroscopeForm}
+        options={options}
+      />
+      <Stack.Screen
+        name="PartnerExpectation"
+        component={PartnerExpectation}
+        options={options}
+      />
+      <Stack.Screen
+        name="FamilyDetailsScreen"
+        component={FamilyDetailsScreen}
+        options={options}
+      />
+      <Stack.Screen
+        name="Education"
+        component={Education}
+        options={options}
+      />
+      <Stack.Screen
+        name="BasicPreferenceForm"
+        component={BasicPreferenceForm}
+        options={options}
+      />
       <Stack.Screen
         name="PartnerMatch"
         component={PartnerMatch}
