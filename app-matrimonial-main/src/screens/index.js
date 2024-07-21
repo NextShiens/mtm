@@ -24,3 +24,8 @@ export {default as SavedUserScreen} from './Main/SavedUsersScreen/SavedUserScree
 export {default as AccountSettingsScreen} from './Main/AccountSettings/AccountSettings';
 export {default as DeleteAccount} from './Main/DeleteAccount/DeleteAccount';
 export {default as PrivacyPolicyScreen} from './Main/PrivacyPolicy/PrivacyPolicy';
+export {default as HoroscopeForm} from './Main/Horoscope/HoroscopeForm';
+export {default as FamilyDetailsScreen} from './Main/Familyupdate/Familyupdate';
+export {default as BasicPreferenceForm} from './Main/BasicPrefferences/BasicPreffences';
+export {default as Education} from './Main/Education/Education';
+export {default as PartnerExpectation} from './Main/PartnerExpection/PartnerExpectationForm';
