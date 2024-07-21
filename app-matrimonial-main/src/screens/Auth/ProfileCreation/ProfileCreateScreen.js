@@ -208,7 +208,7 @@ const ProfileCreateScreen = () => {
 
             <CustomDropdown
               search={false}
-              data={['Male', 'Female']}
+              data={['male', 'female']}
               placeholder={LABELS.Gender}
               setSelected={val => {
                 setFormData({ ...formData, gender: val });
