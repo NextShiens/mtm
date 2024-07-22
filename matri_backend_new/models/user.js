@@ -66,8 +66,8 @@ const userSchema = new mongoose.Schema(
       type: String,
     },
     annualIncome: {
-      type: Number,
-    },  
+      type: String,
+    },
     workLocation: {
       type: String,
     },
@@ -129,12 +129,118 @@ const userSchema = new mongoose.Schema(
     sentInterests: [String],
     receivedInterests: [String],
     friends: [String],
-    savedUsers: [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-    }],
+    savedUsers: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    ageFrom: {
+      type: String,
+    },
+    ageTo: {
+      type: String,
+    },
+    heightFrom: {
+      type: String,
+    },
+    heightTo: {
+      type: String,
+    },
+    lookingFor: {
+      type: String,
+    },
+    physicalStatus: {
+      type: String,
+    },
+    food: {
+      type: String,
+    },
+    smoking: {
+      type: String,
+    },
+    drinking: {
+      type: String,
+    },
+    familyType: {
+      type: String,
+    },
+    familyStatus: {
+      type: String,
+    },
+    familyValue: {
+      type: String,
+    },
+    fathersOccupation: {
+      type: String,
+    },
+    horoscopeDetails: {
+      dosh: {
+        type: String,
+      },
+      // moonsign: {
+      //   type: String,
+      // },
+      star: {
+        type: String,
+      },
+      birthTime: {
+        type: String,
+      },
+      birthPlace: {
+        type: String,
+      },
+      religion: {
+        type: String,
+      },
+      caste: {
+        type: String,
+      },
+      motherTongue: {
+        type: String,
+      },
+      manglik: {
+        type: String,
+      },
+    },
+    FamilyDetails: {
+      numOfBrothers: {
+        type: String,
+      },
+      numOfMarriedBrothers: {
+        type: String,
+      },
+      numOfSisters: {
+        type: String,
+      },
+      numOfMarriedSisters: {
+        type: String,
+      },
+      country: {
+        type: String,
+      },
+      state: {
+        type: String,
+      },
+      city: {
+        type: String,
+      },
+    },
+    Education: {
+      education: {
+        type: String,
+      },
+      occupation: {
+        type: String,
+      },
+      income: {
+        type: String,
+      },
+    },
+    partnerExpectation: {
+      type: String,
+    },
   },
-
   {
     timestamps: true,
   }

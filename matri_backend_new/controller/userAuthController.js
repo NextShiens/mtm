@@ -92,7 +92,7 @@ const userAuthController = {
 
   async login(req, res, next) {
     const userLoginSchema = Joi.object({
-      email: Joi.string().min(5).max(30).required(),
+      email: Joi.string().required(),
       password: Joi.string().required(),
       fcmToken: Joi.string(),
     });
@@ -377,7 +377,6 @@ const userAuthController = {
   //.......................................CompleteProfile..................................//
 
   async completeProfile(req, res, next) {
-
     try {
       const userSchema = Joi.object({
         gender: Joi.string().valid("male", "female").required(),
@@ -405,6 +404,45 @@ const userAuthController = {
           partnerSect: Joi.string().optional(),
           partnerCity: Joi.string().optional()
         }),
+        ageFrom: Joi.string().optional(),
+        ageTo: Joi.string().optional(),
+        heightFrom: Joi.string().optional(),
+        heightTo: Joi.string().optional(),
+        lookingFor: Joi.string().required(),
+        physicalStatus: Joi.string().required(),
+        food: Joi.string().required(),
+        smoking: Joi.string().required(),
+        drinking: Joi.string().required(),
+        familyType: Joi.string().required(),
+        familyStatus: Joi.string().required(),
+        familyValue: Joi.string().required(),
+        fathersOccupation: Joi.string().required(),
+        horoscopeDetails: Joi.object({
+          dosh: Joi.string().required(),
+          // moonsign: Joi.string().allow(''),
+          star: Joi.string().required(),
+          birthTime: Joi.string().required(),
+          birthPlace: Joi.string().required(),
+          religion: Joi.string().required(),
+          caste: Joi.string().required(),
+          motherTongue: Joi.string().required(),
+          manglik: Joi.string().required()
+        }),
+        FamilyDetails: Joi.object({
+          numOfBrothers: Joi.string().required(),
+          numOfMarriedBrothers: Joi.string().required(),
+          numOfSisters: Joi.string().required(),
+          numOfMarriedSisters: Joi.string().required(),
+          country: Joi.string().required(),
+          state: Joi.string().required(),
+          city: Joi.string().required(),
+        }),
+        Education: Joi.object({
+          education: Joi.string().required(),
+          occupation: Joi.string().required(),
+          income: Joi.string().required()
+        }),
+        partnerExpectation: Joi.string().required()
       });
 
       const { error } = userSchema.validate(req.body);
