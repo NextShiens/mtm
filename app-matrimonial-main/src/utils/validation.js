@@ -125,7 +125,7 @@ export const isValidProfileData = ({
 export const isValidProfileDetails = ({
   highestDegree = '',
   occupation = '',
-  employer = '',
+  employedIn = '',
   annualIncome = '',
   workLocation = '',
 }) => {
@@ -139,11 +139,11 @@ export const isValidProfileDetails = ({
     return false;
   }
 
-  if (!employer) {
+  if (!employedIn) {
     Toast(ERRORS.enterEmployer);
     return false;
   }
-  if (employer.length < 5) {
+  if (employedIn.length < 5) {
     Toast(ERRORS.employerLength);
     return false;
   }

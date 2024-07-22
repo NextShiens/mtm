@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { ScrollView, View, ActivityIndicator, TextInput } from 'react-native';
-// import { Fonts } from '../../../assets/fonts';
+import { ScrollView, View, TextInput } from 'react-native';
 import { SVG } from '../../../assets/svg';
 import { COLORS, STYLES } from '../../../assets/theme';
 import AppButton from '../../../components/AppButton/AppButton';
@@ -38,7 +37,17 @@ const PartnerExpectationForm = ({ navigation }) => {
     }));
   };
 
+  const validateForm = () => {
+    if (!allProfileData.partnerExpectation.trim()) {
+      Toast('Partner expectation is required.');
+      return false;
+    }
+    return true;
+  };
+
   const handleSubmit = async () => {
+    if (!validateForm()) return;
+
     console.log('All profile data:', allProfileData);
     setIsLoading(true);
     try {
@@ -94,16 +103,13 @@ const PartnerExpectationForm = ({ navigation }) => {
             onChangeText={updatePartnerExpectation}
           />
           <Space mT={20} />
-          {isLoading ? (
-            <ActivityIndicator size="large" color={COLORS.dark.primary} />
-          ) : (
-            <AppButton
-              variant="filled"
-              title={isLoading ? 'Saving...' : LABELS.save}
-              textVariant={'h5'}
-              onPress={handleSubmit}
-            />
-          )}
+          <AppButton
+            variant="filled"
+            title={isLoading ? 'Registering...' : LABELS.register}
+            textVariant={'h5'}
+            onPress={handleSubmit}
+            disabled={isLoading}
+          />
           <Space mT={20} />
         </View>
       </View>

@@ -3,7 +3,7 @@ export {default as SignUpScreen} from './Auth/RegisterScreen/RegisterScreen';
 export {default as LogInScreen} from './Auth/LoginScreen/LoginScreen';
 export {default as OTPScreen} from './Auth/OTPScreen/OTPScreen';
 export {default as ProfileCreateScreen} from './Auth/ProfileCreation/ProfileCreateScreen';
-export {default as PartnerReferenceScreen} from './Auth/PartnerReferenceScreen/PartnerReferenceScreen';
+// export {default as PartnerReferenceScreen} from './Auth/PartnerReferenceScreen/PartnerReferenceScreen';
 export {default as ProfileDetailsScreen} from './Auth/ProfileDetailsScreen/ProfileDetailsScreen';
 export {default as RegisterScreen} from './Auth/RegisterScreen/RegisterScreen';
 export {default as HomePage} from './Main/HomePage/HomePage';

@@ -122,4 +122,5 @@ export const LABELS = {
   delete : 'Delete Account',
   ChangingPassword: 'Changing Password',
   confirmPassword: 'Confirm Password',
+  register: 'Register',
 };

@@ -33,7 +33,7 @@ const ProfileDetailsScreen = () => {
   const [formData, setFormData] = useState({
     highestDegree: '',
     occupation: '',
-    employer: '',
+    employedIn: '',
     annualIncome: '',
     workLocation: '',
   });
@@ -55,20 +55,22 @@ const ProfileDetailsScreen = () => {
   };
 
   const navigationHandler = () => {
-    const {highestDegree, occupation, employer, annualIncome, workLocation} =
+    const {highestDegree, occupation, employedIn, annualIncome, workLocation} =
       formData;
     if (
       !highestDegree &&
       !occupation &&
-      !employer &&
+      !employedIn &&
       !annualIncome &&
       !workLocation
     ) {
       Toast(ERRORS.emptyForm);
     } else {
       if (isValidProfileDetails({...formData})) {
+        console.log('formData', formData);
+
         Toast('one more step...');
-        navigation.navigate('PartnerReferenceScreen', {
+        navigation.navigate('BasicPreferenceForm', {
           profileData: {
             ...previousProfileData,
             ...formData
@@ -153,7 +155,7 @@ const ProfileDetailsScreen = () => {
             <Space mT={10} />
 
             <AppText
-              title={LABELS.employIn}
+              title={LABELS.employedIn}
               variant={'h5'}
               extraStyle={[STYLES.fontFamily(Fonts.PoppinsRegular)]}
               alignSelf={'flex-start'}
@@ -163,7 +165,7 @@ const ProfileDetailsScreen = () => {
 
             <AppInput
               placeholder={LABELS.employePlaceholder}
-              onChangeText={text => setFormData({...formData, employer: text})}
+              onChangeText={text => setFormData({...formData, employedIn: text})}
               keyboardType={'default'}
             />
             <Space mT={10} />

@@ -239,7 +239,7 @@ const ProfileUpdateScreen = ({ navigation }) => {
           name: result.user.name ? result.user.name.toString() : '',
           email: result.user.email ? result.user.email.toString() : '',
           phone: result.user.phone ? result.user.phone.toString() : '',
-          dateOfBirth: result.user.DOB ? result.user.DOB.toString() : '',
+          dateOfBirth: result.user.dateOfBirth ? result.user.dateOfBirth.toString() : '',
           gender: result.user.gender ? result.user.gender.toString() : '',
           height: result.user.height ? result.user.height.toString() : '',
           location: result.user.city ? result.user.city.toString() : '',
@@ -267,7 +267,7 @@ const ProfileUpdateScreen = ({ navigation }) => {
   }, []);
   console.log('profileData', profileData)
   const handleUpdate = async () => {
-    const { name, email, phone, dateOfBirth: DOB, gender, height, location: city, motherTongue, highestDegree, occupation, maritalStatus, employedIn, annualIncome, profilePicture: userImages } = profileData;
+    const { name, email, phone, dateOfBirth: dateOfBirth, gender, height, location: city, motherTongue, highestDegree, occupation, maritalStatus, employedIn, annualIncome, profilePicture: userImages } = profileData;
 
     const lowercaseGender = gender.toLowerCase();
     try {
@@ -279,7 +279,7 @@ const ProfileUpdateScreen = ({ navigation }) => {
           'Content-Type': 'application/json',
           "authorization": ` Bearer ${token}`
         },
-        body: JSON.stringify({ name, email, phone, DOB, gender: lowercaseGender, height, city, motherTongue, highestDegree, occupation, maritalStatus, employedIn, annualIncome, userImages }),
+        body: JSON.stringify({ name, email, phone, dateOfBirth, gender: lowercaseGender, height, city, motherTongue, highestDegree, occupation, maritalStatus, employedIn, annualIncome, userImages }),
       });
 
       const result = await response.json();

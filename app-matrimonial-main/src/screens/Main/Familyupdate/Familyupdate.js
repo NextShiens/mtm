@@ -9,6 +9,8 @@ import { COLORS} from '../../../assets/theme';
 import Space from '../../../components/Space/Space';
 import AppHeader from '../../../components/AppHeader/AppHeader';
 import { SVG } from '../../../assets/svg';
+import { Toast } from '../../../utils/native'; 
+
 
 
 const FamilyDetailsScreen = () => {
@@ -83,37 +85,47 @@ const FamilyDetailsScreen = () => {
   ],
   };
 
-  // const handleSubmit = () => {
-  //   console.log({
-  //     country,
-  //     state,
-  //     city,
-  //   });
-  //   navigation.navigate('Education', {
-  //     country,
-  //     state,
-  //     city,
-  //   });
-  // };
-
   const backNavigationHandler = () => {
     navigation.goBack();
   };
-  const handleSubmit = () => {
-    const allProfileData = {
-      ...previousProfileData,
-      FamilyDetails: {
-        numOfBrothers,
-        numOfMarriedBrothers,
-        numOfSisters,
-        numOfMarriedSisters,
-        country,
-        state,
-        city,
+  const validateForm = () => {
+    const fields = [
+      { name: 'Number of Brothers', value: numOfBrothers },
+      { name: 'Number of Married Brothers', value: numOfMarriedBrothers },
+      { name: 'Number of Sisters', value: numOfSisters },
+      { name: 'Number of Married Sisters', value: numOfMarriedSisters },
+      { name: 'Country', value: country },
+      { name: 'State', value: state },
+      { name: 'City', value: city },
+    ];
+
+    for (let field of fields) {
+      if (!field.value) {
+        Toast(`Please fill in the ${field.name} field.`);
+        return false;
       }
-    };
-    navigation.navigate('Education', { profileData: allProfileData });
+    }
+    return true;
   };
+
+  const handleSubmit = () => {
+    if (validateForm()) {
+      const allProfileData = {
+        ...previousProfileData,
+        FamilyDetails: {
+          numOfBrothers,
+          numOfMarriedBrothers,
+          numOfSisters,
+          numOfMarriedSisters,
+          country,
+          state,
+          city,
+        }
+      };
+      navigation.navigate('Education', { profileData: allProfileData });
+    }
+  };
+
 
   return (
     <ScrollView style={styles.container}>
@@ -121,7 +133,7 @@ const FamilyDetailsScreen = () => {
           <AppHeader
             iconLeft={<SVG.BackArrow size={24} fill={'black'} />}
             onLeftIconPress={backNavigationHandler}
-            title={'Basic Preferences'}
+            title={'Family Update'}
           />
         </View>
         <Space mT={20} />
@@ -241,6 +253,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FF9B21',
     marginTop: 20,
     marginBottom: 32,
+    borderRadius: 8,
   },
 });
 

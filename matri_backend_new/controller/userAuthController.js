@@ -380,7 +380,7 @@ const userAuthController = {
     try {
       const userSchema = Joi.object({
         gender: Joi.string().valid("male", "female").required(),
-        DOB: Joi.string().required(),
+        dateOfBirth: Joi.string().required(),
         occupation: Joi.string().required(),
         employedIn: Joi.string().required(),
         annualIncome: Joi.string().required(),
@@ -393,17 +393,17 @@ const userAuthController = {
         sect: Joi.string().required(),
         city: Joi.string().required(),
         highestDegree: Joi.string().required(),
-        partnerPreference: Joi.object({
-          partnerAge: Joi.string().optional(),
-          partnerMaritalStatus: Joi.string().optional(),
-          partnerHeight: Joi.string().optional(),
-          education: Joi.string().optional(),
-          partnerOccupation: Joi.string().optional(),
-          partnerMotherTongue: Joi.string().optional(),
-          partnerAnnualIncome: Joi.string().optional(),
-          partnerSect: Joi.string().optional(),
-          partnerCity: Joi.string().optional()
-        }),
+        // partnerPreference: Joi.object({
+        //   partnerAge: Joi.string().optional(),
+        //   partnerMaritalStatus: Joi.string().optional(),
+        //   partnerHeight: Joi.string().optional(),
+        //   education: Joi.string().optional(),
+        //   partnerOccupation: Joi.string().optional(),
+        //   partnerMotherTongue: Joi.string().optional(),
+        //   partnerAnnualIncome: Joi.string().optional(),
+        //   partnerSect: Joi.string().optional(),
+        //   partnerCity: Joi.string().optional()
+        // }),
         ageFrom: Joi.string().optional(),
         ageTo: Joi.string().optional(),
         heightFrom: Joi.string().optional(),

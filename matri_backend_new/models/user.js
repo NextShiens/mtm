@@ -26,7 +26,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       enum: ["male", "female"],
     },
-    DOB: {
+    dateOfBirth: {
       type: String,
     },
     age: {
@@ -99,17 +99,17 @@ const userSchema = new mongoose.Schema(
       default: Date.now(),
     },
     userImages: [String],
-    partnerPreference: {
-      partnerAge: String,
-      partnerMaritalStatus: String,
-      partnerHeight: String,
-      education: String,
-      partnerOccupation: String,
-      partnerMotherTongue: String,
-      partnerAnnualIncome: String,
-      partnerSect: String,
-      partnerCity: String,
-    },
+    // partnerPreference: {
+    //   partnerAge: String,
+    //   partnerMaritalStatus: String,
+    //   partnerHeight: String,
+    //   education: String,
+    //   partnerOccupation: String,
+    //   partnerMotherTongue: String,
+    //   partnerAnnualIncome: String,
+    //   partnerSect: String,
+    //   partnerCity: String,
+    // },
     profileCompleted: {
       type: Boolean,
       default: false,

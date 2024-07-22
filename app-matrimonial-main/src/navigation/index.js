@@ -5,7 +5,7 @@ import {Connections, ForgotPassword, ProfileUpdateScreen , AccountSettingsScreen
 import InitialScreen from '../screens/Auth/InitialScreen/InitialScreen';
 import LoginScreen from '../screens/Auth/LoginScreen/LoginScreen';
 import OTPScreen from '../screens/Auth/OTPScreen/OTPScreen';
-import PartnerReferenceScreen from '../screens/Auth/PartnerReferenceScreen/PartnerReferenceScreen';
+// import PartnerReferenceScreen from '../screens/Auth/PartnerReferenceScreen/PartnerReferenceScreen';
 import ProfileCreateScreen from '../screens/Auth/ProfileCreation/ProfileCreateScreen';
 import ProfileDetailsScreen from '../screens/Auth/ProfileDetailsScreen/ProfileDetailsScreen';
 import RegisterScreen from '../screens/Auth/RegisterScreen/RegisterScreen';
@@ -65,11 +65,11 @@ const AuthStack = () => {
         component={ProfileDetailsScreen}
         options={options}
       />
-      <Stack.Screen
+      {/* <Stack.Screen
         name="PartnerReferenceScreen"
         component={PartnerReferenceScreen}
         options={options}
-      />
+      /> */}
       <Stack.Screen 
         name="HoroscopeForm"
         component={HoroscopeForm}
