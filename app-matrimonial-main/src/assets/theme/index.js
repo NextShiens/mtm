@@ -50,7 +50,7 @@ export const COLORS = {
     ...COMMON_COLORS,
     input: '#424549',
     background: '#1E2124',
-    text: '#fff',
+    text: '#000',
     statusbar: '#000',
   },
 };
