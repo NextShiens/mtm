@@ -22,6 +22,7 @@
     "@react-navigation/native-stack": "^6.9.14",
     "@reduxjs/toolkit": "^1.9.7",
     "libphonenumber-js": "^1.10.48",
+    "lucide-react-native": "^0.414.0",
     "patch-package": "^8.0.0",
     "react": "18.2.0",
     "react-native": "0.72.5",
