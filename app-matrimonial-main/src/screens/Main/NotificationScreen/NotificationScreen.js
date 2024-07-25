@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { ScrollView, TouchableOpacity, View, ActivityIndicator } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { ScrollView, TouchableOpacity, View, ActivityIndicator, RefreshControl, Alert, Text } from 'react-native';
 import { IMAGES } from '../../../assets/images';
 import { SVG } from '../../../assets/svg';
 import { COLORS } from '../../../assets/theme';
@@ -13,10 +13,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL } from '../../../../constant';
 import { checkLiveChatAvailability } from '../../../utils/subscriptionCheck';
 
-
 const NotificationScreen = ({ navigation }) => {
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     fetchNotifications();
@@ -37,41 +37,46 @@ const NotificationScreen = ({ navigation }) => {
       }
     } catch (error) {
       console.error('Error fetching notifications:', error);
+      Alert.alert('Error', 'Failed to fetch notifications. Please try again.');
     } finally {
       setLoading(false);
+      setRefreshing(false);
     }
   };
 
   const handleNotificationPress = async (notification) => {
     console.log('Notification pressed:', notification);
     if (notification.title === 'Chat') {
-    const isSubscribed = await checkLiveChatAvailability(JSON.parse(await AsyncStorage.getItem('theUser')));
-    if (isSubscribed) {
-      navigation.navigate('ChatScreen', { userId: notification?.senderId._id, roomId: `${notification?.senderId._id}_${notification?.receiverId}`, user: notification?.senderId });
-    } else {
-      Toast("You can't chat buy premium plan");
-    }
-  }
-
-    if (notification.title === 'Matrimonial') {
-      navigation.navigate('UserDetailsScreen', {userId: notification?.senderId._id })
+      const isSubscribed = await checkLiveChatAvailability(JSON.parse(await AsyncStorage.getItem('theUser')));
+      if (isSubscribed) {
+        navigation.navigate('ChatScreen', { userId: notification?.senderId._id, roomId: `${notification?.senderId._id}_${notification?.receiverId}`, user: notification?.senderId });
+      } else {
+        Alert.alert('Premium Required', "You can't chat. Please buy a premium plan to access this feature.");
+      }
+    } else if (notification.title === 'Matrimonial') {
+      navigation.navigate('UserDetailsScreen', { userId: notification?.senderId._id });
     }
     // Handle other notification types as needed
   };
 
+  const onRefresh = () => {
+    setRefreshing(true);
+    fetchNotifications();
+  };
+
   if (loading) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color={COLORS.dark.primary} />
       </View>
     );
   }
 
   return (
-    <ScrollView>
+    <View style={styles.container}>
       <View style={styles.headerContainer}>
         <AppHeader
-          iconLeft={<SVG.BackArrow fill={'black'} />}
+          iconLeft={<SVG.BackArrow fill={COLORS.dark.text} />}
           onLeftIconPress={() => navigation.goBack()}
           title={LABELS.notification}
           iconRight={
@@ -85,12 +90,35 @@ const NotificationScreen = ({ navigation }) => {
           }
         />
       </View>
-      <Space mT={20} />
-      <NotificationCard
-        data={notifications}
-        onPress={handleNotificationPress}
-      />
-    </ScrollView>
+      <ScrollView
+        contentContainerStyle={styles.scrollViewContent}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            colors={[COLORS.dark.primary]}
+          />
+        }
+      >
+        <Space mT={20} />
+        {notifications.length > 0 ? (
+          <NotificationCard
+            data={notifications}
+            onPress={handleNotificationPress}
+          />
+        ) : (
+          <View style={styles.emptyStateContainer}>
+            <CustomImage
+              source={IMAGES.emptyNotifications}
+              size={120}
+              resizeMode={'contain'}
+            />
+            <Space mT={20} />
+            <Text style={styles.emptyStateText}>No notifications yet</Text>
+          </View>
+        )}
+      </ScrollView>
+    </View>
   );
 };
 
