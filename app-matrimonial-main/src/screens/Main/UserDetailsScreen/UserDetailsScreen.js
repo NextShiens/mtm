@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Dimensions,
   Image,
@@ -6,22 +6,23 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {useRoute} from '@react-navigation/native';
-import Carousel, {Pagination} from 'react-native-snap-carousel';
-import {Fonts} from '../../../assets/fonts';
-import {IMAGES} from '../../../assets/images';
-import {SVG} from '../../../assets/svg';
-import {COLORS, STYLES} from '../../../assets/theme';
+import { useRoute } from '@react-navigation/native';
+import Carousel, { Pagination } from 'react-native-snap-carousel';
+import { Fonts } from '../../../assets/fonts';
+import { IMAGES } from '../../../assets/images';
+import { SVG } from '../../../assets/svg';
+import { COLORS, STYLES } from '../../../assets/theme';
 import AppHeader from '../../../components/AppHeader/AppHeader';
 import AppText from '../../../components/AppText/AppText';
 import CustomImage from '../../../components/CustomImage/CustomImage';
 import Space from '../../../components/Space/Space';
-import {LABELS} from '../../../labels';
-import {styles} from './styles';
-import {Toast} from '../../../utils/native';
+import { LABELS } from '../../../labels';
+import { styles } from './styles';
+import { Toast } from '../../../utils/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {API_URL} from '../../../../constant';
-import {SvgXml} from 'react-native-svg';
+import { API_URL } from '../../../../constant';
+import { SvgXml } from 'react-native-svg';
+import ActivityIndicator from '../../../components/ActivityIndicator/ActivityIndicator';
 
 const defaultProfileSvg = `
    <Svg height={size} width={size} viewBox="0 0 100 100">
@@ -33,14 +34,20 @@ const defaultProfileSvg = `
     </Svg>
 `;
 
-const UserDetailsScreen = ({navigation}) => {
+
+
+const UserDetailsScreen =  ({navigation}) => {
   const route = useRoute();
   const userId = route.params?.userId || '';
   const screenWidth = Dimensions.get('window').width;
-  const [activeSlide, setActiveSlide] = React.useState(0);
-  const [userDetails, setUserDetails] = React.useState({});
+  const [activeSlide, setActiveSlide] = useState(0);
+  const [userDetails, setUserDetails] = useState({});
   const style = styles;
   const [currentUser, setCurrentUser] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isSendingInterest, setIsSendingInterest] = useState(false);
+
   useEffect(() => {
     const fetchUser = async () => {
       const userString = await AsyncStorage.getItem('theUser');
@@ -52,8 +59,10 @@ const UserDetailsScreen = ({navigation}) => {
 
     fetchUser();
   }, []);
+
   useEffect(() => {
     const fetchUserDetails = async () => {
+      setIsLoading(true);
       try {
         const token = await AsyncStorage.getItem('AccessToken');
         const response = await fetch(`${API_URL}/user/userDetails/${userId}`, {
@@ -67,12 +76,21 @@ const UserDetailsScreen = ({navigation}) => {
         setUserDetails(data.user);
       } catch (error) {
         console.error('Failed to fetch user details:', error);
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: 'Failed to load user details',
+        });
+      } finally {
+        setIsLoading(false);
       }
     };
 
     fetchUserDetails();
   }, [userId]);
-  async function saveUser() {
+
+  const saveUser = async () => {
+    setIsSaving(true);
     const apiUrl = `${API_URL}/user/saveUser`;
     const token = await AsyncStorage.getItem('AccessToken');
     try {
@@ -82,7 +100,7 @@ const UserDetailsScreen = ({navigation}) => {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({userId: userId}),
+        body: JSON.stringify({ userId: userId }),
       });
       if (!response.ok) {
         const errorData = await response.json();
@@ -90,15 +108,26 @@ const UserDetailsScreen = ({navigation}) => {
           errorData.message || 'An error occurred while saving user',
         );
       }
-      const data = await response.json();
-      Toast('User saved successfully!');
+      await response.json();
+      Toast.show({
+        type: 'success',
+        text1: 'Success',
+        text2: 'User saved successfully!',
+      });
     } catch (error) {
       console.error('Error saving user:', error);
-      Toast('An unexpected error occurred');
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'An unexpected error occurred',
+      });
+    } finally {
+      setIsSaving(false);
     }
-  }
+  };
 
-  async function sendInterest() {
+  const sendInterest = async () => {
+    setIsSendingInterest(true);
     const apiUrl = `${API_URL}/user/sendInterest`;
     const token = await AsyncStorage.getItem('AccessToken');
 
@@ -125,21 +154,26 @@ const UserDetailsScreen = ({navigation}) => {
         throw new Error(errorMessage);
       }
 
-      const data = await response.json();
-      Toast('Interest sent successfully!');
-      return {
-        success: true,
-        message: 'Interest sent successfully!',
-        data: data,
-      };
+      await response.json();
+      Toast.show({
+        type: 'success',
+        text1: 'Success',
+        text2: 'Interest sent successfully!',
+      });
     } catch (error) {
       console.error('Error sending interest:', error);
-      return {
-        success: false,
-        message: error.message || 'An unexpected error occurred',
-        error: error,
-      };
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: error.message || 'An unexpected error occurred',
+      });
+    } finally {
+      setIsSendingInterest(false);
     }
+  };
+
+  if (isLoading) {
+    return <ActivityIndicator size="large" color="#0000ff" />;
   }
 
   const carouselData = [
@@ -200,15 +234,15 @@ const UserDetailsScreen = ({navigation}) => {
       category: 'Religion',
     },
   ];
-  const renderItem = ({item, index}) => (
+  const renderItem = ({ item, index }) => (
     <View style={style.slideContainer}>
       {userDetails.userImages && userDetails.userImages[index] ? (
         <Image
-          source={{uri: userDetails.userImages[index]}}
+          source={{ uri: userDetails.userImages[index] }}
           style={style.image}
         />
       ) : (
-        <View style={[style.image, {backgroundColor: COLORS.dark.gray}]}>
+        <View style={[style.image, { backgroundColor: COLORS.dark.gray }]}>
           <SvgXml xml={defaultProfileSvg} width="50%" height="50%" />
         </View>
       )}
@@ -263,7 +297,7 @@ const UserDetailsScreen = ({navigation}) => {
           }
           title={LABELS.matches}
           extraStyle={{
-            container: {width: '100%', position: 'absolute', zIndex: 1},
+            container: { width: '100%', position: 'absolute', zIndex: 1 },
           }}
         />
       </View>
@@ -453,7 +487,7 @@ const UserDetailsScreen = ({navigation}) => {
             </View>
           </View>
 
-          <View style={{paddingHorizontal: 10}}>
+          <View style={{ paddingHorizontal: 10 }}>
             <View
               style={{
                 height: 1,
@@ -470,8 +504,8 @@ const UserDetailsScreen = ({navigation}) => {
             />
 
             <Space mT={17} />
-            <View style={{flexDirection: 'row'}}>
-              <View style={{width: '50%'}}>
+            <View style={{ flexDirection: 'row' }}>
+              <View style={{ width: '50%' }}>
                 <AppText
                   title={LABELS.phoneNumber}
                   variant={'h4'}
@@ -485,7 +519,7 @@ const UserDetailsScreen = ({navigation}) => {
                   extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
                 />
               </View>
-              <View style={{width: '50%'}}>
+              <View style={{ width: '50%' }}>
                 <AppText
                   title={LABELS.email}
                   variant={'h4'}
@@ -619,7 +653,7 @@ const UserDetailsScreen = ({navigation}) => {
           </View>
         </View>
 
-        <View style={{width: '100%', paddingHorizontal: 15}}>
+        <View style={{ width: '100%', paddingHorizontal: 15 }}>
           <View
             style={{
               height: 1,
@@ -634,8 +668,8 @@ const UserDetailsScreen = ({navigation}) => {
             extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
           />
           <Space mT={20} />
-          <View style={{width: '100%', flexDirection: 'row'}}>
-            <View style={{width: '60%'}}>
+          <View style={{ width: '100%', flexDirection: 'row' }}>
+            <View style={{ width: '60%' }}>
               <AppText
                 title={LABELS.maritalExpectation}
                 variant={'h4'}
@@ -657,9 +691,8 @@ const UserDetailsScreen = ({navigation}) => {
                 extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
               />
               <AppText
-                title={`${userDetails?.ageFrom || 'N/A'} - ${
-                  userDetails?.ageTo || 'N/A'
-                }`}
+                title={`${userDetails?.ageFrom || 'N/A'} - ${userDetails?.ageTo || 'N/A'
+                  }`}
                 variant={'h4'}
                 color={COLORS.dark.black}
                 extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
@@ -693,7 +726,7 @@ const UserDetailsScreen = ({navigation}) => {
               />
             </View>
 
-            <View style={{width: '40%'}}>
+            <View style={{ width: '40%' }}>
               <AppText
                 title={LABELS.cast}
                 variant={'h4'}
@@ -715,9 +748,8 @@ const UserDetailsScreen = ({navigation}) => {
                 extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
               />
               <AppText
-                title={`${userDetails.heightFrom || 'N/A'} - ${
-                  userDetails.heightTo || 'N/A'
-                }`}
+                title={`${userDetails.heightFrom || 'N/A'} - ${userDetails.heightTo || 'N/A'
+                  }`}
                 variant={'h4'}
                 color={COLORS.dark.black}
                 extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
@@ -782,7 +814,7 @@ const UserDetailsScreen = ({navigation}) => {
               title={'Send Interest'}
               color={'white'}
               variant={'h5'}
-              extraStyle={{fontFamily: Fonts.PoppinsRegular}}
+              extraStyle={{ fontFamily: Fonts.PoppinsRegular }}
             />
           </TouchableOpacity>
           <Space mL={10} />
