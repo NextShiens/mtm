@@ -96,7 +96,7 @@ const Connections = ({ navigation }) => {
       } else if (selectedBtn === 2 || selectedBtn === 3) {
         data = await getMyRequests();
       }
-      setRequests(data.requests);
+      setRequests(data?.requests);
     } catch (error) {
       console.error('Error fetching requests:', error);
     } finally {
@@ -159,8 +159,8 @@ const Connections = ({ navigation }) => {
       }
 
       const data = await response.json();
-      console.log('My requests:', data);
-      console.log("requests" + data.requests)
+      console.log('My requests: line 162', data);
+      // console.log("requests" + data.requests)
       return data;
     } catch (error) {
       console.error('There was a problem with the fetch operation:', error);
