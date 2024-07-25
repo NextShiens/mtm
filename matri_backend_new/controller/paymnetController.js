@@ -10,12 +10,14 @@ const razorpay = new Razorpay({
 });
 console.log(process.env.RAZORPAY_KEY_ID, "key_id")
 const createOrder = async (req, res) => {
+
   const { amount } = req.body;
   console.log(amount, "amount")
+  const amountInPaise = amount * 100
   const options = {
-    amount: amount, // amount in the smallest currency unit
+    amount: amountInPaise, // amount in the smallest currency unit
     currency: "INR",
-    receipt: `receipt_${Math.random() * 10}`,
+     receipt: `receipt_${Math.random().toString(36).substring(7)}`
   };
 
   // Create an order in razorpay
@@ -37,7 +39,7 @@ const verifyPayment = async (req, res) => {
     razorpay_signature,
     membership,
     userId
-  } = req.body;  
+  } = req.body;
   if (!mongoose.Types.ObjectId.isValid(userId) || !mongoose.Types.ObjectId.isValid(membership)) {
     return res.status(400).json({ success: false, message: 'Invalid userId or membership' });
   }

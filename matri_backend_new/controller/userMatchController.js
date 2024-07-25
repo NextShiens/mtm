@@ -160,7 +160,7 @@ const userMatchController = {
 
       if (
         viewerUser.recentlyViewed.length > 0 &&
-        viewerUser.recentlyViewed[0].toString() === viewedUserId
+        viewerUser.recentlyViewed[0]?.toString() === viewedUserId
       ) {
         return res.json({
           success: true,
@@ -170,7 +170,7 @@ const userMatchController = {
 
       // Remove viewedUserId if it's already in the array
       viewerUser.recentlyViewed = viewerUser.recentlyViewed.filter(
-        id => id.toString() !== viewedUserId
+        id => id?.toString() !== viewedUserId
       );
 
       // Add viewedUserId to the most recent position

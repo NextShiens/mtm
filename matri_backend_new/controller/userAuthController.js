@@ -481,7 +481,6 @@ const userAuthController = {
     const userSchema = Joi.object({
       phone: Joi.string(),
       name: Joi.string(),
-      DOB: Joi.string(),
       userImages: Joi.array(),
       email: Joi.string().email(),
       gender: Joi.string(),
@@ -496,11 +495,11 @@ const userAuthController = {
       annualIncome: Joi.string(),
     });
 
-    const { error } = userSchema.validate(req.body);
+    // const { error } = userSchema.validate(req.body);
 
-    if (error) {
-      return next(error);
-    }
+    // if (error) {
+    //   return next(error);
+    // }
     const { phone, name, DOB, userImages, email, gender, height, city, motherTongue, partner, highestDegree, occupation, maritalStatus, employedIn, annualIncome } = req.body;
     const userId = req.user._id;
 
