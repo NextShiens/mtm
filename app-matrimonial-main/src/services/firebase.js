@@ -1,5 +1,5 @@
 import auth from '@react-native-firebase/auth';
-import {Toast} from '../utils/native';
+import { Toast } from '../utils/native';
 
 export const RegisterUser = async (email, password) => {
   try {
@@ -39,24 +39,24 @@ export const SignOut = () => {
     console.log(err);
   }
 };
-
 export const loginUser = async (email, password) => {
   try {
-    await auth().signInWithEmailAndPassword(email, password);
-    return (await auth().signInWithEmailAndPassword(email, password)).user.uid;
+    const userCredential = await auth().signInWithEmailAndPassword(email, password);
+    return userCredential.user;
   } catch (error) {
     if (error.code === 'auth/user-not-found') {
-      return 'User not found. Please check your email and password.';
+      throw new Error('User not found. Please check your email and password.');
     } else if (error.code === 'auth/wrong-password') {
-      return 'Invalid password. Please try again.';
+      throw new Error('Invalid password. Please try again.');
     } else if (error.code === 'auth/invalid-email') {
-      return 'Invalid email address. Please enter a valid email.';
+      throw new Error('Invalid email address. Please enter a valid email.');
     } else {
       console.log(error);
-      return 'Failed to log in. Please try again later.';
+      throw new Error('Failed to log in. Check your password or email and try again.');
     }
   }
 };
+
 export const getCurrentUser = () => {
   const user = auth().currentUser;
   if (user) {
@@ -69,7 +69,7 @@ export const getCurrentUserWithToken = async () => {
   const user = auth().currentUser;
   if (user) {
     try {
-      const token = await user.getIdToken(); 
+      const token = await user.getIdToken();
       return token;
     } catch (error) {
       console.error("Error getting user token:", error);

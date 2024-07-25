@@ -116,22 +116,20 @@ const LoginScreen = () => {
       console.log(content);
 
       if (!response.ok) {
-        setAlertMessage(content.message || 'An error occurred during login.');
-        setAlertVisible(true);
-        return;
+        throw new Error(content.message || 'An error occurred during login.');
       }
+
       if (!content.user.isActive) {
-        setAlertMessage('Your account is not active. Please wait for the admin to activate it.');
-        setAlertVisible(true);
-        return 'userIactive';
+        throw new Error('Your account is not active. Please wait for the admin to activate it.');
       }
 
       await AsyncStorage.setItem('AccessToken', content.token);
       await AsyncStorage.setItem('theUser', JSON.stringify(content));
+
+      return content;
     } catch (error) {
       console.error('Login error:', error);
-      setAlertMessage('An error occurred during login. Please try again.');
-      setAlertVisible(true);
+      throw error;
     }
   };
 
@@ -141,38 +139,32 @@ const LoginScreen = () => {
       setAlertVisible(true);
       return;
     }
-
+  
     if (!isValidatedLogin({ email, password })) {
       setAlertMessage('Invalid email or password');
       setAlertVisible(true);
       return;
     }
-
+  
     setIsLoading(true);
-
+  
     try {
-      const res = await loginUser(email, password);
-      if (!res) {
-        setAlertMessage('Failed to login with invalid credentials');
-        setAlertVisible(true);
-        return;
-      }
-      const userCheck = await loginAndGetAccessToken();
-      if (userCheck === 'userIactive') {
-        setIsLoading(false);
-        return;
-      }
-      await AsyncStorage.setItem('loginToken', res);
+      const user = await loginUser(email, password);
+      const backendLoginResult = await loginAndGetAccessToken();
+      await AsyncStorage.setItem('loginToken', backendLoginResult.token);
       await getSubscriptions();
+  
+      // If we've made it this far, all checks have passed
       navigation.navigate('DrawerNavigation');
     } catch (error) {
       console.error('Login error:', error);
-      setAlertMessage('An error occurred during login');
+      setAlertMessage(error.message || 'An error occurred during login');
       setAlertVisible(true);
     } finally {
       setIsLoading(false);
     }
   };
+  
   const handleGoogleSignIn = async () => {
     try {
       setIsLoading(true);
