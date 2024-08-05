@@ -5,6 +5,7 @@ import {
   View,
   Text,
   StyleSheet,
+  RefreshControl,
   Modal,
   Pressable,
   Image,
@@ -210,7 +211,13 @@ const HomePage = () => {
   const [recentlyViewedLoading, setRecentlyViewedLoading] = useState(true);
   const [newUsersLoading, setNewUsersLoading] = useState(true);
   const [salaryRange, setSalaryRange] = useState([0, 10000000]);
-
+  const [refreshing, setRefreshing] = React.useState(false);
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
   useEffect(() => {
     const fetchRecentlyViewed = async () => {
       try {
@@ -335,7 +342,10 @@ const HomePage = () => {
   };
 
   return (
-    <ScrollView style={[STYLES.flex1, { backgroundColor: 'white' }]}>
+
+    <ScrollView style={[STYLES.flex1, { backgroundColor: 'white' }]}   refreshControl={
+      <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+    }>
       <View style={styles.headerContainer}>
         <AppHeader
           iconLeft={

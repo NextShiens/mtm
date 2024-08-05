@@ -167,13 +167,14 @@ const CustomDrawerContent = ({ props, navigation }) => {
                 />
               )}
               {isOnline && <View style={style.onlineDot}></View>}
-            </View>
+            </View >
             <Space mL={10} />
-            <View style={{ height: 25, marginBottom: 10 }}>
+            <View style={{ height: 30, marginBottom: 10 ,maxWidth:180}}>
               <AppText
                 title={userName}
-                variant={'h4'}
+                variant={'h6'}
                 extraStyle={{ fontFamily: Fonts.PoppinsSemiBold }}
+              
               />
               <AppText
                 title={userProfession}
