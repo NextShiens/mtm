@@ -79,8 +79,8 @@ android {
         applicationId "com.metrimoni"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode 11
+        versionName "1.111"
     }
     signingConfigs {
         debug {
@@ -90,10 +90,10 @@ android {
             keyPassword 'android'
         }
          release {
-            storeFile file('../../my-release-key.keystore')
-            storePassword '123456789'
-            keyAlias 'my-key-alias'
-            keyPassword '123456789'
+            storeFile file('../../Vaishakhi.jks')
+            storePassword 'Vaishakhi4578&*^'
+            keyAlias 'Vaishakhi'
+            keyPassword 'Vaishakhi4578&*^'
         }
     }
     buildTypes {
