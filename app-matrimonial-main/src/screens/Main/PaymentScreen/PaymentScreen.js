@@ -427,7 +427,7 @@ const PaymentScreen = ({ navigation, route }) => {
   const { plan } = route.params;
   const [selectedMethod, setSelectedMethod] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [keyId, setKeyId] = useState('rzp_test_FIno2mP3rGvz9W');
+  const [keyId, setKeyId] = useState('');
   const fetchKeyId = async () => {
     try {
       const token = await AsyncStorage.getItem('AccessToken');

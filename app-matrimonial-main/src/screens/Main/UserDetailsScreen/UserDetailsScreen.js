@@ -8,6 +8,8 @@ import {
 } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { SvgXml } from 'react-native-svg';
 import { Fonts } from '../../../assets/fonts';
 import { IMAGES } from '../../../assets/images';
 import { SVG } from '../../../assets/svg';
@@ -19,24 +21,22 @@ import Space from '../../../components/Space/Space';
 import { LABELS } from '../../../labels';
 import { styles } from './styles';
 import { Toast } from '../../../utils/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL } from '../../../../constant';
-import { SvgXml } from 'react-native-svg';
 import ActivityIndicator from '../../../components/ActivityIndicator/ActivityIndicator';
+import { checkIsPaidUser } from '../../../utils/subscriptionCheck';
+// import { subscriptionCheck } from './subscriptionUtils'; // Make sure this path is correct
 
 const defaultProfileSvg = `
-   <Svg height={size} width={size} viewBox="0 0 100 100">
-      <Circle cx="50" cy="50" r="50" fill={backgroundColor} />
-      <Path
-        d="M50 48C58.8366 48 66 40.8366 66 32C66 23.1634 58.8366 16 50 16C41.1634 16 34 23.1634 34 32C34 40.8366 41.1634 48 50 48ZM50 54C39.3178 54 18 59.3178 18 70V76C18 79.3137 20.6863 82 24 82H76C79.3137 82 82 79.3137 82 76V70C82 59.3178 60.6822 54 50 54Z"
-        fill={iconColor}
-      />
-    </Svg>
+  <Svg height={size} width={size} viewBox="0 0 100 100">
+    <Circle cx="50" cy="50" r="50" fill={backgroundColor} />
+    <Path
+      d="M50 48C58.8366 48 66 40.8366 66 32C66 23.1634 58.8366 16 50 16C41.1634 16 34 23.1634 34 32C34 40.8366 41.1634 48 50 48ZM50 54C39.3178 54 18 59.3178 18 70V76C18 79.3137 20.6863 82 24 82H76C79.3137 82 82 79.3137 82 76V70C82 59.3178 60.6822 54 50 54Z"
+      fill={iconColor}
+    />
+  </Svg>
 `;
 
-
-
-const UserDetailsScreen =  ({navigation}) => {
+const UserDetailsScreen = ({ navigation }) => {
   const route = useRoute();
   const userId = route.params?.userId || '';
   const screenWidth = Dimensions.get('window').width;
@@ -47,6 +47,7 @@ const UserDetailsScreen =  ({navigation}) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [isSendingInterest, setIsSendingInterest] = useState(false);
+  const [hasSubscription, setHasSubscription] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -58,6 +59,15 @@ const UserDetailsScreen =  ({navigation}) => {
     };
 
     fetchUser();
+  }, []);
+
+  useEffect(() => {
+    const checkSubscription = async () => {
+      const subscriptionStatus = await checkIsPaidUser();
+      setHasSubscription(subscriptionStatus);
+    };
+
+    checkSubscription();
   }, []);
 
   useEffect(() => {
@@ -513,7 +523,7 @@ const UserDetailsScreen =  ({navigation}) => {
                   extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
                 />
                 <AppText
-                  title={userDetails?.phone || 'N/A'}
+                  title={hasSubscription ? (userDetails?.phone || 'N/A') : '******'}
                   variant={'h4'}
                   color={COLORS.dark.black}
                   extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
@@ -527,7 +537,7 @@ const UserDetailsScreen =  ({navigation}) => {
                   extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
                 />
                 <AppText
-                  title={userDetails?.email || 'N/A'}
+                  title={hasSubscription ? (userDetails?.email || 'N/A') : '******'}
                   variant={'h4'}
                   color={COLORS.dark.black}
                   extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
