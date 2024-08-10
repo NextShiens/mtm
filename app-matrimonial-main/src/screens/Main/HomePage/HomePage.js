@@ -343,8 +343,10 @@ const HomePage = () => {
 
   return (
 
-    <ScrollView style={[STYLES.flex1, { backgroundColor: 'white' }]}   refreshControl={
-      <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+    <ScrollView style={[STYLES.flex1, { backgroundColor: 'white' }]} refreshControl={
+      <RefreshControl refreshing={refreshing} onRefresh={onRefresh}
+        colors={[COLORS.dark.primary]}
+      />
     }>
       <View style={styles.headerContainer}>
         <AppHeader
@@ -401,8 +403,8 @@ const HomePage = () => {
           onRequestClose={closeFilters}
           transparent={true}
           visible={showFilters}
-          // onRequestClose={() => setShowFilters(false)}
-          >
+        // onRequestClose={() => setShowFilters(false)}
+        >
           <View style={filterStyles.container}>
             <View style={filterStyles.modalContent}>
               <ScrollView>
@@ -592,7 +594,7 @@ const HomePage = () => {
 
         <View style={{ paddingHorizontal: 15, borderRadius: 20 }}>
           {newUsersLoading ? (
-            <ActivityIndicator size="large" style={{objectFit :'cover'}} color={COLORS.dark.primary} />
+            <ActivityIndicator size="large" style={{ objectFit: 'cover' }} color={COLORS.dark.primary} />
           ) : (
             <SnapCarousel data={newUsers} />
           )}

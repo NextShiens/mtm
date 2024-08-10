@@ -32,7 +32,7 @@ export const styles = StyleSheet.create({
   },
   contentContainer: {
     justifyContent: 'center',
-    paddingHorizontal: 10,
+    paddingHorizontal: 3,
   },
   professionLabel: {
     position: 'absolute',

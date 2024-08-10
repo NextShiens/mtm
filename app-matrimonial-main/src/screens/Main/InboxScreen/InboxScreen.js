@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ScrollView, TouchableOpacity, View, Image, ActivityIndicator, Text } from 'react-native';
+import { ScrollView, TouchableOpacity, View, Image, ActivityIndicator, Text, RefreshControl } from 'react-native';
 import { IMAGES } from '../../../assets/images';
 import { SVG } from '../../../assets/svg';
 import { COLORS } from '../../../assets/theme';
@@ -18,8 +18,14 @@ const InboxScreen = ({ navigation }) => {
   const [conversations, setConversations] = useState([]);
   const [filteredConversations, setFilteredConversations] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
   useEffect(() => {
     const fetchUserAndConversations = async () => {
       try {
@@ -55,8 +61,8 @@ const InboxScreen = ({ navigation }) => {
   }, []);
 
   useEffect(() => {
-    const filtered = conversations.filter(conversation => 
-      conversation.chattedUser && 
+    const filtered = conversations.filter(conversation =>
+      conversation.chattedUser &&
       conversation.chattedUser.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
     setFilteredConversations(filtered);
@@ -96,7 +102,14 @@ const InboxScreen = ({ navigation }) => {
   }
 
   return (
-    <ScrollView>
+    <ScrollView
+
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh}
+        colors={[COLORS.dark.primary]}
+        />
+      }
+    >
       <View style={style.headerContainer}>
         <AppHeader
           iconLeft={<SVG.BackArrow size={24} fill={'black'} />}
@@ -133,8 +146,8 @@ const InboxScreen = ({ navigation }) => {
             style={style.inboxContainer}
             onPress={() => navigateToChatScreen(conversation)}
           >
-            <InboxCard 
-              conversation={conversation.chattedUser} 
+            <InboxCard
+              conversation={conversation.chattedUser}
             />
           </TouchableOpacity>
         ))

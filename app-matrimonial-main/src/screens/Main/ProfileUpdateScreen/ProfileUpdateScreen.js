@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, ScrollView, Image, ActivityIndicator } from 'react-native';
+import { View, ScrollView, Image, ActivityIndicator, RefreshControl } from 'react-native';
 import { TouchableOpacity } from 'react-native';
 import { Fonts } from '../../../assets/fonts';
 import { IMAGES } from '../../../assets/images';
@@ -64,6 +64,7 @@ const ProfileUpdateScreen = ({ navigation }) => {
   const [selectedYear, setSelectedYear] = useState(null);
   const [selectedDay, setSelectedDay] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
 
   const [profileData, setProfileData] = useState({
@@ -85,12 +86,18 @@ const ProfileUpdateScreen = ({ navigation }) => {
   });
 
   const style = styles;
-
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
   const openCamera = () => {
     const options = {
       saveToPhotos: true,
       mediaType: 'photo',
     };
+
 
     launchCamera(options, (response) => {
       if (response.didCancel) {
@@ -302,7 +309,13 @@ const ProfileUpdateScreen = ({ navigation }) => {
 
 
   return (
-    <ScrollView>
+    <ScrollView  refreshControl={
+      <RefreshControl refreshing={refreshing} onRefresh={onRefresh}
+        colors={[COLORS.dark.primary]}
+      />
+    }
+    
+    >
       <View style={style.headerContainer}>
         <AppHeader
           iconLeft={<SVG.BackArrow size={24} fill={'black'} />}
@@ -570,7 +583,7 @@ const ProfileUpdateScreen = ({ navigation }) => {
 
     <Space mT={20} />
     <AppButton
-      title={isLoading ? 'updating...' : LABELS.update}
+      title={isLoading ? 'Updating...' : LABELS.update}
       variant="filled"
       textVariant={'h5'}
       onPress={handleUpdate}

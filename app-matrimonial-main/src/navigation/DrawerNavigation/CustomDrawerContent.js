@@ -1,6 +1,6 @@
 import { DrawerContentScrollView } from '@react-navigation/drawer';
 import React, { useState, useEffect, useCallback } from 'react';
-import { Dimensions, Image, TouchableOpacity, View } from 'react-native';
+import { Dimensions, Image, TouchableOpacity, View, ScrollView, RefreshControl } from 'react-native';
 import { Fonts } from '../../assets/fonts';
 import { IMAGES } from '../../assets/images';
 import { SVG } from '../../assets/svg';
@@ -44,6 +44,14 @@ const CustomDrawerContent = ({ props, navigation }) => {
   const [userImage, setUserImage] = useState('');
   const [userProfession, setUserProfession] = useState('Profession');
   const [userEmail, setUserEmail] = useState('');
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
 
   const style = styles;
   const windowWidth = Dimensions.get('window').width;
@@ -151,7 +159,13 @@ const CustomDrawerContent = ({ props, navigation }) => {
   };
 
   return (
-    <View style={style.container}>
+    <ScrollView style={style.container}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh}
+          colors={[COLORS.dark.primary]}
+        />
+      }
+    >
       <DrawerContentScrollView {...props}>
         <View style={style.contentContainer}>
           <View style={style.nameHolder}>
@@ -169,12 +183,12 @@ const CustomDrawerContent = ({ props, navigation }) => {
               {isOnline && <View style={style.onlineDot}></View>}
             </View >
             <Space mL={10} />
-            <View style={{ height: 30, marginBottom: 10 ,maxWidth:180}}>
+            <View style={{ height: 30, marginBottom: 10, maxWidth: 180 }}>
               <AppText
                 title={userName}
                 variant={'h6'}
                 extraStyle={{ fontFamily: Fonts.PoppinsSemiBold }}
-              
+
               />
               <AppText
                 title={userProfession}
@@ -441,7 +455,7 @@ const CustomDrawerContent = ({ props, navigation }) => {
         </View>
         <Space mT={10} />
       </DrawerContentScrollView>
-    </View>
+    </ScrollView>
   );
 };
 

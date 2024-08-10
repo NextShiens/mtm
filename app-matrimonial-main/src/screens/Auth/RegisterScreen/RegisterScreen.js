@@ -309,7 +309,7 @@ const RegisterScreen = ({ navigation }) => {
             </View>
             <Space mT={20} />
               <AppButton
-                title={isLoading ? 'Nexting...' : LABELS.next}
+                title={isLoading ? 'Next...' : LABELS.next}
                 disabled={isLoading}
                 variant="filled"
                 textVariant={'h5'}

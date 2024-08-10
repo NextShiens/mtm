@@ -103,9 +103,15 @@ const HorizontalCard = ({ data }) => {
         <AppText
           title={`Age ${item.age}, ${item.height}`}
           color={COLORS.dark.inputBorder}
+          style={{
+            fontSize: 4,
+        
+          }}
           extraStyle={[
             STYLES.fontFamily(Fonts.PoppinsRegular),
             STYLES.bottom('5%'),
+            STYLES.fontSize(11),
+            STYLES.mL(0)
           ]}
         />
         <View style={[STYLES.selfLeft, STYLES.gap, STYLES.row]}>

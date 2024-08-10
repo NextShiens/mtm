@@ -24,7 +24,7 @@ import { Toast } from '../../../utils/native';
 import { API_URL } from '../../../../constant';
 import ActivityIndicator from '../../../components/ActivityIndicator/ActivityIndicator';
 import { checkIsPaidUser } from '../../../utils/subscriptionCheck';
-// import { subscriptionCheck } from './subscriptionUtils'; // Make sure this path is correct
+
 
 const defaultProfileSvg = `
   <Svg height={size} width={size} viewBox="0 0 100 100">
