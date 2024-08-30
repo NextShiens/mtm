@@ -248,7 +248,7 @@ const SnapCarousel = ({data}) => {
             <ActivityIndicator size="large" color="#fff" />
           ) : (
             <TouchableOpacity
-            onPress={handleSendInterest}
+            onPress={handleChat}
             style={styles.ButtonContainer}>
             <Image
               source={IMAGES.chatIcon}
