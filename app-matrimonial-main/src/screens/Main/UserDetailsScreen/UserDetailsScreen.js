@@ -5,6 +5,7 @@ import {
   ScrollView,
   TouchableOpacity,
   View,
+  ActivityIndicator
 } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
@@ -22,7 +23,6 @@ import { LABELS } from '../../../labels';
 import { styles } from './styles';
 import { Toast } from '../../../utils/native';
 import { API_URL } from '../../../../constant';
-import ActivityIndicator from '../../../components/ActivityIndicator/ActivityIndicator';
 import { checkIsPaidUser } from '../../../utils/subscriptionCheck';
 
 

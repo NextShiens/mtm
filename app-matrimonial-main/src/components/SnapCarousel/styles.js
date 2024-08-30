@@ -11,6 +11,21 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,
+    zIndex: 1000,
+  },
+  ButtonContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 10,
+    borderRadius: 8,
+  },
+  imageStyle: {
+    width: 10, // Width of the image
+    height: 10, // Height of the image
+  },
+  buttonText: {
+    color: 'white', // Text color
+    fontSize: 16,
   },
   interestSendBtn: {
     width: '100%',
@@ -36,6 +51,11 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,
+    zIndex: 1000,
+  },
+  buttonTouchArea: {
+    padding: 10, // Increase this value to expand the touch area
+    margin: -10, // Negative margin to compensate for the padding
   },
   locationIcon: {
     flexDirection: 'row',
