@@ -12,6 +12,20 @@ export const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: COLORS.dark.lightGrey,
   },
+  ButtonContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 10,
+    borderRadius: 8,
+  },
+  imageStyle: {
+    width: 10, // Width of the image
+    height: 10, // Height of the image
+  },
+  buttonText: {
+    color: 'white', // Text color
+    fontSize: 16,
+  },
   professionLabel: {
     position: 'absolute',
     bottom: 10,

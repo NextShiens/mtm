@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, TouchableOpacity, View, Text } from 'react-native';
+import { ScrollView, TouchableOpacity, View, Text,Image } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import LinearGradient from 'react-native-linear-gradient';
 import { Svg, Circle, Path } from 'react-native-svg';
@@ -176,13 +176,23 @@ const AppCard = ({ isBtnShown, btnType, data, onPressBtn1, onPressBtn2 }) => {
                 onPress={() => {
                   onPressFunction(item);
                 }}>
-                <AppText
-                  title={LABELS.sendInterest}
-                  color={COLORS.dark.white}
-                  extraStyle={STYLES.fontFamily(Fonts.PoppinsRegular)}
-                  variant={'h5'}
-      
-                />
+               <TouchableOpacity
+               onPress={() => {
+                onPressFunction(item);
+              }}
+              style={styles.ButtonContainer}>
+              {/* Image Icon */}
+              <Image
+                source={IMAGES.sendIcon} // Replace with your image URL or local asset
+                style={styles.imageStyle}
+              />
+
+              {/* Space between Image and Text */}
+              <View style={{marginLeft: 10}} />
+
+              {/* Button Text */}
+              <Text style={{color:"white"}}>Send Interest</Text>
+            </TouchableOpacity>
               </TouchableOpacity>
 
               <TouchableOpacity
@@ -190,7 +200,7 @@ const AppCard = ({ isBtnShown, btnType, data, onPressBtn1, onPressBtn2 }) => {
                 onPress={() => {
                   onSecondBtnPress(item);
                 }}>
-              <CustomImage source={IMAGES.chatIcon} size={12} />
+              <Image source={IMAGES.chatIcon} size={12} />
               </TouchableOpacity>
             </View>
           )}
