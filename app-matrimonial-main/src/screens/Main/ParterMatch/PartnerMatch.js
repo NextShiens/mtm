@@ -354,7 +354,7 @@ const PartnerMatch = ({ navigation, route }) => {
     // Apply salary range filter
     filtered = filtered.filter(user => {
       console.log("usersalary", user.annualIncome);
-      const userSalary = parseInt(user.annualIncome.replace(/,/g, '')) || 0;
+      const userSalary = parseInt(user?.annualIncome?.replace(/,/g, '')) || 0;
       return userSalary >= salaryRange[0] && userSalary <= salaryRange[1];
     });
 
