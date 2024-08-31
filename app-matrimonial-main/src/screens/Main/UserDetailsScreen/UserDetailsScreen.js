@@ -245,18 +245,19 @@ const UserDetailsScreen = ({ navigation }) => {
     },
   ];
   const renderItem = ({ item, index }) => (
+    console.log('item', item),
     <View style={style.slideContainer}>
-      {userDetails.userImages && userDetails.userImages[index] ? (
+      {userDetails?.userImages.Length >0 && item?.userImages[index] ? (
         <Image
-          source={{ uri: userDetails.userImages[index] }}
+          source={{ uri: userDetails?.userImages[index] }}
           style={style.image}
         />
       ) : (
         <Image
               source={{
-                uri: item?.gender === 'male' 
+                uri: userDetails?.gender === 'male' 
                   ? 'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-male-5.png'
-                  :  item?.gender === 'female' 
+                  :  userDetails?.gender === 'female' 
                   ? 'https://i.pinimg.com/564x/df/a0/36/dfa036866ac5d4ba8760b3671ae9381c.jpg' 
                   : 'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-male-5.png',
               }}
