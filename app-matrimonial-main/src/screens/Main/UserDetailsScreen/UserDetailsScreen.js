@@ -252,9 +252,17 @@ const UserDetailsScreen = ({ navigation }) => {
           style={style.image}
         />
       ) : (
-        <View style={[style.image, { backgroundColor: COLORS.dark.gray }]}>
-          <SvgXml xml={defaultProfileSvg} width="50%" height="50%" />
-        </View>
+        <Image
+              source={{
+                uri: item?.gender === 'male' 
+                  ? 'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-male-5.png'
+                  :  item?.gender === 'female' 
+                  ? 'https://i.pinimg.com/564x/df/a0/36/dfa036866ac5d4ba8760b3671ae9381c.jpg' 
+                  : 'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-male-5.png',
+              }}
+              resizeMode="cover"
+              style={{width: '100%', height: '100%'}} 
+            />
       )}
       {/* <View style={style.gradient}>
         <AppHeader
