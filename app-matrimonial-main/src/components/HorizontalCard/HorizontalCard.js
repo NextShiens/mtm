@@ -74,12 +74,17 @@ const HorizontalCard = ({ data }) => {
             style={styles.img}
           />
         ) : (
-          <Svg height="45" width="45" viewBox="0 0 100 100" style={styles.img}>
-            <Path
-              d="M50 50m-40 0a40 40 0 1 0 80 0 40 40 0 1 0 -80 0ZM50 20a15 15 0 1 1 0 30 15 15 0 1 1 0-30ZM50 75c-16.569 0-30-10.745-30-24h60C80 64.255 66.569 75 50 75z"
-              fill="#ccc"
+          <Image
+              source={{
+                uri: item?.gender === 'male' 
+                  ? 'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-male-5.png'
+                  :  item?.gender === 'female' 
+                  ? 'https://i.pinimg.com/564x/df/a0/36/dfa036866ac5d4ba8760b3671ae9381c.jpg' 
+                  : 'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-male-5.png',
+              }}
+              resizeMode="cover"
+              style={{width: '100%', height: '100%'}} 
             />
-          </Svg>
         )}
         <AppText
           title={item.occupation}
@@ -95,13 +100,13 @@ const HorizontalCard = ({ data }) => {
       </View>
       <View style={styles.contentContainer}>
         <AppText
-          title={item.name}
-          variant="h4"
+          title={item?.name|| 'N/A'}
+          variant="h5"
           color={COLORS.dark.black}
           extraStyle={[Fonts.PoppinsMedium]}
         />
         <AppText
-          title={`Age ${item.age}, ${item.height}`}
+          title={`Age ${item?.age||'N/A'}, ${item.height}`}
           color={COLORS.dark.inputBorder}
           style={{
             fontSize: 4,

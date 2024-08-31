@@ -94,10 +94,27 @@ const SnapCarousel = ({data}) => {
     }
   }
 
-  const renderItem = ({item}) => (
+  const renderItem = ({item,index}) => (
     <>
       <View style={style.slideContainer}>
-        <Image source={{uri: item.userImages?.[0]}} style={style.image} />
+      {item.userImages && item.userImages[index] ? (
+        <Image
+          source={{ uri: item.userImages[index] }}
+          style={style.image}
+        />
+      ) : (
+        <Image
+              source={{
+                uri: item?.gender === 'male' 
+                  ? 'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-male-5.png'
+                  :  item?.gender === 'female' 
+                  ? 'https://i.pinimg.com/564x/df/a0/36/dfa036866ac5d4ba8760b3671ae9381c.jpg' 
+                  : 'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-male-5.png',
+              }}
+              resizeMode="cover"
+              style={{width: '100%', height: '100%'}} 
+            />
+      )}
         <LinearGradient
           colors={['transparent', COLORS.dark.secondary]}
           style={style.gradient}>
@@ -235,7 +252,7 @@ const SnapCarousel = ({data}) => {
 
               <View style={{marginLeft: 10}} />
 
-              <Text style={{color:"white"}}>Send Interest</Text>
+              <Text style={{color:"white"}}>View Profile</Text>
             </TouchableOpacity>
           )}
         </TouchableOpacity>

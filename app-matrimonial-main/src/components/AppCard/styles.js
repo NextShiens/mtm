@@ -117,6 +117,7 @@ export const styles = StyleSheet.create({
   }),
   imgContainer: {
     width: '35%',
+    height: '100%',
     borderRadius: 20,
   },
 

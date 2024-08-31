@@ -12,6 +12,7 @@ import Space from '../Space/Space';
 import { styles } from './styles';
 import CustomImage from '../CustomImage/CustomImage';
 import { IMAGES } from '../../assets/images';
+import { SVG } from '../../assets/svg';
 
 const LocationIcon = ({ size = 24, color = 'black' }) => (
   <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
@@ -57,19 +58,28 @@ const AppCard = ({ isBtnShown, btnType, data, onPressBtn1, onPressBtn2 }) => {
       : onChatBtnPress;
 
   const renderCard = (item) => {
+    console.log(item,"dsjhkjhakjhdkahkf");
     return (
       <View style={style.cardContainer(isBtnShown)} key={item?.id}>
-        <View style={style.imgContainer}>
+                <View style={style.imgContainer}>
           {item?.userImages?.length > 0 ? (
             <FastImage
-              source={{ uri: item.userImages[0] }}
+              source={{ uri: item?.userImages[0] }}
               resizeMode="cover"
               style={style.img}
             />
           ) : (
-            <View style={style.profileIconContainer}>
-              <ProfileIcon />
-            </View>
+            <Image
+              source={{
+                uri: item?.gender === 'male' 
+                  ? 'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-male-5.png'
+                  :  item?.gender === 'female' 
+                  ? 'https://i.pinimg.com/564x/df/a0/36/dfa036866ac5d4ba8760b3671ae9381c.jpg' 
+                  : 'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-male-5.png',
+              }}
+              resizeMode="cover"
+              style={{width: '100%', height: '100%'}} 
+            />
           )}
           <AppText
             title={item?.occupation || 'N/A'}
