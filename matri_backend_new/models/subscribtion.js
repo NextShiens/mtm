@@ -20,14 +20,14 @@ const subscriptionSchema = new Schema(
       type: Number,
       required: true,
     },
-    sms: {
-      type: Number,
-      required: true,
-    },
-    contactViews: {
-      type: Number,
-      required: true,
-    },
+    // sms: {
+    //   type: Number,
+    //   required: true,
+    // },
+    // contactViews: {
+    //   type: Number,
+    //   required: true,
+    // },
     liveChats: {
       type: String,
       default: "NO",

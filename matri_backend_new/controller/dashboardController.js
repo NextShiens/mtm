@@ -229,16 +229,8 @@ const dashboardController = {
 
   async addSubscriptionPlan(req, res, next) {
     try {
-      const {
-        name,
-        price,
-        duration,
-        messages,
-        sms,
-        contactViews,
-        liveChat,
-        profileViews,
-      } = req.body;
+      const { name, price, duration, messages, liveChat, profileViews } =
+        req.body;
 
       const ifPlanAlreadyExists = await Subscription.findOne({ name });
       if (ifPlanAlreadyExists) {
@@ -250,8 +242,7 @@ const dashboardController = {
         price,
         duration,
         messages,
-        sms,
-        contactViews,
+
         liveChats: liveChat.toUpperCase(),
         profileViews,
       });

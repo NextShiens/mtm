@@ -10,7 +10,11 @@ const { PORT } = require("./config/index");
 const userRouter = require("./routes/user");
 const adminRouter = require("./routes/admin");
 const paymentRouter = require("./routes/payment");
-const { checkRoom, saveMessage, saveNotification } = require("./services/chatRoom");
+const {
+  checkRoom,
+  saveMessage,
+  saveNotification,
+} = require("./services/chatRoom");
 const { sendchatNotification } = require("./firebase/service");
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
@@ -20,7 +24,11 @@ app.use(bodyParser.json({ limit: "50mb" }));
 app.use(express.json({ limit: "50mb" }));
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: [
+      "http://localhost:3000",
+      "https://matri-admin-panel-52f6aaac61cf.herokuapp.com",
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
 );
@@ -29,7 +37,10 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: [
+      "http://localhost:3000",
+      "https://matri-admin-panel-52f6aaac61cf.herokuapp.com",
+    ],
     // origin: "https://metrimonial-backend-2c3a23b121fc.herokuapp.com/",
     methods: ["GET", "POST"],
   },
@@ -48,15 +59,18 @@ io.on("connection", (socket) => {
   socket.on("send_message", async (data) => {
     console.log("data....", data);
     try {
-      await sendchatNotification(data.receiverId, {
-        message: data.text,
-        title: data?.user?.name || 'Metrimonial',
-      }, data.user._id);
+      await sendchatNotification(
+        data.receiverId,
+        {
+          message: data.text,
+          title: data?.user?.name || "Metrimonial",
+        },
+        data.user._id
+      );
 
       await checkRoom(data);
       await saveMessage(data);
       await saveNotification(data);
-
 
       // Emit to all clients in the room, including sender
       io.to(data.roomId).emit("receive_message", data);
