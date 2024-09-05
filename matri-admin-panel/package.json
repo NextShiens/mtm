@@ -1,0 +1,32 @@
+{
+  "name": "matriomony-panel",
+  "version": "0.1.0",
+  "private": true,
+  "engines": {
+    "node": "21.x",
+    "npm": "10.x"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "heroku-postbuild": "next build"
+  },
+  "dependencies": {
+    "antd": "^5.18.3",
+    "axios": "^1.7.2",
+    "next": "14.0.2",
+    "nprogress": "^0.2.0",
+    "razorpay": "^2.9.4",
+    "react": "^18",
+    "react-dom": "^18",
+    "react-hot-toast": "^2.4.1",
+    "react-icons": "^4.11.0",
+    "serve": "^14.2.3"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.0.1",
+    "postcss": "^8",
+    "tailwindcss": "^3.3.0"
+  }
+}
