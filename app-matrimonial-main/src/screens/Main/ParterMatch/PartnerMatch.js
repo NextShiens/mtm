@@ -1,24 +1,37 @@
-
-import React, { useState, useEffect } from 'react';
-import { ScrollView, TouchableOpacity, View, ActivityIndicator, Image, Text, StyleSheet, Modal, Pressable, RefreshControl } from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {
+  ScrollView,
+  TouchableOpacity,
+  View,
+  ActivityIndicator,
+  Image,
+  Text,
+  StyleSheet,
+  Modal,
+  Pressable,
+  RefreshControl,
+} from 'react-native';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { API_URL } from '../../../../constant';
-import { Toast } from '../../../utils/native';
-import { subscriptionCheck, checkLiveChatAvailability } from '../../../utils/subscriptionCheck';
-import { SVG } from '../../../assets/svg';
-import { COLORS, HORIZON_MARGIN, STYLES } from '../../../assets/theme';
+import {API_URL} from '../../../../constant';
+import {Toast} from '../../../utils/native';
+import {
+  subscriptionCheck,
+  checkLiveChatAvailability,
+} from '../../../utils/subscriptionCheck';
+import {SVG} from '../../../assets/svg';
+import {COLORS, HORIZON_MARGIN, STYLES} from '../../../assets/theme';
 import AppHeader from '../../../components/AppHeader/AppHeader';
 import AppInput from '../../../components/AppInput/AppInput';
 import AppText from '../../../components/AppText/AppText';
 import CustomImage from '../../../components/CustomImage/CustomImage';
 import Space from '../../../components/Space/Space';
-import { LABELS } from '../../../labels';
-import { styles } from './styles';
+import {LABELS} from '../../../labels';
+import {styles} from './styles';
 import AppCard from '../../../components/AppCard/AppCard';
-import { IMAGES } from '../../../assets/images';
-
-const filterStyles = StyleSheet.create({
+import {IMAGES} from '../../../assets/images';
+import CheckBox from '@react-native-community/checkbox';
+const style = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'flex-end',
@@ -31,7 +44,7 @@ const filterStyles = StyleSheet.create({
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
@@ -164,7 +177,7 @@ const filterStyles = StyleSheet.create({
     marginRight: '1%',
   },
 });
-const PartnerMatch = ({ navigation, route }) => {
+const PartnerMatch = ({navigation, route}) => {
   const [matchedUsers, setMatchedUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [matchType, setMatchType] = useState('newUsers');
@@ -173,12 +186,15 @@ const PartnerMatch = ({ navigation, route }) => {
   const [searchTerm, setSearchTerm] = useState(route.params?.searchTerm || '');
   const [currentUser, setCurrentUser] = useState({});
   const [showFilters, setShowFilters] = useState(false);
-  const [selectedGender, setSelectedGender] = useState('');
-  const [selectedMaritalStatus, setSelectedMaritalStatus] = useState('');
-  const [selectedLanguage, setSelectedLanguage] = useState('');
-  const [salaryRange, setSalaryRange] = useState([0, 10000000]);
+  // const [selectedGender, setSelectedGender] = useState('');
+  // const [selectedMaritalStatus, setSelectedMaritalStatus] = useState('');
+  // const [selectedLanguage, setSelectedLanguage] = useState('');
+  // const [salaryRange, setSalaryRange] = useState([0, 10000000]);
   const [refreshing, setRefreshing] = useState(false);
-
+  const [selectedGender, setSelectedGender] = useState(null);
+  const [selectedMaritalStatus, setSelectedMaritalStatus] = useState(null);
+  const [selectedLanguage, setSelectedLanguage] = useState(null);
+  const [salaryRange, setSalaryRange] = useState([0, 10000000]);
   useEffect(() => {
     const fetchUser = async () => {
       const userString = await AsyncStorage.getItem('theUser');
@@ -199,48 +215,60 @@ const PartnerMatch = ({ navigation, route }) => {
       setFilteredUsers([]);
       setLoading(true);
       setError(null);
-    }
+    };
   }, []);
 
   useEffect(() => {
     filterUsers();
-  }, [searchTerm, matchedUsers, selectedGender, selectedMaritalStatus, selectedLanguage, salaryRange]);
+  }, [
+    searchTerm,
+    matchedUsers,
+    selectedGender,
+    selectedMaritalStatus,
+    selectedLanguage,
+    salaryRange,
+  ]);
 
   const fetchMatchedUsers = async () => {
     try {
-      setLoading(true)
+      setLoading(true);
       const token = await AsyncStorage.getItem('AccessToken');
       if (!token) {
         throw new Error('Access token not found');
       }
 
-      const response = await fetch(`${API_URL}/user/userMatch?matchType=${matchType}`, {
-        method: 'GET',
-        headers: {
-          'authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
-     
+      const response = await fetch(
+        `${API_URL}/user/userMatch?matchType=${matchType}`,
+        {
+          method: 'GET',
+          headers: {
+            authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        },
+      );
 
       if (!response.ok) {
         const errorResponse = await response.json();
         console.error('Error response:', errorResponse);
-        throw new Error(errorResponse.message || 'Failed to fetch matched users');
+        throw new Error(
+          errorResponse.message || 'Failed to fetch matched users',
+        );
       }
 
       const data = await response.json();
-      console.log("response", data);
+      console.log('response', data);
       setMatchedUsers(data?.matchedUsers || []);
       setFilteredUsers(data?.matchedUsers || []);
     } catch (err) {
       console.error('Error fetching matched users:', err);
-      setError(err.message || 'Failed to fetch matched users. Please try again.');
+      setError(
+        err.message || 'Failed to fetch matched users. Please try again.',
+      );
     } finally {
       setLoading(false);
     }
   };
-
 
   const handleRightIconPress = () => {
     navigation.navigate('NotificationScreen');
@@ -251,7 +279,7 @@ const PartnerMatch = ({ navigation, route }) => {
     setShowFilters(false);
   };
 
-  const handlesearchFunctionality = (text) => {
+  const handlesearchFunctionality = text => {
     setSearchTerm(text);
   };
 
@@ -264,15 +292,16 @@ const PartnerMatch = ({ navigation, route }) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'authorization': `Bearer ${token}`
+          authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          userId: viewedUserId
-        })
+          userId: viewedUserId,
+        }),
       });
 
       if (!response.ok) {
-        let errorMessage = 'An error occurred while adding user to recently viewed';
+        let errorMessage =
+          'An error occurred while adding user to recently viewed';
         try {
           const errorData = await response.json();
           errorMessage = errorData.message || errorMessage;
@@ -286,14 +315,14 @@ const PartnerMatch = ({ navigation, route }) => {
       return {
         success: true,
         message: 'User added to recently viewed successfully!',
-        data: data
+        data: data,
       };
     } catch (error) {
       console.error('Error adding user to recently viewed:', error);
       return {
         success: false,
         message: error.message || 'An unexpected error occurred',
-        error: error
+        error: error,
       };
     }
   }
@@ -338,22 +367,31 @@ const PartnerMatch = ({ navigation, route }) => {
     }
 
     if (selectedGender) {
-      filtered = filtered.filter(user => user.gender?.toLowerCase() == selectedGender.toLowerCase());
+      filtered = filtered.filter(
+        user => user.gender?.toLowerCase() == selectedGender.toLowerCase(),
+      );
     }
 
     // Apply marital status filter
     if (selectedMaritalStatus) {
-      filtered = filtered.filter(user => user.maritalStatus?.toLowerCase() == selectedMaritalStatus.toLowerCase());
+      filtered = filtered.filter(
+        user =>
+          user.maritalStatus?.toLowerCase() ==
+          selectedMaritalStatus.toLowerCase(),
+      );
     }
 
     // Apply language filter
     if (selectedLanguage) {
-      filtered = filtered.filter(user => user.motherTongue?.toLowerCase() == selectedLanguage.toLowerCase());
+      filtered = filtered.filter(
+        user =>
+          user.motherTongue?.toLowerCase() == selectedLanguage.toLowerCase(),
+      );
     }
 
     // Apply salary range filter
     filtered = filtered.filter(user => {
-      console.log("usersalary", user.annualIncome);
+      console.log('usersalary', user.annualIncome);
       const userSalary = parseInt(user?.annualIncome?.replace(/,/g, '')) || 0;
       return userSalary >= salaryRange[0] && userSalary <= salaryRange[1];
     });
@@ -369,7 +407,7 @@ const PartnerMatch = ({ navigation, route }) => {
 
   if (loading) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
         <ActivityIndicator size="xl" color={COLORS.dark.primary} />
       </View>
     );
@@ -384,12 +422,14 @@ const PartnerMatch = ({ navigation, route }) => {
   }
 
   return (
-    <ScrollView refreshControl={
-      <RefreshControl refreshing={refreshing} onRefresh={onRefresh}
-        colors={[COLORS.dark.primary]}
-      />
-    }
-    >
+    <ScrollView
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+          colors={[COLORS.dark.primary]}
+        />
+      }>
       <View style={style.headerContainer}>
         <AppHeader
           iconLeft={<SVG.BackArrow size={24} fill={'black'} />}
@@ -397,7 +437,10 @@ const PartnerMatch = ({ navigation, route }) => {
           title={LABELS.matches || 'Matches'}
           iconRight={
             <TouchableOpacity onPress={handleRightIconPress}>
-              <Image source={IMAGES.notificationIcon} style={styles.Bell_Icon} />
+              <Image
+                source={IMAGES.notificationIcon}
+                style={styles.Bell_Icon}
+              />
             </TouchableOpacity>
           }
         />
@@ -432,71 +475,116 @@ const PartnerMatch = ({ navigation, route }) => {
         transparent={true}
         visible={showFilters}
         onRequestClose={closeFilters}>
-        <View style={filterStyles.container}>
-          <View style={filterStyles.modalContent}>
+        <View style={style.container}>
+          <View style={style.modalContent}>
             <ScrollView>
               {/* Gender Filter */}
-              <View style={filterStyles.ChildContainer}>
-                <Text style={filterStyles.sectionTitle}>Gender</Text>
-                <View style={filterStyles.buttonRow}>
-                  <TouchableOpacity
-                    style={selectedGender === 'male' ? filterStyles.selectedButton : filterStyles.button}
-                    onPress={() => setSelectedGender('male')}>
-                    <Text style={{ color: '#F97B22', textAlign: 'center', fontWeight: 'bold' }}>Male</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={selectedGender === 'female' ? filterStyles.selectedButton : filterStyles.button}
-                    onPress={() => setSelectedGender('female')}>
-                    <Text style={{ color: '#F97B22', textAlign: 'center', fontWeight: 'bold' }}>Female</Text>
-                  </TouchableOpacity>
+              <View style={style.ChildContainer}>
+                <Text style={style.sectionTitle}>Gender</Text>
+                <View style={style.line} />
+                <View style={style.buttonRow}>
+                  <View style={style.checkboxContainer}>
+                    <CheckBox
+                      value={selectedGender === 'all'}
+                      onValueChange={() => setSelectedGender('all')}
+                      tintColors={{true: '#F97B22', false: 'gray'}}
+                      style={{}}
+                    />
+                    <Text style={style.checkboxLabel}>All</Text>
+                  </View>
+                  <View style={style.checkboxContainer}>
+                    <CheckBox
+                      value={selectedGender === 'male'}
+                      onValueChange={() => setSelectedGender('male')}
+                      tintColors={{true: '#F97B22', false: 'gray'}}
+                    />
+                    <Text style={style.checkboxLabel}>Male</Text>
+                  </View>
+                  <View style={style.checkboxContainer}>
+                    <CheckBox
+                      value={selectedGender === 'female'}
+                      onValueChange={() => setSelectedGender('female')}
+                      tintColors={{true: '#F97B22', false: 'gray'}}
+                    />
+                    <Text style={style.checkboxLabel}>Female</Text>
+                  </View>
                 </View>
               </View>
 
               {/* Marital Status Filter */}
-              <View style={filterStyles.ChildContainer1}>
-                <Text style={filterStyles.sectionTitle}>Marital Status</Text>
-                <View style={filterStyles.buttonRow}>
-                  <TouchableOpacity
-                    style={selectedMaritalStatus === 'married' ? filterStyles.selectedButton : filterStyles.button}
-                    onPress={() => setSelectedMaritalStatus('married')}>
-                    <Text style={{ color: '#F97B22', textAlign: 'center', fontWeight: 'bold' }}>Married</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={selectedMaritalStatus === 'single' ? filterStyles.selectedButton : filterStyles.button}
-                    onPress={() => setSelectedMaritalStatus('single')}>
-                    <Text style={{ color: '#F97B22', textAlign: 'center', fontWeight: 'bold' }}>Single</Text>
-                  </TouchableOpacity>
+              <View style={style.ChildContainer1}>
+                <Text style={style.sectionTitle}>Marital Status</Text>
+                <View style={style.line} />
+                <View style={[style.buttonRow]}>
+                  <View style={style.checkboxContainer}>
+                    <CheckBox
+                      value={selectedMaritalStatus === 'married'}
+                      onValueChange={() => setSelectedMaritalStatus('married')}
+                      tintColors={{true: '#F97B22', false: 'gray'}}
+                    />
+                    <Text style={style.checkboxLabel}>Married</Text>
+                  </View>
+                  <View style={style.checkboxContainer}>
+                    <CheckBox
+                      value={selectedMaritalStatus === 'unmarried'}
+                      onValueChange={() =>
+                        setSelectedMaritalStatus('unmarried')
+                      }
+                      tintColors={{true: '#F97B22', false: 'gray'}}
+                    />
+                    <Text style={style.checkboxLabel}>Unmarried</Text>
+                  </View>
                 </View>
               </View>
 
               {/* Language Filter */}
-              <View style={filterStyles.ChildContainer2}>
-                <Text style={filterStyles.sectionTitle}>Language</Text>
-                <View style={filterStyles.buttonRow2}>
-                  <TouchableOpacity
-                    style={selectedLanguage === 'english' ? filterStyles.selectedButton2 : filterStyles.button2}
-                    onPress={() => setSelectedLanguage('english')}>
-                    <Text style={{ color: '#F97B22', textAlign: 'center', fontWeight: 'bold' }}>English</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={selectedLanguage === 'urdu' ? filterStyles.selectedButton2 : filterStyles.button2}
-                    onPress={() => setSelectedLanguage('urdu')}>
-                    <Text style={{ color: '#F97B22', textAlign: 'center', fontWeight: 'bold' }}>Urdu</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={selectedLanguage === 'hindi' ? filterStyles.selectedButton2 : filterStyles.button2}
-                    onPress={() => setSelectedLanguage('hindi')}>
-                    <Text style={{ color: '#F97B22', textAlign: 'center', fontWeight: 'bold' }}>Hindi</Text>
-                  </TouchableOpacity>
+              <View style={style.ChildContainer2}>
+                <Text style={style.sectionTitle}>Language</Text>
+                <View style={style.line} />
+                <View style={style.buttonRow2}>
+                  <View style={style.checkboxContainer}>
+                    <CheckBox
+                      value={selectedLanguage === 'english'}
+                      onValueChange={() => setSelectedLanguage('english')}
+                      tintColors={{true: '#F97B22', false: 'gray'}}
+                    />
+                    <Text style={style.checkboxLabel}>English</Text>
+                  </View>
+                  <View style={[style.checkboxContainer, {marginRight: 20}]}>
+                    <CheckBox
+                      value={selectedLanguage === 'urdu'}
+                      onValueChange={() => setSelectedLanguage('urdu')}
+                      tintColors={{true: '#F97B22', false: 'gray'}}
+                    />
+                    <Text style={style.checkboxLabel}>Urdu</Text>
+                  </View>
+                </View>
+                <View style={style.buttonRow2}>
+                  <View style={style.checkboxContainer}>
+                    <CheckBox
+                      value={selectedLanguage === 'hindi'}
+                      onValueChange={() => setSelectedLanguage('hindi')}
+                      tintColors={{true: '#F97B22', false: 'gray'}}
+                    />
+                    <Text style={style.checkboxLabel}>Hindi</Text>
+                  </View>
+                  <View style={style.checkboxContainer}>
+                    <CheckBox
+                      value={selectedLanguage === 'marathi'}
+                      onValueChange={() => setSelectedLanguage('marathi')}
+                      tintColors={{true: '#F97B22', false: 'gray'}}
+                    />
+                    <Text style={style.checkboxLabel}>Marathi</Text>
+                  </View>
                 </View>
               </View>
 
               {/* Salary Range Filter */}
-              <Text style={filterStyles.sectionTitle}>Salary Range</Text>
-              <Text style={filterStyles.salaryText}>
+              <Text style={style.sectionTitle}>Salary Range</Text>
+              <Text style={style.salaryText}>
                 {salaryRange[0]} - {salaryRange[1]}
               </Text>
-              <View style={filterStyles.sliderContainer}>
+              <View style={style.sliderContainer}>
                 <MultiSlider
                   values={salaryRange}
                   min={0}
@@ -508,32 +596,31 @@ const PartnerMatch = ({ navigation, route }) => {
                   }}
                   trackStyle={{
                     height: 6,
+                    width:'100%'
                   }}
                   markerStyle={{
                     backgroundColor: 'white',
                     borderWidth: 2,
                     borderColor: '#F97B22',
                     padding: 5,
+                    marginTop:5,
+
                   }}
                 />
               </View>
 
-              <TouchableOpacity
-                style={filterStyles.applyButton}
-                onPress={onSubmitFilter}>
-                <Text style={filterStyles.applyButtonText}>
-                  Apply Filter
-                </Text>
-              </TouchableOpacity>
+              <View
+                style={{flexDirection: 'row',justifyContent:'center',gap:20}}>
+                <Pressable style={style.closeButton} onPress={closeFilters}>
+                  <Text style={style.closeButtonText}>Close Filters</Text>
+                </Pressable>
+                <TouchableOpacity
+                  style={style.applyButton}
+                  onPress={onSubmitFilter}>
+                  <Text style={style.applyButtonText}>Apply Filter</Text>
+                </TouchableOpacity>
+              </View>
             </ScrollView>
-
-            <Pressable
-              style={filterStyles.closeButton}
-              onPress={closeFilters}>
-              <Text style={filterStyles.closeButtonText}>
-                Close Filters
-              </Text>
-            </Pressable>
           </View>
         </View>
       </Modal>
@@ -550,14 +637,18 @@ const PartnerMatch = ({ navigation, route }) => {
               onPressBtn1={async () => {
                 addToRecentlyViewed(user?._id);
                 if (await subscriptionCheck(user)) {
-                  navigation.navigate('UserDetailsScreen', { userId: user?._id });
+                  navigation.navigate('UserDetailsScreen', {userId: user?._id});
                 } else {
-                  Toast("Your profile view limit exceeded.");
+                  Toast('Your profile view limit exceeded.');
                 }
               }}
               onPressBtn2={async () => {
                 if (await checkLiveChatAvailability()) {
-                  navigation.navigate('ChatScreen', { userId: user?._id, roomId: `${user?._id}_${currentUser.user._id}`, user: user });
+                  navigation.navigate('ChatScreen', {
+                    userId: user?._id,
+                    roomId: `${user?._id}_${currentUser.user._id}`,
+                    user: user,
+                  });
                 } else {
                   Toast("You can't chat buy premium plan.");
                 }
@@ -565,7 +656,10 @@ const PartnerMatch = ({ navigation, route }) => {
             />
           ))
         ) : (
-          <AppText title="No matched users found" color={COLORS.dark.secondary} />
+          <AppText
+            title="No matched users found"
+            color={COLORS.dark.secondary}
+          />
         )}
       </View>
     </ScrollView>
