@@ -5,8 +5,34 @@ export const styles =
   StyleSheet.create({
     container: {
       flex: 1,
-      position: 'relative',
+      justifyContent: 'center',
+      alignItems: 'center',
       backgroundColor: '#FFFFFF',
+    },
+    inputContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      backgroundColor: '#FFFFFF',
+      borderColor: '#E5E5E5',
+      borderWidth: 1,
+      borderRadius: 17,
+      paddingHorizontal: 10,
+      height: 58,
+    },
+    input: {
+      flex: 1,
+      color: '#000000',
+      height: 40,
+    },
+    iconContainer: {
+      padding: 5,
+    },
+    loginbtn: {
+      alignItems: 'center',
+      borderWidth: 1,
+      borderRadius: 17,
+      paddingHorizontal: 10,
+      height: 58,
     },
     contentContainer: {
       flex: 1,

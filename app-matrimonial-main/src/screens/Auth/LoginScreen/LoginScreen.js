@@ -1,7 +1,7 @@
 import auth from '@react-native-firebase/auth';
 import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
-import { Alert, ScrollView, TouchableOpacity, View, ActivityIndicator } from 'react-native';
+import { Alert, ScrollView, TouchableOpacity, View, ActivityIndicator, TextInput } from 'react-native';
 import { Fonts } from '../../../assets/fonts';
 import { IMAGES } from '../../../assets/images';
 import { SVG } from '../../../assets/svg';
@@ -40,10 +40,10 @@ const LoginScreen = () => {
 
   const PasswordEyeIcon = ({ showPassword }) => {
     return showPassword ? (
-      <Svg width={24} height={24} viewBox="0 0 24 24" fill="black">
+      <Svg width={24} height={24} viewBox="0 0 24 24" fill="none">
         <Path
           d="M1 12S4 4 12 4s11 8 11 8-3 8-11 8-11-8-11-8z"
-          fill="black"
+          fill="#E5E5E5"
         />
         <Path
           d="M12 15a3 3 0 100-6 3 3 0 000 6z"
@@ -59,7 +59,7 @@ const LoginScreen = () => {
           d="M12 4.5C7.78 4.5 4.3 7.5 3 12c1.3 4.5 4.78 7.5 9 7.5s7.7-3 9-7.5c-1.3-4.5-4.78-7.5-9-7.5z
           M12 15c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3z
           M-1 1L25 25"
-          stroke="black"
+          stroke="#E5E5E5"
           strokeWidth="1"
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -139,21 +139,21 @@ const LoginScreen = () => {
       setAlertVisible(true);
       return;
     }
-  
+
     if (!isValidatedLogin({ email, password })) {
       setAlertMessage('Invalid email or password');
       setAlertVisible(true);
       return;
     }
-  
+
     setIsLoading(true);
-  
+
     try {
       const user = await loginUser(email, password);
       const backendLoginResult = await loginAndGetAccessToken();
       await AsyncStorage.setItem('loginToken', backendLoginResult.token);
       await getSubscriptions();
-  
+
       // If we've made it this far, all checks have passed
       navigation.navigate('DrawerNavigation');
     } catch (error) {
@@ -164,7 +164,7 @@ const LoginScreen = () => {
       setIsLoading(false);
     }
   };
-  
+
   const handleGoogleSignIn = async () => {
     try {
       setIsLoading(true);
@@ -245,10 +245,17 @@ const LoginScreen = () => {
             />
             <Space mT={10} />
 
-            <AppInput
-              placeholder={LABELS.emailPlaceholder}
-              onChangeText={onEnterEmail}
-            />
+            <View style={styles.container}>
+              <View style={styles.inputContainer}>
+                <TextInput
+                  placeholder={LABELS.emailPlaceholder}
+                  keyboardType={'email-address'}
+                  onChangeText={onEnterEmail}
+                  placeholderTextColor="#949494"
+                  style={styles.input}
+                />
+              </View>
+            </View>
 
             <Space mT={10} />
 
@@ -261,17 +268,23 @@ const LoginScreen = () => {
             />
             <Space mT={10} />
 
-            <AppInput
-              placeholder={LABELS.passwordPlaceholder}
-              secureTextEntry={!showPassword}
-              keyboardType={'default'}
-              onChangeText={onPasswordEnter}
-            />
-            <TouchableOpacity
-              onPress={() => setShowPassword(!showPassword)}
-              style={style.PasswordEyeIcon}>
-              <PasswordEyeIcon showPassword={showPassword} />
-            </TouchableOpacity>
+            <View style={styles.container}>
+              <View style={styles.inputContainer}>
+                <TextInput
+                  placeholder={LABELS.passwordPlaceholder}
+                  secureTextEntry={!showPassword}
+                  keyboardType={'default'}
+                  onChangeText={setPassword}
+                  placeholderTextColor="#949494"
+                  style={styles.input}
+                />
+                <TouchableOpacity
+                  onPress={() => setShowPassword(!showPassword)}
+                  style={styles.iconContainer}>
+                  <PasswordEyeIcon showPassword={showPassword} color="#E5E5E5" />
+                </TouchableOpacity>
+              </View>
+            </View>
 
             <Space mT={10} />
 

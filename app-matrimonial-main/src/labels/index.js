@@ -35,7 +35,7 @@ export const LABELS = {
   phoneNumber: 'Phone Number',
   phonePlaceholder: '3456999 9',
   Password: 'Password',
-  passwordPlaceholder: '******',
+  passwordPlaceholder: 'Password',
   checkboxLabel: 'I agree to the Terms of use And Privacy Policy',
   welcomeBack: 'Welcome Back!',
   loginMessage: 'Please Log in to continue.',
