@@ -477,6 +477,153 @@ const dashboardController = {
       return next(error);
     }
   },
+  async createUser(req, res) {
+    try {
+      const {
+        name,
+        email,
+        phone,
+        password,
+        isAdmin,
+        gender,
+        dateOfBirth,
+        age,
+        height,
+        motherTongue,
+        cast,
+        religion,
+        sect,
+        city,
+        highestDegree,
+        occupation,
+        employedIn,
+        annualIncome,
+        workLocation,
+        maritalStatus,
+        fcmToken,
+        userImages,
+        ageFrom,
+        ageTo,
+        heightFrom,
+        heightTo,
+        lookingFor,
+        physicalStatus,
+        food,
+        smoking,
+        drinking,
+        familyType,
+        familyStatus,
+        familyValue,
+        fathersOccupation,
+        horoscopeDetails,
+        FamilyDetails,
+        Education,
+        partnerExpectation
+      } = req.body;
+
+      // Validate required fields
+      if (!name || !email || !phone || !password) {
+        return res.status(400).json({ success: false, message: "Missing required fields" });
+      }
+
+      // Check if user with this email already exists
+      const existingUser = await User.findOne({ email });
+      if (existingUser) {
+        return res.status(400).json({ success: false, message: "User with this email already exists" });
+      }
+
+      // Hash password
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(password, salt);
+
+      // Create new user
+      const newUser = new User({
+        name,
+        email,
+        phone,
+        password: hashedPassword,
+        isAdmin: isAdmin || false,
+        gender,
+        dateOfBirth,
+        age,
+        height,
+        motherTongue,
+        cast,
+        religion,
+        sect,
+        city,
+        highestDegree,
+        occupation,
+        employedIn,
+        annualIncome,
+        workLocation,
+        maritalStatus,
+        fcmToken,
+        userImages: userImages || [],
+        ageFrom,
+        ageTo,
+        heightFrom,
+        heightTo,
+        lookingFor,
+        physicalStatus,
+        food,
+        smoking,
+        drinking,
+        familyType,
+        familyStatus,
+        familyValue,
+        fathersOccupation,
+        horoscopeDetails,
+        FamilyDetails,
+        Education,
+        partnerExpectation
+      });
+
+      await newUser.save();
+
+      res.status(201).json({ success: true, message: "User created successfully", user: newUser });
+    } catch (error) {
+      console.error("Error creating user:", error);
+      res.status(500).json({ success: false, message: "Error creating user", error: error.message });
+    }
+  },
+
+  async editUser(req, res) {
+    try {
+      const { id } = req.params;
+      const updateData = req.body;
+
+      // Remove password from updateData if it exists (password should be updated separately)
+      delete updateData.password;
+
+      const updatedUser = await User.findByIdAndUpdate(id, updateData, { new: true });
+
+      if (!updatedUser) {
+        return res.status(404).json({ success: false, message: "User not found" });
+      }
+
+      res.status(200).json({ success: true, message: "User updated successfully", user: updatedUser });
+    } catch (error) {
+      console.error("Error updating user:", error);
+      res.status(500).json({ success: false, message: "Error updating user", error: error.message });
+    }
+  },
+  async getUser(req, res) {
+    try {
+      const { id } = req.params;
+      const user = await User.findById(id);
+
+      if (!user) {
+        return res.status(404).json({ success: false, message: "User not found" });
+      }
+
+      res.status(200).json({ success: true, user });
+    } catch (error) {
+      console.error("Error fetching user:", error);
+      res.status(500).json({ success: false, message: "Error fetching user", error: error.message });
+    }
+  },
+
 
   async deleteUser(req, res, next) {
     try {

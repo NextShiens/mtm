@@ -77,4 +77,6 @@ router.get(
   isAuthenticated,
   adminDashController.getUserInfo
 );
+router.post("/admin/create-user",isAuthenticated, adminDashController.createUser);
+router.put("/admin/edit-user/:id",isAuthenticated, adminDashController.editUser);
 module.exports = router;

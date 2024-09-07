@@ -6,99 +6,128 @@ import { AiOutlineEye } from "react-icons/ai";
 import { backendUrl } from "@/url";
 import Link from "next/link";
 import AdminLayout from "@/components/AdminLayout";
-import toast, { LoaderIcon } from "react-hot-toast";
+import toast from "react-hot-toast";
+import { useRouter } from 'next/router';
+
+const DashboardCard = ({ item, dashboardDetails }) => (
+  <div
+    className="flex justify-between gap-4 p-4 border border-[rgba(15,35,84,0.10)] rounded-[10px]"
+    style={{
+      background: item.background,
+      borderBottom: item.borderColor,
+    }}
+  >
+    <div className="flex flex-col gap-2">
+      <h2 className="text-[16px] text-[#363B49] font-[500]">{item.heading}</h2>
+      {dashboardDetails ? (
+        <p className="text-[24px] text-[#000] font-[600] mt-2">{item.textNumber}</p>
+      ) : (
+        <div className="animate-pulse bg-gray-200 h-6 w-16 rounded"></div>
+      )}
+      <p className="text-[#363B49] text-[16px] pt-2">
+        <span style={{ color: item.spanText }}>{item.percentage}</span> {item.text}
+      </p>
+    </div>
+    <img src={item.img} className="w-12 h-12 object-contain" alt="Icon" />
+  </div>
+);
+
+const ActionMenu = ({ onClose, onView, onEdit, onDelete, onEditUser }) => (
+  <div className="bg-white border border-gray-200 rounded-md shadow-lg z-20 w-48">
+    <div className="py-1">
+      <button onClick={onView} className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+        <AiOutlineEye className="inline mr-2" /> View Profile
+      </button>
+      <button onClick={onEdit} className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+        <BiSolidEdit className="inline mr-2" /> Edit Profile
+      </button>
+      <button onClick={onDelete} className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+        <RiDeleteBin6Line className="inline mr-2" /> Delete Profile
+      </button>
+      <button onClick={onEditUser} className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+        <BiSolidEdit className="inline mr-2" /> Edit User Details
+      </button>
+    </div>
+  </div>
+);
 
 export default function Home() {
-  const [show, setShow] = useState(false);
-  const [members, setMembers] = useState();
-  const [selected, setSelected] = useState();
-  const divRef = useRef();
+  const [users, setUsers] = useState([]);
+  const [dashboardDetails, setDashboardDetails] = useState(null);
   const [loading, setLoading] = useState(false);
-
-  const [users, setUsers] = useState();
-  const [dashboardDetails, setDashboardDetails] = useState();
-
-  const handleShow = (id) => {
-    setShow(!show);
-    setSelected(id);
-  };
+  const [activeMenu, setActiveMenu] = useState(null);
+  const router = useRouter();
+  const menuRef = useRef(null);
 
   useEffect(() => {
-    fetch(backendUrl + "/admin/getAllUsers", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setUsers(data.users);
-      });
+    fetchUsers();
+    fetchDashboardDetails();
   }, []);
 
-  useEffect(() => {
-    fetch(backendUrl + "/admin/dashDetails", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setDashboardDetails(data);
+  const fetchUsers = async () => {
+    try {
+      const res = await fetch(`${backendUrl}/admin/getAllUsers`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
       });
-  }, []);
-
-  const handleDelete = (id) => {
-    setLoading(true);
-    fetch(backendUrl + `/admin/delete-user/${id}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setLoading(false);
-        toast.success("User deleted successfully");
-        setMembers(data.users);
-      })
-      .catch((err) => {
-        setLoading(false);
-        toast.error(err.message);
-      });
-  };
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (divRef.current && !divRef.current.contains(event.target)) {
-        setShow(false);
-      }
-    };
-
-    if (show) {
-      document.addEventListener("click", handleClickOutside);
-    } else {
-      document.removeEventListener("click", handleClickOutside);
+      const data = await res.json();
+      setUsers(data.users);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+      toast.error("Failed to fetch users");
     }
+  };
 
-    return () => {
-      document.removeEventListener("click", handleClickOutside);
-    };
-  }, [show]);
+  const fetchDashboardDetails = async () => {
+    try {
+      const res = await fetch(`${backendUrl}/admin/dashDetails`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+      });
+      const data = await res.json();
+      setDashboardDetails(data);
+    } catch (error) {
+      console.error("Error fetching dashboard details:", error);
+      toast.error("Failed to fetch dashboard details");
+    }
+  };
 
+  const handleDelete = async (id) => {
+    setLoading(true);
+    try {
+      const res = await fetch(`${backendUrl}/admin/delete-user/${id}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+      });
+      const data = await res.json();
+      setLoading(false);
+      toast.success("User deleted successfully");
+      setUsers(data.users);
+    } catch (error) {
+      setLoading(false);
+      toast.error(error.message || "Failed to delete user");
+    }
+  };
+
+  const handleEditRedirect = (userId) => {
+    router.push(`/edit-user?userId=${userId}`);
+  };
+
+  const toggleMenu = (index) => {
+    setActiveMenu(activeMenu === index ? null : index);
+  };
   const cardsData = [
     {
       id: 1,
       background: "#f4f6ff",
       heading: "All Members",
-      textNumber: `${dashboardDetails && dashboardDetails.totalUsers}`,
+      textNumber: dashboardDetails?.totalUsers || 0,
       spanText: "#28A745",
-      percentage: dashboardDetails && dashboardDetails.userPercentageChange,
-      text: ` Since Last month`,
+      percentage: dashboardDetails?.userPercentageChange || 0,
+      text: "Since Last month",
       img: "/images/allMemberIcon.png",
       borderColor: "10px solid #3747CF",
     },
@@ -118,13 +147,12 @@ export default function Home() {
       id: 3,
       background: "#F1E8F0",
       heading: "Paid Members",
-      textNumber: `${
-        dashboardDetails && dashboardDetails.paidUsers === undefined ? (
-          <LoaderIcon />
-        ) : (
-          dashboardDetails && dashboardDetails.paidUsers
-        )
-      }`,
+      textNumber: `${dashboardDetails && dashboardDetails.paidUsers === undefined ? (
+        <LoaderIcon />
+      ) : (
+        dashboardDetails && dashboardDetails.paidUsers
+      )
+        }`,
       spanText: "#C73170",
       percentage: dashboardDetails && dashboardDetails.paidUserPercentageChange,
       text: ` Since Last month`,
@@ -145,239 +173,83 @@ export default function Home() {
     },
   ];
 
-  const graphCardData = [
-    {
-      id: 1,
-      bg: "#000000",
-      heading: "Advertisment",
-      textNumber: "123",
-      spanText: "%12.00",
-      spanStyle: "#28A745",
-      img: "/images/graphImg.png",
-    },
-    {
-      id: 2,
-      bg: "#000000",
-      heading: "Membership Plan",
-      textNumber: "123",
-      spanText: "%12.00",
-      spanStyle: "#C73170",
-
-      img: "/images/graphImgPink.png",
-    },
-    {
-      id: 3,
-      bg: "#000000",
-      heading: "Express Interest",
-      textNumber: "123",
-      spanText: "%12.00",
-      spanStyle: "#E8BC42",
-      img: "/images/graphImgYellow.png",
-    },
-    {
-      id: 4,
-      bg: "#000000",
-      heading: "Success Story",
-      textNumber: "123",
-      spanText: "%12.00",
-      spanStyle: "#1240B4",
-      img: "/images/graphImgBlue.png",
-    },
-  ];
-
   return (
-    <div>
-      <div className="grid grid-cols-1 sm:grid-cols-2  xxl:grid-cols-4 gap-[1rem]">
-        {cardsData.map((item, index) => (
-          <div
-            className={`flex justify-between gap-4 px-4 pt-4  border border-[rgba(15, 35, 84, 0.10)] rounded-[10px]`}
-            style={{
-              background: item.background,
-              borderBottom: item.borderColor,
-            }}
-            key={item.id}
-          >
-            <div className="flex flex-col gap-2">
-              <h1 className="text-[16px] text-[#363B49] font-[500]">
-                {item.heading}
-              </h1>
-              {dashboardDetails ? (
-                <h1 className="text-[24px] text-[#000] font-[600] mt-2">
-                  {item.textNumber}
-                </h1>
-              ) : (
-                <LoaderIcon />
-              )}
-              <p className="text-[#363B49] text-[16px] pt-2 pb-4 ">
-                <span style={{ color: item.spanText }}>{item.percentage}</span>
-                {item.text}
-              </p>
-            </div>
-            <div>
-              <img src={item.img} className="mt-4 " alt="Icon" />
-            </div>
-          </div>
+    <div className="container mx-auto px-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        {cardsData.map((item) => (
+          <DashboardCard key={item.id} item={item} dashboardDetails={dashboardDetails} />
         ))}
-
-        {/* {graphCardData.map((item) => (
-          <div key={item.id}>
-            <div className="  border border-[rgba(15, 35, 84, 0.10)] rounded-[10px]">
-              <div className={`flex justify-between  gap-4 p-4 `}>
-                <div className="flex flex-col gap-1">
-                  <h1 className="text-[16px] text-[#363B49] font-[500]">
-                    {item.heading}
-                  </h1>
-                  <h1 className="text-[24px] text-[#000] font-[600]">
-                    {item.textNumber}
-                  </h1>
-                </div>
-                <div>
-                  <p
-                    className="text-[14px] font-[600]"
-                    style={{ color: item.spanStyle }}
-                  >
-                    {item.spanText}
-                  </p>
-                </div>
-              </div>
-              <div className="w-full">
-                <img
-                  src={item.img}
-                  alt="Graph Img"
-                  className="w-full h-[80px]"
-                />
-              </div>
-            </div>
-          </div>
-        ))} */}
       </div>
 
-      <div className="mt-6">
-        <h1 className="text-homeText-Color text-[24px] font-[600] ">
-          Recent Members
-        </h1>
-        <div className="overflow-x-auto mt-7">
-          <table className="min-w-full bg-white ">
-            <thead className="ltr:text-left rtl:text-right border-t border-t-[rgba(0, 0, 0, 0.07)] p-4">
-              <tr className="">
-                <th className="whitespace-nowrap px-5 py-4  text-[16px]    text-[#363B49]  font-[400]">
-                  User Name
-                </th>
-                <th className="whitespace-nowrap px-4 py-4 text-[16px]  text-[#363B49]  font-[400] ">
-                  Gender
-                </th>
-                <th className="whitespace-nowrap px-4 py-4 text-[16px]  text-[#363B49]  font-[400] ">
-                  Email Address
-                </th>
-                <th className="whitespace-nowrap px-4 py-4 text-[16px]  text-[#363B49]  font-[400] ">
-                  Mobile Number
-                </th>
-                <th className="whitespace-nowrap px-4 py-4 text-[16px]  text-[#363B49]  font-[400] ">
-                  Status
-                </th>
-                <th className="whitespace-nowrap px-4 py-4 text-[16px]  text-[#363B49]  font-[400] ">
-                  Action
-                </th>
+      <h1 className="text-2xl font-semibold mb-4">Recent Members</h1>
+      <div className="h-[500px] overflow-y-auto">
+        <table className="min-w-full bg-white border border-gray-200">
+          <thead className="bg-gray-50 sticky top-0">
+            <tr>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User Name</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Gender</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email Address</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Mobile Number</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {users.map((user, index) => (
+              <tr key={user._id}>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="flex items-center">
+                    {user.userImages.length > 0 ? (
+                      <img className="h-10 w-10 rounded-full" src={user.userImages[0]} alt="" />
+                    ) : (
+                      <div className="h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center">
+                        <span className="text-xl font-medium text-gray-600">{user.name[0]}</span>
+                      </div>
+                    )}
+                    <div className="ml-4">
+                      <div className="text-sm font-medium text-gray-900">{user.name}</div>
+                    </div>
+                  </div>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="text-sm text-gray-900">{user.gender}</div>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="text-sm text-gray-900">{user.email}</div>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="text-sm text-gray-900">{user.phone}</div>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${user.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                    {user.isActive ? 'Active' : 'Inactive'}
+                  </span>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium relative">
+                  <button
+                    onClick={() => toggleMenu(index)}
+                    className="text-indigo-600 hover:text-indigo-900 action-menu-button"
+                  >
+                    <BsThreeDotsVertical />
+                  </button>
+                  {activeMenu === index && (
+                    <div ref={menuRef} className="absolute right-0 mt-2 z-10">
+                      <ActionMenu
+                        onClose={() => setActiveMenu(null)}
+                        onView={() => router.push(`/user-profile/${user._id}`)}
+                        onEdit={() => router.push(`/user-edit/${user._id}`)}
+                        onDelete={() => handleDelete(user._id)}
+                        onEditUser={() => handleEditRedirect(user._id)}
+                      />
+                    </div>
+                  )}
+                </td>
               </tr>
-            </thead>
-            <tbody className="home-table ">
-              {users &&
-                users.map((item, index) => {
-                  return (
-                    <tr
-                      className="border border-[rgba(0, 0, 0, 0.07)]"
-                      key={index}
-                    >
-                      <td className="whitespace-nowrap p-4 text-[14px]  text-blackColor font-[500] flex items-center gap-4  max-xl:w-[200px] ">
-                        {item && item.userImages.length > 0 ? (
-                          <img
-                            src={item.userImages[0]}
-                            alt="Profile Image"
-                            className="block mx-auto w-10 h-10 rounded-full"
-                          />
-                        ) : (
-                          <div className="h-10 w-10 flex items-center justify-center bg-gray-200 rounded-full mx-auto">
-                            {item && item.name[0]}
-                          </div>
-                        )}
-                        <h1>{item.name}</h1>
-                      </td>
-                      <td className="whitespace-nowrap p-4 font-roboto text-black font-[500] max-xl:w-[300px] ">
-                        {item.gender}
-                      </td>
-                      <td className="whitespace-nowrap p-4 font-roboto  text-blackColor font-[500] max-xl:w-[300px]  ">
-                        {item.email}
-                      </td>
-                      <td className="whitespace-nowrap p-4  font-roboto text-blackColor font-[500] max-xl:w-[300px]  ">
-                        {item.phone}
-                      </td>
-                      <td className="whitespace-nowrap p-4   text-blackColor font-[500] max-xl:w-[300px]  ">
-                        <button
-                          className={`w-[108px] h-[40px] font-roboto p-2  rounded-lg ${
-                            !item.isActive
-                              ? "bg-[#CFD8ED] text-[#1240B4]"
-                              : "bg-[#CFFFDA] text-[#28A745]"
-                          } `}
-                        >
-                          {item.isActive ? "Approved" : "Pending"}
-                        </button>
-                      </td>
-                      <td className="whitespace-nowrap p-4  text-blackColor font-[500] max-xl:w-[300px]  relative">
-                        <button
-                          className="border border-[rgba(0, 0, 0, 0.07)] p-2 bg-[248, 249, 255, 0.72] rounded-lg"
-                          onClick={() =>
-                            setTimeout(() => {
-                              handleShow(index);
-                            }, 100)
-                          }
-                        >
-                          <BsThreeDotsVertical />
-                        </button>
-                        {show && selected === index && (
-                          <div
-                            ref={divRef}
-                            className="absolute top-[60px] left-[-30px]  max-[1759px]:left-[-90px] w-[142px] bg-white border border-[rgba(194, 194, 206, 0.22)] p-4 flex flex-col gap-4 rounded-md z-20 shadow-dropDownBoxShadow "
-                          >
-                            <div className="flex items-center gap-3 cursor-pointer">
-                              <AiOutlineEye className="text-[#696974]" />
-                              <Link href={`/user-profile/${item._id}`}>
-                                <p className="text-[#696974] font-normal text-[14px]">
-                                  View Profile
-                                </p>
-                              </Link>
-                            </div>
-                            <div
-                              className="flex items-center gap-3 cursor-pointer"
-                              // onClick={showModal}
-                            >
-                              <BiSolidEdit className="text-[#696974]" />
-                              <Link href={`/user-edit/${item._id}`}>
-                                <p className="text-[#696974] font-normal text-[14px]">
-                                  Edit Profile
-                                </p>
-                              </Link>
-                            </div>
-                            <div
-                              className="flex items-center gap-3 cursor-pointer"
-                              onClick={() => handleDelete(item._id)}
-                            >
-                              <RiDeleteBin6Line className="text-[#696974]  " />
-                              <p className="text-[#696974] font-normal text-[14px]">
-                                {loading ? "Deleting..." : "Delete Profile"}
-                              </p>
-                            </div>
-                          </div>
-                        )}
-                      </td>
-                    </tr>
-                  );
-                })}
-            </tbody>
-          </table>
-        </div>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );
 }
-
 Home.getLayout = (page) => <AdminLayout>{page}</AdminLayout>;

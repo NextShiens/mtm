@@ -192,30 +192,18 @@ export const sidebarData = [
       },
     ],
   },
-  // {
-  //   id: 9,
-  //   icon: <PiUserSwitchLight className="text-[#ED6C0E] text-[22px]" />,
-  //   header: "User Activity",
-  //   startingRoute: "",
-  //   subRoutes: [
-  //     {
-  //       text: "Route 1",
-  //       route: "",
-  //     },
-  //     {
-  //       text: "Route 2",
-  //       route: "",
-  //     },
-  //     {
-  //       text: "Route 3",
-  //       route: "",
-  //     },
-  //     {
-  //       text: "Route 4",
-  //       route: "",
-  //     },
-  //   ],
-  // },
+  {
+    id: 9,
+    icon: <PiUserSwitchLight className="text-[#ED6C0E] text-[22px]" />,
+    header: "User Management",
+    startingRoute: "",
+    subRoutes: [
+      {
+        text: "Create New User",
+        route: "create-user",
+      },
+    ],
+  },
 ];
 
 function Sidebar() {
