@@ -41,7 +41,7 @@ const UserForm = ({ userId = null }) => {
                         headers: {
                             'Content-Type': 'application/json',
                         },
-                        withCredentials: true, 
+                        withCredentials: true,
                     }
                 );
             } else {
@@ -52,7 +52,7 @@ const UserForm = ({ userId = null }) => {
                         headers: {
                             'Content-Type': 'application/json',
                         },
-                        withCredentials: true, 
+                        withCredentials: true,
                     }
                 );
             }
@@ -158,8 +158,62 @@ const UserForm = ({ userId = null }) => {
         name: Yup.string().required('Required'),
         email: Yup.string().email('Invalid email').required('Required'),
         phone: Yup.string().required('Required'),
-        password: userId ? Yup.string() : Yup.string().required('Required'),
-        // Add more validations as needed
+        password: Yup.string().required('Required'),
+        isAdmin: Yup.boolean(),
+        gender: Yup.string().required('Required'),
+        dateOfBirth: Yup.date().required('Required'),
+        age: Yup.number().required('Required').positive().integer(),
+        height: Yup.number().required('Required').positive(),
+        motherTongue: Yup.string().required('Required'),
+        cast: Yup.string().required('Required'),
+        religion: Yup.string().required('Required'),
+        sect: Yup.string().required('Required'),
+        city: Yup.string().required('Required'),
+        highestDegree: Yup.string().required('Required'),
+        occupation: Yup.string().required('Required'),
+        employedIn: Yup.string().required('Required'),
+        annualIncome: Yup.string().required('Required'),
+        workLocation: Yup.string().required('Required'),
+        maritalStatus: Yup.string().required('Required'),
+        userImages: Yup.array().of(Yup.string().url()),
+        ageFrom: Yup.number().required('Required').positive().integer(),
+        ageTo: Yup.number().required('Required').positive().integer(),
+        heightFrom: Yup.number().required('Required').positive(),
+        heightTo: Yup.number().required('Required').positive(),
+        lookingFor: Yup.string().required('Required'),
+        physicalStatus: Yup.string().required('Required'),
+        food: Yup.string().required('Required'),
+        smoking: Yup.string().required('Required'),
+        drinking: Yup.string().required('Required'),
+        familyType: Yup.string().required('Required'),
+        familyStatus: Yup.string().required('Required'),
+        familyValue: Yup.string().required('Required'),
+        fathersOccupation: Yup.string().required('Required'),
+        horoscopeDetails: Yup.object().shape({
+            dosh: Yup.string().required('Required'),
+            star: Yup.string().required('Required'),
+            birthTime: Yup.string().required('Required'),
+            birthPlace: Yup.string().required('Required'),
+            religion: Yup.string().required('Required'),
+            caste: Yup.string().required('Required'),
+            motherTongue: Yup.string().required('Required'),
+            manglik: Yup.string().required('Required'),
+        }),
+        FamilyDetails: Yup.object().shape({
+            numOfBrothers: Yup.number().required('Required').positive().integer(),
+            numOfMarriedBrothers: Yup.number().required('Required').positive().integer(),
+            numOfSisters: Yup.number().required('Required').positive().integer(),
+            numOfMarriedSisters: Yup.number().required('Required').positive().integer(),
+            country: Yup.string().required('Required'),
+            state: Yup.string().required('Required'),
+            city: Yup.string().required('Required'),
+        }),
+        Education: Yup.object().shape({
+            education: Yup.string().required('Required'),
+            occupation: Yup.string().required('Required'),
+            income: Yup.string().required('Required'),
+        }),
+        partnerExpectation: Yup.string().required('Required'),
     });
 
     return (
@@ -178,118 +232,32 @@ const UserForm = ({ userId = null }) => {
                         <h2 className="text-2xl font-bold text-orange-600">Create New User</h2>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label htmlFor="name" className="block text-orange-600 font-semibold mb-2">Name</label>
-                            <Field name="name" type="text" className="w-full p-2 border border-orange-300 rounded" />
-                            <ErrorMessage name="name" component="div" className="text-red-500 text-sm mt-1" />
-                        </div>
-
-                        <div>
-                            <label htmlFor="email" className="block text-orange-600 font-semibold mb-2">Email</label>
-                            <Field name="email" type="email" className="w-full p-2 border border-orange-300 rounded" />
-                            <ErrorMessage name="email" component="div" className="text-red-500 text-sm mt-1" />
-                        </div>
-
-                        <div>
-                            <label htmlFor="phone" className="block text-orange-600 font-semibold mb-2">Phone</label>
-                            <Field name="phone" type="text" className="w-full p-2 border border-orange-300 rounded" />
-                            <ErrorMessage name="phone" component="div" className="text-red-500 text-sm mt-1" />
-                        </div>
-
-                        {!userId && (
-                            <div>
-                                <label htmlFor="password" className="block text-orange-600 font-semibold mb-2">Password</label>
-                                <Field name="password" type="password" className="w-full p-2 border border-orange-300 rounded" />
-                                <ErrorMessage name="password" component="div" className="text-red-500 text-sm mt-1" />
-                            </div>
-                        )}
-
-                        <div>
-                            <label htmlFor="isAdmin" className="block text-orange-600 font-semibold mb-2">Is Admin</label>
-                            <Field name="isAdmin" type="checkbox" className="mr-2" />
-                        </div>
-
-                        <div>
-                            <label htmlFor="gender" className="block text-orange-600 font-semibold mb-2">Gender</label>
-                            <Field name="gender" as="select" className="w-full p-2 border border-orange-300 rounded">
-                                <option value="">Select Gender</option>
-                                <option value="male">Male</option>
-                                <option value="female">Female</option>
-                            </Field>
-                        </div>
-
-                        <div>
-                            <label htmlFor="dateOfBirth" className="block text-orange-600 font-semibold mb-2">Date of Birth</label>
-                            <Field name="dateOfBirth" type="date" className="w-full p-2 border border-orange-300 rounded" />
-                        </div>
-
-                        <div>
-                            <label htmlFor="age" className="block text-orange-600 font-semibold mb-2">Age</label>
-                            <Field name="age" type="text" className="w-full p-2 border border-orange-300 rounded" />
-                        </div>
-
-                        <div>
-                            <label htmlFor="height" className="block text-orange-600 font-semibold mb-2">Height</label>
-                            <Field name="height" type="text" className="w-full p-2 border border-orange-300 rounded" />
-                        </div>
-
-                        <div>
-                            <label htmlFor="motherTongue" className="block text-orange-600 font-semibold mb-2">Mother Tongue</label>
-                            <Field name="motherTongue" type="text" className="w-full p-2 border border-orange-300 rounded" />
-                        </div>
-
-                        <div>
-                            <label htmlFor="cast" className="block text-orange-600 font-semibold mb-2">Cast</label>
-                            <Field name="cast" type="text" className="w-full p-2 border border-orange-300 rounded" />
-                        </div>
-
-                        <div>
-                            <label htmlFor="religion" className="block text-orange-600 font-semibold mb-2">Religion</label>
-                            <Field name="religion" type="text" className="w-full p-2 border border-orange-300 rounded" />
-                        </div>
-
-                        <div>
-                            <label htmlFor="sect" className="block text-orange-600 font-semibold mb-2">Sect</label>
-                            <Field name="sect" type="text" className="w-full p-2 border border-orange-300 rounded" />
-                        </div>
-
-                        <div>
-                            <label htmlFor="city" className="block text-orange-600 font-semibold mb-2">City</label>
-                            <Field name="city" type="text" className="w-full p-2 border border-orange-300 rounded" />
-                        </div>
-
-                        <div>
-                            <label htmlFor="highestDegree" className="block text-orange-600 font-semibold mb-2">Highest Degree</label>
-                            <Field name="highestDegree" type="text" className="w-full p-2 border border-orange-300 rounded" />
-                        </div>
-
-                        <div>
-                            <label htmlFor="occupation" className="block text-orange-600 font-semibold mb-2">Occupation</label>
-                            <Field name="occupation" type="text" className="w-full p-2 border border-orange-300 rounded" />
-                        </div>
-
-                        <div>
-                            <label htmlFor="employedIn" className="block text-orange-600 font-semibold mb-2">Employed In</label>
-                            <Field name="employedIn" type="text" className="w-full p-2 border border-orange-300 rounded" />
-                        </div>
-
-                        <div>
-                            <label htmlFor="annualIncome" className="block text-orange-600 font-semibold mb-2">Annual Income</label>
-                            <Field name="annualIncome" type="text" className="w-full p-2 border border-orange-300 rounded" />
-                        </div>
-
-                        <div>
-                            <label htmlFor="workLocation" className="block text-orange-600 font-semibold mb-2">Work Location</label>
-                            <Field name="workLocation" type="text" className="w-full p-2 border border-orange-300 rounded" />
-                        </div>
-
-                        <div>
-                            <label htmlFor="maritalStatus" className="block text-orange-600 font-semibold mb-2">Marital Status</label>
-                            <Field name="maritalStatus" type="text" className="w-full p-2 border border-orange-300 rounded" />
-                        </div>
-
-                        <div>
+                    <FormSection title="Basic Information">
+                        <FormField name="name" label="Name" />
+                        <FormField name="email" label="Email" type="email" />
+                        <FormField name="phone" label="Phone" />
+                        {!userId && <FormField name="password" label="Password" type="password" />}
+                        <FormField name="isAdmin" label="Is Admin" type="checkbox" />
+                        <FormField name="gender" label="Gender" as="select">
+                            <option value="">Select Gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                        </FormField>
+                        <FormField name="dateOfBirth" label="Date of Birth" type="date" />
+                        <FormField name="age" label="Age" />
+                        <FormField name="height" label="Height" />
+                        <FormField name="motherTongue" label="Mother Tongue" />
+                        <FormField name="cast" label="Cast" />
+                        <FormField name="religion" label="Religion" />
+                        <FormField name="sect" label="Sect" />
+                        <FormField name="city" label="City" />
+                        <FormField name="highestDegree" label="Highest Degree" />
+                        <FormField name="occupation" label="Occupation" />
+                        <FormField name="employedIn" label="Employed In" />
+                        <FormField name="annualIncome" label="Annual Income" />
+                        <FormField name="workLocation" label="Work Location" />
+                        <FormField name="maritalStatus" label="Marital Status" />
+                        <div className="mb-4">
                             <label htmlFor="userImages" className="block text-orange-600 font-semibold mb-2">User Images</label>
                             <input
                                 type="file"
@@ -300,164 +268,52 @@ const UserForm = ({ userId = null }) => {
                                 <img key={index} src={image} alt={`User image ${index + 1}`} className="w-24 h-24 mt-2" />
                             ))}
                         </div>
+                    </FormSection>
 
-                        <div>
-                            <label htmlFor="ageFrom" className="block text-orange-600 font-semibold mb-2">Age From</label>
-                            <Field name="ageFrom" type="text" className="w-full p-2 border border-orange-300 rounded" />
-                        </div>
+                    <FormSection title="Partner Preferences">
+                        <FormField name="ageFrom" label="Age From" />
+                        <FormField name="ageTo" label="Age To" />
+                        <FormField name="heightFrom" label="Height From" />
+                        <FormField name="heightTo" label="Height To" />
+                        <FormField name="lookingFor" label="Looking For" />
+                        <FormField name="physicalStatus" label="Physical Status" />
+                        <FormField name="food" label="Food Preference" />
+                        <FormField name="smoking" label="Smoking" />
+                        <FormField name="drinking" label="Drinking" />
+                        <FormField name="familyType" label="Family Type" />
+                        <FormField name="familyStatus" label="Family Status" />
+                        <FormField name="familyValue" label="Family Value" />
+                        <FormField name="fathersOccupation" label="Father's Occupation" />
+                    </FormSection>
 
-                        <div>
-                            <label htmlFor="ageTo" className="block text-orange-600 font-semibold mb-2">Age To</label>
-                            <Field name="ageTo" type="text" className="w-full p-2 border border-orange-300 rounded" />
-                        </div>
+                    <FormSection title="Horoscope Details">
+                        <FormField name="horoscopeDetails.dosh" label="Dosh" />
+                        <FormField name="horoscopeDetails.star" label="Star" />
+                        <FormField name="horoscopeDetails.birthTime" label="Birth Time" />
+                        <FormField name="horoscopeDetails.birthPlace" label="Birth Place" />
+                        <FormField name="horoscopeDetails.religion" label="Religion" />
+                        <FormField name="horoscopeDetails.caste" label="Caste" />
+                        <FormField name="horoscopeDetails.motherTongue" label="Mother Tongue" />
+                        <FormField name="horoscopeDetails.manglik" label="Manglik" />
+                    </FormSection>
 
-                        <div>
-                            <label htmlFor="heightFrom" className="block text-orange-600 font-semibold mb-2">Height From</label>
-                            <Field name="heightFrom" type="text" className="w-full p-2 border border-orange-300 rounded" />
-                        </div>
+                    <FormSection title="Family Details">
+                        <FormField name="FamilyDetails.numOfBrothers" label="Number of Brothers" />
+                        <FormField name="FamilyDetails.numOfMarriedBrothers" label="Number of Married Brothers" />
+                        <FormField name="FamilyDetails.numOfSisters" label="Number of Sisters" />
+                        <FormField name="FamilyDetails.numOfMarriedSisters" label="Number of Married Sisters" />
+                        <FormField name="FamilyDetails.country" label="Country" />
+                        <FormField name="FamilyDetails.state" label="State" />
+                        <FormField name="FamilyDetails.city" label="City" />
+                    </FormSection>
 
-                        <div>
-                            <label htmlFor="heightTo" className="block text-orange-600 font-semibold mb-2">Height To</label>
-                            <Field name="heightTo" type="text" className="w-full p-2 border border-orange-300 rounded" />
-                        </div>
+                    <FormSection title="Education">
+                        <FormField name="Education.education" label="Education" />
+                        <FormField name="Education.occupation" label="Occupation" />
+                        <FormField name="Education.income" label="Income" />
+                    </FormSection>
 
-                        <div>
-                            <label htmlFor="lookingFor" className="block text-orange-600 font-semibold mb-2">Looking For</label>
-                            <Field name="lookingFor" type="text" className="w-full p-2 border border-orange-300 rounded" />
-                        </div>
-
-                        <div>
-                            <label htmlFor="physicalStatus" className="block text-orange-600 font-semibold mb-2">Physical Status</label>
-                            <Field name="physicalStatus" type="text" className="w-full p-2 border border-orange-300 rounded" />
-                        </div>
-
-                        <div>
-                            <label htmlFor="food" className="block text-orange-600 font-semibold mb-2">Food Preference</label>
-                            <Field name="food" type="text" className="w-full p-2 border border-orange-300 rounded" />
-                        </div>
-
-                        <div>
-                            <label htmlFor="smoking" className="block text-orange-600 font-semibold mb-2">Smoking</label>
-                            <Field name="smoking" type="text" className="w-full p-2 border border-orange-300 rounded" />
-                        </div>
-
-                        <div>
-                            <label htmlFor="drinking" className="block text-orange-600 font-semibold mb-2">Drinking</label>
-                            <Field name="drinking" type="text" className="w-full p-2 border border-orange-300 rounded" />
-                        </div>
-
-                        <div>
-                            <label htmlFor="familyType" className="block text-orange-600 font-semibold mb-2">Family Type</label>
-                            <Field name="familyType" type="text" className="w-full p-2 border border-orange-300 rounded" />
-                        </div>
-
-                        <div>
-                            <label htmlFor="familyStatus" className="block text-orange-600 font-semibold mb-2">Family Status</label>
-                            <Field name="familyStatus" type="text" className="w-full p-2 border border-orange-300 rounded" />
-                        </div>
-
-                        <div>
-                            <label htmlFor="familyValue" className="block text-orange-600 font-semibold mb-2">Family Value</label>
-                            <Field name="familyValue" type="text" className="w-full p-2 border border-orange-300 rounded" />
-                        </div>
-
-                        <div>
-                            <label htmlFor="fathersOccupation" className="block text-orange-600 font-semibold mb-2">Father's Occupation</label>
-                            <Field name="fathersOccupation" type="text" className="w-full p-2 border border-orange-300 rounded" />
-                        </div>
-                    </div>
-
-                    <h3 className="text-xl font-bold text-orange-600 mt-6">Horoscope Details</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label htmlFor="horoscopeDetails.dosh" className="block text-orange-600 font-semibold mb-2">Dosh</label>
-                            <Field name="horoscopeDetails.dosh" type="text" className="w-full p-2 border border-orange-300 rounded" />
-                        </div>
-                        <div>
-                            <label htmlFor="horoscopeDetails.star" className="block text-orange-600 font-semibold mb-2">Star</label>
-                            <Field name="horoscopeDetails.star" type="text" className="w-full p-2 border border-orange-300 rounded" />
-                        </div>
-                        <div>
-                            <label htmlFor="horoscopeDetails.birthTime" className="block text-orange-600 font-semibold mb-2">Birth Time</label>
-                            <Field name="horoscopeDetails.birthTime" type="text" className="w-full p-2 border border-orange-300 rounded" />
-                        </div>
-                        <div>
-                            <label htmlFor="horoscopeDetails.birthPlace" className="block text-orange-600 font-semibold mb-2">Birth Place</label>
-                            <Field name="horoscopeDetails.birthPlace" type="text" className="w-full p-2 border border-orange-300 rounded" />
-                        </div>
-                        <div>
-                            <label htmlFor="horoscopeDetails.religion" className="block text-orange-600 font-semibold mb-2">Religion</label>
-                            <Field name="horoscopeDetails.religion" type="text" className="w-full p-2 border border-orange-300 rounded" />
-                        </div>
-                        <div>
-                            <label htmlFor="horoscopeDetails.caste" className="block text-orange-600 font-semibold mb-2">Caste</label>
-                            <Field name="horoscopeDetails.caste" type="text" className="w-full p-2 border border-orange-300 rounded" />
-                        </div>
-                        <div>
-                            <label htmlFor="horoscopeDetails.motherTongue" className="block text-orange-600 font-semibold mb-2">Mother Tongue</label>
-                            <Field name="horoscopeDetails.motherTongue" type="text" className="w-full p-2 border border-orange-300 rounded" />
-                        </div>
-                        <div>
-                            <label htmlFor="horoscopeDetails.manglik" className="block text-orange-600 font-semibold mb-2">Manglik</label>
-                            <Field name="horoscopeDetails.manglik" type="text" className="w-full p-2 border border-orange-300 rounded" />
-                        </div>
-                    </div>
-
-                    <h3 className="text-xl font-bold text-orange-600 mt-6">Family Details</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label htmlFor="FamilyDetails.numOfBrothers" className="block text-orange-600 font-semibold mb-2">Number of Brothers</label>
-                            <Field name="FamilyDetails.numOfBrothers" type="text" className="w-full p-2 border border-orange-300 rounded" />
-                        </div>
-                        <div>
-                            <label htmlFor="FamilyDetails.numOfMarriedBrothers" className="block text-orange-600 font-semibold mb-2">Number of Married Brothers</label>
-                            <Field name="FamilyDetails.numOfMarriedBrothers" type="text" className="w-full p-2 border border-orange-300 rounded" />
-                        </div>
-                        <div>
-                            <label htmlFor="FamilyDetails.numOfSisters" className="block text-orange-600 font-semibold mb-2">Number of Sisters</label>
-                            <Field name="FamilyDetails.numOfSisters" type="text" className="w-full p-2 border border-orange-300 rounded" />
-                        </div>
-                        <div>
-                            <label htmlFor="FamilyDetails.numOfMarriedSisters" className="block text-orange-600 font-semibold mb-2">Number of Married Sisters</label>
-                            <Field name="FamilyDetails.numOfMarriedSisters" type="text" className="w-full p-2 border border-orange-300 rounded" />
-                        </div>
-                        <div>
-                            <label htmlFor="FamilyDetails.country" className="block text-orange-600 font-semibold mb-2">Country</label>
-                            <Field name="FamilyDetails.country" type="text" className="w-full p-2 border border-orange-300 rounded" />
-                        </div>
-                        <div>
-                            <label htmlFor="FamilyDetails.state" className="block text-orange-600 font-semibold mb-2">State</label>
-                            <Field name="FamilyDetails.state" type="text" className="w-full p-2 border border-orange-300 rounded" />
-                        </div>
-                        <div>
-                            <label htmlFor="FamilyDetails.city" className="block text-orange-600 font-semibold mb-2">City</label>
-                            <Field name="FamilyDetails.city" type="text" className="w-full p-2 border border-orange-300 rounded" />
-                        </div>
-                    </div>
-
-                    <div className="mb-4">
-                        <label htmlFor="Education.education" className="block text-orange-600 font-semibold mb-2">Education</label>
-                        <Field name="Education.education" type="text" className="w-full p-2 border border-orange-300 rounded" />
-                        <ErrorMessage name="Education.education" component="div" className="text-red-500 text-sm mt-1" />
-                    </div>
-
-                    <div className="mb-4">
-                        <label htmlFor="Education.occupation" className="block text-orange-600 font-semibold mb-2">Occupation</label>
-                        <Field name="Education.occupation" type="text" className="w-full p-2 border border-orange-300 rounded" />
-                        <ErrorMessage name="Education.occupation" component="div" className="text-red-500 text-sm mt-1" />
-                    </div>
-
-                    <div className="mb-4">
-                        <label htmlFor="Education.income" className="block text-orange-600 font-semibold mb-2">Income</label>
-                        <Field name="Education.income" type="text" className="w-full p-2 border border-orange-300 rounded" />
-                        <ErrorMessage name="Education.income" component="div" className="text-red-500 text-sm mt-1" />
-                    </div>
-
-                    <div className="mb-4">
-                        <label htmlFor="partnerExpectation" className="block text-orange-600 font-semibold mb-2">Partner Expectation</label>
-                        <Field name="partnerExpectation" as="textarea" className="w-full p-2 border border-orange-300 rounded" />
-                        <ErrorMessage name="partnerExpectation" component="div" className="text-red-500 text-sm mt-1" />
-                    </div>
+                    <FormField name="partnerExpectation" label="Partner Expectation" as="textarea" />
 
                     <button type="submit" disabled={isLoading} className="w-full p-2 bg-orange-600 text-white font-semibold rounded">
                         {isLoading ? 'Submitting...' : 'Create User'}
@@ -466,7 +322,26 @@ const UserForm = ({ userId = null }) => {
             )}
         </Formik>
     );
+
 };
 
 UserForm.getLayout = (page) => <AdminLayout>{page}</AdminLayout>;
 export default UserForm;
+
+const FormField = ({ name, label, type = 'text', as = 'input', ...props }) => (
+    <div className="mb-4">
+        <label htmlFor={name} className="block text-orange-600 font-semibold mb-2">{label}</label>
+        <Field name={name} type={type} as={as} className="w-full p-2 border border-orange-300 rounded" {...props} />
+        <ErrorMessage name={name} component="div" className="text-red-500 text-sm mt-1" />
+    </div>
+);
+
+
+const FormSection = ({ title, children }) => (
+    <div className="mb-6">
+        <h3 className="text-xl font-bold text-orange-600 mb-4">{title}</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {children}
+        </div>
+    </div>
+);
