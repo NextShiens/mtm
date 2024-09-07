@@ -929,10 +929,8 @@ export const DrawerListData = [
   {
     key: '2',
     name: 'Active Status',
-    description: 'Turn on & off your matrimoney proposal you have received',
     iconName: IMAGES.statusIcon,
     onScreenPress: () => {},
-    isActive: false,
   },
   {
     key: '3',
@@ -945,8 +943,6 @@ export const DrawerListData = [
   {
     key: '4',
     name: 'Membership',
-    description:
-      'Choose your membership plan for you it will give you more access & options.',
     iconName: IMAGES.membershipIcon,
     onScreenPress: () => {},
     isActive: false,
@@ -954,8 +950,6 @@ export const DrawerListData = [
   {
     key: '5',
     name: 'Payment Method',
-    description:
-      'Choose your membership plan for you it will give you more access & options.',
     iconName: IMAGES.paymentIcon,
     onScreenPress: () => {},
     isActive: false,

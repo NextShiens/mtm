@@ -1,25 +1,35 @@
-import { DrawerContentScrollView } from '@react-navigation/drawer';
-import React, { useState, useEffect, useCallback } from 'react';
-import { Dimensions, Image, TouchableOpacity, View, ScrollView, RefreshControl } from 'react-native';
-import { Fonts } from '../../assets/fonts';
-import { IMAGES } from '../../assets/images';
-import { SVG } from '../../assets/svg';
-import { COLORS, STYLES } from '../../assets/theme';
+import {DrawerContentScrollView,DrawerItemList} from '@react-navigation/drawer';
+import React, {useState, useEffect, useCallback} from 'react';
+import {
+  Dimensions,
+  Image,
+  TouchableOpacity,
+  View,
+  ScrollView,
+  RefreshControl,
+  Modal,
+  Text,
+} from 'react-native';
+import {Fonts} from '../../assets/fonts';
+import {IMAGES} from '../../assets/images';
+import {SVG} from '../../assets/svg';
+import {COLORS, STYLES} from '../../assets/theme';
 import AppText from '../../components/AppText/AppText';
 import CustomImage from '../../components/CustomImage/CustomImage';
 import Icon from '../../components/Icon/Icon';
 import Space from '../../components/Space/Space';
-import { DrawerListData } from '../../data/appData';
+import {DrawerListData} from '../../data/appData';
 import auth from '@react-native-firebase/auth';
-import { LABELS } from '../../labels';
-import { styles } from './styles';
+import {LABELS} from '../../labels';
+import {styles} from './styles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Toast } from '../../utils/native';
-import Svg, { Circle, Path } from 'react-native-svg';
+import {Toast} from '../../utils/native';
+import Svg, {Circle, Path} from 'react-native-svg';
 import ToggleSwitch from 'toggle-switch-react-native';
-import { API_URL } from '../../../constant';
-import { CommonActions } from '@react-navigation/native';
-
+import {API_URL} from '../../../constant';
+import {CommonActions} from '@react-navigation/native';
+import {Images} from 'lucide-react-native';
+import { useNavigation ,DrawerActions} from '@react-navigation/native';
 
 const ProfileAvatar = () => (
   <Svg width="50" height="50" viewBox="0 0 100 100">
@@ -29,14 +39,12 @@ const ProfileAvatar = () => (
       fill="#fff"
       transform="translate(-19 15)"
     />
-    <Path
-      d="M50,59c-16,0-30,7-30,16v5h60v-5c0-9-14-16-30-16z"
-      fill="#fff"
-    />
+    <Path d="M50,59c-16,0-30,7-30,16v5h60v-5c0-9-14-16-30-16z" fill="#fff" />
   </Svg>
 );
 
-const CustomDrawerContent = ({ props, navigation }) => {
+const CustomDrawerContent = ({props}) => {
+  const navigation = useNavigation();
   const [isOnline, setIsOnline] = useState(false);
   const [drawerData, setDrawerData] = useState(DrawerListData);
   const [selectedRoute, setSelectedRoute] = useState('User Name');
@@ -45,6 +53,7 @@ const CustomDrawerContent = ({ props, navigation }) => {
   const [userProfession, setUserProfession] = useState('Profession');
   const [userEmail, setUserEmail] = useState('');
   const [refreshing, setRefreshing] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
@@ -53,14 +62,21 @@ const CustomDrawerContent = ({ props, navigation }) => {
     }, 2000);
   }, []);
 
+  const openModal = () => {
+    setModalVisible(true);
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+  };
   const style = styles;
   const windowWidth = Dimensions.get('window').width;
   const resetToInitialScreen = () => {
     navigation.dispatch(
       CommonActions.reset({
         index: 0,
-        routes: [{ name: 'InitialScreen' }],
-      })
+        routes: [{name: 'InitialScreen'}],
+      }),
     );
   };
 
@@ -69,7 +85,7 @@ const CustomDrawerContent = ({ props, navigation }) => {
       const userString = await AsyncStorage.getItem('theUser');
       console.log('User data:', userString);
       const user = JSON.parse(userString);
-      console.log('User:', user)
+      console.log('User:', user);
       setUserName(user.user.name);
       setIsOnline(user.user.isActive);
       setUserImage(user.user.userImages[0]);
@@ -159,68 +175,80 @@ const CustomDrawerContent = ({ props, navigation }) => {
   };
 
   return (
-    <ScrollView style={style.container}
+    <ScrollView
+      style={style.container}
       refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh}
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}
           colors={[COLORS.dark.primary]}
         />
-      }
-    >
+      }>
       <DrawerContentScrollView {...props}>
         <View style={style.contentContainer}>
           <View style={style.nameHolder}>
             <View style={style.avatarContainer}>
               {userImage !== '' ? (
                 <Image
-                  source={{ uri: userImage }}
-                  style={{ width: 50, height: 50, borderRadius: 25 }}
+                  source={{uri: userImage}}
+                  style={{width: 50, height: 50, borderRadius: 25}}
                 />
               ) : (
-                <ProfileAvatar
-                  extraStyle={{ container: STYLES.bR(25) }}
-                />
+                <ProfileAvatar extraStyle={{container: STYLES.bR(25)}} />
               )}
               {isOnline && <View style={style.onlineDot}></View>}
-            </View >
+            </View>
             <Space mL={10} />
-            <View style={{ height: 30, marginBottom: 10, maxWidth: 180 }}>
+            <View style={{height: 30, marginBottom: 10, maxWidth: 180}}>
               <AppText
                 title={userName}
                 variant={'h6'}
-                extraStyle={{ fontFamily: Fonts.PoppinsSemiBold }}
-
+                extraStyle={{fontFamily: Fonts.PoppinsSemiBold}}
               />
-              <AppText
-                title={userProfession}
-                color={COLORS.dark.inputBorder}
-              />
+              <AppText title={userProfession} color={COLORS.dark.inputBorder} />
             </View>
           </View>
 
           <TouchableOpacity
-            onPress={() => {
-              navigation.navigate('ProfileUpdateScreen');
+          style={{
+            paddingVertical: 10,
+            paddingHorizontal: 20,
+            borderRadius: 30,
+            borderWidth: 1,
+            borderColor: '#ff6600',
+            backgroundColor: 'white',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+          onPress={() => {
+            navigation.dispatch(DrawerActions.closeDrawer());
+            setModalVisible(true);
+          }}>
+          <Text
+            style={{
+              color: '#ff6600',
+              fontSize: 10,
+              fontWeight: 'bold',
             }}>
-            <Icon
-              SVGIcon={
-                <SVG.vectorIcon
-                  fill={'black'}
-                  height={20}
-                  width={20}
-                  onPress={() => {
-                    navigation.navigate('ProfileUpdateScreen');
+            Upgrade Now
+          </Text>
+        </TouchableOpacity>
+        </View>
+        <View
+                  style={{
+                    height: 2,
+                    width: '100%',
+                    backgroundColor: '#E5E5E5',
+                    marginVertical: 10,
                   }}
                 />
-              }
-            />
-          </TouchableOpacity>
-        </View>
+
 
         {DrawerListData.map(route => {
           if (route.name === 'Home') {
             return null;
           }
-
+          <Space mT={10} />;
           if (route.name === 'Active Status') {
             return (
               <TouchableOpacity
@@ -229,7 +257,8 @@ const CustomDrawerContent = ({ props, navigation }) => {
                   flexDirection: 'row',
                   alignItems: 'center',
                   paddingVertical: 10,
-                  paddingHorizontal: 17
+                  paddingHorizontal: 10,
+                  marginHorizontal: 20,
                 }}>
                 <CustomImage
                   source={route.iconName}
@@ -237,29 +266,20 @@ const CustomDrawerContent = ({ props, navigation }) => {
                   resizeMode={'contain'}
                 />
                 <Space mL={10} />
-                <View style={{ flex: 1 }}>
-                  <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                <View style={{flex: 1}}>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                    }}>
                     <AppText
                       title={route.name}
                       variant={'h6'}
                       extraStyle={style.drawerItemText}
                       color={COLORS.dark.black}
                     />
-                    <ToggleSwitch
-                      isOn={isOnline}
-                      onColor="#F97B22"
-                      offColor="#F3F5FE"
-                      size="small"
-                      onToggle={() => { }}
-                      style={{ marginLeft: 10 }}
-                    />
                   </View>
-                  <AppText
-                    title={route.description}
-                    variant={'body2'}
-                    extraStyle={{ fontFamily: Fonts.PoppinsRegular, marginTop: 5 }}
-                    color={COLORS.dark.inputBorder}
-                  />
                 </View>
               </TouchableOpacity>
             );
@@ -286,24 +306,15 @@ const CustomDrawerContent = ({ props, navigation }) => {
                 />
                 <Space mL={10} />
                 <View
-                  style={{ maxWidth: '90%' }}
+                  style={{maxWidth: '90%'}}
                   onPress={() => {
                     handleItemClick(route);
                   }}>
                   <AppText
-                    title={userName}
+                    title={'My Account'}
                     variant={'h6'}
                     extraStyle={style.drawerItemText}
                     color={COLORS.dark.black}
-                    onPress={() => {
-                      handleItemClick(route);
-                    }}
-                  />
-                  <AppText
-                    title={userEmail}
-                    variant={'body2'}
-                    extraStyle={style.drawerItemDescription}
-                    color={COLORS.dark.inputBorder}
                     onPress={() => {
                       handleItemClick(route);
                     }}
@@ -334,31 +345,22 @@ const CustomDrawerContent = ({ props, navigation }) => {
                 />
                 <Space mL={10} />
                 <View
-                  style={{ maxWidth: '90%' }}
+                  style={{maxWidth: '90%'}}
                   onPress={() => {
                     handleItemClick(route);
                   }}>
                   <AppText
                     title={route.name}
                     variant={'h6'}
-                    extraStyle={style.drawerItemText}
+                    extraStyle={[style.drawerItemText, {color: 'red'}]}
                     color={COLORS.dark.black}
-                    onPress={() => {
-                      handleItemClick(route);
-                    }}
-                  />
-                  <AppText
-                    title={userEmail}
-                    variant={'body2'}
-                    extraStyle={style.drawerItemDescription}
-                    color={COLORS.dark.inputBorder}
                     onPress={() => {
                       handleItemClick(route);
                     }}
                   />
                 </View>
               </TouchableOpacity>
-            )
+            );
           }
           return (
             <TouchableOpacity
@@ -381,7 +383,7 @@ const CustomDrawerContent = ({ props, navigation }) => {
               />
               <Space mL={10} />
               <View
-                style={{ maxWidth: '90%' }}
+                style={{maxWidth: '90%'}}
                 onPress={() => {
                   handleItemClick(route);
                 }}>
@@ -394,66 +396,183 @@ const CustomDrawerContent = ({ props, navigation }) => {
                     handleItemClick(route);
                   }}
                 />
-                <AppText
-                  title={route.description}
-                  variant={'body2'}
-                  extraStyle={style.drawerItemDescription}
-                  color={COLORS.dark.inputBorder}
-                  onPress={() => {
-                    handleItemClick(route);
-                  }}
-                />
               </View>
             </TouchableOpacity>
           );
         })}
         <Space mT={10} />
-        <View
-          style={{
-            paddingHorizontal: 10,
-            flexDirection: 'row',
-          }}>
-          <Image source={IMAGES.membershipBg} style={style.upgradeCard} />
-          <View
+        <View style={style.upgradeCard}>
+          <AppText
+            title={'Upgrade to Pro'}
+            variant={'h2'}
+            extraStyle={{
+              alignSelf: 'flex-start',
+              left: 20,
+              top: 10,
+              fontWeight: '600',
+              fontFamily: Fonts.PoppinsSemiBold,
+            }}
+            onPress={openModal}
+            color={COLORS.dark.black}
+          />
+          <AppText
+            title={'More features, more visibility!'}
+            color={COLORS.dark.black}
+            variant={'h5'}
+            extraStyle={{
+              alignSelf: 'flex-start',
+              top: 20,
+              left: 20,
+              fontFamily: Fonts.PoppinsRegular,
+            }}
+          />
+          <Space mT={30} />
+          <TouchableOpacity
+            onPress={openModal}
             style={{
+              backgroundColor: COLORS.dark.primary,
               width: '80%',
-              position: 'absolute',
+              height: 40,
+              alignSelf: 'center',
+              borderRadius: 20,
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
             }}>
-            <AppText
-              title={'Upgrade to Pro'}
-              variant={'h2'}
-              extraStyle={{
-                alignSelf: 'flex-start',
-                left: 20,
-                top: 20,
-                fontFamily: Fonts.PoppinsSemiBold,
-              }}
-              onPress={() => {
-                navigation.navigate('MembershipPlan');
-              }}
-              color={COLORS.dark.white}
-            />
-            <AppText
-              title={'More features, more visibility!'}
-              color={COLORS.dark.white}
-              variant={'body2'}
-              extraStyle={{
-                alignSelf: 'center',
-                top: 20,
-                fontFamily: Fonts.PoppinsRegular,
-              }}
-            />
-          </View>
-          <View
-            style={{ width: '20%', position: 'absolute', right: 20, top: 10 }}>
-            <CustomImage
-              source={IMAGES.character}
-              size={60}
+            <Image
+              source={IMAGES.space}
+              style={{width: 20, height: 20, resizeMode: 'contain'}}
               resizeMode={'contain'}
             />
-          </View>
+            <Text
+              style={{
+                color: COLORS.dark.white,
+                fontFamily: Fonts.PoppinsSemiBold,
+                left: 5,
+              }}
+            >Upgrade Now</Text>
+
+          </TouchableOpacity>
         </View>
-        <Space mT={10} />
+        <Space mT={50} />
+        <View style={{flex: 1}}>
+          <Modal
+            animationType="fade"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={() => setModalVisible(false)}>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: 'rgba(0, 0, 0, 0.3)', // Slight fade background
+              }}>
+              <View
+                style={{
+                  width: '90%',
+                  backgroundColor: 'white',
+                  borderRadius: 10,
+                  paddingVertical: 20,
+                  paddingHorizontal: 25,
+                  shadowColor: '#000',
+                  shadowOffset: {width: 0, height: 2},
+                  shadowOpacity: 0.25,
+                  shadowRadius: 4,
+                  elevation: 5,
+                  position: 'relative', // For positioning the close icon
+                }}>
+                {/* Close Icon */}
+                <TouchableOpacity
+                  style={{
+                    position: 'absolute',
+                    top: 10,
+                    right: 10,
+                    padding: 5,
+                  }}
+                  onPress={() => setModalVisible(false)}>
+                  <Text style={{fontSize: 16, color: '#666'}}>X</Text>
+                </TouchableOpacity>
+
+                <Text
+                  style={{
+                    fontSize: 18,
+                    fontWeight: '600',
+                    textAlign: 'left', // Left-aligned text for title
+                  }}>
+                  Upgrade Membership
+                </Text>
+
+                {/* Horizontal line */}
+                <View
+                  style={{
+                    height: 1,
+                    width: '100%',
+                    backgroundColor: '#ccc',
+                    marginVertical: 10,
+                  }}
+                />
+
+                <Text
+                  style={{
+                    fontSize: 15,
+                    textAlign: 'left', // Left-aligned description text
+                    marginBottom: 25,
+                    color: '#666',
+                  }}>
+                  Become a premium member to view contacts of this profile
+                </Text>
+
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    width: '100%',
+                  }}>
+                  <TouchableOpacity
+                    style={{
+                      flex: 1,
+                      paddingVertical: 12,
+                      marginHorizontal: 5,
+                      borderRadius: 30, // Rounded corners for buttons
+                      backgroundColor: '#FFF',
+                      borderWidth: 1,
+                      borderColor: '#ccc',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}
+                    onPress={() => setModalVisible(false)}>
+                    <Text style={{color: '#666', fontSize: 16}}>Cancel</Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    style={{
+                      flex: 1,
+                      paddingVertical: 12,
+                      marginHorizontal: 5,
+                      borderRadius: 30, // Rounded corners for buttons
+                      backgroundColor: '#ff6600',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}
+                    onPress={() => {
+                      setModalVisible(false);
+                      navigation.navigate('MembershipPlan');
+                    }}>
+                    <Text
+                      style={{
+                        color: 'white',
+                        fontSize: 16,
+                        fontWeight: 'bold',
+                      }}>
+                      Upgrade Now
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          </Modal>
+        </View>
       </DrawerContentScrollView>
     </ScrollView>
   );

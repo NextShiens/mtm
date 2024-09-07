@@ -4,13 +4,13 @@ import { Fonts } from '../../assets/fonts';
 const screenWidth = Dimensions.get('window').width;
 export const styles = StyleSheet.create({
   chatBtn: {
-    height: 45,
-    width: '40%',
+    height: 40,
+    width: '15%',
     backgroundColor: COLORS.dark.primary,
-    flexDirection: 'row',
+    // flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 10,
+    borderRadius: 45,
     zIndex: 1000,
   },
   ButtonContainer: {
@@ -39,18 +39,18 @@ export const styles = StyleSheet.create({
   btnContainer: {
     flexDirection: 'row',
     width: '100%',
-    justifyContent: 'space-evenly',
+    justifyContent: 'space-around',
     paddingHorizontal: 15,
     alignSelf: 'center',
   },
   btnOptionsCont: {
     height: 45,
-    width: '40%',
+    width: '15%',
     backgroundColor: COLORS.dark.secondary,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 10,
+    borderRadius: 40,
     zIndex: 1000,
   },
   buttonTouchArea: {

@@ -1,7 +1,7 @@
 import {StyleSheet} from 'react-native';
 import {COLORS, HORIZON_MARGIN} from '../../../assets/theme';
 export const styles = StyleSheet.create({
-  textInputCont:{
+  textInputCont: {
     width: '80%',
     backgroundColor: COLORS.dark.searchBox,
     borderWidth: 0,
@@ -132,5 +132,101 @@ export const styles = StyleSheet.create({
     height: 30,
     resizeMode: 'contain',
     marginRight: '1%',
+  },
+  container: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
+  modalContent: {
+    width: '100%',
+    backgroundColor: 'white',
+    borderRadius: 10,
+    padding: 20,
+  },
+  ChildContainer: {
+    marginBottom: 20,
+  },
+  ChildContainer1: {
+    marginBottom: 20,
+  },
+  ChildContainer2: {
+    marginBottom: 20,
+  },
+  sectionTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: 'black',
+  },
+  checkboxContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 5,
+  },
+  checkboxLabel: {
+    marginLeft: 8,
+    fontSize: 16,
+  },
+  buttonRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '80%',
+  },
+  buttonRow2: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    width: '80%',
+  },
+  button: {
+    // Define your button styles
+  },
+  selectedButton: {
+    // Define your selected button styles
+  },
+  button2: {
+    // Define your button2 styles
+  },
+  selectedButton2: {
+    // Define your selected button2 styles
+  },
+  sliderContainer: {
+    marginVertical: 20,
+    paddingHorizontal:10,
+    alignItems:'center'
+  },
+  salaryText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  applyButton: {
+    backgroundColor: '#F97B22',
+    padding: 15,
+    borderRadius: 25,
+    alignItems: 'center',
+    paddingHorizontal: 30,
+  },
+  applyButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  closeButton: {
+    borderColor: '#F97B22',
+    padding: 15,
+    borderRadius: 25,
+    alignItems: 'center',
+    paddingHorizontal: 30,
+    borderWidth: 1,
+  },
+  closeButtonText: {
+    color: '#F97B22',
+    fontWeight: 'bold',
+  },
+  line: {
+    width: '100%',
+    alignSelf: 'center',
+    height: 2,
+    backgroundColor: '#E5E5E5',
+    marginVertical: 10,
   },
 });

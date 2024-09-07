@@ -4,11 +4,16 @@ import {
   Image,
   TouchableOpacity,
   View,
-  Text,
   ActivityIndicator,
+  StyleSheet,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Carousel, {Pagination} from 'react-native-snap-carousel';
+import {useNavigation} from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {BlurView} from '@react-native-community/blur';
+
+// Assume these are imported from their respective files
 import {Fonts} from '../../assets/fonts';
 import {IMAGES} from '../../assets/images';
 import {SVG} from '../../assets/svg';
@@ -18,22 +23,18 @@ import AppText from '../AppText/AppText';
 import CustomImage from '../CustomImage/CustomImage';
 import Icon from '../Icon/Icon';
 import Space from '../Space/Space';
-import {useNavigation} from '@react-navigation/native';
-import {styles} from './styles';
 import {
   subscriptionCheck,
   checkLiveChatAvailability,
 } from '../../utils/subscriptionCheck';
 import {Toast} from '../../utils/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {API_URL} from '../../../constant';
-import {Button} from 'react-native-elements';
+
+const screenWidth = Dimensions.get('window').width;
 
 const SnapCarousel = ({data}) => {
   const navigation = useNavigation();
-  const screenWidth = Dimensions.get('window').width;
   const [activeSlide, setActiveSlide] = useState(0);
-  const style = styles;
   const [currentUser, setCurrentUser] = useState({});
   const [loadingViewProfile, setLoadingViewProfile] = useState(false);
   const [loadingChat, setLoadingChat] = useState(false);
@@ -94,104 +95,126 @@ const SnapCarousel = ({data}) => {
     }
   }
 
-  const renderItem = ({item,index}) => (
-    <>
-      <View style={style.slideContainer}>
+  const renderItem = ({item, index}) => (
+    <View style={styles.slideContainer}>
       {item.userImages && item.userImages[index] ? (
-        <Image
-          source={{ uri: item.userImages[index] }}
-          style={style.image}
-        />
+        <Image source={{uri: item.userImages[index]}} style={styles.image} />
       ) : (
         <Image
-              source={{
-                uri: item?.gender === 'male' 
-                  ? 'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-male-5.png'
-                  :  item?.gender === 'female' 
-                  ? 'https://i.pinimg.com/564x/df/a0/36/dfa036866ac5d4ba8760b3671ae9381c.jpg' 
-                  : 'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-male-5.png',
-              }}
-              resizeMode="cover"
-              style={{width: '100%', height: '100%'}} 
-            />
+          source={{
+            uri:
+              item?.gender === 'male'
+                ? 'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-male-5.png'
+                : item?.gender === 'female'
+                ? 'https://i.pinimg.com/564x/df/a0/36/dfa036866ac5d4ba8760b3671ae9381c.jpg'
+                : 'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-male-5.png',
+          }}
+          resizeMode="cover"
+          style={styles.image}
+        />
       )}
-        <LinearGradient
-          colors={['transparent', COLORS.dark.secondary]}
-          style={style.gradient}>
-          <View style={style.headerContainer}>
-            <TouchableOpacity style={style.headerBtn1}>
-              <AppText
-                title={LABELS.new}
-                color={COLORS.dark.white}
-                extraStyle={[STYLES.fontFamily(Fonts.PoppinsMedium)]}
-              />
+      <LinearGradient
+        colors={['transparent', 'rgba(0,0,0,0.1)']}
+        style={styles.gradient}>
+        <View style={styles.headerContainer}>
+          <TouchableOpacity style={styles.headerBtn1}>
+            <AppText
+              title={LABELS.new}
+              color={COLORS.dark.white}
+              extraStyle={[STYLES.fontFamily(Fonts.PoppinsMedium)]}
+            />
+          </TouchableOpacity>
+          {item.isVerified && (
+            <TouchableOpacity style={styles.verifyBtn}>
+              <CustomImage source={IMAGES.verifyIcon} size={12} />
             </TouchableOpacity>
-            {item.isVerified && (
-              <TouchableOpacity style={style.verifyBtn}>
-                <CustomImage source={IMAGES.verifyIcon} size={12} />
-              </TouchableOpacity>
-            )}
-          </View>
+          )}
+        </View>
 
-          <View style={style.nameContainer}>
+        <View style={styles.textContainer}>
+          <View style={styles.blurredBackground}>
             <AppText
               title={item.name}
               variant={'h3'}
               color={'white'}
               extraStyle={[STYLES.fontFamily(Fonts.PoppinsMedium)]}
             />
-          </View>
-          <View style={style.locationCont}>
-            <View>
+            <View style={styles.locationCont}>
               <AppText
-                title={[`Age ${item.age} , `, item.height]}
+                title={`Age ${item.age}, ${item.height}` || 'undefined'}
                 variant={'h6'}
                 extraStyle={[STYLES.fontFamily(Fonts.PoppinsRegular)]}
                 color={'white'}
               />
+              {/* <View style={styles.locationIcon}>
+                <Icon
+                  SVGIcon={<SVG.locationIconSVG fill={COLORS.dark.primary} />}
+                />
+                <Space mL={5} />
+                <AppText
+                  title={item.city || 'undefined'}
+                  variant={'h6'}
+                  extraStyle={[STYLES.fontFamily(Fonts.PoppinsRegular)]}
+                  color={'white'}
+                />
+              </View> */}
             </View>
-            <View style={style.locationIcon}>
-              <Icon
-                SVGIcon={<SVG.locationIconSVG fill={COLORS.dark.primary} />}
-              />
+            <View style={styles.occupationContainer}>
+              <CustomImage source={IMAGES.briefcaseColored} size={14} />
               <Space mL={5} />
               <AppText
-                title={item.city}
-                variant={'h6'}
-                extraStyle={[STYLES.fontFamily(Fonts.PoppinsRegular)]}
+                title={item.occupation || 'undefined'}
+                variant={'h5'}
                 color={'white'}
+                extraStyle={[STYLES.fontFamily(Fonts.PoppinsRegular)]}
               />
             </View>
           </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              width: '100%',
-              alignItems: 'center',
-              top: 60,
-            }}>
-            <CustomImage source={IMAGES.briefcaseColored} size={14} />
-            <Space mL={5} />
-            <AppText
-              title={item.occupation}
-              variant={'h5'}
-              color={'white'}
-              extraStyle={[STYLES.fontFamily(Fonts.PoppinsRegular)]}
-            />
-          </View>
-          <Pagination
-            dotsLength={data.length}
-            activeDotIndex={activeSlide}
-            containerStyle={style.paginationContainer}
-            dotStyle={style.dotStyle}
-            inactiveDotStyle={style.inactiveDotStyle}
-            inactiveDotOpacity={0.6}
-            inactiveDotScale={0.6}
-          />
-        </LinearGradient>
+        </View>
+      </LinearGradient>
+
+      <View style={styles.cityContainer}>
+        <Icon
+          SVGIcon={<SVG.locationIconSVG fill={COLORS.dark.primary} />}
+          style={{marginRight: 8}} 
+        />
+        <AppText
+          title={item.city || 'undefined'}
+          variant={'h6'}
+          extraStyle={[STYLES.fontFamily(Fonts.PoppinsRegular)]}
+          color={'white'}
+        />
       </View>
-      <Space mT={20} />
-    </>
+
+      <View style={styles.bottomRightButtonsContainer}>
+        <TouchableOpacity
+          style={styles.bottomRightButton}
+          onPress={handleSendInterest}
+          disabled={loadingViewProfile}>
+          {loadingViewProfile ? (
+            <ActivityIndicator size="small" color="#fff" />
+          ) : (
+            <Image
+              source={IMAGES.sendIcon}
+              style={styles.bottomRightButtonIcon}
+            />
+          )}
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.bottomRightButton}
+          onPress={handleChat}
+          disabled={loadingChat}>
+          {loadingChat ? (
+            <ActivityIndicator size="small" color="#fff" />
+          ) : (
+            <Image
+              source={IMAGES.chatIcon}
+              style={styles.bottomRightButtonIcon}
+            />
+          )}
+        </TouchableOpacity>
+      </View>
+    </View>
   );
 
   const handleSendInterest = async () => {
@@ -226,61 +249,144 @@ const SnapCarousel = ({data}) => {
   };
 
   return (
-    <View style={style.container}>
+    <View style={styles.container}>
       <Carousel
         data={data}
         renderItem={renderItem}
         sliderWidth={screenWidth}
-        itemWidth={screenWidth}
+        itemWidth={screenWidth - 40}
         onSnapToItem={index => setActiveSlide(index)}
       />
-      <View style={style.btnContainer}>
-        <TouchableOpacity
-          style={style.btnOptionsCont}
-          onPress={handleSendInterest}
-          disabled={false}>
-          {loadingViewProfile ? (
-            <ActivityIndicator size="small" color="#fff" />
-          ) : (
-            <TouchableOpacity
-              onPress={handleSendInterest}
-              style={styles.ButtonContainer}>
-              <Image
-                source={IMAGES.sendIcon} 
-                style={styles.imageStyle}
-              />
-
-              <View style={{marginLeft: 10}} />
-
-              <Text style={{color:"white"}}>View Profile</Text>
-            </TouchableOpacity>
-          )}
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={style.chatBtn}
-          onPress={handleChat}
-          disabled={false}>
-          {loadingChat ? (
-            <ActivityIndicator size="large" color="#fff" />
-          ) : (
-            <TouchableOpacity
-            onPress={handleChat}
-            style={styles.ButtonContainer}>
-            <Image
-              source={IMAGES.chatIcon}
-              style={styles.imageStyle}
-            />
-
-            <View style={{marginLeft: 10}} />
-
-            <Text style={{color:"white"}}>Chat</Text>
-          </TouchableOpacity>
-          )}
-        </TouchableOpacity>
-      </View>
+      <Pagination
+        dotsLength={data.length}
+        activeDotIndex={activeSlide}
+        containerStyle={styles.paginationContainer}
+        dotStyle={styles.dotStyle}
+        inactiveDotStyle={styles.inactiveDotStyle}
+        inactiveDotOpacity={0.6}
+        inactiveDotScale={0.6}
+      />
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  slideContainer: {
+    width: screenWidth - 40,
+    height: 280,
+    alignSelf: 'center',
+    justifyContent: 'center',
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  image: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'fit',
+    borderRadius: 10,
+  },
+  gradient: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: 'flex-end',
+    borderRadius: 10,
+  },
+  headerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    position: 'absolute',
+    top: 20,
+    left: 15,
+    right: 15,
+  },
+  headerBtn1: {
+    height: 28,
+    paddingHorizontal: 10,
+    justifyContent: 'center',
+    backgroundColor: COLORS.dark.primary,
+    borderRadius: 15,
+    alignItems: 'center',
+  },
+  verifyBtn: {
+    height: 26,
+    width: 26,
+    borderRadius: 13,
+    backgroundColor: 'white',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  textContainer: {
+    // paddingHorizontal: 15,
+    // paddingBottom: 20,
+  },
+  blurredBackground: {
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    borderRadius: 10,
+    padding: 12,
+  },
+  locationCont: {
+    flexDirection: 'column',
+    marginBottom: 5,
+  },
+  locationIcon: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 5,
+  },
+  occupationContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 5,
+  },
+  cityContainer: {
+    position: 'absolute',
+    bottom: 60,
+    right: 20,
+    zIndex: 1000,
+    borderRadius: 10,
+    padding: 5,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  bottomRightButtonsContainer: {
+    position: 'absolute',
+    bottom: 20,
+    right: 20,
+    flexDirection: 'row',
+    zIndex: 1000,
+  },
+  bottomRightButton: {
+    height: 30,
+    width: 30,
+    backgroundColor: COLORS.dark.primary,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 20,
+    marginLeft: 10,
+  },
+  bottomRightButtonIcon: {
+    width: 15,
+    height: 15,
+  },
+  paginationContainer: {
+    paddingVertical: 8,
+  },
+  dotStyle: {
+    width: 12,
+    marginHorizontal: -5,
+    height: 5,
+    borderRadius: 5,
+    backgroundColor: COLORS.dark.primary,
+  },
+  inactiveDotStyle: {
+    width: 12,
+    height: 10,
+    borderRadius: 10,
+    backgroundColor: COLORS.dark.gray,
+  },
+});
 
 export default SnapCarousel;
