@@ -4,10 +4,16 @@ import {Fonts} from '../../assets/fonts';
 
 export const styles = StyleSheet.create({
   upgradeCard: {
-    height: 90,
-    width: '100%',
+    width: '80%',
+    height: 130,
+    position: 'relative',
+    top:70,
+    alignSelf: 'center',
     borderRadius: 10,
-  },
+    backgroundColor: COLORS.dark.white,
+    elevation: 2,
+    marginBottom:60,
+    },
   drawerItemDescription: {
     fontFamily: Fonts.PoppinsRegular,
   },
@@ -24,6 +30,7 @@ export const styles = StyleSheet.create({
     paddingVertical: 15,
     justifyContent: 'space-between',
     alignItems: 'center',
+    
   },
   avatarContainer: {
     position: 'relative',
@@ -53,21 +60,22 @@ export const styles = StyleSheet.create({
   },
   activeDrawerItem: {
     flexDirection: 'row',
-    backgroundColor: COLORS.dark.drawerTint,
+    backgroundColor: '#F97B220D',
+    color: "red",
     borderRadius: 6,
-    height: 80,
+    height: 40,
     alignItems: 'center',
-    marginHorizontal: 10,
+    marginHorizontal: 20,
     paddingHorizontal: 10,
   },
 
   inactiveDrawerItem: {
-    marginVertical: 10,
+    marginVertical: 4,
     flexDirection: 'row',
     borderRadius: 6,
-    height: 80,
+    height: 40,
     alignItems: 'center',
-    marginHorizontal: 5,
+    marginHorizontal: 20,
     paddingHorizontal: 10,
   },
   drawerItemText: {
