@@ -8,7 +8,7 @@ const AppText = props => {
     onPress = () => {},
     extraStyle = {},
     variant = 'body2',
-    color = COLORS.dark.black,
+    color = '',
     title = '',
     alignSelf = 'center',
     numberOfLines,

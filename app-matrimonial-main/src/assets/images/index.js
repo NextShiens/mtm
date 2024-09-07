@@ -37,7 +37,7 @@ export const IMAGES = {
   paymentIcon: require('./paymentIcon.png'),
   settingIcon: require('./settingsIcon.png'),
   privacyIcon: require('./privacyPolicy.png'),
-  logoutIcon: require('./logoutIcon.png'),
+  logoutIcon: require('./logout.png'),
   savedIcon: require('./SavedIcon.png'),
   theme2: require('./Theme2.jpeg'),
   profile1: require('./Profile1.png'),
@@ -56,5 +56,5 @@ export const IMAGES = {
   smile:require('./smile.png'),
   audio:require('./audio.png'),
   raserpay:require('./Razer.jpeg'),
-  
+  space:require('./space.png'),
 };
