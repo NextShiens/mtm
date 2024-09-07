@@ -204,6 +204,22 @@ export const sidebarData = [
       },
     ],
   },
+  {
+    id: 9,
+    icon: <PiUserSwitchLight className="text-[#ED6C0E] text-[22px]" />,
+    header: "Add Success Story",
+    startingRoute: "",
+    subRoutes: [
+      {
+        text: "Add Success Story",
+        route: "add-success-story",
+      },
+      {
+        text: "Manage Success Story",
+        route: "all-success-story",
+      },
+    ],
+  },
 ];
 
 function Sidebar() {

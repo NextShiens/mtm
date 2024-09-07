@@ -2,8 +2,19 @@ const express = require("express");
 const router = express.Router();
 const adminDashController = require("../controller/dashboardController");
 const { isAuthenticated } = require("../middlewares/auth");
-
+const uploadFileController = require("../controller/uploadFileController");
+const multer = require("multer");
 //..............dashboard...............
+
+const storage = multer.diskStorage({
+  destination: "./temp", // Update the destination path
+  filename: function (req, file, cb) {
+    // Use the original file name and extension
+    cb(null, file.originalname);
+  }
+});
+
+const upload = multer({ storage: storage });
 router.get(
   "/admin/getAllUsers",
   isAuthenticated,
@@ -77,6 +88,17 @@ router.get(
   isAuthenticated,
   adminDashController.getUserInfo
 );
+
+router.post(
+  "/admin/uploadFile",
+  upload.single("file"),
+  uploadFileController.uploadFile
+);
+
 router.post("/admin/create-user",isAuthenticated, adminDashController.createUser);
 router.put("/admin/edit-user/:id",isAuthenticated, adminDashController.editUser);
+router.post("/admin/add-success-story",isAuthenticated , adminDashController.addSuccessStory);
+router.get("/admin/get-success-stories",isAuthenticated, adminDashController.getSuccessStories);
+router.delete("/admin/delete-success-story/:id",isAuthenticated , adminDashController.deleteSuccessStory);
+
 module.exports = router;

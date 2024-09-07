@@ -5,6 +5,7 @@ import axios from 'axios';
 import { useRouter } from 'next/router';
 import { backendUrl } from '@/url';
 import { FaArrowLeft } from 'react-icons/fa';
+import AdminLayout from '@/components/AdminLayout';
 
 
 
@@ -63,21 +64,29 @@ const EditUserForm = () => {
         router.push('/');
       };
 
-    const handleImageUpload = async (event, setFieldValue, values) => {
+      const handleImageUpload = async (event, setFieldValue, values) => {
         const file = event.target.files[0];
         const formData = new FormData();
         formData.append('file', file);
 
         try {
-            const response = await axios.post('/api/user/uploadFile', formData, {
-                headers: { 'Content-Type': 'multipart/form-data' }
-            });
+            const response = await axios.post(
+                backendUrl + "/admin/uploadFile",
+                formData,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                    withCredentials: true,
+                }
+            );
             setFieldValue('userImages', [...values.userImages, response.data.fileUrl]);
         } catch (error) {
             console.error("Error uploading image:", error);
             alert("Error uploading image. Please try again.");
         }
     };
+
 
     if (isLoading) return <div>Loading...</div>;
     if (error) return <div>{error}</div>;
@@ -388,4 +397,5 @@ const EditUserForm = () => {
     );
 };
 
+EditUserForm.getLayout = (page) => <AdminLayout>{page}</AdminLayout>;
 export default EditUserForm;

@@ -5,6 +5,7 @@ import axios from 'axios';
 import { FaArrowLeft } from 'react-icons/fa';
 import { backendUrl } from '@/url';
 import { useRouter } from 'next/router';
+import AdminLayout from '@/components/AdminLayout';
 
 const UserForm = ({ userId = null }) => {
     const [user, setUser] = useState(null);
@@ -22,7 +23,7 @@ const UserForm = ({ userId = null }) => {
 
     const fetchUser = async () => {
         try {
-            const response = await axios.get(`${backendUrl}/api/admin/user/${userId}`);
+            const response = await axios.get(`${backendUrl}/admin/user/${userId}`);
             setUser(response.data.user);
         } catch (error) {
             console.error("Error fetching user:", error);
@@ -33,9 +34,27 @@ const UserForm = ({ userId = null }) => {
         setIsLoading(true);
         try {
             if (userId) {
-                await axios.put(`${backendUrl}/api/admin/edit-user/${userId}`, values);
+                await axios.put(
+                    `${backendUrl}/admin/edit-user/${userId}`,
+                    values,
+                    {
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        withCredentials: true, 
+                    }
+                );
             } else {
-                await axios.post(`${backendUrl}/api/admin/create-user`, values);
+                await axios.post(
+                    `${backendUrl}/admin/create-user`,
+                    values,
+                    {
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        withCredentials: true, 
+                    }
+                );
             }
             alert(userId ? "User updated successfully" : "User created successfully");
         } catch (error) {
@@ -52,9 +71,16 @@ const UserForm = ({ userId = null }) => {
         formData.append('file', file);
 
         try {
-            const response = await axios.post('/api/user/uploadFile', formData, {
-                headers: { 'Content-Type': 'multipart/form-data' }
-            });
+            const response = await axios.post(
+                backendUrl + "/admin/uploadFile",
+                formData,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                    withCredentials: true,
+                }
+            );
             setFieldValue('userImages', [...values.userImages, response.data.fileUrl]);
         } catch (error) {
             console.error("Error uploading image:", error);
@@ -434,7 +460,7 @@ const UserForm = ({ userId = null }) => {
                     </div>
 
                     <button type="submit" disabled={isLoading} className="w-full p-2 bg-orange-600 text-white font-semibold rounded">
-                        {isLoading ? 'Submitting...' :  'Create User'}
+                        {isLoading ? 'Submitting...' : 'Create User'}
                     </button>
                 </Form>
             )}
@@ -442,4 +468,5 @@ const UserForm = ({ userId = null }) => {
     );
 };
 
+UserForm.getLayout = (page) => <AdminLayout>{page}</AdminLayout>;
 export default UserForm;

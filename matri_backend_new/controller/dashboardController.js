@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const User = require("../models/user");
+const SuccessStory = require("../models/successStory");
 const Subscription = require("../models/subscribtion.js");
 const { defaultMaxListeners } = require("nodemailer/lib/xoauth2/index.js");
 const cron = require("node-cron");
@@ -648,6 +649,55 @@ const dashboardController = {
       res.status(200).json({ success: true, user });
     } else {
       res.status(400).json({ success: false });
+    }
+  },
+  async addSuccessStory(req, res) {
+    try {
+      const { title, description, image } = req.body;
+      const createdBy = req.user._id; // Assuming you have authentication middleware
+
+      if (!title || !description || !image) {
+        return res.status(400).json({ success: false, message: "Missing required fields" });
+      }
+
+      const newSuccessStory = new SuccessStory({
+        title,
+        description,
+        image,
+        createdBy,
+      });
+
+      await newSuccessStory.save();
+
+      res.status(201).json({ success: true, message: "Success story added successfully", successStory: newSuccessStory });
+    } catch (error) {
+      console.error("Error adding success story:", error);
+      res.status(500).json({ success: false, message: "Error adding success story", error: error.message });
+    }
+  },
+
+  async getSuccessStories(req, res) {
+    try {
+      const successStories = await SuccessStory.find().sort({ createdAt: -1 });
+      res.status(200).json({ success: true, successStories });
+    } catch (error) {
+      console.error("Error fetching success stories:", error);
+      res.status(500).json({ success: false, message: "Error fetching success stories", error: error.message });
+    }
+  },
+  async deleteSuccessStory(req, res) {
+    try {
+      const { id } = req.params;
+      const deletedStory = await SuccessStory.findByIdAndDelete(id);
+
+      if (!deletedStory) {
+        return res.status(404).json({ success: false, message: "Success story not found" });
+      }
+
+      res.status(200).json({ success: true, message: "Success story deleted successfully" });
+    } catch (error) {
+      console.error("Error deleting success story:", error);
+      res.status(500).json({ success: false, message: "Error deleting success story", error: error.message });
     }
   },
 };
