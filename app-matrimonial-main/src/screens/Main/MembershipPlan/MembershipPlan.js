@@ -1,53 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import { ScrollView, TouchableOpacity, View, Text, Image } from 'react-native';
-import { Fonts } from '../../../assets/fonts';
-import { IMAGES } from '../../../assets/images';
-import { API_URL } from '../../../../constant';
-import { SVG } from '../../../assets/svg';
-import { COLORS, HORIZON_MARGIN, STYLES } from '../../../assets/theme';
+import React, {useState, useEffect} from 'react';
+import {ScrollView, TouchableOpacity, View, Text, Image} from 'react-native';
+import {Fonts} from '../../../assets/fonts';
+import {API_URL} from '../../../../constant';
+import {COLORS, HORIZON_MARGIN, STYLES} from '../../../assets/theme';
 import AppHeader from '../../../components/AppHeader/AppHeader';
 import AppText from '../../../components/AppText/AppText';
 import Space from '../../../components/Space/Space';
-import { LABELS } from '../../../labels';
-import { styles } from './styles';
-import Svg, { Path, Circle } from 'react-native-svg';
+import {LABELS} from '../../../labels';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {color} from 'react-native-elements/dist/helpers';
+import { styles } from './styles';
 
-const SvgIcon = () => {
-  return (
-    <Svg width={20} height={20} viewBox="0 0 24 24" fill="green">
-      <Circle cx="12" cy="12" r="10" fill="green" />
-      <Path d="M20.3 4.3a1 1 0 0 0-1.4 0L9 14.6 4.7 10.3a1 1 0 0 0-1.4 1.4l5 5a1 1 0 0 0 1.4 0l11-11a1 1 0 0 0 0-1.4z" fill="white" />
-    </Svg>
-  );
-};
-
-const MembershipPlan = ({ navigation }) => {
+const MembershipPlan = ({navigation}) => {
   const [subscription, setSubscription] = useState([]);
+  const [selectedPlan, setSelectedPlan] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
-    const fetchUser = async () => {
-      const userString = await AsyncStorage.getItem('theUser');
-      if (userString) {
-        const user = JSON.parse(userString);
-        setCurrentUser(user);
-      }
-    };
-
-    fetchUser();
     getSubscriptions();
   }, []);
-
-  const membershipSelectionHandler = async plan => {
-    await AsyncStorage.setItem('memberShipPlan', JSON.stringify(plan));
-    navigation.navigate('PaymentScreen', { plan });
-  };
-
-  const handleRightIconPress = () => {
-    navigation.navigate('NotificationScreen');
-  };
 
   const getSubscriptions = async () => {
     setIsLoading(true);
@@ -57,7 +28,7 @@ const MembershipPlan = ({ navigation }) => {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          "authorization": `Bearer ${token}`,
+          authorization: `Bearer ${token}`,
         },
       });
       const data = await response.json();
@@ -69,14 +40,76 @@ const MembershipPlan = ({ navigation }) => {
     }
   };
 
-  const isSubscribed = (plan) => {
-    if (!currentUser || !currentUser.membership) return false;
-    return currentUser.membership === plan._id && new Date(currentUser.membershipExpiry) > new Date();
+  const handlePlanSelection = plan => {
+    setSelectedPlan(plan);
   };
 
-  const HorizontalLine = () => {
-    return <View style={styles.line} />;
+  const handleContinue = () => {
+    if (selectedPlan) {
+      navigation.navigate('PaymentScreen', {plan: selectedPlan});
+    }
   };
+
+  const PlanCard = ({plan, isSelected}) => (
+    <TouchableOpacity
+      style={[styles.planCard, isSelected && styles.selectedPlanCard]}
+      onPress={() => handlePlanSelection(plan)}>
+      <Text style={[styles.planName, isSelected && styles.selectedText]}>
+        {plan.name}
+      </Text>
+      <Text
+        style={[
+          styles.planPrice,
+          isSelected && styles.selectedText,
+          {color: '#F97B22'},
+        ]}>
+        ₹{plan.price}k{' '}
+        <Text style={[{color: 'black'}, isSelected && {color: 'white'}]}>
+          /mo
+        </Text>
+      </Text>
+      <View style={styles.featuresContainer}>
+        {['duration', 'messages', 'liveChats', 'profileViews'].map(
+          (feature, index) => (
+            <View key={index} style={styles.featureItem}>
+              <Text
+                style={[
+                  styles.featureIcon,
+                  isSelected && {backgroundColor: 'white'},
+                ]}>
+                ✓
+              </Text>
+              <Text
+                style={[styles.featureText, isSelected && styles.selectedText]}>
+                {plan[feature]}{' '}
+                {feature.charAt(0).toUpperCase() + feature.slice(1)}
+              </Text>
+            </View>
+          ),
+        )}
+      </View>
+      <TouchableOpacity
+        style={[styles.selectButton, isSelected && styles.selectedButton]}
+        onPress={() => handlePlanSelection(plan)}>
+        <Text
+          style={[
+            styles.selectButtonText,
+            
+          ]}>
+          Select Plan
+        </Text>
+      </TouchableOpacity>
+    {isSelected &&  <View style={{position: 'absolute',right: 0,top:10}}>
+        <Text
+          style={[
+            styles.featureIcon,
+            isSelected && {backgroundColor: '#F97B22',color:'white'},
+          ]}>
+          ✓
+        </Text>
+      </View>}
+    </TouchableOpacity>
+  );
 
   if (isLoading) {
     return (
@@ -87,66 +120,40 @@ const MembershipPlan = ({ navigation }) => {
   }
 
   return (
-    <ScrollView>
-      <View style={styles.headerContainer}>
-        <AppHeader
-          iconLeft={<SVG.BackArrow size={24} fill={'black'} />}
-          onLeftIconPress={() => navigation.goBack()}
-          title={LABELS.membership}
-          iconRight={
-            <TouchableOpacity onPress={handleRightIconPress}>
-              <Image source={IMAGES.notificationIcon} style={styles.Bell_Icon} />
-            </TouchableOpacity>
-          }
-        />
+    <View style={styles.container}>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          marginTop: 20,
+          alignSelf: 'center',
+          marginBottom:10
+        }}>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.goBack();
+          }}>
+          <Image source={require('../../../assets/images/leftarrow.png')} />
+        </TouchableOpacity>
+        <Text style={styles.heading}>Subscription Plan</Text>
       </View>
-      <Space mT={20} />
-      <View style={STYLES.pH(HORIZON_MARGIN)}>
-        <AppText
-          title={LABELS.selectMembershipPlan}
-          variant={'h4'}
-          extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
-        />
-      </View>
-      <ScrollView>
-        {subscription && subscription.length > 0 && subscription.map((plan) => (
-          <View key={plan._id} style={styles.planContainer}>
-            <Text style={styles.planName}>{plan.name}</Text>
-            <HorizontalLine />
-            <View style={styles.featureContainer}>
-              <View style={styles.featureItem}>
-                <SvgIcon style={styles.icon} />
-                <Text style={styles.feature}>Duration: {plan.duration}</Text>
-              </View>
-              <View style={styles.featureItem}>
-                <SvgIcon style={styles.icon} />
-                <Text style={styles.feature}>Messages: {plan.messages}</Text>
-              </View>
-              <View style={styles.featureItem}>
-                <SvgIcon style={styles.icon} />
-                <Text style={styles.feature}>Live Chats: {plan.liveChats}</Text>
-              </View>
-              <View style={styles.featureItem}>
-                <SvgIcon style={styles.icon} />
-                <Text style={styles.feature}>Profile Views: {plan.profileViews}</Text>
-              </View>
-            </View>
-            <HorizontalLine />
-            <Text style={styles.price}>₹{plan.price}</Text>
-            <TouchableOpacity 
-              style={[styles.button, isSubscribed(plan) && styles.disabledButton]} 
-              onPress={() => membershipSelectionHandler(plan)}
-              disabled={isSubscribed(plan)}
-            >
-              <Text style={styles.buttonText}>
-                {isSubscribed(plan) ? 'Current Plan' : 'Start Now'}
-              </Text>
-            </TouchableOpacity>
-          </View>
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <Space mT={20} />
+        {subscription.map(plan => (
+          <PlanCard
+            key={plan._id}
+            plan={plan}
+            isSelected={selectedPlan && selectedPlan._id === plan._id}
+          />
         ))}
       </ScrollView>
-    </ScrollView>
+      <TouchableOpacity style={styles.continueButton} onPress={handleContinue}>
+        <Text style={styles.continueButtonText}>Continue</Text>
+      </TouchableOpacity>
+    </View>
   );
 };
+
+
 
 export default MembershipPlan;

@@ -31,6 +31,7 @@ import FamilyDetailsScreen from '../screens/Main/Familyupdate/Familyupdate';
 import BasicPreferenceForm from '../screens/Main/BasicPrefferences/BasicPreffences';
 import Education from '../screens/Main/Education/Education';
 import PartnerExpectation from '../screens/Main/PartnerExpection/PartnerExpectationForm';
+import SuccessStoriesDetals from '../screens/Main/successStories/SuccessStoriesDetals';
 
 
 const Stack = createNativeStackNavigator();
@@ -46,6 +47,11 @@ const AuthStack = () => {
       <Stack.Screen
         name="RegisterScreen"
         component={RegisterScreen}
+        options={options}
+      />
+       <Stack.Screen
+        name="SuccessStoriesDetals"
+        component={SuccessStoriesDetals}
         options={options}
       />
       <Stack.Screen
