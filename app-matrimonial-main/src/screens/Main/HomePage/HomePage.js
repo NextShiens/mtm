@@ -219,6 +219,7 @@ const HomePage = () => {
   const [matchType, setMatchType] = useState('newUsers');
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [matchedUsers, setMatchedUsers] = useState([]);
+  const [successStories, setSuccessStories] = useState([]);
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
@@ -288,6 +289,36 @@ const HomePage = () => {
       }
     };
 
+    const fetchSuccesStories = async () => {
+      try {
+        setNewUsersLoading(true);
+        const token = await AsyncStorage.getItem('AccessToken');
+        const response = await fetch(`${API_URL}/user/get-success-stories`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          if (response.status === 404) {
+            throw new Error('No new users found');
+          } else {
+            throw new Error('Something went wrong');
+          }
+        }
+
+        const {successStories} = await response.json();
+        console.log('stories', successStories);
+        setSuccessStories(successStories);
+      } catch (error) {
+        console.error('Error fetching Success stories:', error);
+        throw error;
+      } finally {
+        setNewUsersLoading(false);
+      }
+    };
     const fetchMatchedUsers = async () => {
       try {
         setLoading(true);
@@ -333,6 +364,7 @@ const HomePage = () => {
       fetchNewUsers(),
       fetchRecentlyViewed(),
       fetchMatchedUsers(),
+      fetchSuccesStories(),
     ]).then(() => {
       setLoading(false);
     });
@@ -753,15 +785,15 @@ const HomePage = () => {
       {/* FlatList for horizontal cards */}
       <FlatList
         horizontal
-        data={arr}
+        data={successStories}
         renderItem={({ item, index }) => (
           <View>
             <SuccessStoriesCard
               {...item}
               index={index}
               image={item.image}
-              name={item.name}
-              des={item.decription}
+              name={item.title}
+              des={item.description}
               onPress={() => {navigation.navigate('SuccessStoriesDetals')}}
             />
           </View>

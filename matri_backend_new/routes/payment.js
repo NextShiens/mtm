@@ -12,7 +12,7 @@ router.post("/create-order", auth, createOrder);
 router.post("/verify-payment", auth, verifyPayment);
 
 router.get("/get-keyid", auth, (req, res) => {
-  const key = process.env.RAZORPAY_KEY_ID;
+  const key = 'rzp_live_87MOwe1ckbeY0F';
   res.status(200).json({ keyId: key });
 });
 module.exports = router;

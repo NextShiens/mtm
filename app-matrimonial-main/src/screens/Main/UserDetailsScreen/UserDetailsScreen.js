@@ -1,30 +1,32 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Dimensions,
   Image,
   ScrollView,
   TouchableOpacity,
   View,
-  ActivityIndicator
+  ActivityIndicator,
+  Text,
+  Modal,
 } from 'react-native';
-import { useRoute } from '@react-navigation/native';
-import Carousel, { Pagination } from 'react-native-snap-carousel';
+import {useRoute} from '@react-navigation/native';
+import Carousel, {Pagination} from 'react-native-snap-carousel';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { SvgXml } from 'react-native-svg';
-import { Fonts } from '../../../assets/fonts';
-import { IMAGES } from '../../../assets/images';
-import { SVG } from '../../../assets/svg';
-import { COLORS, STYLES } from '../../../assets/theme';
+import {SvgXml} from 'react-native-svg';
+import {Fonts} from '../../../assets/fonts';
+import {IMAGES} from '../../../assets/images';
+import {SVG} from '../../../assets/svg';
+import {COLORS, STYLES} from '../../../assets/theme';
 import AppHeader from '../../../components/AppHeader/AppHeader';
 import AppText from '../../../components/AppText/AppText';
 import CustomImage from '../../../components/CustomImage/CustomImage';
 import Space from '../../../components/Space/Space';
-import { LABELS } from '../../../labels';
-import { styles } from './styles';
-import { Toast } from '../../../utils/native';
-import { API_URL } from '../../../../constant';
-import { checkIsPaidUser } from '../../../utils/subscriptionCheck';
-
+import {LABELS} from '../../../labels';
+import Icon from '../../../components/Icon/Icon';
+import {styles} from './styles';
+import {Toast} from '../../../utils/native';
+import {API_URL} from '../../../../constant';
+import {checkIsPaidUser} from '../../../utils/subscriptionCheck';
 
 const defaultProfileSvg = `
   <Svg height={size} width={size} viewBox="0 0 100 100">
@@ -36,7 +38,7 @@ const defaultProfileSvg = `
   </Svg>
 `;
 
-const UserDetailsScreen = ({ navigation }) => {
+const UserDetailsScreen = ({navigation}) => {
   const route = useRoute();
   const userId = route.params?.userId || '';
   const screenWidth = Dimensions.get('window').width;
@@ -48,6 +50,7 @@ const UserDetailsScreen = ({ navigation }) => {
   const [isSaving, setIsSaving] = useState(false);
   const [isSendingInterest, setIsSendingInterest] = useState(false);
   const [hasSubscription, setHasSubscription] = useState(false);
+  const [isRequestSent, setIsRequestSent] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -110,7 +113,7 @@ const UserDetailsScreen = ({ navigation }) => {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ userId: userId }),
+        body: JSON.stringify({userId: userId}),
       });
       if (!response.ok) {
         const errorData = await response.json();
@@ -244,28 +247,30 @@ const UserDetailsScreen = ({ navigation }) => {
       category: 'Religion',
     },
   ];
-  const renderItem = ({ item, index }) => (
+  const renderItem = ({item, index}) => (
     console.log('item', item),
-    <View style={style.slideContainer}>
-      {userDetails?.userImages.Length >0 && item?.userImages[index] ? (
-        <Image
-          source={{ uri: userDetails?.userImages[index] }}
-          style={style.image}
-        />
-      ) : (
-        <Image
-              source={{
-                uri: userDetails?.gender === 'male' 
+    (
+      <View style={style.slideContainer}>
+        {userDetails?.userImages.Length > 0 && item?.userImages[index] ? (
+          <Image
+            source={{uri: userDetails?.userImages[index]}}
+            style={style.image}
+          />
+        ) : (
+          <Image
+            source={{
+              uri:
+                userDetails?.gender === 'male'
                   ? 'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-male-5.png'
-                  :  userDetails?.gender === 'female' 
-                  ? 'https://i.pinimg.com/564x/df/a0/36/dfa036866ac5d4ba8760b3671ae9381c.jpg' 
+                  : userDetails?.gender === 'female'
+                  ? 'https://i.pinimg.com/564x/df/a0/36/dfa036866ac5d4ba8760b3671ae9381c.jpg'
                   : 'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-male-5.png',
-              }}
-              resizeMode="cover"
-              style={{width: '100%', height: '100%'}} 
-            />
-      )}
-      {/* <View style={style.gradient}>
+            }}
+            resizeMode="cover"
+            style={{width: '100%', height: '100%'}}
+          />
+        )}
+        {/* <View style={style.gradient}>
         <AppHeader
           iconLeft={<SVG.BackArrow size={24} fill={'black'} />}
           onLeftIconPress={() => navigation.goBack()}
@@ -290,577 +295,695 @@ const UserDetailsScreen = ({ navigation }) => {
           }}
         />
       </View> */}
-    </View>
-  );
-
-  return (
-    <ScrollView style={[STYLES.bgColor(COLORS.dark.white)]}>
-      <View style={styles.container}>
-        <AppHeader
-          iconLeft={<SVG.BackArrow size={24} fill={'black'} />}
-          onLeftIconPress={() => navigation.goBack()}
-          textColor="white"
-          iconRight={
-            <TouchableOpacity
-              style={styles.rightIconContainer}
-              onPress={async () => {
-                await saveUser();
-                navigation.navigate('SavedUserScreen');
-              }}>
-              <CustomImage
-                source={IMAGES.savedIcon}
-                size={18}
-                resizeMode={'contain'}
-              />
-            </TouchableOpacity>
-          }
-          title={LABELS.matches}
-          extraStyle={{
-            container: { width: '100%', position: 'absolute', zIndex: 1 },
-          }}
-        />
       </View>
-
-      <View style={style.container}>
-        <View style={style.carouselContainer}>
-          <Carousel
-            data={carouselData}
-            renderItem={renderItem}
-            sliderWidth={screenWidth}
-            itemWidth={screenWidth}
-            onSnapToItem={index => setActiveSlide(index)}
-          />
-          <Pagination
-            dotsLength={3}
-            activeDotIndex={activeSlide}
-            containerStyle={style.paginationContainer}
-            dotStyle={style.dotStyle}
-            inactiveDotStyle={style.inactiveDotStyle}
-            inactiveDotOpacity={0.6}
-            inactiveDotScale={0.6}
+    )
+  );
+  return (
+    <View>
+      <ScrollView style={[STYLES.bgColor(COLORS.dark.white)]}>
+        <View style={styles.container}>
+          <AppHeader
+            iconLeft={<SVG.BackArrow size={24} fill={'black'} />}
+            onLeftIconPress={() => navigation.goBack()}
+            textColor="black"
+            iconRight={
+              <TouchableOpacity
+                style={styles.rightIconContainer}
+                onPress={async () => {
+                  await saveUser();
+                  navigation.navigate('SavedUserScreen');
+                }}>
+                <Image
+                  source={IMAGES.savedIcon}
+                  style={{width: 20, height: 20}}
+                />
+              </TouchableOpacity>
+            }
+            title={LABELS.matches}
+            extraStyle={{
+              container: {width: '100%', position: 'absolute', zIndex: 1},
+            }}
           />
         </View>
 
-        <View style={style.contentContainer}>
-          <View style={style.basicDetailsContainer}>
-            <Space mT={20} />
-            <AppText
-              title={userDetails?.name || 'N/A'}
-              variant={'h3'}
-              color={COLORS.dark.black}
-              extraStyle={STYLES.fontFamily(Fonts.PoppinsSemiBold)}
-            />
-            <AppText
-              title={userDetails?.occupation || 'N/A'}
-              variant={'h5'}
-              color={COLORS.dark.inputBorder}
-              extraStyle={STYLES.fontFamily(Fonts.PoppinsRegular)}
-            />
-            <Space mT={13} />
-            <AppText
-              title={
-                userDetails.description ||
-                'This user prefers to keep an air of mystery about them.'
-              }
-              color={COLORS.dark.black}
-              extraStyle={STYLES.fontFamily(Fonts.PoppinsRegular)}
-            />
-            <Space mT={13} />
-            <AppText
-              title={userDetails?.city || 'N/A'}
-              variant={'h5'}
-              color={COLORS.dark.inputBorder}
-              extraStyle={STYLES.fontFamily(Fonts.PoppinsRegular)}
-            />
-            <Space mT={20} />
-
+        <View style={style.container}>
+          <View style={style.carouselContainer}>
             <View
               style={{
-                backgroundColor: COLORS.dark.lightGrey,
-                height: 1,
-              }}></View>
-            <Space mT={20} />
-            <AppText
-              title={LABELS.basicInfo}
-              variant={'h3'}
-              color={COLORS.dark.inputBorder}
-              extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
+                position: 'absolute',
+                zIndex: 1,
+                right: 15,
+                top: 15,
+                padding: 7,
+                backgroundColor: COLORS.dark.white,
+                borderRadius: 50,
+              }}>
+              <Image
+                style={{width: 20, height: 20}}
+                source={IMAGES.correct}></Image>
+            </View>
+
+            <Carousel
+              data={carouselData}
+              renderItem={renderItem}
+              sliderWidth={screenWidth - 60}
+              itemWidth={screenWidth}
+              onSnapToItem={index => setActiveSlide(index)}
+            />
+            <Pagination
+              dotsLength={3}
+              activeDotIndex={activeSlide}
+              containerStyle={style.paginationContainer}
+              dotStyle={style.dotStyle}
+              inactiveDotStyle={style.inactiveDotStyle}
+              inactiveDotOpacity={0.6}
+              inactiveDotScale={0.6}
             />
           </View>
-          <Space mT={12} />
-          <View style={style.basicInfoContainer}>
-            <View style={style.infoCont1}>
-              <AppText
-                title={LABELS.name}
-                variant={'h4'}
-                color={COLORS.dark.gray}
-                extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
-              />
+
+          <View style={style.contentContainer}>
+            <View style={style.basicDetailsContainer}>
+              <Space mT={20} />
               <AppText
                 title={userDetails?.name || 'N/A'}
-                variant={'h4'}
+                variant={'h3'}
                 color={COLORS.dark.black}
-                extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
+                extraStyle={STYLES.fontFamily(Fonts.PoppinsSemiBold)}
               />
+              <Space mT={13} />
+              <AppText
+                title={
+                  userDetails.description ||
+                  'This user prefers to keep an air of mystery about them.'
+                }
+                color={COLORS.dark.black}
+                extraStyle={STYLES.fontFamily(Fonts.PoppinsRegular)}
+              />
+              <Space mT={13} />
+              <View
+                style={{flexDirection: 'row', alignItems: 'start', gap: 5}}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '48%',
+                    backgroundColor: '#f5f5f5',
+                    borderRadius: 10,
+                    paddingVertical: 8,
+                    paddingHorizontal: 8,
+                  }}>
+                  <Image
+                    source={IMAGES.briefcaseColored} // Update with the correct path
+                    style={{width: 13, height: 13, marginRight: 8}}
+                  />
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      fontFamily: 'Poppins-Regular', // Update this to match your font setup
+                      color: '#333',
+                    }}>
+                    {userDetails?.occupation || 'N/A'}
+                  </Text>
+                </View>
+
+                {/* Second item - City with icon */}
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '49%',
+                    backgroundColor: '#f5f5f5',
+                    borderRadius: 10,
+                    gap: 5,
+                    paddingVertical: 8,
+                    paddingHorizontal: 12,
+                    marginHorizontal: 5,
+                  }}>
+                  <Icon
+                    SVGIcon={<SVG.locationIconSVG fill={COLORS.dark.primary} />} // Update with the correct path
+                    style={{width: 40, height: 40}}
+                  />
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      fontFamily: 'Poppins-Regular', // Update this to match your font setup
+                      color: '#333',
+                    }}>
+                    {userDetails?.city || 'N/A'}
+                  </Text>
+                </View>
+              </View>
               <Space mT={20} />
 
+              <View
+                style={{
+                  backgroundColor: COLORS.dark.lightGrey,
+                  height: 1,
+                }}></View>
+              <Space mT={20} />
               <AppText
-                title={LABELS.maritalStatus}
-                variant={'h4'}
-                color={COLORS.dark.gray}
-                extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
-              />
-              <AppText
-                title={userDetails?.maritalStatus || 'N/A'}
-                variant={'h4'}
+                title={LABELS.basicInfo}
+                variant={'h3'}
                 color={COLORS.dark.black}
                 extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
               />
-              <Space mT={20} />
+            </View>
+            <Space mT={12} />
+            <View style={style.basicInfoContainer}>
+              <View style={[style.infoCont1]}>
+                <AppText
+                  title={LABELS.name}
+                  variant={'h4'}
+                  color={COLORS.dark.gray}
+                  extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
+                />
+                <AppText
+                  title={userDetails?.name || 'N/A'}
+                  variant={'h4'}
+                  color={COLORS.dark.black}
+                  extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
+                />
+                <Space mT={20} />
 
-              <AppText
-                title={LABELS.height}
-                variant={'h4'}
-                color={COLORS.dark.gray}
-                extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
-              />
-              <AppText
-                title={userDetails?.height || 'N/A'}
-                variant={'h4'}
-                color={COLORS.dark.black}
-                extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
-              />
-              <Space mT={20} />
-              <AppText
-                title={LABELS.profileCreatedFor}
-                variant={'h4'}
-                color={COLORS.dark.gray}
-                extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
-              />
-              <AppText
-                title={userDetails?.profileCreatedFor || 'Self'}
-                variant={'h4'}
-                color={COLORS.dark.black}
-                extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
-              />
-              <Space mT={20} />
+                <AppText
+                  title={LABELS.maritalStatus}
+                  variant={'h4'}
+                  color={COLORS.dark.gray}
+                  extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
+                />
+                <AppText
+                  title={userDetails?.maritalStatus || 'N/A'}
+                  variant={'h4'}
+                  color={COLORS.dark.black}
+                  extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
+                />
+                <Space mT={20} />
+
+                <AppText
+                  title={LABELS.height}
+                  variant={'h4'}
+                  color={COLORS.dark.gray}
+                  extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
+                />
+                <AppText
+                  title={userDetails?.height || 'N/A'}
+                  variant={'h4'}
+                  color={COLORS.dark.black}
+                  extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
+                />
+                <Space mT={20} />
+                <AppText
+                  title={LABELS.profileCreatedFor}
+                  variant={'h4'}
+                  color={COLORS.dark.gray}
+                  extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
+                />
+                <AppText
+                  title={userDetails?.profileCreatedFor || 'Self'}
+                  variant={'h4'}
+                  color={COLORS.dark.black}
+                  extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
+                />
+                <Space mT={20} />
+              </View>
+
+              <View style={style.infoCont2}>
+                <View>
+                  <AppText
+                    title={LABELS.age}
+                    variant={'h4'}
+                    color={COLORS.dark.gray}
+                    extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
+                  />
+                  <AppText
+                    title={userDetails?.age || 'N/A'}
+                    variant={'h4'}
+                    color={COLORS.dark.black}
+                    extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
+                  />
+                  <Space mT={20} />
+
+                  <AppText
+                    title={LABELS.Gender}
+                    variant={'h4'}
+                    color={COLORS.dark.gray}
+                    extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
+                  />
+                  <AppText
+                    title={userDetails?.gender || 'N/A'}
+                    variant={'h4'}
+                    color={COLORS.dark.black}
+                    extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
+                  />
+                  <Space mT={20} />
+
+                  <AppText
+                    title={LABELS.cast}
+                    variant={'h4'}
+                    color={COLORS.dark.gray}
+                    extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
+                  />
+                  <AppText
+                    title={userDetails?.sect || 'N/A'}
+                    variant={'h4'}
+                    color={COLORS.dark.black}
+                    extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
+                  />
+                  <Space mT={20} />
+                  <AppText
+                    title={LABELS.disability}
+                    variant={'h4'}
+                    color={COLORS.dark.gray}
+                    extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
+                  />
+                  <AppText
+                    title={userDetails?.disability || 'No'}
+                    variant={'h4'}
+                    color={COLORS.dark.black}
+                    extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
+                  />
+                  <Space mT={20} />
+                </View>
+              </View>
             </View>
 
-            <View style={style.infoCont2}>
+            <View style={{paddingHorizontal: 10}}>
+              <View
+                style={{
+                  height: 1,
+                  width: '100%',
+                  backgroundColor: COLORS.dark.lightGrey,
+                }}></View>
+              <Space mT={20} />
+
+              <AppText
+                title={LABELS.contactDetails}
+                variant={'h3'}
+                color={COLORS.dark.black}
+                extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
+              />
+
+              <Space mT={17} />
+              <View style={{flexDirection: 'row'}}>
+                <View style={{width: '50%'}}>
+                  <AppText
+                    title={LABELS.phoneNumber}
+                    variant={'h4'}
+                    color={COLORS.dark.gray}
+                    extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
+                  />
+                  <AppText
+                    title={
+                      hasSubscription
+                        ? userDetails?.phone || 'N/A'
+                        : '+91 34********'
+                    }
+                    variant={'h4'}
+                    color={COLORS.dark.black}
+                    extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
+                  />
+                </View>
+                <View style={{width: '50%'}}>
+                  <AppText
+                    title={LABELS.email}
+                    variant={'h4'}
+                    color={COLORS.dark.gray}
+                    extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
+                  />
+                  <AppText
+                    title={
+                      hasSubscription
+                        ? userDetails?.email || 'N/A'
+                        : '******@gmail.com'
+                    }
+                    variant={'h4'}
+                    color={COLORS.dark.black}
+                    extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
+                  />
+                </View>
+              </View>
+              <Space mT={20} />
+              <View
+                style={{
+                  height: 1,
+                  backgroundColor: 'lightgrey',
+                  width: '100%',
+                }}></View>
+              <Space mT={15} />
+              <AppText
+                title={LABELS.locationInfo}
+                variant={'h3'}
+                color={COLORS.dark.black}
+                extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
+              />
+              <Space mT={15} />
+              <AppText
+                title={LABELS.presentAddress}
+                variant={'h4'}
+                color={COLORS.dark.gray}
+                extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
+              />
+              <AppText
+                title={userDetails?.city + ', India' || 'N/A'}
+                variant={'h4'}
+                color={COLORS.dark.black}
+                extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
+              />
+              <Space mT={20} />
+              <AppText
+                title={LABELS.PreminentAddress}
+                variant={'h4'}
+                color={COLORS.dark.gray}
+                extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
+              />
+              <AppText
+                title={userDetails?.city + ', India' || 'N/A'}
+                variant={'h4'}
+                color={COLORS.dark.black}
+                extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
+              />
+              <Space mT={20} />
+              <View
+                style={{
+                  height: 1,
+                  width: '100%',
+                  backgroundColor: COLORS.dark.lightGrey,
+                }}></View>
+              <Space mT={20} />
+              <AppText
+                title={LABELS.educationCareer}
+                variant={'h3'}
+                color={COLORS.dark.black}
+                extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
+              />
+            </View>
+            <Space mT={10} />
+            <View style={style.basicInfoContainer}>
               <View style={style.infoCont1}>
                 <AppText
-                  title={LABELS.age}
+                  title={LABELS.highestDegree}
                   variant={'h4'}
                   color={COLORS.dark.gray}
                   extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
                 />
                 <AppText
-                  title={userDetails?.age || 'N/A'}
+                  title={userDetails?.highestDegree || 'N/A'}
                   variant={'h4'}
                   color={COLORS.dark.black}
                   extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
                 />
-                <Space mT={20} />
+                <Space mT={15} />
 
                 <AppText
-                  title={LABELS.Gender}
+                  title={LABELS.occupation}
                   variant={'h4'}
                   color={COLORS.dark.gray}
                   extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
                 />
                 <AppText
-                  title={userDetails?.gender || 'N/A'}
+                  title={userDetails?.occupation || 'N/A'}
                   variant={'h4'}
                   color={COLORS.dark.black}
                   extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
                 />
-                <Space mT={20} />
+                <Space mT={10} />
+              </View>
+
+              <View style={style.infoCont2}>
+                <AppText
+                  title={LABELS.employedIn}
+                  variant={'h4'}
+                  color={COLORS.dark.gray}
+                  extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
+                />
+                <AppText
+                  title={userDetails?.employedIn || 'N/A'}
+                  variant={'h4'}
+                  color={COLORS.dark.black}
+                  extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
+                />
+                <Space mT={10} />
 
                 <AppText
-                  title={LABELS.cast}
+                  title={LABELS.AnnualIncome}
                   variant={'h4'}
                   color={COLORS.dark.gray}
                   extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
                 />
                 <AppText
-                  title={userDetails?.sect || 'N/A'}
+                  title={userDetails?.annualIncome + ' INR' || 'N/A'}
                   variant={'h4'}
                   color={COLORS.dark.black}
                   extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
                 />
-                <Space mT={20} />
-                <AppText
-                  title={LABELS.disability}
-                  variant={'h4'}
-                  color={COLORS.dark.gray}
-                  extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
-                />
-                <AppText
-                  title={userDetails?.disability || 'No'}
-                  variant={'h4'}
-                  color={COLORS.dark.black}
-                  extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
-                />
-                <Space mT={20} />
+                <Space mT={10} />
+              </View>
+            </View>
+            <View style={{paddingHorizontal: 10}}>
+              <View
+                style={{
+                  height: 1,
+                  width: '100%',
+                  backgroundColor: COLORS.dark.lightGrey,
+                }}></View>
+              <Space mT={20} />
+              <AppText
+                title={LABELS.partnerExpectation}
+                variant={'h3'}
+                color={COLORS.dark.black}
+                extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
+              />
+              <Space mT={20} />
+              <View
+                style={{
+                  width: '100%',
+                  flexDirection: 'row',
+                }}>
+                <View style={{width: '60%'}}>
+                  <AppText
+                    title={LABELS.maritalExpectation}
+                    variant={'h4'}
+                    color={COLORS.dark.gray}
+                    extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
+                  />
+                  <AppText
+                    title={userDetails?.lookingFor || 'N/A'}
+                    variant={'h4'}
+                    color={COLORS.dark.black}
+                    extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
+                  />
+                  <Space mT={15} />
+
+                  <AppText
+                    title={LABELS.age}
+                    variant={'h4'}
+                    color={COLORS.dark.gray}
+                    extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
+                  />
+                  <AppText
+                    title={`${userDetails?.ageFrom || 'N/A'} - ${
+                      userDetails?.ageTo || 'N/A'
+                    }`}
+                    variant={'h4'}
+                    color={COLORS.dark.black}
+                    extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
+                  />
+                  <Space mT={15} />
+
+                  <AppText
+                    title={LABELS.education}
+                    variant={'h4'}
+                    color={COLORS.dark.gray}
+                    extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
+                  />
+                  <AppText
+                    title={userDetails.Education?.education || 'N/A'}
+                    variant={'h4'}
+                    color={COLORS.dark.black}
+                    extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
+                  />
+                  <Space mT={15} />
+                  <AppText
+                    title={LABELS.motherToungue}
+                    variant={'h4'}
+                    color={COLORS.dark.gray}
+                    extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
+                  />
+                  <AppText
+                    title={userDetails?.motherTongue || 'N/A'}
+                    variant={'h4'}
+                    color={COLORS.dark.black}
+                    extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
+                  />
+                </View>
+
+                <View style={{width: '40%'}}>
+                  <AppText
+                    title={LABELS.cast}
+                    variant={'h4'}
+                    color={COLORS.dark.gray}
+                    extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
+                  />
+                  <AppText
+                    title={userDetails?.horoscopeDetails?.caste || 'N/A'}
+                    variant={'h4'}
+                    color={COLORS.dark.black}
+                    extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
+                  />
+                  <Space mT={15} />
+
+                  <AppText
+                    title={LABELS.height}
+                    variant={'h4'}
+                    color={COLORS.dark.gray}
+                    extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
+                  />
+                  <AppText
+                    title={`${userDetails.heightFrom || 'N/A'} - ${
+                      userDetails.heightTo || 'N/A'
+                    }`}
+                    variant={'h4'}
+                    color={COLORS.dark.black}
+                    extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
+                  />
+                  <Space mT={15} />
+
+                  <AppText
+                    title={LABELS.occupation}
+                    variant={'h4'}
+                    color={COLORS.dark.gray}
+                    extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
+                  />
+                  <AppText
+                    title={userDetails?.occupation || 'N/A'}
+                    variant={'h4'}
+                    color={COLORS.dark.black}
+                    extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
+                  />
+                  <Space mT={15} />
+                  <AppText
+                    title={LABELS.AnnualIncome}
+                    variant={'h4'}
+                    color={COLORS.dark.gray}
+                    extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
+                  />
+                  <AppText
+                    title={userDetails?.annualIncome || 'N/A'}
+                    variant={'h4'}
+                    color={COLORS.dark.black}
+                    extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
+                  />
+                </View>
               </View>
             </View>
           </View>
-
-          <View style={{ paddingHorizontal: 10 }}>
-            <View
-              style={{
-                height: 1,
-                width: '100%',
-                backgroundColor: COLORS.dark.lightGrey,
-              }}></View>
-            <Space mT={20} />
-
-            <AppText
-              title={LABELS.contactDetails}
-              variant={'h3'}
-              color={COLORS.dark.inputBorder}
-              extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
-            />
-
-            <Space mT={17} />
-            <View style={{ flexDirection: 'row' }}>
-              <View style={{ width: '50%' }}>
-                <AppText
-                  title={LABELS.phoneNumber}
-                  variant={'h4'}
-                  color={COLORS.dark.gray}
-                  extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
-                />
-                <AppText
-                  title={hasSubscription ? (userDetails?.phone || 'N/A') : '******'}
-                  variant={'h4'}
-                  color={COLORS.dark.black}
-                  extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
-                />
-              </View>
-              <View style={{ width: '50%' }}>
-                <AppText
-                  title={LABELS.email}
-                  variant={'h4'}
-                  color={COLORS.dark.gray}
-                  extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
-                />
-                <AppText
-                  title={hasSubscription ? (userDetails?.email || 'N/A') : '******'}
-                  variant={'h4'}
-                  color={COLORS.dark.black}
-                  extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
-                />
-              </View>
-            </View>
-            <Space mT={20} />
-            <View
-              style={{
-                height: 1,
-                backgroundColor: 'lightgrey',
-                width: '100%',
-              }}></View>
-            <Space mT={15} />
-            <AppText
-              title={LABELS.locationInfo}
-              variant={'h3'}
-              color={COLORS.dark.inputBorder}
-              extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
-            />
-            <Space mT={15} />
-            <AppText
-              title={LABELS.presentAddress}
-              variant={'h4'}
-              color={COLORS.dark.gray}
-              extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
-            />
-            <AppText
-              title={userDetails?.city + ', India' || 'N/A'}
-              variant={'h4'}
-              color={COLORS.dark.black}
-              extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
-            />
-            <Space mT={20} />
-            <AppText
-              title={LABELS.PreminentAddress}
-              variant={'h4'}
-              color={COLORS.dark.gray}
-              extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
-            />
-            <AppText
-              title={userDetails?.city + ', India' || 'N/A'}
-              variant={'h4'}
-              color={COLORS.dark.black}
-              extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
-            />
-            <Space mT={20} />
-            <View
-              style={{
-                height: 1,
-                width: '100%',
-                backgroundColor: COLORS.dark.lightGrey,
-              }}></View>
-            <Space mT={20} />
-            <AppText
-              title={LABELS.educationCareer}
-              variant={'h3'}
-              color={COLORS.dark.inputBorder}
-              extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
-            />
-          </View>
-          <Space mT={10} />
-          <View style={style.basicInfoContainer}>
-            <View style={style.infoCont1}>
-              <AppText
-                title={LABELS.highestDegree}
-                variant={'h4'}
-                color={COLORS.dark.gray}
-                extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
-              />
-              <AppText
-                title={userDetails?.highestDegree || 'N/A'}
-                variant={'h4'}
-                color={COLORS.dark.black}
-                extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
-              />
-              <Space mT={15} />
-
-              <AppText
-                title={LABELS.occupation}
-                variant={'h4'}
-                color={COLORS.dark.gray}
-                extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
-              />
-              <AppText
-                title={userDetails?.occupation || 'N/A'}
-                variant={'h4'}
-                color={COLORS.dark.black}
-                extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
-              />
-              <Space mT={10} />
-            </View>
-
-            <View style={style.infoCont2}>
-              <AppText
-                title={LABELS.employedIn}
-                variant={'h4'}
-                color={COLORS.dark.gray}
-                extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
-              />
-              <AppText
-                title={userDetails?.employedIn || 'N/A'}
-                variant={'h4'}
-                color={COLORS.dark.black}
-                extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
-              />
-              <Space mT={10} />
-
-              <AppText
-                title={LABELS.AnnualIncome}
-                variant={'h4'}
-                color={COLORS.dark.gray}
-                extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
-              />
-              <AppText
-                title={userDetails?.annualIncome + ' INR' || 'N/A'}
-                variant={'h4'}
-                color={COLORS.dark.black}
-                extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
-              />
-              <Space mT={10} />
-            </View>
-          </View>
+          <Space mT={80} />
+          <Space mT={20} />
         </View>
-
-        <View style={{ width: '100%', paddingHorizontal: 15 }}>
+        <View style={{height: 60}} />
+        <Modal
+          transparent={true}
+          visible={isRequestSent}
+          animationType="slide"
+          onRequestClose={() => setIsRequestSent(false)}>
           <View
             style={{
-              height: 1,
-              width: '100%',
-              backgroundColor: COLORS.dark.lightGrey,
-            }}></View>
-          <Space mT={20} />
-          <AppText
-            title={LABELS.partnerExpectation}
-            variant={'h3'}
-            color={COLORS.dark.inputBorder}
-            extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
-          />
-          <Space mT={20} />
-          <View style={{ width: '100%', flexDirection: 'row' }}>
-            <View style={{ width: '60%' }}>
-              <AppText
-                title={LABELS.maritalExpectation}
-                variant={'h4'}
-                color={COLORS.dark.gray}
-                extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
-              />
-              <AppText
-                title={userDetails?.lookingFor || 'N/A'}
-                variant={'h4'}
-                color={COLORS.dark.black}
-                extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
-              />
-              <Space mT={15} />
-
-              <AppText
-                title={LABELS.age}
-                variant={'h4'}
-                color={COLORS.dark.gray}
-                extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
-              />
-              <AppText
-                title={`${userDetails?.ageFrom || 'N/A'} - ${userDetails?.ageTo || 'N/A'
-                  }`}
-                variant={'h4'}
-                color={COLORS.dark.black}
-                extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
-              />
-              <Space mT={15} />
-
-              <AppText
-                title={LABELS.education}
-                variant={'h4'}
-                color={COLORS.dark.gray}
-                extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
-              />
-              <AppText
-                title={userDetails.Education?.education || 'N/A'}
-                variant={'h4'}
-                color={COLORS.dark.black}
-                extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
-              />
-              <Space mT={15} />
-              <AppText
-                title={LABELS.motherToungue}
-                variant={'h4'}
-                color={COLORS.dark.gray}
-                extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
-              />
-              <AppText
-                title={userDetails?.motherTongue || 'N/A'}
-                variant={'h4'}
-                color={COLORS.dark.black}
-                extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
-              />
-            </View>
-
-            <View style={{ width: '40%' }}>
-              <AppText
-                title={LABELS.cast}
-                variant={'h4'}
-                color={COLORS.dark.gray}
-                extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
-              />
-              <AppText
-                title={userDetails?.horoscopeDetails?.caste || 'N/A'}
-                variant={'h4'}
-                color={COLORS.dark.black}
-                extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
-              />
-              <Space mT={15} />
-
-              <AppText
-                title={LABELS.height}
-                variant={'h4'}
-                color={COLORS.dark.gray}
-                extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
-              />
-              <AppText
-                title={`${userDetails.heightFrom || 'N/A'} - ${userDetails.heightTo || 'N/A'
-                  }`}
-                variant={'h4'}
-                color={COLORS.dark.black}
-                extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
-              />
-              <Space mT={15} />
-
-              <AppText
-                title={LABELS.occupation}
-                variant={'h4'}
-                color={COLORS.dark.gray}
-                extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
-              />
-              <AppText
-                title={userDetails?.occupation || 'N/A'}
-                variant={'h4'}
-                color={COLORS.dark.black}
-                extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
-              />
-              <Space mT={15} />
-              <AppText
-                title={LABELS.AnnualIncome}
-                variant={'h4'}
-                color={COLORS.dark.gray}
-                extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
-              />
-              <AppText
-                title={userDetails?.annualIncome || 'N/A'}
-                variant={'h4'}
-                color={COLORS.dark.black}
-                extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
-              />
+              flex: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: 'rgba(0,0,0,0.5)',
+            }}>
+            <View
+              style={{backgroundColor: 'white', padding: 20, borderRadius: 10}}>
+              <View style={styles.box}>
+                <View style={styles.contentbox}>
+                  <View style={styles.iconbox}>
+                    <Image
+                      source={IMAGES.check}
+                      style={styles.checkmarkImage}
+                    />
+                  </View>
+                  <View style={styles.textbox}>
+                    <Text style={styles.titlebox}>Request Sent</Text>
+                    <Text style={styles.messagebox}>
+                      Your request has been sent. We'll update you soon.
+                    </Text>
+                  </View>
+                </View>
+                <TouchableOpacity
+                  style={styles.closeButton}
+                  onPress={() => setIsRequestSent(false)}>
+                  <Text style={styles.closeButtonText}>✕</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
-        </View>
-        <Space mT={20} />
-        <View
+        </Modal>
+      </ScrollView>
+      <View
+        style={{
+          width: '100%',
+          flexDirection: 'row',
+          paddingHorizontal: 20,
+          position: 'absolute', // Change from 'fixed' to 'absolute'
+          bottom: 0,
+          justifyContent: 'center',
+          paddingVertical: 15,
+          backgroundColor: 'white', // Optional: to create a background for the button container
+          elevation: 5, // Optional: add shadow/elevation for better visibility
+        }}>
+        <TouchableOpacity
           style={{
-            width: '100%',
+            width: '48%',
+            height: 50,
+            backgroundColor: COLORS.dark.secondary,
+            justifyContent: 'center',
+            alignItems: 'center',
             flexDirection: 'row',
-            paddingHorizontal: 20,
+            borderRadius: 30,
+          }}
+          onPress={() => {
+            setIsRequestSent(true); // Trigger modal visibility
+            sendInterest(); // Assuming this is the function to send the request
           }}>
-          <TouchableOpacity
-            style={{
-              width: '80%',
-              height: 50,
-              backgroundColor: COLORS.dark.secondary,
-              justifyContent: 'center',
-              alignItems: 'center',
-              flexDirection: 'row',
-              borderRadius: 6,
-            }}
-            onPress={() => {
-              sendInterest();
-            }}>
-            <CustomImage
-              source={IMAGES.sendIcon}
-              size={12}
-              resizeMode={'contain'}
-            />
-            <Space mL={10} />
-            <AppText
-              title={'Send Interest'}
-              color={'white'}
-              variant={'h5'}
-              extraStyle={{ fontFamily: Fonts.PoppinsRegular }}
-            />
-          </TouchableOpacity>
+          <Image
+            source={IMAGES.sendIcon}
+            style={{width:14,height:14}}
+          />
           <Space mL={10} />
+          <Text
+            style={{fontFamily: Fonts.PoppinsRegular,color:'white',fontSize:14}}
+          >Send Interest</Text>
+        </TouchableOpacity>
+        <Space mL={10} />
 
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate('ChatScreen', {
-                userId: userDetails?._id,
-                roomId: `${userDetails?._id}_${currentUser.user._id}`,
-                user: userDetails,
-              });
-            }}
-            style={{
-              width: '15%',
-              height: 50,
-              backgroundColor: COLORS.dark.primary,
-              justifyContent: 'center',
-              alignItems: 'center',
-              flexDirection: 'row',
-              borderRadius: 6,
-            }}>
-            <CustomImage source={IMAGES.chatIcon} size={12} />
-          </TouchableOpacity>
-        </View>
-        <Space mT={20} />
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('ChatScreen', {
+              userId: userDetails?._id,
+              roomId: `${userDetails?._id}_${currentUser.user._id}`,
+              user: userDetails,
+            });
+          }}
+          style={{
+            width: '48%',
+            height: 50,
+            backgroundColor: COLORS.dark.primary,
+            justifyContent: 'center',
+            alignItems: 'center',
+            flexDirection: 'row',
+            borderRadius: 30,
+          }}>
+          <Image source={IMAGES.chatIcon} style={{width:14,height:14}} />
+          <Space mL={10} />
+          <Text
+            style={{fontFamily: Fonts.PoppinsRegular,color:'white',fontSize:14}}
+          >Chat Now</Text>
+        </TouchableOpacity>
       </View>
-    </ScrollView>
+    </View>
   );
 };
 

@@ -9,6 +9,7 @@ const VerificationController = require("../controller/verificationController");
 const { auth } = require("../middlewares/auth");
 const uploadFileController = require("../controller/uploadFileController");
 const multer = require("multer");
+const adminDashController = require("../controller/dashboardController");
 const chatController = require("../controller/chatController");
 const router = express.Router();
 const path = require('path');
@@ -120,4 +121,7 @@ router.post("/user/userPreferences/", auth, userAuthController.userPreferences);
 router.get("/user/profile", auth, userAuthController.userProfile);
 
 router.get('/user/current-user', auth, userAuthController.currentUser)
+router.get("/user/get-success-stories",auth,adminDashController.getSuccessStories);
+
+
 module.exports = router;
