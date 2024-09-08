@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   ScrollView,
   TouchableOpacity,
@@ -10,11 +10,12 @@ import {
   Pressable,
   Image,
   ActivityIndicator,
+  FlatList,
 } from 'react-native';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
-import { IMAGES } from '../../../assets/images';
-import { SVG } from '../../../assets/svg';
-import { COLORS, HORIZON_MARGIN, STYLES } from '../../../assets/theme';
+import {IMAGES} from '../../../assets/images';
+import {SVG} from '../../../assets/svg';
+import {COLORS, HORIZON_MARGIN, STYLES} from '../../../assets/theme';
 import AppHeader from '../../../components/AppHeader/AppHeader';
 import AppInput from '../../../components/AppInput/AppInput';
 import CustomImage from '../../../components/CustomImage/CustomImage';
@@ -22,20 +23,23 @@ import HorizontalCard from '../../../components/HorizontalCard/HorizontalCard';
 import HorizontalScreen from '../../../components/HorizontalScroll/HorizontalScreen';
 import SnapCarousel from '../../../components/SnapCarousel/SnapCarousel';
 import Space from '../../../components/Space/Space';
-import { API_URL } from '../../../../constant';
+import {API_URL} from '../../../../constant';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useNavigation } from '@react-navigation/native';
-import Svg, { Path } from 'react-native-svg';
+import {useNavigation} from '@react-navigation/native';
+import Svg, {Path} from 'react-native-svg';
 import {
   HorizontalCardData,
   carouselData,
   filterOptions,
   usersData,
 } from '../../../data/appData';
-import { LABELS } from '../../../labels';
-import { Toast } from '../../../utils/native';
-import { styles } from './styles';
-const MenuIcon = ({ size = 24, color = 'black' }) => (
+import {LABELS} from '../../../labels';
+import {Toast} from '../../../utils/native';
+import {styles} from './styles';
+import GridCard from '../../../components/SuggestedCard/GridCard';
+import SuccessStoriesCard from '../../../components/successStories/SuccessStoriesCard';
+
+const MenuIcon = ({size = 24, color = 'black'}) => (
   <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
     <Path
       d="M3 12h18M3 6h18M3 18h18"
@@ -59,7 +63,7 @@ const filterStyles = StyleSheet.create({
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
@@ -212,12 +216,17 @@ const HomePage = () => {
   const [newUsersLoading, setNewUsersLoading] = useState(true);
   const [salaryRange, setSalaryRange] = useState([0, 10000000]);
   const [refreshing, setRefreshing] = React.useState(false);
+  const [matchType, setMatchType] = useState('newUsers');
+  const [filteredUsers, setFilteredUsers] = useState([]);
+  const [matchedUsers, setMatchedUsers] = useState([]);
+
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     setTimeout(() => {
       setRefreshing(false);
     }, 2000);
   }, []);
+
   useEffect(() => {
     const fetchRecentlyViewed = async () => {
       try {
@@ -239,7 +248,7 @@ const HomePage = () => {
           }
         }
 
-        const { recentlyViewed } = await response.json();
+        const {recentlyViewed} = await response.json();
         console.log('Recently Viewed:', recentlyViewed);
         setRecentlyViewed(recentlyViewed);
       } catch (error) {
@@ -269,7 +278,7 @@ const HomePage = () => {
           }
         }
 
-        const { newUsers } = await response.json();
+        const {newUsers} = await response.json();
         setNewUsers(newUsers);
       } catch (error) {
         console.error('Error fetching new users:', error);
@@ -279,10 +288,55 @@ const HomePage = () => {
       }
     };
 
-    Promise.all([fetchNewUsers(), fetchRecentlyViewed()]).then(() => {
+    const fetchMatchedUsers = async () => {
+      try {
+        setLoading(true);
+        const token = await AsyncStorage.getItem('AccessToken');
+        if (!token) {
+          throw new Error('Access token not found');
+        }
+
+        const response = await fetch(
+          `${API_URL}/user/userMatch?matchType=${matchType}`,
+          {
+            method: 'GET',
+            headers: {
+              authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+          },
+        );
+
+        if (!response.ok) {
+          const errorResponse = await response.json();
+          console.error('Error response:', errorResponse);
+          throw new Error(
+            errorResponse.message || 'Failed to fetch matched users',
+          );
+        }
+
+        const data = await response.json();
+        console.log('response', data);
+        setMatchedUsers(data?.matchedUsers || []);
+        setFilteredUsers(data?.matchedUsers || []);
+      } catch (err) {
+        console.error('Error fetching matched users:', err);
+        setError(
+          err.message || 'Failed to fetch matched users. Please try again.',
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    Promise.all([
+      fetchNewUsers(),
+      fetchRecentlyViewed(),
+      fetchMatchedUsers(),
+    ]).then(() => {
       setLoading(false);
     });
-  }, []);
+  }, [matchType]);
 
   const handleRightIconPress = () => {
     navigation.navigate('NotificationScreen');
@@ -332,8 +386,7 @@ const HomePage = () => {
     setSelectedGender('');
     setSelectedMaritalStatus('');
     setSelectedLanguage('');
-    setSalaryRange([0, 10000000
-    ]);
+    setSalaryRange([0, 10000000]);
   };
 
   const closeFilters = () => {
@@ -341,13 +394,54 @@ const HomePage = () => {
     setShowFilters(false);
   };
 
-  return (
+  const arr = [
+    {
+      id: 1,
+      image: require('../../../assets/images/image.png'),
+      name: 'Lorem ipsum dolor',
+      decription:
+        'Lorem ipsum dolor sit amet consectetur. Risus nulla auctor tellus quam enim amet lorem. Consectetur aliquet nunc nunc.',
+    },
+    {
+      id: 1,
+      image: require('../../../assets/images/image.png'),
+      name: 'Lorem ipsum dolor',
+      decription:
+        'Lorem ipsum dolor sit amet consectetur. Risus nulla auctor tellus quam enim amet lorem. Consectetur aliquet nunc nunc.',
+    },
+    {
+      id: 1,
+      image: require('../../../assets/images/image.png'),
+      name: 'Lorem ipsum dolor',
+      decription:
+        'Lorem ipsum dolor sit amet consectetur. Risus nulla auctor tellus quam enim amet lorem. Consectetur aliquet nunc nunc.',
+    },
+    {
+      id: 1,
+      image: require('../../../assets/images/image.png'),
+      name: 'Lorem ipsum dolor',
+      decription:
+        'Lorem ipsum dolor sit amet consectetur. Risus nulla auctor tellus quam enim amet lorem. Consectetur aliquet nunc nunc.',
+    },
+    {
+      id: 1,
+      image: require('../../../assets/images/image.png'),
+      name: 'Lorem ipsum dolor',
+      decription:
+        'Lorem ipsum dolor sit amet consectetur. Risus nulla auctor tellus quam enim amet lorem. Consectetur aliquet nunc nunc.',
+    },
+  ];
 
-    <ScrollView style={[STYLES.flex1, { backgroundColor: 'white' }]} refreshControl={
-      <RefreshControl refreshing={refreshing} onRefresh={onRefresh}
-        colors={[COLORS.dark.primary]}
-      />
-    }>
+  return (
+    <ScrollView
+      style={[STYLES.flex1, {backgroundColor: 'white'}]}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+          colors={[COLORS.dark.primary]}
+        />
+      }>
       <View style={styles.headerContainer}>
         <AppHeader
           iconLeft={
@@ -380,7 +474,7 @@ const HomePage = () => {
                 width={15}
               />
             }
-            extraStyle={{ textInputCont: [styles.searchInputCont] }}
+            extraStyle={{textInputCont: [styles.searchInputCont]}}
             placeholder={LABELS.searchHere}
             onChangeText={handleSearch}
           />
@@ -403,7 +497,7 @@ const HomePage = () => {
           onRequestClose={closeFilters}
           transparent={true}
           visible={showFilters}
-        // onRequestClose={() => setShowFilters(false)}
+          // onRequestClose={() => setShowFilters(false)}
         >
           <View style={filterStyles.container}>
             <View style={filterStyles.modalContent}>
@@ -446,9 +540,7 @@ const HomePage = () => {
                   </View>
                 </View>
                 <View style={filterStyles.ChildContainer1}>
-                  <Text style={filterStyles.sectionTitle}>
-                    Marital Status
-                  </Text>
+                  <Text style={filterStyles.sectionTitle}>Marital Status</Text>
                   <View style={filterStyles.buttonRow}>
                     <TouchableOpacity
                       style={
@@ -565,18 +657,14 @@ const HomePage = () => {
                 <TouchableOpacity
                   style={filterStyles.applyButton}
                   onPress={onSubmitFilter}>
-                  <Text style={filterStyles.applyButtonText}>
-                    Apply Filter
-                  </Text>
+                  <Text style={filterStyles.applyButtonText}>Apply Filter</Text>
                 </TouchableOpacity>
               </ScrollView>
 
               <Pressable
                 style={filterStyles.closeButton}
                 onPress={closeFilters}>
-                <Text style={filterStyles.closeButtonText}>
-                  Close Filters
-                </Text>
+                <Text style={filterStyles.closeButtonText}>Close Filters</Text>
               </Pressable>
             </View>
           </View>
@@ -592,9 +680,13 @@ const HomePage = () => {
 
         <Space mT={20} />
 
-        <View style={{ paddingHorizontal: 15, borderRadius: 20 }}>
+        <View style={{paddingHorizontal: 15, borderRadius: 20}}>
           {newUsersLoading ? (
-            <ActivityIndicator size="large" style={{ objectFit: 'cover' }} color={COLORS.dark.primary} />
+            <ActivityIndicator
+              size="large"
+              style={{objectFit: 'cover'}}
+              color={COLORS.dark.primary}
+            />
           ) : (
             <SnapCarousel data={newUsers} />
           )}
@@ -618,6 +710,56 @@ const HomePage = () => {
           ) : (
             <Text style={styles.noDataText}>No recently viewed users</Text>
           )}
+        </View>
+        <Space mT={20} />
+
+        <View style={[STYLES.pL(6)]}>
+          {loading ? (
+            <ActivityIndicator size="large" color={COLORS.dark.primary} />
+          ) : matchedUsers && matchedUsers.length > 0 ? (
+            <GridCard data={matchedUsers.slice(0, 8)} />
+          ) : (
+            <Text style={styles.noDataText}>No matched users found</Text>
+          )}
+        </View>
+        <Space mT={10} />
+
+        <View style={[STYLES.pL(6)]}>
+          {recentlyViewedLoading ? (
+            <ActivityIndicator size="large" color={COLORS.dark.primary} />
+          ) : recentlyViewed && recentlyViewed.length > 0 ? (
+            <HorizontalCard
+              data={recentlyViewed}
+              onLinkPress={showMoreUserHandler}
+              onSendInterest={sendInterestHandler}
+              onChatBtnClick={chatPressHandler}
+              onVerifyBtnClick={() => {
+                Toast('This account is verified');
+              }}
+            />
+          ) : (
+            <Text style={styles.noDataText}>No recently viewed users</Text>
+          )}
+        </View>
+        <View style={{width:'100%'}}>
+        <FlatList
+        horizontal
+          data={arr}
+          renderItem={({item, index}) => (
+           <View>
+             <SuccessStoriesCard
+              {...item}
+              index={index}
+              image={item.image}
+              name={item.name}
+              des={item.decription}
+              onPress={() => {
+                navigation.navigate('SuccessStoriesDetals');
+              }}
+            />
+           </View>
+          )}
+        />
         </View>
       </View>
     </ScrollView>

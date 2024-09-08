@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, TouchableOpacity, View, Image, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -11,11 +11,12 @@ import { LABELS } from '../../labels';
 import AppText from '../AppText/AppText';
 import CustomImage from '../CustomImage/CustomImage';
 import Icon from '../Icon/Icon';
-import Space from '../Space/Space';
 import { subscriptionCheck, checkLiveChatAvailability } from '../../utils/subscriptionCheck';
 import { Toast } from '../../utils/native';
+import {API_URL} from '../../../constant';
 
-const HorizontalCard = ({ data }) => {
+
+const PartnerCard = ({ data }) => {
   const navigation = useNavigation();
   const [currentUser, setCurrentUser] = useState({});
 
@@ -31,8 +32,53 @@ const HorizontalCard = ({ data }) => {
     fetchUser();
   }, []);
 
+  async function addToRecentlyViewed(viewedUserId) {
+    const apiUrl = `${API_URL}/user/recentlyViewed`;
+    const token = await AsyncStorage.getItem('AccessToken');
+
+    try {
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          userId: viewedUserId,
+        }),
+      });
+
+      if (!response.ok) {
+        let errorMessage =
+          'An error occurred while adding user to recently viewed';
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.message || errorMessage;
+        } catch (e) {
+          errorMessage = response.statusText;
+        }
+        throw new Error(errorMessage);
+      }
+
+      const data = await response.json();
+      return {
+        success: true,
+        message: 'User added to recently viewed successfully!',
+        data: data,
+      };
+    } catch (error) {
+      console.error('Error adding user to recently viewed:', error);
+      return {
+        success: false,
+        message: error.message || 'An unexpected error occurred',
+        error: error,
+      };
+    }
+  }
+
   const handleSendInterest = async (item) => {
     try {
+      addToRecentlyViewed(item?._id);
       if (await subscriptionCheck(item)) {
         navigation.navigate('UserDetailsScreen', { userId: item?._id });
       } else {
@@ -94,7 +140,7 @@ const HorizontalCard = ({ data }) => {
         <View style={styles.nameLocationContainer}>
           <AppText
             title={item?.name || 'N/A'}
-            variant="h5"
+            variant="h6"
             color={COLORS.dark.black}
           />
           <View style={styles.locationContainer}>
@@ -152,13 +198,12 @@ const HorizontalCard = ({ data }) => {
       </View>
     </View>
   );
-  
 
   return (
     <View style={styles.parentContainer}>
-      <View style={styles.textContainer}>
-          <AppText
-          title={LABELS.recentlyViewed}
+      {/* <View style={styles.textContainer}>
+        <AppText
+          title={'Suggested for you'}
           variant="h3"
           color="black" 
           extraStyle={[STYLES.fontFamily(Fonts.PoppinsSemiBold)]}
@@ -168,7 +213,7 @@ const HorizontalCard = ({ data }) => {
           onPress={() => navigation.navigate('SuggestedUsersPage')}
         >
           <AppText
-            title={LABELS.seeMore}
+            title={'See all'}
             variant={'h5'}
             extraStyle={[STYLES.fontFamily(Fonts.PoppinsRegular)]}
             color={COLORS.dark.primary}
@@ -186,20 +231,11 @@ const HorizontalCard = ({ data }) => {
             />
           </View>
         </TouchableOpacity>
-      </View>
+      </View> */}
 
-      <ScrollView
-        horizontal={true}
-        showsHorizontalScrollIndicator={false}
-        style={styles.horizontalScrollContainer}
-      >
-        {data?.map((item, index) => (
-          <React.Fragment key={`${item._id}_${index}`}>
-            {renderCard(item, index)}
-            <Space mL={10} />
-          </React.Fragment>
-        ))}
-      </ScrollView>
+      <View style={styles.gridContainer}>
+        {data?.map((item, index) => renderCard(item, index))}
+      </View>
     </View>
   );
 };
@@ -215,23 +251,26 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: 15,
+    marginBottom: 10,
   },
   linkContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  horizontalScrollContainer: {
-    width: '100%',
-    height: 210,
+  gridContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    paddingHorizontal: 5,
   },
   cardContainer: {
-    width: 170,
+    width: '48%',
     height: 190,
     backgroundColor: COLORS.dark.white,
     borderRadius: 15,
     elevation: 5,
-    marginTop: 10,
+    marginBottom: 15,
     overflow: 'hidden',
   },
   imageContainer: {
@@ -273,14 +312,6 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     zIndex: 1,
   },
-  professionLabel: {
-    position: 'absolute',
-    bottom: 10,
-    alignSelf: 'center',
-    zIndex: 2,
-    fontSize: 13,
-    fontFamily: Fonts.PoppinsRegular,
-  },
   infoContainer: {
     padding: 15,
   },
@@ -297,7 +328,7 @@ const styles = StyleSheet.create({
   },
   locationText: {
     fontSize: 10,
-    marginLeft: 5,
+    marginLeft: -3,
   },
   detailsText: {
     flex: 1,
@@ -322,4 +353,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HorizontalCard;
+export default PartnerCard;

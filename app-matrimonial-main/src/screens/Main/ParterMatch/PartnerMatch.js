@@ -31,6 +31,8 @@ import {styles} from './styles';
 import AppCard from '../../../components/AppCard/AppCard';
 import {IMAGES} from '../../../assets/images';
 import CheckBox from '@react-native-community/checkbox';
+import GridCard from '../../../components/SuggestedCard/GridCard';
+import PartnerCard from '../../../components/PartnerCard/PartnerCard';
 const style = StyleSheet.create({
   container: {
     flex: 1,
@@ -596,21 +598,24 @@ const PartnerMatch = ({navigation, route}) => {
                   }}
                   trackStyle={{
                     height: 6,
-                    width:'100%'
+                    width: '100%',
                   }}
                   markerStyle={{
                     backgroundColor: 'white',
                     borderWidth: 2,
                     borderColor: '#F97B22',
                     padding: 5,
-                    marginTop:5,
-
+                    marginTop: 5,
                   }}
                 />
               </View>
 
               <View
-                style={{flexDirection: 'row',justifyContent:'center',gap:20}}>
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  gap: 20,
+                }}>
                 <Pressable style={style.closeButton} onPress={closeFilters}>
                   <Text style={style.closeButtonText}>Close Filters</Text>
                 </Pressable>
@@ -626,7 +631,7 @@ const PartnerMatch = ({navigation, route}) => {
       </Modal>
 
       <Space mT={5} />
-      <View style={STYLES.pH(HORIZON_MARGIN)}>
+      {/* <View style={STYLES.pH(HORIZON_MARGIN)}>
         {filteredUsers.length > 0 ? (
           filteredUsers.map(user => (
             <AppCard
@@ -660,6 +665,15 @@ const PartnerMatch = ({navigation, route}) => {
             title="No matched users found"
             color={COLORS.dark.secondary}
           />
+        )}
+      </View> */}
+      <View style={[STYLES.pL(6)]}>
+        {loading ? (
+          <ActivityIndicator size="large" color={COLORS.dark.primary} />
+        ) : filteredUsers && filteredUsers.length > 0 ? (
+          <PartnerCard data={filteredUsers} />
+        ) : (
+          <Text style={styles.noDataText}>No matched users found</Text>
         )}
       </View>
     </ScrollView>
