@@ -155,7 +155,11 @@ const LoginScreen = () => {
       await getSubscriptions();
 
       // If we've made it this far, all checks have passed
-      navigation.navigate('DrawerNavigation');
+      // navigation.navigate('DrawerNavigation');
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'DrawerNavigation' }],
+      });
     } catch (error) {
       console.error('Login error:', error);
       setAlertMessage(error.message || 'An error occurred during login');

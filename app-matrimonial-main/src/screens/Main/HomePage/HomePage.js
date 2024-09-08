@@ -38,6 +38,7 @@ import {Toast} from '../../../utils/native';
 import {styles} from './styles';
 import GridCard from '../../../components/SuggestedCard/GridCard';
 import SuccessStoriesCard from '../../../components/successStories/SuccessStoriesCard';
+import CheckBox from '@react-native-community/checkbox';
 
 const MenuIcon = ({size = 24, color = 'black'}) => (
   <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
@@ -51,143 +52,131 @@ const MenuIcon = ({size = 24, color = 'black'}) => (
   </Svg>
 );
 const filterStyles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  textInputCont: {
+    width: '80%',
+    backgroundColor: COLORS.dark.searchBox,
+    borderWidth: 0,
   },
-  modalContent: {
+  headerContainer: {
+    height: 70,
     width: '100%',
-    backgroundColor: 'white',
-    padding: 20,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.dark.lightGrey,
   },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 10,
-    color: 'black',
-  },
-  buttonRow: {
-    flexDirection: 'row',
+  searchBoxContainer: {
+    width: '100%',
+    paddingHorizontal: HORIZON_MARGIN,
     justifyContent: 'space-between',
-    backgroundColor: 'white',
-    borderRadius: 30,
-    padding: 10,
-    paddingLeft: 10,
-    paddingRight: 10,
+    flexDirection: 'row',
   },
-  button: {
-    borderRadius: 30,
-    width: '50%',
-    padding: 0,
-    margin: 0,
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    color: 'black',
-    borderWidth: 2,
-    borderColor: 'white',
+  searchBox: {
+    height: 50,
+    width: '75%',
+    backgroundColor: COLORS.dark.lightGrey,
   },
-  selectedButton: {
-    backgroundColor: 'rgba(249, 123, 34, 0.1)',
-    borderColor: '#F97B22',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 30,
-    width: '50%',
-    borderWidth: 2,
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-
-  sliderContainer: {
-    marginBottom: 15,
-  },
-  salaryText: {
-    fontSize: 16,
-    color: '#F97B22',
-  },
-  closeButton: {
-    marginTop: 20,
-    alignItems: 'center',
-  },
-  closeButtonText: {
-    fontSize: 16,
-    color: COLORS.dark.secondary,
-  },
-  applyButton: {
+  filterBtn: {
+    height: 50,
+    width: '15%',
     backgroundColor: COLORS.dark.secondary,
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 5,
+    borderRadius: 10,
+    justifyContent: 'center',
     alignItems: 'center',
   },
-  applyButtonText: {
-    color: 'white',
-    fontWeight: 'bold',
+  cardContainer: {
+    height: 155,
+    width: '100%',
+    backgroundColor: 'white',
+    borderWidth: 1,
+    borderColor: COLORS.dark.text,
+    flexDirection: 'row',
+    borderRadius: 10,
+    elevation: 5,
+    marginTop: 10,
   },
-  label: {
-    fontSize: 18,
-    marginBottom: 10,
+  imgContainer: {
+    width: '35%',
+    borderRadius: 20,
   },
-  sliderContainer: {
+  contentContainer: {
+    justifyContent: 'center',
+    paddingHorizontal: HORIZON_MARGIN,
+  },
+  gradientOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    borderRadius: 10,
+  },
+  textContainer: {
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: -10,
+    paddingHorizontal: 15,
   },
-  value: {
-    fontSize: 16,
-    color: 'black',
+  linkContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  leftValue: {
-    position: 'absolute',
-    left: 0,
-  },
-  rightValue: {
-    position: 'absolute',
-    right: 0,
-  },
-  ChildContainer: {
-    margin: 5,
-    backgroundColor: '#F8F8F8',
-    paddingBottom: 25,
-    borderRadius: 10,
-    padding: 10,
-  },
-  ChildContainer1: {
-    backgroundColor: '#F8F8F8',
-    margin: 5,
-    paddingBottom: 25,
-    borderRadius: 10,
-    padding: 10,
-  },
-  buttonRow2: {
+  horizontalScrollContainer: {
     width: '100%',
+    height: 150,
+  },
+  img: {
+    flex: 1,
+    borderRadius: 10,
+  },
+  sendIconBtn: {
+    height: 25,
+    width: 25,
+    backgroundColor: COLORS.dark.secondary,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  chatIconBtn: {
+    height: 25,
+    width: 25,
+    backgroundColor: COLORS.dark.primary,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  verifyIconBtn: {
+    height: 25,
+    width: 25,
+    backgroundColor: COLORS.dark.white,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: COLORS.dark.lightGrey,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  image: {
+    ...StyleSheet.absoluteFillObject,
+    resizeMode: 'cover',
+    borderRadius: 10,
+  },
+  locationContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  btnContainer: {
     flexDirection: 'row',
   },
-  button2: {
-    width: '30%',
-    backgroundColor: '#F8F8F8',
-    marginLeft: 10,
-    borderRadius: 30,
-    padding: 10,
-    borderWidth: 2,
-    borderColor: 'white',
+  sendInterestBtn: {
+    width: '55%',
+    height: 40,
+    backgroundColor: COLORS.dark.secondary,
+    borderRadius: 5,
+    justifyContent: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
   },
-  selectedButton2: {
-    width: '30%',
-    backgroundColor: 'rgba(249, 123, 34, 0.1)',
-    borderWidth: 2,
-    borderColor: '#F97B22',
-    borderRadius: 30,
-    padding: 10,
+  chatBtn: {
+    width: '20%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: COLORS.dark.primary,
+    borderRadius: 5,
   },
   Bell_Icon: {
     width: 25,
@@ -195,6 +184,108 @@ const filterStyles = StyleSheet.create({
     resizeMode: 'contain',
     marginRight: '1%',
   },
+  container: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
+  modalContent: {
+    width: '100%',
+    backgroundColor: 'white',
+    borderRadius: 10,
+    padding: 20,
+  },
+  ChildContainer: {
+    marginBottom: 20,
+  },
+  ChildContainer1: {
+    marginBottom: 20,
+  },
+  ChildContainer2: {
+    marginBottom: 20,
+  },
+  sectionTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: 'black',
+  },
+  checkboxContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 5,
+  },
+  checkboxLabel: {
+    marginLeft: 8,
+    fontSize: 16,
+    color:'#333'
+  },
+  buttonRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '80%',
+  },
+  buttonRow2: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    width: '80%',
+  },
+  button: {
+    // Define your button styles
+  },
+  selectedButton: {
+    // Define your selected button styles
+  },
+  button2: {
+    // Define your button2 styles
+  },
+  selectedButton2: {
+    // Define your selected button2 styles
+  },
+  sliderContainer: {
+    marginVertical: 20,
+    paddingHorizontal:10,
+    alignItems:'center'
+  },
+  salaryText: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: 'black',
+  },
+  applyButton: {
+    backgroundColor: '#F97B22',
+    padding: 15,
+    borderRadius: 25,
+    alignItems: 'center',
+    paddingHorizontal: 30,
+  },
+  applyButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  closeButton: {
+    borderColor: '#F97B22',
+    padding: 15,
+    borderRadius: 25,
+    alignItems: 'center',
+    paddingHorizontal: 30,
+    borderWidth: 1,
+  },
+  closeButtonText: {
+    color: '#F97B22',
+    fontWeight: 'bold',
+  },
+  line: {
+    width: '100%',
+    alignSelf: 'center',
+    height: 2,
+    backgroundColor: '#E5E5E5',
+    marginVertical: 10,
+  },
+  text:{
+    fontSize: 12,
+    color: '#ff385c',
+  }
 });
 
 const HomePage = () => {
@@ -525,182 +616,164 @@ const HomePage = () => {
         <Space mT={20} />
 
         <Modal
-          animationType="slide"
-          onRequestClose={closeFilters}
-          transparent={true}
-          visible={showFilters}
-          // onRequestClose={() => setShowFilters(false)}
-        >
-          <View style={filterStyles.container}>
-            <View style={filterStyles.modalContent}>
-              <ScrollView>
-                <View style={filterStyles.ChildContainer}>
-                  <Text style={filterStyles.sectionTitle}>Gender</Text>
-                  <View style={filterStyles.buttonRow}>
-                    <TouchableOpacity
-                      style={
-                        selectedGender === 'male'
-                          ? filterStyles.selectedButton
-                          : filterStyles.button
-                      }
-                      onPress={() => setSelectedGender('male')}>
-                      <Text
-                        style={{
-                          color: '#F97B22',
-                          textAlign: 'center',
-                          fontWeight: 'bold',
-                        }}>
-                        Male
-                      </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={
-                        selectedGender === 'female'
-                          ? filterStyles.selectedButton
-                          : filterStyles.button
-                      }
-                      onPress={() => setSelectedGender('female')}>
-                      <Text
-                        style={{
-                          color: '#F97B22',
-                          textAlign: 'center',
-                          fontWeight: 'bold',
-                        }}>
-                        Female
-                      </Text>
-                    </TouchableOpacity>
+        animationType="slide"
+        transparent={true}
+        visible={showFilters}
+        onRequestClose={closeFilters}>
+        <View style={filterStyles.container}>
+          <View style={filterStyles.modalContent}>
+            <ScrollView>
+              {/* Gender Filter */}
+              <View style={filterStyles.ChildContainer}>
+                <Text style={filterStyles.sectionTitle}>Gender</Text>
+                <View style={filterStyles.line} />
+                <View style={filterStyles.buttonRow}>
+                  <View style={filterStyles.checkboxContainer}>
+                    <CheckBox
+                      value={selectedGender === 'all'}
+                      onValueChange={() => setSelectedGender('all')}
+                      tintColors={{true: '#F97B22', false: 'gray'}}
+                      style={{}}
+                    />
+                    <Text style={filterStyles.checkboxLabel}>All</Text>
+                  </View>
+                  <View style={filterStyles.checkboxContainer}>
+                    <CheckBox
+                      value={selectedGender === 'male'}
+                      onValueChange={() => setSelectedGender('male')}
+                      tintColors={{true: '#F97B22', false: 'gray'}}
+                    />
+                    <Text style={filterStyles.checkboxLabel}>Male</Text>
+                  </View>
+                  <View style={filterStyles.checkboxContainer}>
+                    <CheckBox
+                      value={selectedGender === 'female'}
+                      onValueChange={() => setSelectedGender('female')}
+                      tintColors={{true: '#F97B22', false: 'gray'}}
+                    />
+                    <Text style={filterStyles.checkboxLabel}>Female</Text>
                   </View>
                 </View>
-                <View style={filterStyles.ChildContainer1}>
-                  <Text style={filterStyles.sectionTitle}>Marital Status</Text>
-                  <View style={filterStyles.buttonRow}>
-                    <TouchableOpacity
-                      style={
-                        selectedMaritalStatus === 'married'
-                          ? filterStyles.selectedButton
-                          : filterStyles.button
+              </View>
+
+              {/* Marital Status Filter */}
+              <View style={filterStyles.ChildContainer1}>
+                <Text style={filterStyles.sectionTitle}>Marital Status</Text>
+                <View style={filterStyles.line} />
+                <View style={[filterStyles.buttonRow]}>
+                  <View style={filterStyles.checkboxContainer}>
+                    <CheckBox
+                      value={selectedMaritalStatus === 'married'}
+                      onValueChange={() => setSelectedMaritalStatus('married')}
+                      tintColors={{true: '#F97B22', false: 'gray'}}
+                    />
+                    <Text style={filterStyles.checkboxLabel}>Married</Text>
+                  </View>
+                  <View style={filterStyles.checkboxContainer}>
+                    <CheckBox
+                      value={selectedMaritalStatus === 'unmarried'}
+                      onValueChange={() =>
+                        setSelectedMaritalStatus('unmarried')
                       }
-                      onPress={() => setSelectedMaritalStatus('married')}>
-                      <Text
-                        style={{
-                          color: '#F97B22',
-                          textAlign: 'center',
-                          fontWeight: 'bold',
-                        }}>
-                        Married
-                      </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={
-                        selectedMaritalStatus === 'unmarried'
-                          ? filterStyles.selectedButton
-                          : filterStyles.button
-                      }
-                      onPress={() => setSelectedMaritalStatus('unmarried')}>
-                      <Text
-                        style={{
-                          color: '#F97B22',
-                          textAlign: 'center',
-                          fontWeight: 'bold',
-                        }}>
-                        Unmarried
-                      </Text>
-                    </TouchableOpacity>
+                      tintColors={{true: '#F97B22', false: 'gray'}}
+                    />
+                    <Text style={filterStyles.checkboxLabel}>Unmarried</Text>
                   </View>
                 </View>
-                <View style={filterStyles.ChildContainer2}>
-                  <Text style={filterStyles.sectionTitle}>Language</Text>
-                  <View style={filterStyles.buttonRow2}>
-                    <TouchableOpacity
-                      style={
-                        selectedLanguage === 'english'
-                          ? filterStyles.selectedButton2
-                          : filterStyles.button2
-                      }
-                      onPress={() => setSelectedLanguage('english')}>
-                      <Text
-                        style={{
-                          color: '#F97B22',
-                          textAlign: 'center',
-                          fontWeight: 'bold',
-                        }}>
-                        English
-                      </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={
-                        selectedLanguage === 'urdu'
-                          ? filterStyles.selectedButton2
-                          : filterStyles.button2
-                      }
-                      onPress={() => setSelectedLanguage('urdu')}>
-                      <Text
-                        style={{
-                          color: '#F97B22',
-                          textAlign: 'center',
-                          fontWeight: 'bold',
-                        }}>
-                        Urdu
-                      </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={
-                        selectedLanguage === 'hindi'
-                          ? filterStyles.selectedButton2
-                          : filterStyles.button2
-                      }
-                      onPress={() => setSelectedLanguage('hindi')}>
-                      <Text
-                        style={{
-                          color: '#F97B22',
-                          textAlign: 'center',
-                          fontWeight: 'bold',
-                        }}>
-                        Hindi
-                      </Text>
-                    </TouchableOpacity>
+              </View>
+
+              {/* Language Filter */}
+              <View style={filterStyles.ChildContainer2}>
+                <Text style={filterStyles.sectionTitle}>Language</Text>
+                <View style={filterStyles.line} />
+                <View style={filterStyles.buttonRow2}>
+                  <View style={filterStyles.checkboxContainer}>
+                    <CheckBox
+                      value={selectedLanguage === 'english'}
+                      onValueChange={() => setSelectedLanguage('english')}
+                      tintColors={{true: '#F97B22', false: 'gray'}}
+                    />
+                    <Text style={filterStyles.checkboxLabel}>English</Text>
+                  </View>
+                  <View style={[filterStyles.checkboxContainer, {marginRight: 20}]}>
+                    <CheckBox
+                      value={selectedLanguage === 'urdu'}
+                      onValueChange={() => setSelectedLanguage('urdu')}
+                      tintColors={{true: '#F97B22', false: 'gray'}}
+                    />
+                    <Text style={filterStyles.checkboxLabel}>Urdu</Text>
                   </View>
                 </View>
-                <Text style={filterStyles.sectionTitle}>Salary Range</Text>
-                <Text style={filterStyles.salaryText}>
-                  {range[0]} - {range[1]}
-                </Text>
-                <View style={filterStyles.sliderContainer}>
-                  <MultiSlider
-                    values={range}
-                    min={0}
-                    max={10000000}
-                    step={100}
-                    onValuesChange={setRange}
-                    selectedStyle={{
-                      backgroundColor: '#F97B22',
-                    }}
-                    trackStyle={{
-                      height: 6,
-                    }}
-                    markerStyle={{
-                      backgroundColor: 'white',
-                      borderWidth: 2,
-                      borderColor: '#F97B22',
-                      padding: 5,
-                    }}
-                  />
+                <View style={filterStyles.buttonRow2}>
+                  <View style={filterStyles.checkboxContainer}>
+                    <CheckBox
+                      value={selectedLanguage === 'hindi'}
+                      onValueChange={() => setSelectedLanguage('hindi')}
+                      tintColors={{true: '#F97B22', false: 'gray'}}
+                    />
+                    <Text style={filterStyles.checkboxLabel}>Hindi</Text>
+                  </View>
+                  <View style={filterStyles.checkboxContainer}>
+                    <CheckBox
+                      value={selectedLanguage === 'marathi'}
+                      onValueChange={() => setSelectedLanguage('marathi')}
+                      tintColors={{true: '#F97B22', false: 'gray'}}
+                    />
+                    <Text style={filterStyles.checkboxLabel}>Marathi</Text>
+                  </View>
                 </View>
+              </View>
+
+              {/* Salary Range Filter */}
+              <Text style={filterStyles.sectionTitle}>Salary Range</Text>
+              <Text style={filterStyles.salaryText}>
+                {salaryRange[0]} - {salaryRange[1]}
+              </Text>
+              <View style={filterStyles.headerContainer}>
+                <MultiSlider
+                  values={salaryRange}
+                  min={0}
+                  max={10000000}
+                  step={100}
+                  onValuesChange={setSalaryRange}
+                  selectedStyle={{
+                    backgroundColor: '#F97B22',
+                  }}
+                  trackStyle={{
+                    height: 6,
+                    width: '80%',
+                    alignSelf: 'center',
+                  }}
+                  markerStyle={{
+                    backgroundColor: 'white',
+                    borderWidth: 2,
+                    borderColor: '#F97B22',
+                    padding: 5,
+                    marginTop: 5,
+                  }}
+                />
+              </View>
+
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  gap: 20,
+                  marginTop:20
+                }}>
+                <Pressable style={filterStyles.closeButton} onPress={closeFilters}>
+                  <Text style={filterStyles.closeButtonText}>Close Filters</Text>
+                </Pressable>
                 <TouchableOpacity
                   style={filterStyles.applyButton}
                   onPress={onSubmitFilter}>
                   <Text style={filterStyles.applyButtonText}>Apply Filter</Text>
                 </TouchableOpacity>
-              </ScrollView>
-
-              <Pressable
-                style={filterStyles.closeButton}
-                onPress={closeFilters}>
-                <Text style={filterStyles.closeButtonText}>Close Filters</Text>
-              </Pressable>
-            </View>
+              </View>
+            </ScrollView>
           </View>
-        </Modal>
+        </View>
+      </Modal>
 
         <Space mT={20} />
 

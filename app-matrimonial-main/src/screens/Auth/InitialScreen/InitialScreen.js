@@ -21,6 +21,10 @@ const InitialScreen = ({ navigation }) => {
       let currentUser = getCurrentUser();
       if (currentUser && AccessToken) {
         navigation.navigate('DrawerNavigation');
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'DrawerNavigation' }],
+        });
       } else {
         console.log("No user is currently signed in.");
       }
@@ -34,7 +38,7 @@ const InitialScreen = ({ navigation }) => {
   const loginNavigation = () => {
     if (loginToken) {
       console.log("Login Token is available", loginToken);
-      // navigation.reset('DrawerNavigation');
+      // navigation.navigate('DrawerNavigation');
       navigation.reset({
         index: 0,
         routes: [{ name: 'DrawerNavigation' }],

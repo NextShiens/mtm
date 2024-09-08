@@ -6,13 +6,58 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
-import React from 'react';
+import React, { useEffect } from 'react';
+import {useState} from 'react';
 import SuccessStoriesCard from '../../../components/successStories/SuccessStoriesCard';
 import {Image} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
+import { API_URL } from '../../../../constant';
+
+
 
 export default function SuccessStories() {
-  const nav = useNavigation()
+  const nav = useNavigation();
+  const [successStories, setSuccessStories] = useState([]);
+  const [newUsersLoading, setNewUsersLoading] = useState(true);
+
+
+
+
+  useEffect(() => { fetchSuccesStories(); }, []);
+
+
+  const fetchSuccesStories = async () => {
+    debugger
+    try {
+      setNewUsersLoading(true);
+      const token = await AsyncStorage.getItem('AccessToken');
+      const response = await fetch(`${API_URL}/user/get-success-stories`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        if (response.status === 404) {
+          throw new Error('No new users found');
+        } else {
+          throw new Error('Something went wrong');
+        }
+      }
+
+      const {successStories} = await response.json();
+      console.log('stories', successStories);
+      setSuccessStories(successStories);
+    } catch (error) {
+      console.error('Error fetching Success stories:', error);
+      throw error;
+    } finally {
+      setNewUsersLoading(false);
+    }
+  };
   const arr = [
     {
       id: 1,
@@ -60,14 +105,14 @@ export default function SuccessStories() {
       </View>
       <ScrollView contentContainerStyle={style.scrollContent}>
         <FlatList
-          data={arr}
+          data={successStories}
           renderItem={({item, index}) => (
             <SuccessStoriesCard
               {...item}
               index={index}
-              image={item.image}
-              name={item.name}
-              des={item.decription}
+              image={item.image||require('../../../assets/images/leftarrow.png')}
+              name={item.title}
+              des={item.description}
               onPress={() => {nav.navigate('SuccessStoriesDetals')}}
             />
           )}

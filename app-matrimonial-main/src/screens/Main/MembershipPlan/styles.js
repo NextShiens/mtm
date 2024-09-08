@@ -59,6 +59,7 @@ export const styles = StyleSheet.create({
   },
   featureText: {
     fontSize: 14,
+    color:'#333'
   },
   selectButton: {
     backgroundColor: '#F97B221A',

@@ -1,7 +1,12 @@
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
-import {Connections, ForgotPassword, ProfileUpdateScreen , AccountSettingsScreen} from '../screens';
+import {
+  Connections,
+  ForgotPassword,
+  ProfileUpdateScreen,
+  AccountSettingsScreen,
+} from '../screens';
 import InitialScreen from '../screens/Auth/InitialScreen/InitialScreen';
 import LoginScreen from '../screens/Auth/LoginScreen/LoginScreen';
 import OTPScreen from '../screens/Auth/OTPScreen/OTPScreen';
@@ -50,11 +55,6 @@ const AuthStack = () => {
         component={RegisterScreen}
         options={options}
       />
-       <Stack.Screen
-        name="SuccessStoriesDetals"
-        component={SuccessStoriesDetals}
-        options={options}
-      />
       <Stack.Screen
         name="LoginScreen"
         component={LoginScreen}
@@ -77,7 +77,7 @@ const AuthStack = () => {
         component={PartnerReferenceScreen}
         options={options}
       /> */}
-      <Stack.Screen 
+      <Stack.Screen
         name="HoroscopeForm"
         component={HoroscopeForm}
         options={options}
@@ -92,16 +92,7 @@ const AuthStack = () => {
         component={FamilyDetailsScreen}
         options={options}
       />
-      <Stack.Screen
-        name="SuccessStories"
-        component={SuccessStories}
-        options={options}
-      />
-      <Stack.Screen
-        name="Education"
-        component={Education}
-        options={options}
-      />
+      <Stack.Screen name="Education" component={Education} options={options} />
       <Stack.Screen
         name="BasicPreferenceForm"
         component={BasicPreferenceForm}
@@ -137,11 +128,6 @@ const HomeStack = () => {
       <Stack.Screen
         name="ProfileUpadateScreen"
         component={ProfileUpdateScreen}
-        options={options}
-      />
-            <Stack.Screen
-        name="SuccessStories"
-        component={SuccessStories}
         options={options}
       />
       <Stack.Screen
@@ -218,7 +204,7 @@ const HomeStack = () => {
       <Stack.Screen
         name="ChangePasswordScreen"
         component={ChangePasswordScreen}
-        options={options} 
+        options={options}
       />
       {/* <Stack.Screen
         name="PrivacyPolicyScreen"
@@ -230,6 +216,7 @@ const HomeStack = () => {
         component={ChatScreen}
         options={options}
       />
+
     </Stack.Navigator>
   );
 };
@@ -247,6 +234,16 @@ const RootNavigator = () => {
       <Stack.Screen
         name="DrawerNavigation"
         component={DrawerNavigation}
+        options={options}
+      />
+            <Stack.Screen
+        name="SuccessStoriesDetals"
+        component={SuccessStoriesDetals}
+        options={options}
+      />
+      <Stack.Screen
+        name="SuccessStories"
+        component={SuccessStories}
         options={options}
       />
     </Stack.Navigator>
