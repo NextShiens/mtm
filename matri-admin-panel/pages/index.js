@@ -186,6 +186,7 @@ export default function Home() {
         <table className="min-w-full bg-white border border-gray-200">
           <thead className="bg-gray-50 sticky top-0">
             <tr>
+            <th className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer ID</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User Name</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Gender</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email Address</th>
@@ -197,6 +198,9 @@ export default function Home() {
           <tbody className="bg-white divide-y divide-gray-200">
             {users.map((user, index) => (
               <tr key={user._id}>
+                  <td className="px-2 py-4 whitespace-nowrap">
+                  <div className="text-sm text-gray-900">{user._id}</div>
+                </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex items-center">
                     {user.userImages.length > 0 ? (
@@ -253,3 +257,4 @@ export default function Home() {
   );
 }
 Home.getLayout = (page) => <AdminLayout>{page}</AdminLayout>;
+

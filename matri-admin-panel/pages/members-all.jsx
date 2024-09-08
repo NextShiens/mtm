@@ -287,6 +287,9 @@ const Members = () => {
             <thead className="ltr:text-left rtl:text-right border-t border-t-[rgba(0, 0, 0, 0.07)] p-4">
               <tr className="">
                 <th className="whitespace-nowrap px-5 py-4  text-[16px]    text-[#363B49]  font-[400]">
+                  Customer ID
+                </th>
+                <th className="whitespace-nowrap px-5 py-4  text-[16px]    text-[#363B49]  font-[400]">
                   User Name
                 </th>
                 <th className="whitespace-nowrap px-4 py-4 text-[16px]  text-[#363B49]  font-[400] ">
@@ -306,48 +309,58 @@ const Members = () => {
                 </th>
               </tr>
             </thead>
-            <tbody className="home-table ">
+            <tbody className="home-table">
               {members.map((item, index) => {
                 return (
                   <tr
-                    className="border border-[rgba(0, 0, 0, 0.07)]"
+                    className="border border-[rgba(0, 0, 0, 0.07)] flex flex-col md:table-row"
                     key={index}
                   >
-                    <td className="whitespace-nowrap p-4 text-[14px]  text-blackColor font-[500] flex items-center gap-4  max-xl:w-[200px] ">
+                    <td className="whitespace-nowrap p-4 font-roboto text-black font-[500] max-xl:w-full">
+                      <div className="md:hidden font-semibold">ID</div>
+                      {item._id}
+                    </td>
+                    <td className="whitespace-nowrap p-4 text-[14px] text-blackColor font-[500] flex items-center gap-4 max-xl:w-full">
+                      <div className="md:hidden font-semibold">User</div>
                       {item && item.userImages.length > 0 ? (
                         <img
                           src={item.userImages[0]}
                           alt="Profile Image"
-                          className="block mx-auto h-10 w-10 rounded-full "
+                          className="block h-10 w-10 rounded-full"
                         />
                       ) : (
-                        <div className="h-10 w-10 flex items-center justify-center bg-gray-200 rounded-full mx-auto">
+                        <div className="h-10 w-10 flex items-center justify-center bg-gray-200 rounded-full">
                           {item && item.name[0]}
                         </div>
                       )}
                       <h1>{item.name}</h1>
                     </td>
-                    <td className="whitespace-nowrap p-4 font-roboto text-black font-[500] max-xl:w-[300px] ">
-                      {item.gender}
+                    <td className="whitespace-nowrap p-4 font-roboto text-black font-[500] max-xl:w-full">
+                      <div className="md:hidden font-semibold">Gender</div>
+                      {item.gender || "N/A"}
                     </td>
-                    <td className="whitespace-nowrap p-4 font-roboto  text-blackColor font-[500] max-xl:w-[300px]  ">
+                    <td className="whitespace-nowrap p-4 font-roboto text-blackColor font-[500] max-xl:w-full">
+                      <div className="md:hidden font-semibold">Email</div>
                       {item.email}
                     </td>
-                    <td className="whitespace-nowrap p-4  font-roboto text-blackColor font-[500] max-xl:w-[300px]  ">
+                    <td className="whitespace-nowrap p-4 font-roboto text-blackColor font-[500] max-xl:w-full">
+                      <div className="md:hidden font-semibold">Phone</div>
                       {item.phone}
                     </td>
-                    <td className="whitespace-nowrap p-4   text-blackColor font-[500] max-xl:w-[300px]  ">
+                    <td className="whitespace-nowrap p-4 text-blackColor font-[500] max-xl:w-full">
+                      <div className="md:hidden font-semibold">Status</div>
                       <button
-                        className={`w-[108px] h-[40px] font-roboto p-2  rounded-lg ${
+                        className={`w-[108px] h-[40px] font-roboto p-2 rounded-lg ${
                           !item.isActive
                             ? "bg-[#CFD8ED] text-[#1240B4]"
                             : "bg-[#CFFFDA] text-[#28A745]"
-                        } `}
+                        }`}
                       >
                         {item.isActive ? "Approved" : "Pending"}
                       </button>
                     </td>
-                    <td className="whitespace-nowrap p-4  text-blackColor font-[500] max-xl:w-[300px]  relative">
+                    <td className="whitespace-nowrap p-4 text-blackColor font-[500] max-xl:w-full relative">
+                      <div className="md:hidden font-semibold">Actions</div>
                       <button
                         className="border border-[rgba(0, 0, 0, 0.07)] p-2 bg-[248, 249, 255, 0.72] rounded-lg"
                         onClick={() =>
@@ -361,7 +374,7 @@ const Members = () => {
                       {show && selected === index && (
                         <div
                           ref={divRef}
-                          className="absolute top-[60px] left-[-30px]  max-[1759px]:left-[-90px] w-[142px] bg-white border border-[rgba(194, 194, 206, 0.22)] p-4 flex flex-col gap-4 rounded-md z-20 shadow-dropDownBoxShadow "
+                          className="absolute top-[60px] left-[-30px]  max-[1759px]:left-[-90px] w-[142px] bg-white border border-[rgba(194, 194, 206, 0.22)] p-4 flex flex-col gap-4 rounded-md z-20 shadow-dropDownBoxShadow"
                         >
                           <div className="flex items-center gap-3 cursor-pointer">
                             <AiOutlineEye className="text-[#696974]" />
@@ -371,10 +384,7 @@ const Members = () => {
                               </p>
                             </Link>
                           </div>
-                          <div
-                            className="flex items-center gap-3 cursor-pointer"
-                            // onClick={showModal}
-                          >
+                          <div className="flex items-center gap-3 cursor-pointer">
                             <BiSolidEdit className="text-[#696974]" />
                             <Link href={`/user-edit/${item._id}`}>
                               <p className="text-[#696974] font-normal text-[14px]">
@@ -386,7 +396,7 @@ const Members = () => {
                             className="flex items-center gap-3 cursor-pointer"
                             onClick={() => showDeleteModal(item._id)}
                           >
-                            <RiDeleteBin6Line className="text-[#696974]  " />
+                            <RiDeleteBin6Line className="text-[#696974]" />
                             <p className="text-[#696974] font-normal text-[14px]">
                               {loading ? "Deleting..." : "Delete Profile"}
                             </p>

@@ -1,3 +1,5 @@
+import { check } from 'react-native-permissions';
+
 export const IMAGES = {
   initialBackground: require('./InitialBg.png'),
   gradientBg: require('./GradientBg.png'),
@@ -38,7 +40,7 @@ export const IMAGES = {
   settingIcon: require('./settingsIcon.png'),
   privacyIcon: require('./privacyPolicy.png'),
   logoutIcon: require('./logout.png'),
-  savedIcon: require('./SavedIcon.png'),
+  savedIcon: require('./save-instagram.png'),
   theme2: require('./Theme2.jpeg'),
   profile1: require('./Profile1.png'),
   profile2: require('./Profile2.png'),
@@ -57,4 +59,7 @@ export const IMAGES = {
   audio:require('./audio.png'),
   raserpay:require('./Razer.jpeg'),
   space:require('./space.png'),
+  location:require('./location-marker.png'),
+  correct:require('./correct.png'),
+  check:require('./checked.png'),
 };
