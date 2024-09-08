@@ -66,7 +66,6 @@
 //     }
 //   };
 
-
 //   useEffect(() => {
 //     fetchKeyId();
 //   }, []);
@@ -132,7 +131,7 @@
 //       console.log('Order data:', orderData);
 
 //       const options = {
-//         key: keyId, 
+//         key: keyId,
 //         amount: orderData.amount,
 //         currency: orderData.currency,
 //         name: "Flex Flow",
@@ -158,7 +157,7 @@
 //             razorpay_signature: data.razorpay_signature,
 //             amount: orderData.amount,
 //           });
-//           const afterJson = verificationResult.json();  
+//           const afterJson = verificationResult.json();
 //           console.log('Verification result:', verificationResult);
 
 //           if (verificationResult.success) {
@@ -398,7 +397,7 @@
 
 // export default PaymentScreen;
 
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   ScrollView,
   TouchableOpacity,
@@ -410,21 +409,21 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import RazorpayCheckout from 'react-native-razorpay';
-import { SVG } from '../../../assets/svg';
-import { IMAGES } from '../../../assets/images';
-import { COLORS } from '../../../assets/theme';
+import {SVG} from '../../../assets/svg';
+import {IMAGES} from '../../../assets/images';
+import {COLORS} from '../../../assets/theme';
 import AppHeader from '../../../components/AppHeader/AppHeader';
 import CustomImage from '../../../components/CustomImage/CustomImage';
 import Space from '../../../components/Space/Space';
-import { LABELS } from '../../../labels';
-import { paymentMethods } from '../../../data/appData';
+import {LABELS} from '../../../labels';
+import {paymentMethods} from '../../../data/appData';
 import Icon from '../../../components/Icon/Icon';
-import Svg, { Path, Circle } from 'react-native-svg';
-import { API_URL } from '../../../../constant';
-import { Toast } from '../../../utils/native';
+import Svg, {Path, Circle} from 'react-native-svg';
+import {API_URL} from '../../../../constant';
+import {Toast} from '../../../utils/native';
 
-const PaymentScreen = ({ navigation, route }) => {
-  const { plan } = route.params;
+const PaymentScreen = ({navigation, route}) => {
+  const {plan} = route.params;
   const [selectedMethod, setSelectedMethod] = useState(null);
   const [loading, setLoading] = useState(false);
   const [keyId, setKeyId] = useState('');
@@ -435,7 +434,7 @@ const PaymentScreen = ({ navigation, route }) => {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          "authorization": `Bearer ${token}`,
+          authorization: `Bearer ${token}`,
         },
       });
 
@@ -449,8 +448,8 @@ const PaymentScreen = ({ navigation, route }) => {
       console.log('Key ID:', data);
       if (!data.keyId) {
         throw new Error('KeyId is not present in the response');
-      }+
-      setKeyId('rzp_test_FIno2mP3rGvz9W');
+      }
+      +setKeyId('rzp_test_FIno2mP3rGvz9W');
     } catch (error) {
       console.error('Error fetching key ID:', error);
       Alert.alert('Error', 'Unable to initialize payment. Please try again.');
@@ -461,15 +460,17 @@ const PaymentScreen = ({ navigation, route }) => {
     fetchKeyId();
   }, []);
 
-
   const SvgIcon = () => (
     <Svg width={20} height={20} viewBox="0 0 24 24" fill="green">
       <Circle cx="12" cy="12" r="10" fill="green" />
-      <Path d="M20.3 4.3a1 1 0 0 0-1.4 0L9 14.6 4.7 10.3a1 1 0 0 0-1.4 1.4l5 5a1 1 0 0 0 1.4 0l11-11a1 1 0 0 0 0-1.4z" fill="white" />
+      <Path
+        d="M20.3 4.3a1 1 0 0 0-1.4 0L9 14.6 4.7 10.3a1 1 0 0 0-1.4 1.4l5 5a1 1 0 0 0 1.4 0l11-11a1 1 0 0 0 0-1.4z"
+        fill="white"
+      />
     </Svg>
   );
 
-  const createOrder = async (amount) => {
+  const createOrder = async amount => {
     try {
       const token = await AsyncStorage.getItem('AccessToken');
       const response = await fetch(`${API_URL}/create-order`, {
@@ -478,13 +479,17 @@ const PaymentScreen = ({ navigation, route }) => {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ amount }),
+        body: JSON.stringify({amount}),
       });
 
       if (!response.ok) {
         const errorText = await response.text();
-        console.error(`Failed to create order: ${response.status} ${response.statusText} - ${errorText}`);
-        throw new Error(`Failed to create order: ${response.status} ${response.statusText}`);
+        console.error(
+          `Failed to create order: ${response.status} ${response.statusText} - ${errorText}`,
+        );
+        throw new Error(
+          `Failed to create order: ${response.status} ${response.statusText}`,
+        );
       }
 
       return await response.json();
@@ -494,7 +499,7 @@ const PaymentScreen = ({ navigation, route }) => {
     }
   };
 
-  const verifyPayment = async (paymentData) => {
+  const verifyPayment = async paymentData => {
     try {
       const token = await AsyncStorage.getItem('AccessToken');
       const currentUser = await AsyncStorage.getItem('theUser');
@@ -536,9 +541,10 @@ const PaymentScreen = ({ navigation, route }) => {
         key: keyId,
         amount: orderData.amount,
         currency: orderData.currency,
-        name: "MTM",
-        description: "MTM Transaction",
-        image: "https://www.vaishakhimatrimony.in/img/80ff7b0e-7d2f-4cf0-8505-53cbb66c2f28.jpg",
+        name: 'MTM',
+        description: 'MTM Transaction',
+        image:
+          'https://www.vaishakhimatrimony.in/img/80ff7b0e-7d2f-4cf0-8505-53cbb66c2f28.jpg',
         order_id: orderData.id,
         prefill: {
           name: user.user?.name,
@@ -546,12 +552,12 @@ const PaymentScreen = ({ navigation, route }) => {
           contact: user.user?.phone,
         },
         theme: {
-          color: "#F37254",
+          color: '#F37254',
         },
       };
 
       RazorpayCheckout.open(options)
-        .then(async (data) => {
+        .then(async data => {
           console.log('Payment success:', data);
           const verificationResult = await verifyPayment({
             razorpay_order_id: data.razorpay_order_id,
@@ -566,7 +572,7 @@ const PaymentScreen = ({ navigation, route }) => {
             Toast('Error', 'Payment verification failed!');
           }
         })
-        .catch((error) => {
+        .catch(error => {
           console.error('Payment failed:', error);
           if (error.code === 'PAYMENT_CANCELLED') {
             Toast('Info', 'Payment cancelled by user');
@@ -577,7 +583,6 @@ const PaymentScreen = ({ navigation, route }) => {
         .finally(() => {
           setLoading(false);
         });
-
     } catch (error) {
       console.error('Error handling payment:', error);
       Toast('Error', 'Error initiating payment. Please try again.');
@@ -585,7 +590,7 @@ const PaymentScreen = ({ navigation, route }) => {
     }
   };
 
-  const onPayCardSelection = (item) => {
+  const onPayCardSelection = item => {
     setSelectedMethod(item.key);
   };
 
@@ -606,74 +611,76 @@ const PaymentScreen = ({ navigation, route }) => {
           title={LABELS.Payment}
           iconRight={
             <TouchableOpacity onPress={handleRightIconPress}>
-              <Image source={IMAGES.notificationIcon} style={styles.Bell_Icon} />
+              <Image
+                source={IMAGES.notificationIcon}
+                style={styles.Bell_Icon}
+              />
             </TouchableOpacity>
           }
         />
       </View>
 
       <Space mT={20} />
-    
 
-      {plan && (
-        <View style={styles.planContainer}>
-          <Text style={styles.planName}>{plan.name}</Text>
-          <View style={styles.line} />
-          <View style={styles.featureContainer}>
-            <View style={styles.featureItem}>
-              <SvgIcon />
-              <Text style={styles.feature}>Duration: {plan.duration}</Text>
-            </View>
-            <View style={styles.featureItem}>
-              <SvgIcon />
-              <Text style={styles.feature}>Messages: {plan.messages}</Text>
-            </View>
-            <View style={styles.featureItem}>
-              <SvgIcon />
-              <Text style={styles.feature}>Live Chats: {plan.liveChats}</Text>
-            </View>
-            <View style={styles.featureItem}>
-              <SvgIcon />
-              <Text style={styles.feature}>Profile Views: {plan.profileViews}</Text>
+      <View style={{paddingHorizontal: 20}}>
+        {plan && (
+          <View style={[styles.planCard]}>
+            <Text style={[styles.planName]}>{plan.name}</Text>
+            <Text style={[styles.planPrice]}>
+              ₹{plan.price}k{' '}
+              <Text style={[{color: 'black'}, {color: 'white'}]}>/mo</Text>
+            </Text>
+            <View style={styles.featuresContainer}>
+              {['duration', 'messages', 'liveChats', 'profileViews'].map(
+                (feature, index) => (
+                  <View key={index} style={styles.featureItem}>
+                    <Text style={[styles.featureIcon]}>✓</Text>
+                    <Text style={[styles.featureText]}>
+                      {plan[feature]}{' '}
+                      {feature.charAt(0).toUpperCase() + feature.slice(1)}
+                    </Text>
+                  </View>
+                ),
+              )}
             </View>
           </View>
-          <View style={styles.line} />
-          <Text style={styles.price}>₹{plan.price}</Text>
-        </View>
-      )}
+        )}
+      </View>
 
       <Space mT={20} />
 
       <Text style={styles.sectionTitle}>Select Payment Method</Text>
 
-      {paymentMethods && paymentMethods.map((item, index) => (
-        <TouchableOpacity
-          key={item.key}
-          style={styles.optionContainer}
-          onPress={() => onPayCardSelection(item)}
-          disabled={loading}
-        >
-          <View style={styles.paymentMethodContent}>
-            <Image
-              source={item.img}
-              style={styles.payIcons}
-              resizeMode="contain"
-            />
-            <Text style={styles.paymentMethodName}>{item.name}</Text>
-          </View>
-          <View style={styles.radioButton}>
-            {selectedMethod === item.key ? (
-              <View style={styles.radioButtonInner} />
-            ) : null}
-          </View>
-        </TouchableOpacity>
-      ))}
+      {paymentMethods &&
+        paymentMethods.map((item, index) => (
+          <TouchableOpacity
+            key={item.key}
+            style={styles.optionContainer}
+            onPress={() => onPayCardSelection(item)}
+            disabled={loading}>
+            <View style={styles.paymentMethodContent}>
+              <Image
+                source={item.img}
+                style={styles.payIcons}
+                resizeMode="contain"
+              />
+              <Text style={styles.paymentMethodName}>{item.name}</Text>
+            </View>
+            <View style={styles.radioButton}>
+              {selectedMethod === item.key ? (
+                <View style={styles.radioButtonInner} />
+              ) : null}
+            </View>
+          </TouchableOpacity>
+        ))}
 
       <TouchableOpacity
-        style={[styles.button, (loading || !selectedMethod) && styles.disabledButton]}
+        style={[
+          styles.button,
+          (loading || !selectedMethod) && styles.disabledButton,
+        ]}
         onPress={handlePayment}
-        disabled={loading || !selectedMethod}
-      >
+        disabled={loading || !selectedMethod}>
         <Text style={styles.buttonText}>
           {loading ? 'Processing...' : 'Subscribe'}
         </Text>
@@ -700,7 +707,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 16,
     marginHorizontal: 16,
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 2,
@@ -751,7 +758,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     backgroundColor: 'white',
-    
+
     marginHorizontal: 16,
     paddingRight: 15,
     marginBottom: 8,
@@ -801,6 +808,47 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
+  planCard: {
+    backgroundColor: '#1E285F',
+    borderRadius: 10,
+    padding: 20,
+    marginBottom: 20,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  planName: {
+    fontSize: 16,
+    marginBottom: 5,
+    color: 'white',
+  },
+  planPrice: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 15,
+    color: '#F97B22',
+    marginTop: 10,
+  },
+  featureItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 15,
+  },
+  featureIcon: {
+    marginRight: 10,
+    color: '#FFA500',
+    backgroundColor: 'white',
+    padding: 2,
+    borderRadius: 20,
+    paddingHorizontal: 5,
+  },
+  featureText: {
+    fontSize: 14,
+    color: 'white',
+  },
+ 
 });
 
 export default PaymentScreen;

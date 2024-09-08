@@ -1,160 +1,94 @@
 import {StyleSheet} from 'react-native';
 import {COLORS, HORIZON_MARGIN} from '../../../assets/theme';
 export const styles = StyleSheet.create({
-  payIcons: {
-    height: '50%',
-    width: '50%',
+  container: {
+    flex: 1,
+    backgroundColor: '#F5F5F5',
   },
-  main:{
-    backgroundColor:'white',
+  heading: {
+    fontSize: 16,
+    color: 'black',
+    textAlign: 'center',
+    width: '85%',
+    fontWeight: '700',
   },
-  characterImg: {
-    height: 120,
-    width: '90%',
-    alignSelf: 'flex-start',
+  scrollContent: {
+    paddingHorizontal: 40,
   },
-  textContainer: {
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    width: '80%',
-    flexDirection: 'row',
-  },
-  bullet: {
-    height: 8,
-    width: 8,
-    borderRadius: 4,
-    backgroundColor: COLORS.dark.primary,
-  },
-  contentContainer: {
-    width: '60%',
-    position: 'absolute',
-    top: 10,
-    alignItems: 'center',
-    alignSelf: 'flex-start',
-    marginLeft: 15,
-    justifyContent: 'center',
-    height: 200,
-    zIndex: 3,
-  },
-  selectBtn: {
-    height: 35,
-    width: '60%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 30,
-    backgroundColor: COLORS.dark.primary,
-  },
-  selectedBtn: {
-    backgroundColor: COLORS.dark.green,
-  },
-  characterContainer: {
-    justifyContent: 'center',
-    height: 200,
-    width: '45%',
-    alignItems: 'center',
-    alignSelf: 'flex-end',
-    position: 'absolute',
-    zIndex: 2,
-  },
-  headerContainer: {
-    height: 70,
-    width: '100%',
-    borderBottomWidth: 1,
-    borderBottomColor: COLORS.dark.lightGrey,
-  },
-  cardContainer: {
-    height: 210,
-    paddingHorizontal: HORIZON_MARGIN,
-    justifyContent: 'center',
-    width: '100%',
-  },
-  img: {
-    width: '100%',
-    height: 200,
-    flexDirection: 'row',
-    borderRadius: 10,
-    marginTop: 20,
-    zIndex: 1,
-  },
-  optionContainer: {
-    height: 50,
-    width: '100%',
-    borderWidth: 1,
-    borderColor: COLORS.dark.lightGrey,
-    flexDirection: 'row',
-    alignItems: 'center',
+  planCard: {
     backgroundColor: 'white',
-    justifyContent: 'space-between',
-    borderRadius: 5,
-  },
-  planContainer: {
-    width: '90%',
+    borderRadius: 10,
     padding: 20,
-    borderRadius: 15,
-    borderColor: '#ccc',
-    backgroundColor: '#fff',
-    marginVertical: 15,
-    alignSelf: 'center',
-    marginBottom: 10,
-    elevation: 5,
+    marginBottom: 20,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  selectedPlanCard: {
+    backgroundColor: '#1E285F',
   },
   planName: {
+    fontSize: 16,
+    marginBottom: 5,
+    color: 'black',
+  },
+  planPrice: {
     fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: 10,
-    color: '#333',
+    marginBottom: 15,
+    color: '#F97B22',
+    marginTop: 10,
   },
-  featureContainer: {
-    flexDirection: 'colomn',
-    alignItems: 'left',
-    paddingTop: 10,
-    paddingHorizontal: 10,
-    marginBottom: 10,
+  featuresContainer: {
+    marginBottom: 15,
   },
   featureItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 5,
+    marginBottom: 15,
   },
-  feature: {
-    fontSize: 16,
-    color: '#333',
-    marginLeft: 15,
-  },
-  icon: {
+  featureIcon: {
     marginRight: 10,
-    color: 'green',
-  },
-  price: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginVertical: 10,
-    color: '#333',
-    textAlign: 'center',
-  },
-  button: {
-    backgroundColor: '#ff7f50',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
+    color: '#FFA500',
+    backgroundColor: '#F97B221A',
+    padding: 2,
     borderRadius: 20,
-    alignItems: 'center',
-    alignSelf: 'stretch',
+    paddingHorizontal: 5,
   },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
+  featureText: {
+    fontSize: 14,
+  },
+  selectButton: {
+    backgroundColor: '#F97B221A',
+    borderRadius: 25,
+    padding: 10,
+    alignItems: 'center',
+  },
+  selectedButton: {
+    backgroundColor: 'white',
+  },
+  selectButtonText: {
+    color: '#F97B22',
     fontWeight: 'bold',
   },
-  Bell_Icon: {
-    width: 25,
-    height: 30,
-    resizeMode: 'contain',
-    marginRight: '1%',
+  selectedButtonText: {
+    color: '#1E285F',
   },
-  line: {
-    borderBottomColor: 'lightgrey',
-    borderBottomWidth: 2,
-    marginVertical: 10,
-    width: '100%',
+  selectedText: {
+    color: 'white',
+  },
+  continueButton: {
+    backgroundColor: '#F97B22',
+    padding: 15,
+    margin: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  continueButtonText: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 });
