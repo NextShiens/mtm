@@ -166,6 +166,7 @@ export const styles = StyleSheet.create({
   checkboxLabel: {
     marginLeft: 8,
     fontSize: 16,
+    color:'#333'
   },
   buttonRow: {
     flexDirection: 'row',
@@ -196,8 +197,9 @@ export const styles = StyleSheet.create({
     alignItems:'center'
   },
   salaryText: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: 'bold',
+    color: 'black',
   },
   applyButton: {
     backgroundColor: '#F97B22',
@@ -229,4 +231,8 @@ export const styles = StyleSheet.create({
     backgroundColor: '#E5E5E5',
     marginVertical: 10,
   },
+  text:{
+    fontSize: 12,
+    color: '#ff385c',
+  }
 });

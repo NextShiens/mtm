@@ -30,3 +30,5 @@ export {default as BasicPreferenceForm} from './Main/BasicPrefferences/BasicPref
 export {default as Education} from './Main/Education/Education';
 export {default as PartnerExpectation} from './Main/PartnerExpection/PartnerExpectationForm';
 export {default as SuggestedUsersPage} from './Main/Suggested/Suggestedfor';
+export {default as SuccessStoriesDetals} from './Main/SuccessStories/SuccessStoriesDetals';
+export {default as SuccessStories} from './Main/SuccessStories/SuccessStories';

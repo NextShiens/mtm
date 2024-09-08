@@ -259,7 +259,7 @@ const PartnerMatch = ({navigation, route}) => {
       }
 
       const data = await response.json();
-      console.log('response', data);
+      // console.log('response', data);
       setMatchedUsers(data?.matchedUsers || []);
       setFilteredUsers(data?.matchedUsers || []);
     } catch (err) {
@@ -393,7 +393,7 @@ const PartnerMatch = ({navigation, route}) => {
 
     // Apply salary range filter
     filtered = filtered.filter(user => {
-      console.log('usersalary', user.annualIncome);
+      // console.log('usersalary', user.annualIncome);
       const userSalary = parseInt(user?.annualIncome?.replace(/,/g, '')) || 0;
       return userSalary >= salaryRange[0] && userSalary <= salaryRange[1];
     });
@@ -411,6 +411,7 @@ const PartnerMatch = ({navigation, route}) => {
     return (
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
         <ActivityIndicator size="xl" color={COLORS.dark.primary} />
+        <Text style={style.text}>Loading....</Text>
       </View>
     );
   }

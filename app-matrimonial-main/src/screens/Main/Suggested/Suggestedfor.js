@@ -190,8 +190,8 @@ const SuggestedUsersPage = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity>
-          <Text style={styles.backButton}>{'<'}</Text>
+      <TouchableOpacity onPress={() => {navigation.navigate('HomePage')}}>
+          <Image source={require('../../../assets/images/leftarrow.png')} />
         </TouchableOpacity>
         <Text style={styles.headerText}>Suggested For You</Text>
       </View>

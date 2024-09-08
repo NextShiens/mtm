@@ -31,9 +31,9 @@ import FamilyDetailsScreen from '../screens/Main/Familyupdate/Familyupdate';
 import BasicPreferenceForm from '../screens/Main/BasicPrefferences/BasicPreffences';
 import Education from '../screens/Main/Education/Education';
 import PartnerExpectation from '../screens/Main/PartnerExpection/PartnerExpectationForm';
-import SuccessStoriesDetals from '../screens/Main/successStories/SuccessStoriesDetals';
+import SuccessStoriesDetals from '../screens/Main/SuccessStories/SuccessStoriesDetals';
 import SuggestedUsersPage from '../screens/Main/Suggested/Suggestedfor';
-
+import SuccessStories from '../screens/Main/SuccessStories/SuccessStories';
 
 const Stack = createNativeStackNavigator();
 const options = {headerShown: false};
@@ -93,6 +93,11 @@ const AuthStack = () => {
         options={options}
       />
       <Stack.Screen
+        name="SuccessStories"
+        component={SuccessStories}
+        options={options}
+      />
+      <Stack.Screen
         name="Education"
         component={Education}
         options={options}
@@ -132,6 +137,11 @@ const HomeStack = () => {
       <Stack.Screen
         name="ProfileUpadateScreen"
         component={ProfileUpdateScreen}
+        options={options}
+      />
+            <Stack.Screen
+        name="SuccessStories"
+        component={SuccessStories}
         options={options}
       />
       <Stack.Screen

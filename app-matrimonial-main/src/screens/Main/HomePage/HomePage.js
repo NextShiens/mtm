@@ -741,26 +741,34 @@ const HomePage = () => {
             <Text style={styles.noDataText}>No recently viewed users</Text>
           )}
         </View>
-        <View style={{width:'100%'}}>
-        <FlatList
+        <View style={{ width: '100%', paddingHorizontal: 7 }}>
+      {/* Header with title and See All */}
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
+        <Text style={{ fontSize: 18, fontWeight: 'bold', color:'#333' }}>Success Stories</Text>
+        <TouchableOpacity onPress={() => navigation.navigate('SuccessStories')}>
+          <Text style={{ color: 'rgba(249, 123, 34, 1)', fontSize: 16 }}>See All</Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* FlatList for horizontal cards */}
+      <FlatList
         horizontal
-          data={arr}
-          renderItem={({item, index}) => (
-           <View>
-             <SuccessStoriesCard
+        data={arr}
+        renderItem={({ item, index }) => (
+          <View>
+            <SuccessStoriesCard
               {...item}
               index={index}
               image={item.image}
               name={item.name}
               des={item.decription}
-              onPress={() => {
-                navigation.navigate('SuccessStoriesDetals');
-              }}
+              onPress={() => {navigation.navigate('SuccessStoriesDetals')}}
             />
-           </View>
-          )}
-        />
-        </View>
+          </View>
+        )}
+        keyExtractor={(item, index) => index.toString()}
+      />
+    </View>
       </View>
     </ScrollView>
   );

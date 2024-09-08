@@ -1,7 +1,7 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useIsFocused } from '@react-navigation/native';
 import React, { useState, useEffect } from 'react';
-import { TouchableOpacity, Keyboard } from 'react-native';
+import { TouchableOpacity, Keyboard,View, Image, } from 'react-native';
 import { SVG } from '../../assets/svg';
 import { COLORS } from '../../assets/theme';
 import Icon from '../../components/Icon/Icon';
@@ -60,10 +60,7 @@ const BottomNavigation = ({ navigation }) => {
           tabBarLabel: 'Home',
           tabBarLabelStyle: [style.tabBarLabel],
           tabBarIcon: ({ focused }) => (
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate('HomePage');
-              }}>
+            <View>
               <Icon
                 SVGIcon={
                   <SVG.homeIcon
@@ -74,8 +71,12 @@ const BottomNavigation = ({ navigation }) => {
                     width={22}
                   />
                 }
+                onPress={() => {
+                  navigation.navigate('HomePage');
+                }
+                }
               />
-            </TouchableOpacity>
+            </View>
           ),
         }}
       />
@@ -86,10 +87,7 @@ const BottomNavigation = ({ navigation }) => {
           tabBarLabel: 'Matches',
           tabBarLabelStyle: [style.tabBarLabel],
           tabBarIcon: ({ focused }) => (
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate('PartnerMatch');
-              }}>
+            <View>
               <Icon
                 SVGIcon={
                   <SVG.heartIcon
@@ -100,8 +98,13 @@ const BottomNavigation = ({ navigation }) => {
                     width={22}
                   />
                 }
+                onPress={() => {
+                  navigation.navigate('PartnerMatch');
+                }
+                }
               />
-            </TouchableOpacity>
+          
+            </View>
           ),
         }}
       />
@@ -117,6 +120,7 @@ const BottomNavigation = ({ navigation }) => {
                 navigation.navigate('InboxScreen');
               }}>
               <Icon
+                
                 SVGIcon={
                   <SVG.envelopeIcon
                     fill={
@@ -125,6 +129,10 @@ const BottomNavigation = ({ navigation }) => {
                     height={22}
                     width={22}
                   />
+                }
+                onPress={() => {
+                  navigation.navigate('InboxScreen');
+                }
                 }
               />
             </TouchableOpacity>
@@ -152,6 +160,10 @@ const BottomNavigation = ({ navigation }) => {
                     width={22}
                   />
                 }
+                onPress={() => {
+                  navigation.navigate('NotificationScreen');
+                }
+                }
               />
             </TouchableOpacity>
           ),
@@ -177,6 +189,10 @@ const BottomNavigation = ({ navigation }) => {
                     height={22}
                     width={22}
                   />
+                }
+                onPress={() => {
+                  navigation.navigate('ProfileUpdateScreen');
+                }
                 }
               />
             </TouchableOpacity>
