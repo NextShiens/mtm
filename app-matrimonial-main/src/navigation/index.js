@@ -32,6 +32,7 @@ import BasicPreferenceForm from '../screens/Main/BasicPrefferences/BasicPreffenc
 import Education from '../screens/Main/Education/Education';
 import PartnerExpectation from '../screens/Main/PartnerExpection/PartnerExpectationForm';
 import SuccessStoriesDetals from '../screens/Main/successStories/SuccessStoriesDetals';
+import SuggestedUsersPage from '../screens/Main/Suggested/Suggestedfor';
 
 
 const Stack = createNativeStackNavigator();
@@ -104,6 +105,11 @@ const AuthStack = () => {
       <Stack.Screen
         name="PartnerMatch"
         component={PartnerMatch}
+        options={options}
+      />
+      <Stack.Screen
+        name="SuggestedUsersPage"
+        component={SuggestedUsersPage}
         options={options}
       />
       <Stack.Screen

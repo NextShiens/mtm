@@ -34,7 +34,11 @@ const InitialScreen = ({ navigation }) => {
   const loginNavigation = () => {
     if (loginToken) {
       console.log("Login Token is available", loginToken);
-      navigation.navigate('DrawerNavigation');
+      // navigation.reset('DrawerNavigation');
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'DrawerNavigation' }],
+      });
     } else {
       navigation.navigate('LoginScreen');
     }

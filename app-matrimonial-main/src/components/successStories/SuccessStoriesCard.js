@@ -1,5 +1,6 @@
-import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
+import {View, Text, StyleSheet, Image, TouchableOpacity, Dimensions} from 'react-native';
 import React from 'react';
+const {width} = Dimensions.get('window'); 
 
 export default function SuccessStoriesCard({image, name, des,onPress}) {
   return (
@@ -7,7 +8,7 @@ export default function SuccessStoriesCard({image, name, des,onPress}) {
       <Image source={image} />
      <View style={{flex:1}}>
      <Text style={style.name}>{name}</Text>
-     <Text style={style.des}>{des}</Text>
+     <Text style={style.des} numberOfLines={4}>{des}</Text>
      </View>
     </TouchableOpacity>
   );
@@ -38,6 +39,6 @@ const style = StyleSheet.create({
   des:{
     fontSize:13,
     color:'#949494',
-
+    width:width-160
   }
 });
