@@ -12,8 +12,8 @@
   "dependencies": {
     "@ptomasroos/react-native-multi-slider": "^2.2.2",
     "@react-native-async-storage/async-storage": "^1.19.3",
-    "@react-native-community/checkbox": "^0.5.17",
     "@react-native-community/blur": "^4.4.1",
+    "@react-native-community/checkbox": "^0.5.17",
     "@react-native-firebase/app": "^18.9.0",
     "@react-native-firebase/auth": "^18.5.0",
     "@react-native-firebase/messaging": "^20.1.0",
@@ -36,6 +36,7 @@
     "react-native-datepicker": "^1.7.2",
     "react-native-dropdown-picker": "^5.4.6",
     "react-native-dropdown-select-list": "^2.0.5",
+    "react-native-element-dropdown": "^2.12.1",
     "react-native-elements": "^3.4.3",
     "react-native-fast-image": "^8.6.3",
     "react-native-gesture-handler": "^2.17.1",

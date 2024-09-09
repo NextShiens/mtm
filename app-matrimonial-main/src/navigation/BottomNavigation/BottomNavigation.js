@@ -10,6 +10,7 @@ import HomePage from '../../screens/Main/HomePage/HomePage';
 import NotificationScreen from '../../screens/Main/NotificationScreen/NotificationScreen';
 import PartnerMatch from '../../screens/Main/ParterMatch/PartnerMatch';
 import ProfileUpdateScreen from '../../screens/Main/ProfileUpdateScreen/ProfileUpdateScreen';
+import EditProfileScreen from '../../screens/Main/EditProfileScreen/EditProfileScreen';
 import { styles } from './styles';
 
 const Tab = createBottomTabNavigator();
@@ -170,15 +171,15 @@ const BottomNavigation = ({ navigation }) => {
         }}
       />
       <Tab.Screen
-        name="ProfileUpdateScreen"
-        component={ProfileUpdateScreen}
+        name="EditProfileScreen"
+        component={EditProfileScreen}
         options={{
           tabBarLabel: 'Profile',
           tabBarLabelStyle: [style.tabBarLabel],
           tabBarIcon: ({ focused }) => (
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate('ProfileUpdateScreen');
+                navigation.navigate('EditProfileScreen');
               }}>
               <Icon
                 SVGIcon={
@@ -191,7 +192,7 @@ const BottomNavigation = ({ navigation }) => {
                   />
                 }
                 onPress={() => {
-                  navigation.navigate('ProfileUpdateScreen');
+                  navigation.navigate('EditProfileScreen');
                 }
                 }
               />

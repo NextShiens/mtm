@@ -40,6 +40,15 @@ import SuccessStoriesDetals from '../screens/Main/SuccessStories/SuccessStoriesD
 import SuggestedUsersPage from '../screens/Main/Suggested/Suggestedfor';
 import SuccessStories from '../screens/Main/SuccessStories/SuccessStories';
 import SearchScreen from '../screens/Main/Search/searchScreen';
+import EditProfileScreen from '../screens/Main/EditProfileScreen/EditProfileScreen';
+import MyAccountScreen from '../screens/Main/Account/MyAccount';
+import UserProfileStep2 from '../screens/Main/BasicInfo/Step2';
+import UserProfileStep1 from '../screens/Main/BasicInfo/Step1';
+import BasicInfo from '../screens/PrefencesPages/BasicInfo';
+import ReligionPage from '../screens/PrefencesPages/Religion';
+import LocationPage from '../screens/PrefencesPages/Location';
+import EducationPage from '../screens/PrefencesPages/Education';
+import CriteriaPage from '../screens/PrefencesPages/Criteria';
 
 const Stack = createNativeStackNavigator();
 const options = {headerShown: false};
@@ -129,6 +138,11 @@ const HomeStack = () => {
       <Stack.Screen
         name="ProfileUpadateScreen"
         component={ProfileUpdateScreen}
+        options={options}
+      />
+      <Stack.Screen
+        name="EditProfileScreen"
+        component={EditProfileScreen}
         options={options}
       />
       <Stack.Screen
@@ -242,7 +256,7 @@ const RootNavigator = () => {
         component={DrawerNavigation}
         options={options}
       />
-            <Stack.Screen
+      <Stack.Screen
         name="SuccessStoriesDetals"
         component={SuccessStoriesDetals}
         options={options}
@@ -250,6 +264,46 @@ const RootNavigator = () => {
       <Stack.Screen
         name="SuccessStories"
         component={SuccessStories}
+        options={options}
+      />
+      <Stack.Screen
+        name="MyAccountScreen"
+        component={MyAccountScreen}
+        options={options}
+      />
+      <Stack.Screen
+        name="UserProfileStep1"
+        component={UserProfileStep1}
+        options={options}
+      />
+      <Stack.Screen
+        name="UserProfileStep2"
+        component={UserProfileStep2}
+        options={options}
+      />
+      <Stack.Screen
+        name="BasicInfo"
+        component={BasicInfo}
+        options={options}
+      />
+      <Stack.Screen
+        name="ReligionPage"
+        component={ReligionPage}
+        options={options}
+      />
+      <Stack.Screen
+        name="LocationPage"
+        component={LocationPage}
+        options={options}
+      />
+      <Stack.Screen
+        name="EducationPage"
+        component={EducationPage}
+        options={options}
+      />
+      <Stack.Screen
+        name="CriteriaPage"
+        component={CriteriaPage}
         options={options}
       />
     </Stack.Navigator>
