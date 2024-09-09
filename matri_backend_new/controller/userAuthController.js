@@ -694,9 +694,40 @@ const userAuthController = {
       res.status(200).json({ user, success: true });
     }
   },
+  async searchUsers(req,res,next){
+    try {
+      const { query } = req.query; // Get the search query from the request
+      const regex = new RegExp(query, 'i'); // Create a regex for case-insensitive search
+  
+      // Find users that match the query in name, age, occupation, email, or location
+      const matchedUsers = await User.find({
+        $or: [
+          { name: { $regex: regex } },
+          { age: { $regex: regex } },
+          { occupation: { $regex: regex } },
+          { email: { $regex: regex } },
+          { city: { $regex: regex } }, // Updated to 'city'
+          { religion: { $regex: regex } },
+          { caste: { $regex: regex } },
+          {workLocation: { $regex: regex } },
+        ],
+      });
+  
+      // Send the matched users as a response
+      res.status(200).json({
+        success: true,
+        data: matchedUsers,
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({
+        success: false,
+        message: 'Server error',
+      });
+    }
+  },
 
   async currentUser(req, res, next) {
-    const user = req.user;
 
     if (!user) {
       res.status(401).json({ success: false, message: "User not found" });

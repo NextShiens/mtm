@@ -94,7 +94,9 @@ const HorizontalCard = ({ data }) => {
         <View style={styles.nameLocationContainer}>
           <AppText
             title={item?.name || 'N/A'}
-            variant="h5"
+            variant="h6"
+            width="60%"
+            numberOfLines={1}
             color={COLORS.dark.black}
           />
           <View style={styles.locationContainer}>

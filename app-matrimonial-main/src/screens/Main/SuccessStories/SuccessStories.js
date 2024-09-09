@@ -28,7 +28,6 @@ import {
   
   
     const fetchSuccesStories = async () => {
-      debugger
       try {
         setNewUsersLoading(true);
         const token = await AsyncStorage.getItem('AccessToken');
@@ -113,7 +112,13 @@ import {
                 image={item.image||require('../../../assets/images/leftarrow.png')}
                 name={item.title}
                 des={item.description}
-                onPress={() => {nav.navigate('SuccessStoriesDetals')}}
+                onPress={() => {
+                    if (item._id) {
+                      nav.navigate('SuccessStoriesDetails', { id: item._id });
+                    } else {
+                      console.log('Item ID is undefined');
+                    }
+                  }}
               />
             )}
           />

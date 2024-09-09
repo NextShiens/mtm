@@ -18,6 +18,7 @@ const AppInput = props => {
     multiline = false,
     numberOfLines = 1,
     disabled = false,
+    onFocus = () => {},
     extraStyle = {textInputCont: {}, textInput: {}},
   } = props;
   const style = styles;
@@ -45,6 +46,7 @@ const AppInput = props => {
         style={[style.textInput, extraStyle.textInput]}
         value={value}
         onChangeText={onChangeText}
+        onFocus={onFocus} 
       />
     </View>
   );

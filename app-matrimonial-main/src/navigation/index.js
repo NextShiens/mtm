@@ -39,6 +39,7 @@ import PartnerExpectation from '../screens/Main/PartnerExpection/PartnerExpectat
 import SuccessStoriesDetals from '../screens/Main/SuccessStories/SuccessStoriesDetals';
 import SuggestedUsersPage from '../screens/Main/Suggested/Suggestedfor';
 import SuccessStories from '../screens/Main/SuccessStories/SuccessStories';
+import SearchScreen from '../screens/Main/Search/searchScreen';
 
 const Stack = createNativeStackNavigator();
 const options = {headerShown: false};
@@ -229,6 +230,11 @@ const RootNavigator = () => {
       <Stack.Screen
         name="Home"
         component={BottomNavigation}
+        options={options}
+      />
+      <Stack.Screen
+        name="SearchScreen"
+        component={SearchScreen}
         options={options}
       />
       <Stack.Screen

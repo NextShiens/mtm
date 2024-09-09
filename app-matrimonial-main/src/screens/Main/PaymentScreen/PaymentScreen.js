@@ -449,7 +449,7 @@ const PaymentScreen = ({navigation, route}) => {
       if (!data.keyId) {
         throw new Error('KeyId is not present in the response');
       }
-      +setKeyId('rzp_test_FIno2mP3rGvz9W');
+      +setKeyId('rzp_live_87MOwe1ckbeY0F');
     } catch (error) {
       console.error('Error fetching key ID:', error);
       Alert.alert('Error', 'Unable to initialize payment. Please try again.');
@@ -470,7 +470,7 @@ const PaymentScreen = ({navigation, route}) => {
     </Svg>
   );
 
-  const createOrder = async amount => {
+  const createOrder = async (amount) => {
     try {
       const token = await AsyncStorage.getItem('AccessToken');
       const response = await fetch(`${API_URL}/create-order`, {
@@ -479,31 +479,27 @@ const PaymentScreen = ({navigation, route}) => {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({amount}),
+        body: JSON.stringify({ amount }),
       });
-
+  
       if (!response.ok) {
         const errorText = await response.text();
-        console.error(
-          `Failed to create order: ${response.status} ${response.statusText} - ${errorText}`,
-        );
-        throw new Error(
-          `Failed to create order: ${response.status} ${response.statusText}`,
-        );
+        throw new Error(`Failed to create order: ${response.status} ${response.statusText} - ${errorText}`);
       }
-
+  
       return await response.json();
     } catch (error) {
       console.error('Error creating order:', error);
       throw error;
     }
   };
-
-  const verifyPayment = async paymentData => {
+  
+  const verifyPayment = async (paymentData) => {
     try {
       const token = await AsyncStorage.getItem('AccessToken');
       const currentUser = await AsyncStorage.getItem('theUser');
       const user = JSON.parse(currentUser);
+  
       const response = await fetch(`${API_URL}/verify-payment`, {
         method: 'POST',
         headers: {
@@ -512,39 +508,38 @@ const PaymentScreen = ({navigation, route}) => {
         },
         body: JSON.stringify({
           ...paymentData,
-          membership: plan._id,
           userId: user.user._id,
         }),
       });
+  
       if (!response.ok) throw new Error('Failed to verify payment');
+  
       return await response.json();
     } catch (error) {
       console.error('Error verifying payment:', error);
       throw error;
     }
   };
-
+  
   const handlePayment = async () => {
     if (!selectedMethod) {
       Alert.alert('Error', 'Please select a payment method');
       return;
     }
-
+  
     setLoading(true);
     try {
       const orderData = await createOrder(plan.price);
-      console.log('Order data:', orderData);
-
       const currentUser = await AsyncStorage.getItem('theUser');
       const user = JSON.parse(currentUser);
+  
       const options = {
-        key: keyId,
+        key:'rzp_live_87MOwe1ckbeY0F', // Use environment variable for key
         amount: orderData.amount,
         currency: orderData.currency,
         name: 'MTM',
         description: 'MTM Transaction',
-        image:
-          'https://www.vaishakhimatrimony.in/img/80ff7b0e-7d2f-4cf0-8505-53cbb66c2f28.jpg',
+        image: 'https://yourimageurl.com/logo.png', // Replace with your actual logo URL
         order_id: orderData.id,
         prefill: {
           name: user.user?.name,
@@ -555,24 +550,23 @@ const PaymentScreen = ({navigation, route}) => {
           color: '#F37254',
         },
       };
-
+  
       RazorpayCheckout.open(options)
-        .then(async data => {
+        .then(async (data) => {
           console.log('Payment success:', data);
           const verificationResult = await verifyPayment({
             razorpay_order_id: data.razorpay_order_id,
             razorpay_payment_id: data.razorpay_payment_id,
             razorpay_signature: data.razorpay_signature,
-            amount: orderData.amount,
           });
-
+  
           if (verificationResult.success) {
             Toast('Success', 'Payment successful!');
           } else {
             Toast('Error', 'Payment verification failed!');
           }
         })
-        .catch(error => {
+        .catch((error) => {
           console.error('Payment failed:', error);
           if (error.code === 'PAYMENT_CANCELLED') {
             Toast('Info', 'Payment cancelled by user');

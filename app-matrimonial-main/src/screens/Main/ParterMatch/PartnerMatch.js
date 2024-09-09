@@ -271,6 +271,9 @@ const PartnerMatch = ({navigation, route}) => {
       setLoading(false);
     }
   };
+  const handleSearchFocus = () => {
+    navigation.navigate('SearchScreen'); // Replace with your search screen name
+  };
 
   const handleRightIconPress = () => {
     navigation.navigate('NotificationScreen');
@@ -456,7 +459,7 @@ const PartnerMatch = ({navigation, route}) => {
             textInputCont: [style.textInputCont],
           }}
           placeholder={LABELS.searchHere || 'Search here'}
-          onChangeText={handlesearchFunctionality}
+          onFocus={handleSearchFocus}
           value={searchTerm}
         />
         <TouchableOpacity
