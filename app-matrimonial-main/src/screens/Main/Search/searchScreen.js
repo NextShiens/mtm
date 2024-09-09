@@ -218,6 +218,7 @@ export default function SearchScreen() {
         <TextInput
           style={styles.input}
           placeholder="Search ..."
+          placeholderTextColor={COLORS.dark.inputBorder}
           ref={inputRef}
           onChangeText={setSearchQuery}
         />
@@ -290,6 +291,7 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     fontSize: 16,
+    color: 'black',
   },
   icon: {
     width: 20,
