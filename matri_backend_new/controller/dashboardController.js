@@ -700,6 +700,16 @@ const dashboardController = {
       res.status(500).json({ success: false, message: "Error deleting success story", error: error.message });
     }
   },
+  async getSuccessStorybyId(req, res) {
+    try {
+      const { id } = req.params;
+      const singleStory = await SuccessStory.findById(id);
+      res.status(200).json({ success: true, singleStory});
+    } catch (error) {
+      console.error("Error fetching success stories:", error);
+      res.status(500).json({ success: false, message: "Error fetching success stories", error: error.message });
+    }
+  },
 };
 
 module.exports = dashboardController;

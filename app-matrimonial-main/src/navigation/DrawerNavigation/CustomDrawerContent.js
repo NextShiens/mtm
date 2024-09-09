@@ -199,13 +199,9 @@ const CustomDrawerContent = ({props}) => {
               {isOnline && <View style={style.onlineDot}></View>}
             </View>
             <Space mL={10} />
-            <View style={{height: 30, marginBottom: 10, maxWidth: 180}}>
-              <AppText
-                title={userName}
-                variant={'h6'}
-                extraStyle={{fontFamily: Fonts.PoppinsSemiBold}}
-              />
-              <AppText title={userProfession} color={COLORS.dark.inputBorder} />
+            <View style={{height: 40, marginBottom: 10, maxWidth: 100}}>
+              <Text>{userName}</Text>
+              <Text>{userProfession}</Text>
             </View>
           </View>
 

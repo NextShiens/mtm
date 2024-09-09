@@ -217,7 +217,7 @@ const filterStyles = StyleSheet.create({
   checkboxLabel: {
     marginLeft: 8,
     fontSize: 16,
-    color:'#333'
+    color: '#333',
   },
   buttonRow: {
     flexDirection: 'row',
@@ -244,8 +244,8 @@ const filterStyles = StyleSheet.create({
   },
   sliderContainer: {
     marginVertical: 20,
-    paddingHorizontal:10,
-    alignItems:'center'
+    paddingHorizontal: 10,
+    alignItems: 'center',
   },
   salaryText: {
     fontSize: 14,
@@ -282,10 +282,10 @@ const filterStyles = StyleSheet.create({
     backgroundColor: '#E5E5E5',
     marginVertical: 10,
   },
-  text:{
+  text: {
     fontSize: 12,
     color: '#ff385c',
-  }
+  },
 });
 
 const HomePage = () => {
@@ -473,6 +473,11 @@ const HomePage = () => {
     }
   };
 
+  const handleSearchFocus = () => {
+    // Navigate to your search screen
+    navigation.navigate('SearchScreen'); // Replace with your search screen name
+  };
+
   const handleSearch = query => {
     setSearchQuery(query);
   };
@@ -599,7 +604,7 @@ const HomePage = () => {
             }
             extraStyle={{textInputCont: [styles.searchInputCont]}}
             placeholder={LABELS.searchHere}
-            onChangeText={handleSearch}
+            onFocus={handleSearchFocus}
           />
           <TouchableOpacity
             style={styles.filterBtn}
@@ -616,164 +621,176 @@ const HomePage = () => {
         <Space mT={20} />
 
         <Modal
-        animationType="slide"
-        transparent={true}
-        visible={showFilters}
-        onRequestClose={closeFilters}>
-        <View style={filterStyles.container}>
-          <View style={filterStyles.modalContent}>
-            <ScrollView>
-              {/* Gender Filter */}
-              <View style={filterStyles.ChildContainer}>
-                <Text style={filterStyles.sectionTitle}>Gender</Text>
-                <View style={filterStyles.line} />
-                <View style={filterStyles.buttonRow}>
-                  <View style={filterStyles.checkboxContainer}>
-                    <CheckBox
-                      value={selectedGender === 'all'}
-                      onValueChange={() => setSelectedGender('all')}
-                      tintColors={{true: '#F97B22', false: 'gray'}}
-                      style={{}}
-                    />
-                    <Text style={filterStyles.checkboxLabel}>All</Text>
-                  </View>
-                  <View style={filterStyles.checkboxContainer}>
-                    <CheckBox
-                      value={selectedGender === 'male'}
-                      onValueChange={() => setSelectedGender('male')}
-                      tintColors={{true: '#F97B22', false: 'gray'}}
-                    />
-                    <Text style={filterStyles.checkboxLabel}>Male</Text>
-                  </View>
-                  <View style={filterStyles.checkboxContainer}>
-                    <CheckBox
-                      value={selectedGender === 'female'}
-                      onValueChange={() => setSelectedGender('female')}
-                      tintColors={{true: '#F97B22', false: 'gray'}}
-                    />
-                    <Text style={filterStyles.checkboxLabel}>Female</Text>
-                  </View>
-                </View>
-              </View>
-
-              {/* Marital Status Filter */}
-              <View style={filterStyles.ChildContainer1}>
-                <Text style={filterStyles.sectionTitle}>Marital Status</Text>
-                <View style={filterStyles.line} />
-                <View style={[filterStyles.buttonRow]}>
-                  <View style={filterStyles.checkboxContainer}>
-                    <CheckBox
-                      value={selectedMaritalStatus === 'married'}
-                      onValueChange={() => setSelectedMaritalStatus('married')}
-                      tintColors={{true: '#F97B22', false: 'gray'}}
-                    />
-                    <Text style={filterStyles.checkboxLabel}>Married</Text>
-                  </View>
-                  <View style={filterStyles.checkboxContainer}>
-                    <CheckBox
-                      value={selectedMaritalStatus === 'unmarried'}
-                      onValueChange={() =>
-                        setSelectedMaritalStatus('unmarried')
-                      }
-                      tintColors={{true: '#F97B22', false: 'gray'}}
-                    />
-                    <Text style={filterStyles.checkboxLabel}>Unmarried</Text>
+          animationType="slide"
+          transparent={true}
+          visible={showFilters}
+          onRequestClose={closeFilters}>
+          <View style={filterStyles.container}>
+            <View style={filterStyles.modalContent}>
+              <ScrollView>
+                {/* Gender Filter */}
+                <View style={filterStyles.ChildContainer}>
+                  <Text style={filterStyles.sectionTitle}>Gender</Text>
+                  <View style={filterStyles.line} />
+                  <View style={filterStyles.buttonRow}>
+                    <View style={filterStyles.checkboxContainer}>
+                      <CheckBox
+                        value={selectedGender === 'all'}
+                        onValueChange={() => setSelectedGender('all')}
+                        tintColors={{true: '#F97B22', false: 'gray'}}
+                        style={{}}
+                      />
+                      <Text style={filterStyles.checkboxLabel}>All</Text>
+                    </View>
+                    <View style={filterStyles.checkboxContainer}>
+                      <CheckBox
+                        value={selectedGender === 'male'}
+                        onValueChange={() => setSelectedGender('male')}
+                        tintColors={{true: '#F97B22', false: 'gray'}}
+                      />
+                      <Text style={filterStyles.checkboxLabel}>Male</Text>
+                    </View>
+                    <View style={filterStyles.checkboxContainer}>
+                      <CheckBox
+                        value={selectedGender === 'female'}
+                        onValueChange={() => setSelectedGender('female')}
+                        tintColors={{true: '#F97B22', false: 'gray'}}
+                      />
+                      <Text style={filterStyles.checkboxLabel}>Female</Text>
+                    </View>
                   </View>
                 </View>
-              </View>
 
-              {/* Language Filter */}
-              <View style={filterStyles.ChildContainer2}>
-                <Text style={filterStyles.sectionTitle}>Language</Text>
-                <View style={filterStyles.line} />
-                <View style={filterStyles.buttonRow2}>
-                  <View style={filterStyles.checkboxContainer}>
-                    <CheckBox
-                      value={selectedLanguage === 'english'}
-                      onValueChange={() => setSelectedLanguage('english')}
-                      tintColors={{true: '#F97B22', false: 'gray'}}
-                    />
-                    <Text style={filterStyles.checkboxLabel}>English</Text>
-                  </View>
-                  <View style={[filterStyles.checkboxContainer, {marginRight: 20}]}>
-                    <CheckBox
-                      value={selectedLanguage === 'urdu'}
-                      onValueChange={() => setSelectedLanguage('urdu')}
-                      tintColors={{true: '#F97B22', false: 'gray'}}
-                    />
-                    <Text style={filterStyles.checkboxLabel}>Urdu</Text>
+                {/* Marital Status Filter */}
+                <View style={filterStyles.ChildContainer1}>
+                  <Text style={filterStyles.sectionTitle}>Marital Status</Text>
+                  <View style={filterStyles.line} />
+                  <View style={[filterStyles.buttonRow]}>
+                    <View style={filterStyles.checkboxContainer}>
+                      <CheckBox
+                        value={selectedMaritalStatus === 'married'}
+                        onValueChange={() =>
+                          setSelectedMaritalStatus('married')
+                        }
+                        tintColors={{true: '#F97B22', false: 'gray'}}
+                      />
+                      <Text style={filterStyles.checkboxLabel}>Married</Text>
+                    </View>
+                    <View style={filterStyles.checkboxContainer}>
+                      <CheckBox
+                        value={selectedMaritalStatus === 'unmarried'}
+                        onValueChange={() =>
+                          setSelectedMaritalStatus('unmarried')
+                        }
+                        tintColors={{true: '#F97B22', false: 'gray'}}
+                      />
+                      <Text style={filterStyles.checkboxLabel}>Unmarried</Text>
+                    </View>
                   </View>
                 </View>
-                <View style={filterStyles.buttonRow2}>
-                  <View style={filterStyles.checkboxContainer}>
-                    <CheckBox
-                      value={selectedLanguage === 'hindi'}
-                      onValueChange={() => setSelectedLanguage('hindi')}
-                      tintColors={{true: '#F97B22', false: 'gray'}}
-                    />
-                    <Text style={filterStyles.checkboxLabel}>Hindi</Text>
+
+                {/* Language Filter */}
+                <View style={filterStyles.ChildContainer2}>
+                  <Text style={filterStyles.sectionTitle}>Language</Text>
+                  <View style={filterStyles.line} />
+                  <View style={filterStyles.buttonRow2}>
+                    <View style={filterStyles.checkboxContainer}>
+                      <CheckBox
+                        value={selectedLanguage === 'english'}
+                        onValueChange={() => setSelectedLanguage('english')}
+                        tintColors={{true: '#F97B22', false: 'gray'}}
+                      />
+                      <Text style={filterStyles.checkboxLabel}>English</Text>
+                    </View>
+                    <View
+                      style={[
+                        filterStyles.checkboxContainer,
+                        {marginRight: 20},
+                      ]}>
+                      <CheckBox
+                        value={selectedLanguage === 'urdu'}
+                        onValueChange={() => setSelectedLanguage('urdu')}
+                        tintColors={{true: '#F97B22', false: 'gray'}}
+                      />
+                      <Text style={filterStyles.checkboxLabel}>Urdu</Text>
+                    </View>
                   </View>
-                  <View style={filterStyles.checkboxContainer}>
-                    <CheckBox
-                      value={selectedLanguage === 'marathi'}
-                      onValueChange={() => setSelectedLanguage('marathi')}
-                      tintColors={{true: '#F97B22', false: 'gray'}}
-                    />
-                    <Text style={filterStyles.checkboxLabel}>Marathi</Text>
+                  <View style={filterStyles.buttonRow2}>
+                    <View style={filterStyles.checkboxContainer}>
+                      <CheckBox
+                        value={selectedLanguage === 'hindi'}
+                        onValueChange={() => setSelectedLanguage('hindi')}
+                        tintColors={{true: '#F97B22', false: 'gray'}}
+                      />
+                      <Text style={filterStyles.checkboxLabel}>Hindi</Text>
+                    </View>
+                    <View style={filterStyles.checkboxContainer}>
+                      <CheckBox
+                        value={selectedLanguage === 'marathi'}
+                        onValueChange={() => setSelectedLanguage('marathi')}
+                        tintColors={{true: '#F97B22', false: 'gray'}}
+                      />
+                      <Text style={filterStyles.checkboxLabel}>Marathi</Text>
+                    </View>
                   </View>
                 </View>
-              </View>
 
-              {/* Salary Range Filter */}
-              <Text style={filterStyles.sectionTitle}>Salary Range</Text>
-              <Text style={filterStyles.salaryText}>
-                {salaryRange[0]} - {salaryRange[1]}
-              </Text>
-              <View style={filterStyles.headerContainer}>
-                <MultiSlider
-                  values={salaryRange}
-                  min={0}
-                  max={10000000}
-                  step={100}
-                  onValuesChange={setSalaryRange}
-                  selectedStyle={{
-                    backgroundColor: '#F97B22',
-                  }}
-                  trackStyle={{
-                    height: 6,
-                    width: '80%',
-                    alignSelf: 'center',
-                  }}
-                  markerStyle={{
-                    backgroundColor: 'white',
-                    borderWidth: 2,
-                    borderColor: '#F97B22',
-                    padding: 5,
-                    marginTop: 5,
-                  }}
-                />
-              </View>
+                {/* Salary Range Filter */}
+                <Text style={filterStyles.sectionTitle}>Salary Range</Text>
+                <Text style={filterStyles.salaryText}>
+                  {salaryRange[0]} - {salaryRange[1]}
+                </Text>
+                <View style={filterStyles.headerContainer}>
+                  <MultiSlider
+                    values={salaryRange}
+                    min={0}
+                    max={10000000}
+                    step={100}
+                    onValuesChange={setSalaryRange}
+                    selectedStyle={{
+                      backgroundColor: '#F97B22',
+                    }}
+                    trackStyle={{
+                      height: 6,
+                      width: '80%',
+                      alignSelf: 'center',
+                    }}
+                    markerStyle={{
+                      backgroundColor: 'white',
+                      borderWidth: 2,
+                      borderColor: '#F97B22',
+                      padding: 5,
+                      marginTop: 5,
+                    }}
+                  />
+                </View>
 
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'center',
-                  gap: 20,
-                  marginTop:20
-                }}>
-                <Pressable style={filterStyles.closeButton} onPress={closeFilters}>
-                  <Text style={filterStyles.closeButtonText}>Close Filters</Text>
-                </Pressable>
-                <TouchableOpacity
-                  style={filterStyles.applyButton}
-                  onPress={onSubmitFilter}>
-                  <Text style={filterStyles.applyButtonText}>Apply Filter</Text>
-                </TouchableOpacity>
-              </View>
-            </ScrollView>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    gap: 20,
+                    marginTop: 20,
+                  }}>
+                  <Pressable
+                    style={filterStyles.closeButton}
+                    onPress={closeFilters}>
+                    <Text style={filterStyles.closeButtonText}>
+                      Close Filters
+                    </Text>
+                  </Pressable>
+                  <TouchableOpacity
+                    style={filterStyles.applyButton}
+                    onPress={onSubmitFilter}>
+                    <Text style={filterStyles.applyButtonText}>
+                      Apply Filter
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </ScrollView>
+            </View>
           </View>
-        </View>
-      </Modal>
+        </Modal>
 
         <Space mT={20} />
 
@@ -846,34 +863,48 @@ const HomePage = () => {
             <Text style={styles.noDataText}>No recently viewed users</Text>
           )}
         </View>
-        <View style={{ width: '100%', paddingHorizontal: 7 }}>
-      {/* Header with title and See All */}
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-        <Text style={{ fontSize: 18, fontWeight: 'bold', color:'#333' }}>Success Stories</Text>
-        <TouchableOpacity onPress={() => navigation.navigate('SuccessStories')}>
-          <Text style={{ color: 'rgba(249, 123, 34, 1)', fontSize: 16 }}>See All</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* FlatList for horizontal cards */}
-      <FlatList
-        horizontal
-        data={successStories}
-        renderItem={({ item, index }) => (
-          <View>
-            <SuccessStoriesCard
-              {...item}
-              index={index}
-              image={item.image}
-              name={item.title}
-              des={item.description}
-              onPress={() => {navigation.navigate('SuccessStoriesDetals')}}
-            />
+        <View style={{width: '100%', paddingHorizontal: 7}}>
+          {/* Header with title and See All */}
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: 10,
+            }}>
+            <Text style={{fontSize: 18, fontWeight: 'bold', color: '#333'}}>
+              Success Stories
+            </Text>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('SuccessStories')}>
+              <Text style={{color: 'rgba(249, 123, 34, 1)', fontSize: 16}}>
+                See All
+              </Text>
+            </TouchableOpacity>
           </View>
-        )}
-        keyExtractor={(item, index) => index.toString()}
-      />
-    </View>
+
+          {/* FlatList for horizontal cards */}
+          <FlatList
+            horizontal
+            data={successStories}
+            renderItem={({item, index}) => (
+              console.log('item', item),
+              <View>
+                <SuccessStoriesCard
+                  {...item}
+                  index={index}
+                  image={item.image}
+                  name={item.title}
+                  des={item.description}
+                  onPress={() => {
+                    navigation.navigate('SuccessStoriesDetals', {id: item._id});
+                  }}
+                />
+              </View>
+            )}
+            keyExtractor={(item, index) => index.toString()}
+          />
+        </View>
       </View>
     </ScrollView>
   );

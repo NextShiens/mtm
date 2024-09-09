@@ -121,7 +121,9 @@ router.post("/user/userPreferences/", auth, userAuthController.userPreferences);
 router.get("/user/profile", auth, userAuthController.userProfile);
 
 router.get('/user/current-user', auth, userAuthController.currentUser)
+router.get("/user/search",userAuthController.searchUsers);
 router.get("/user/get-success-stories",auth,adminDashController.getSuccessStories);
+router.get("/user/get-success-storie/:id",adminDashController.getSuccessStorybyId);
 
 
 module.exports = router;

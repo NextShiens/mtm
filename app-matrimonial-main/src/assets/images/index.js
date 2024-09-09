@@ -24,7 +24,7 @@ export const IMAGES = {
   sect: require('./pray.png'),
   location: require('./language.png'),
   menuIcon: require('./MenuIcon.png'),
-  filterIcon: require('./Filter.png'),
+  filterIcon: require('./setting.png'),
   primaryVector: require('./primaryVector.png'),
   carousel1: require('./Carousel1.jpg'),
   sendIcon: require('./SendIcon.png'),
@@ -62,4 +62,5 @@ export const IMAGES = {
   location:require('./location-marker.png'),
   correct:require('./correct.png'),
   check:require('./checked.png'),
+  filter:require('./Filter.png'),
 };

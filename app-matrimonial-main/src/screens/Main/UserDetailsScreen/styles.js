@@ -9,19 +9,22 @@ export const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+    top: 70,
   },
   carouselContainer: {
     flex: 1,
     alignItems: 'center',
+    top: 70,
+    borderRadius: 20, // Adjust this value to control the roundness
+    overflow: 'hidden',
   },
   rightIconContainer: {
-    height: 40,
-    width: 40,
+    height: 50,
+    width:50,
     justifyContent: 'center',
     alignItems: 'center',
-    elevation: 5,
-    backgroundColor: COLORS.dark.primary,
-    borderRadius: 10,
+    borderRadius: 0,
+    // backgroundColor: 'yellow',
   },
 
   contentContainer: {
@@ -31,7 +34,8 @@ export const styles = StyleSheet.create({
     borderTopRightRadius: 15,
     paddingHorizontal: 10,
     backgroundColor: COLORS.dark.white,
-    bottom: 10,
+    bottom: 70,
+    top: 70,
   },
   basicDetailsContainer: {
     width: '100%',
@@ -42,6 +46,8 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 10,
     width: '100%',
     flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   infoCont1: {
     width: '60%',
@@ -96,10 +102,11 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
   },
   slideContainer: {
-    width: screenWidth,
+    width: '100%',
     height: 280,
-    borderRadius: 10,
+    borderRadius: 20,
     borderBottomRadius: 10,
+    backgroundColor: `yellow`,
   },
   image: {
     width: '100%',
@@ -127,9 +134,12 @@ export const styles = StyleSheet.create({
   paginationContainer: {
     position: 'absolute',
     bottom: -10,
+    backgroundColor: 'rgba(0,0,0,0.3)',
+    width: '83%',
+    borderRadius: 10,
   },
   dotStyle: {
-    width: 10,
+    width: 20,
     marginHorizontal: -5,
     height: 10,
     borderRadius: 5,
@@ -141,4 +151,68 @@ export const styles = StyleSheet.create({
     borderRadius: 5,
     backgroundColor: COLORS.dark.white,
   },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  box: {
+    backgroundColor: '#100B271A',
+    borderWidth: 1,
+    borderColor: '#FDBA74',
+    borderRadius: 8,
+    paddingVertical:30,
+    paddingHorizontal:20,
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+    // maxWidth: 300,
+    alignSelf: 'center',
+    // marginVertical: 10,
+  },
+  contentbox: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+  },
+  iconbox: {
+    backgroundColor: '#FED7AA',
+    borderRadius: 12,
+    width: 24,
+    height: 24,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  textbox: {
+    flex: 1,
+  },
+  titlebox: {
+    fontWeight: 'bold',
+    color: '#1F2937',
+    fontSize: 16,
+  },
+  messagebox: {
+    color: '#4B5563',
+    fontSize: 14,
+  },
+  closeButton: {
+    padding: 4,
+  },
+  closeButtonText:{
+    fontSize: 16,
+    position: 'absolute',
+    right: 5,
+    top: -10,
+  }
 });

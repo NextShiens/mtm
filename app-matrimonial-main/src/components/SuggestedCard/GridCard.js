@@ -290,6 +290,7 @@ const styles = StyleSheet.create({
   actionContainer: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
+    paddingTop: 10,
   },
   actionButton: {
     width: 17,

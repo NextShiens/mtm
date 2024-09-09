@@ -453,18 +453,8 @@ const UserDetailsScreen = ({navigation}) => {
             <Space mT={12} />
             <View style={style.basicInfoContainer}>
               <View style={[style.infoCont1]}>
-                <AppText
-                  title={LABELS.name}
-                  variant={'h4'}
-                  color={COLORS.dark.gray}
-                  extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
-                />
-                <AppText
-                  title={userDetails?.name || 'N/A'}
-                  variant={'h4'}
-                  color={COLORS.dark.black}
-                  extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
-                />
+                <Text>{LABELS.name}</Text>
+                <Text style={{maxWidth:'80%',fontSize:16,color:'black'}}>{userDetails?.name || 'N/A'}</Text>
                 <Space mT={20} />
 
                 <AppText
