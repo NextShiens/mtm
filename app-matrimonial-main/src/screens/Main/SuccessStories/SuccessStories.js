@@ -28,7 +28,6 @@ export default function SuccessStories() {
 
 
   const fetchSuccesStories = async () => {
-    debugger
     try {
       setNewUsersLoading(true);
       const token = await AsyncStorage.getItem('AccessToken');
