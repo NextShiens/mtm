@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+// import { Image } from 'react-native-svg';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Image } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL } from '../../../../constant';
 import { Toast } from '../../../utils/native';
 import {occupationList,indianCastes, workLocationList } from '../../../data/appData';
+import { useNavigation } from '@react-navigation/native';
+
 
 
 const UserProfileStep1 = () => {
+  const navigation = useNavigation();
   const [age, setAge] = useState(null);
   const [gender, setGender] = useState(null);
   const [height, setHeight] = useState(null);
@@ -15,8 +19,9 @@ const UserProfileStep1 = () => {
   const [maritalStatus, setMaritalStatus] = useState(null);
   const [religion, setReligion] = useState(null);
   const [motherTongue, setMotherTongue] = useState(null);
-  const [cast, setCast] = useState(null);
+  const [caste, setCast] = useState(null);
   const [city, setCity] = useState(null);
+  const [initialUserData, setInitialUserData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
 
   const data = [
@@ -98,6 +103,9 @@ const cities = workLocationList.map(city => ({
   value: city
 }));
 
+
+
+
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -114,6 +122,7 @@ const cities = workLocationList.map(city => ({
           setMotherTongue(user.motherTongue);
           setCast(user.horoscopeDetails.caste);
           setCity(user.city);
+          setInitialUserData(user);
         }
         console.log('User data:', userData);
       } catch (error) {
@@ -124,18 +133,25 @@ const cities = workLocationList.map(city => ({
     fetchUserData();
   }, []);
 
+  
   const handleSave = async () => {
-    const userProfile = {
-      age,
-      gender,
-      height,
-      dob,
-      maritalStatus,
-      religion,
-      motherTongue,
-      cast,
-      city,
-    };
+    const userProfile = {};
+
+    // Compare each field with the initial data, and only add changed fields
+    if (age !== initialUserData.age) userProfile.age = age;
+    if (gender !== initialUserData.gender) userProfile.gender = gender;
+    if (height !== initialUserData.height) userProfile.height = height;
+    if (dob !== initialUserData.dateOfBirth) userProfile.dob = dob;
+    if (maritalStatus !== initialUserData.maritalStatus) userProfile.maritalStatus = maritalStatus;
+    if (religion !== initialUserData.religion) userProfile.religion = religion;
+    if (motherTongue !== initialUserData.motherTongue) userProfile.motherTongue = motherTongue;
+    if (caste !== initialUserData.horoscopeDetails?.caste) userProfile.caste = caste;
+    if (city !== initialUserData.city) userProfile.city = city;
+
+    if (Object.keys(userProfile).length === 0) {
+      Toast("No changes to save.");
+      return;
+    }
 
     try {
       setIsLoading(true);
@@ -154,7 +170,6 @@ const cities = workLocationList.map(city => ({
         console.log('result', result);
         Toast(result.message);
       } else {
-        // Update user data in AsyncStorage
         const userData = await AsyncStorage.getItem('theUser');
         if (userData) {
           const parsedUser = JSON.parse(userData);
@@ -170,10 +185,15 @@ const cities = workLocationList.map(city => ({
       setIsLoading(false);
     }
   };
-
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.header}>Basic Info</Text>
+       <View style={styles.flexrow}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Image source={require('../../../assets/images/leftarrow.png')} />
+          </TouchableOpacity>
+          <Text style={styles.heading}>Basic Info</Text>
+        </View>
+      {/* <Text style={styles.header}>Basic Info</Text> */}
       <Text style={styles.stepText}>Step 1</Text>
       <Text style={styles.stepText}>Age</Text>
       <Dropdown
@@ -294,14 +314,14 @@ const cities = workLocationList.map(city => ({
         data={casteData}
         labelField="label"
         valueField="value"
-        placeholder={cast}
+        placeholder={caste}
         search={true}
         searchPlaceholder="Search"
         searchPlaceholderTextColor="gray"
         placeholderStyle={{color: 'gray'}}
         inputSearchStyle={styles.inputSearchStyle}
         selectedTextStyle={styles.selectedTextStyle}
-        value={cast}
+        value={caste}
         onChange={(item) => setCast(item.value)}
         itemTextStyle={{color: 'black'}}
       />
@@ -324,7 +344,9 @@ const cities = workLocationList.map(city => ({
       />
 
       <TouchableOpacity style={styles.saveButton} onPress={handleSave} disabled={isLoading}>
-        <Text style={styles.saveText}>Save</Text>
+        <Text style={styles.saveText}>
+          {isLoading ? 'Loading...' : 'Save'}
+        </Text>
       </TouchableOpacity>
     </ScrollView>
   );
@@ -379,6 +401,20 @@ const styles = StyleSheet.create({
   selectedTextStyle: {
     fontSize: 14,
     color: '#333',
+  },
+  flexrow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 20,
+    alignSelf: 'center',
+    marginBottom: 10,
+  },
+  heading: {
+    fontSize: 16,
+    color: 'black',
+    textAlign: 'center',
+    width: '85%',
+    fontWeight: '700',
   },
 });
 

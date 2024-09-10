@@ -1,16 +1,21 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity,ToastAndroid,Image,ScrollView} from 'react-native';
 import {Dropdown} from 'react-native-element-dropdown';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {API_URL} from '../../../../constant';
 import { QualificationList, occupationList, workLocationList} from '../../../data/appData';
+import { useNavigation } from '@react-navigation/native';
 
 
 const UserProfileStep2 = () => {
+  const navigation = useNavigation();
   const [highestDegree, setHighestDegree] = useState(null);
   const [occupation, setOccupation] = useState(null);
   const [employment, setEmployment] = useState(null);
   const [annualIncome, setAnnualIncome] = useState(null);
   const [workLocation, setWorkLocation] = useState(null);
+  const [initialUserData, setInitialUserData] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
 
   const data = [
     {label: 'Select', value: null},
@@ -51,6 +56,55 @@ const cities = workLocationList.map(city => ({
   value: city
 }));
 
+
+const handleSave = async () => {
+  const userProfile = {};
+
+  // Compare each field with the initial data, and only add changed fields
+  if (highestDegree !== initialUserData.highestDegree) userProfile.highestDegree = highestDegree;
+  if (occupation !== initialUserData.occupation) userProfile.occupation = occupation;
+  if (employment !== initialUserData.employment) userProfile.heiemploymentght = employment;
+  if (workLocation !== initialUserData.workLocation) userProfile.workLocation = workLocation;
+  if (annualIncome !== initialUserData.annualIncome) userProfile.annualIncome = annualIncome;
+  if (Object.keys(userProfile).length === 0) {
+    Toast("No changes to save.");
+    return;
+  }
+
+  try {
+    setIsLoading(true);
+    const token = await AsyncStorage.getItem('AccessToken');
+    const response = await fetch(`${API_URL}/user/updateProfile`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        "authorization": `Bearer ${token}`
+      },
+      body: JSON.stringify(userProfile),
+    });
+
+    const result = await response.json();
+    if (!response.ok) {
+      console.log('result', result);
+      Toast(result.message);
+    } else {
+      const userData = await AsyncStorage.getItem('theUser');
+      if (userData) {
+        const parsedUser = JSON.parse(userData);
+        parsedUser.user = { ...parsedUser.user, ...userProfile };
+        await AsyncStorage.setItem('theUser', JSON.stringify(parsedUser));
+      }
+      console.log('user data:', userData);
+      ToastAndroid.showWithGravityAndOffset('Profile Updated Successfully', ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
+    }
+  } catch (error) {
+    ToastAndroid.showWithGravityAndOffset('Failed to update profile', ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
+    console.error('error', error);
+  } finally {
+    setIsLoading(false);
+  }
+};
+
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -63,6 +117,8 @@ const cities = workLocationList.map(city => ({
           setEmployment(user.employment);
           setAnnualIncome(user.annualIncome);
           setWorkLocation(user.workLocation);
+          setInitialUserData(user);
+
         }
       } catch (error) {
         console.error('Failed to load user data', error);
@@ -73,7 +129,13 @@ const cities = workLocationList.map(city => ({
   }, []);
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
+      <View style={styles.flexrow}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Image source={require('../../../assets/images/leftarrow.png')} />
+          </TouchableOpacity>
+          <Text style={styles.heading}>Account</Text>
+        </View>
       <View style={styles.stepContainer}>
         <Text style={styles.stepText2}>Step 2</Text>
         <Text style={styles.stepText}>HighestDegree</Text>
@@ -91,7 +153,7 @@ const cities = workLocationList.map(city => ({
           selectedTextStyle={styles.selectedTextStyle}
           value={highestDegree}
           onChange={item => setHighestDegree(item.value)}
-          itemTextStyle={{color: 'gray'}}
+          itemTextStyle={{color: 'black'}}
         />
         <Text style={styles.stepText}>Occupation</Text>
         <Dropdown
@@ -165,10 +227,12 @@ const cities = workLocationList.map(city => ({
         />
       </View>
 
-      <TouchableOpacity style={styles.saveButton}>
-        <Text style={styles.saveButtonText}>Save</Text>
+      <TouchableOpacity style={styles.saveButton} onPress={handleSave} disabled={isLoading}>
+        <Text style={styles.saveButtonText}>
+          {isLoading ? 'Loading...' : 'Save'}
+        </Text>
       </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -219,6 +283,20 @@ const styles = StyleSheet.create({
   selectedTextStyle: {
     fontSize: 14,
     color: '#333',
+  },
+  flexrow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 20,
+    alignSelf: 'center',
+    // marginBottom: 10/,
+  },
+  heading: {
+    fontSize: 16,
+    color: 'black',
+    textAlign: 'center',
+    width: '85%',
+    fontWeight: '700',
   },
 });
 

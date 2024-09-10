@@ -426,7 +426,7 @@ const userAuthController = {
           religion: Joi.string().required(),
           caste: Joi.string().required(),
           motherTongue: Joi.string().required(),
-          manglik: Joi.string().required()
+          manglik: Joi.string().required(),
         }),
         FamilyDetails: Joi.object({
           numOfBrothers: Joi.string().required(),
@@ -440,16 +440,16 @@ const userAuthController = {
         Education: Joi.object({
           education: Joi.string().required(),
           occupation: Joi.string().required(),
-          income: Joi.string().required()
+          income: Joi.string().required(),
         }),
-        partnerExpectation: Joi.string().required()
+        partnerExpectation: Joi.string().required(),
       });
 
       const { error } = userSchema.validate(req.body);
 
       if (error) {
         return next(error);
-      };
+      }
       const userId = req.user._id;
 
       try {
@@ -478,64 +478,144 @@ const userAuthController = {
   },
 
   async updateProfile(req, res, next) {
-    const userSchema = Joi.object({
-      phone: Joi.string(),
-      name: Joi.string(),
-      userImages: Joi.array(),
-      email: Joi.string().email(),
-      gender: Joi.string(),
-      height: Joi.string(),
-      city: Joi.string(),
-      motherTongue: Joi.string(),
-      partner: Joi.string(),
-      highestDegree: Joi.string(),
-      occupation: Joi.string(),
-      maritalStatus: Joi.string(),
-      employedIn: Joi.string(),
-      annualIncome: Joi.string(),
-    });
-
-    // const { error } = userSchema.validate(req.body);
-
-    // if (error) {
-    //   return next(error);
-    // }
-    const { phone, name, DOB, userImages, email, gender, height, city, motherTongue, partner, highestDegree, occupation, maritalStatus, employedIn, annualIncome } = req.body;
-    const userId = req.user._id;
-
-    const user = await User.findById(userId);
-
-    if (!user) {
-      const error = new Error("User not found!");
-      error.status = 404;
-      return next(error);
-    }
-
-    // Update only the provided fields
-    if (phone) user.phone = phone;
-    if (name) user.name = name;
-    if (DOB) user.DOB = DOB;
-    if (userImages) user.userImages = userImages;
-    if (email) user.email = email;
-    if (gender) user.gender = gender;
-    if (height) user.height = height;
-    if (city) user.city = city;
-    if (motherTongue) user.motherTongue = motherTongue;
-    if (partner) user.partner = partner;
-    if (highestDegree) user.highestDegree = highestDegree;
-    if (occupation) user.occupation = occupation;
-    if (maritalStatus) user.maritalStatus = maritalStatus;
-    if (employedIn) user.employedIn = employedIn;
-    if (annualIncome) user.annualIncome = annualIncome;
-    // Save the updated test
-    await user.save();
-
-    return res.status(200).json({
-      message: "User updated successfully",
-      user: user,
-    });
+      const userSchema = Joi.object({
+          name: Joi.string(),
+          email: Joi.string(),
+          phone: Joi.string(),
+          gender: Joi.string().valid("male", "female"),
+          dateOfBirth: Joi.string(),
+          age: Joi.string(),
+          height: Joi.string(),
+          motherTongue: Joi.string(),
+          caste: Joi.string(),
+          religion: Joi.string(),
+          sect: Joi.string(),
+          city: Joi.string(),
+          highestDegree: Joi.string(),
+          occupation: Joi.string(),
+          employedIn: Joi.string(),
+          annualIncome: Joi.string(),
+          workLocation: Joi.string(),
+          maritalStatus: Joi.string(),
+          fcmToken: Joi.string(),
+          userImages: Joi.array().items(Joi.string()),
+          profileCompleted: Joi.boolean(),
+          isActive: Joi.boolean(),
+          isPaid: Joi.boolean(),
+          isFeatured: Joi.boolean(),
+          sentInterests: Joi.array().items(Joi.string()),
+          receivedInterests: Joi.array().items(Joi.string()),
+          friends: Joi.array().items(Joi.string()),
+          ageFrom: Joi.string(),
+          ageTo: Joi.string(),
+          heightFrom: Joi.string(),
+          heightTo: Joi.string(),
+          lookingFor: Joi.string(),
+          physicalStatus: Joi.string(),
+          food: Joi.string(),
+          smoking: Joi.string(),
+          drinking: Joi.string(),
+          familyType: Joi.string(),
+          familyStatus: Joi.string(),
+          familyValue: Joi.string(),
+          fathersOccupation: Joi.string(),
+          dosh: Joi.string(),
+          star: Joi.string(),
+          birthTime: Joi.string(),
+          birthPlace: Joi.string(),
+          manglik: Joi.string(),
+          numOfBrothers: Joi.string(),
+          numOfMarriedBrothers: Joi.string(),
+          numOfSisters: Joi.string(),
+          numOfMarriedSisters: Joi.string(),
+          country: Joi.string(),
+          state: Joi.string(),
+          partnerExpectation: Joi.string(),
+          education: Joi.string(),
+          occupation: Joi.string(),
+          income: Joi.string(),
+      });
+  
+      const { error } = userSchema.validate(req.body);
+  
+      if (error) {
+          return next(error);
+      }
+  
+      const {
+          phone, name, dateOfBirth, userImages, email, gender, height, city, motherTongue,drinking, partnerExpectation, highestDegree, occupation, maritalStatus, employedIn, annualIncome, numOfSisters, numOfMarriedSisters, numOfBrothers, numOfMarriedBrothers, country, state, education, income, fathersOccupation, familyValue, familyStatus, familyType, smoking, food, physicalStatus, lookingFor, heightFrom, heightTo, ageFrom, ageTo, dosh, star, birthTime, birthPlace, religion, caste, sect, manglik,
+      } = req.body;
+  
+      const userId = req.user._id;
+  
+      const user = await User.findById(userId);
+  
+      if (!user) {
+          const error = new Error("User not found!");
+          error.status = 404;
+          return next(error);
+      }
+  
+      // Update only the provided fields
+      if (phone) user.phone = phone;
+      if (name) user.name = name;
+      if (dateOfBirth) user.dateOfBirth = dateOfBirth;
+      if (userImages) user.userImages = userImages;
+      if (email) user.email = email;
+      if (gender) user.gender = gender;
+      if (height) user.height = height;
+      if (city) user.city = city;
+      if (motherTongue) user.motherTongue = motherTongue;
+      if (partnerExpectation) user.partnerExpectation = partnerExpectation;
+      if (highestDegree) user.highestDegree = highestDegree;
+      if (occupation) user.occupation = occupation;
+      if (maritalStatus) user.maritalStatus = maritalStatus;
+      if (employedIn) user.employedIn = employedIn;
+      if (annualIncome) user.annualIncome = annualIncome;
+      if (ageFrom) user.ageFrom = ageFrom;
+      if (ageTo) user.ageTo = ageTo;
+      if (heightFrom) user.heightFrom = heightFrom;
+      if (heightTo) user.heightTo = heightTo;
+      if (lookingFor) user.lookingFor = lookingFor;
+      if (physicalStatus) user.physicalStatus = physicalStatus;
+      if (food) user.food = food;
+      if (smoking) user.smoking = smoking;
+      if (drinking) user.drinking = drinking;
+      if (familyType) user.familyType = familyType;
+      if (familyStatus) user.familyStatus = familyStatus;
+      if (familyValue) user.familyValue = familyValue;
+      if (fathersOccupation) user.fathersOccupation = fathersOccupation;
+      if (sect) user.sect = sect;
+  
+      // Update nested fields
+      if (dosh) user.horoscopeDetails.dosh = dosh;
+      if (star) user.horoscopeDetails.star = star;
+      if (birthTime) user.horoscopeDetails.birthTime = birthTime;
+      if (birthPlace) user.horoscopeDetails.birthPlace = birthPlace;
+      if (religion) user.horoscopeDetails.religion = religion;
+      if (caste) user.horoscopeDetails.caste = caste;
+      if (manglik) user.horoscopeDetails.manglik = manglik;
+  
+      if (numOfBrothers) user.FamilyDetails.numOfBrothers = numOfBrothers;
+      if (numOfMarriedBrothers) user.FamilyDetails.numOfMarriedBrothers = numOfMarriedBrothers;
+      if (numOfSisters) user.FamilyDetails.numOfSisters = numOfSisters;
+      if (numOfMarriedSisters) user.FamilyDetails.numOfMarriedSisters = numOfMarriedSisters;
+      if (country) user.FamilyDetails.country = country;
+      if (state) user.FamilyDetails.state = state;
+      if (city) user.FamilyDetails.city = city;
+  
+      if (education) user.Education.education = education;
+      if (occupation) user.Education.occupation = occupation;
+      if (income) user.Education.income = income;
+  
+      // Save the updated user
+      await user.save();
+  
+      return res.status(200).json({
+          message: "User updated successfully",
+          user: user,
+      });
   },
-
   async updateActiveStatus(req, res, next) {
     const userSchema = Joi.object({
       isActive: Joi.boolean(),
@@ -694,11 +774,11 @@ const userAuthController = {
       res.status(200).json({ user, success: true });
     }
   },
-  async searchUsers(req,res,next){
+  async searchUsers(req, res, next) {
     try {
       const { query } = req.query; // Get the search query from the request
-      const regex = new RegExp(query, 'i'); // Create a regex for case-insensitive search
-  
+      const regex = new RegExp(query, "i"); // Create a regex for case-insensitive search
+
       // Find users that match the query in name, age, occupation, email, or location
       const matchedUsers = await User.find({
         $or: [
@@ -709,10 +789,10 @@ const userAuthController = {
           { city: { $regex: regex } }, // Updated to 'city'
           { religion: { $regex: regex } },
           { caste: { $regex: regex } },
-          {workLocation: { $regex: regex } },
+          { workLocation: { $regex: regex } },
         ],
       });
-  
+
       // Send the matched users as a response
       res.status(200).json({
         success: true,
@@ -722,19 +802,18 @@ const userAuthController = {
       console.error(error);
       res.status(500).json({
         success: false,
-        message: 'Server error',
+        message: "Server error",
       });
     }
   },
 
   async currentUser(req, res, next) {
-
     if (!user) {
       res.status(401).json({ success: false, message: "User not found" });
     } else {
       res.status(200).json({ user, success: true });
     }
-  }
+  },
 };
 
 module.exports = userAuthController;
