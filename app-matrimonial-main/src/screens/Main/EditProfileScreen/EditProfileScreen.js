@@ -31,6 +31,7 @@ const EditProfileScreen = () => {
     { label: 'Education', value: 'education' },
   ];
 
+
   useEffect(() => {
     const fetchUser = async () => {
       try {

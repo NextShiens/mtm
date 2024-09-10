@@ -151,6 +151,11 @@ export const styles = StyleSheet.create({
     borderRadius: 5,
     backgroundColor: COLORS.dark.white,
   },
+  test: {
+    color: 'black',
+    fontSize: 16,
+  },
+  
 
 
 

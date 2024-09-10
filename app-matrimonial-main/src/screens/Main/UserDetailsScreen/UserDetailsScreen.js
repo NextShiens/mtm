@@ -28,6 +28,7 @@ import {Toast} from '../../../utils/native';
 import {API_URL} from '../../../../constant';
 import {checkIsPaidUser} from '../../../utils/subscriptionCheck';
 
+
 const defaultProfileSvg = `
   <Svg height={size} width={size} viewBox="0 0 100 100">
     <Circle cx="50" cy="50" r="50" fill={backgroundColor} />
@@ -51,6 +52,8 @@ const UserDetailsScreen = ({navigation}) => {
   const [isSendingInterest, setIsSendingInterest] = useState(false);
   const [hasSubscription, setHasSubscription] = useState(false);
   const [isRequestSent, setIsRequestSent] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -63,6 +66,12 @@ const UserDetailsScreen = ({navigation}) => {
 
     fetchUser();
   }, []);
+
+  const handleContactPress = () => {
+    if (!hasSubscription) {
+      setModalVisible(true);
+    }
+  };
 
   useEffect(() => {
     const checkSubscription = async () => {
@@ -122,18 +131,10 @@ const UserDetailsScreen = ({navigation}) => {
         );
       }
       await response.json();
-      Toast.show({
-        type: 'success',
-        text1: 'Success',
-        text2: 'User saved successfully!',
-      });
+      Toast('send interest successfully');
     } catch (error) {
       console.error('Error saving user:', error);
-      Toast.show({
-        type: 'error',
-        text1: 'Error',
-        text2: 'An unexpected error occurred',
-      });
+      Toast('An unexpected error occurred'); 
     } finally {
       setIsSaving(false);
     }
@@ -156,6 +157,8 @@ const UserDetailsScreen = ({navigation}) => {
         }),
       });
 
+      console.log('response', response);
+
       if (!response.ok) {
         let errorMessage = 'An error occurred while sending interest';
         try {
@@ -168,18 +171,11 @@ const UserDetailsScreen = ({navigation}) => {
       }
 
       await response.json();
-      Toast.show({
-        type: 'success',
-        text1: 'Success',
-        text2: 'Interest sent successfully!',
-      });
+      Toast('Interest sent successfully');
+
     } catch (error) {
       console.error('Error sending interest:', error);
-      Toast.show({
-        type: 'error',
-        text1: 'Error',
-        text2: error.message || 'An unexpected error occurred',
-      });
+      Toast('Error sending interest:', error);
     } finally {
       setIsSendingInterest(false);
     }
@@ -192,56 +188,56 @@ const UserDetailsScreen = ({navigation}) => {
   const carouselData = [
     {
       id: '0',
-      name: userDetails.name || 'N/A',
-      age: userDetails.age || 'N/A',
-      height: userDetails.height || 'N/A',
-      occupation: userDetails.occupation || 'N/A',
-      location: userDetails.city || 'N/A',
-      isVerified: userDetails.isActive || false,
-      userStatus: userDetails.isPaid ? 'Premium' : 'Free',
-      img: userDetails.userImages?.[0] || (
+      name: userDetails?.name || 'N/A',
+      age: userDetails?.age || 'N/A',
+      height: userDetails?.height || 'N/A',
+      occupation: userDetails?.occupation || 'N/A',
+      location: userDetails?.city || 'N/A',
+      isVerified: userDetails?.isActive || false,
+      userStatus: userDetails?.isPaid ? 'Premium' : 'Free',
+      img: userDetails?.userImages?.[0] || (
         <SvgXml xml={defaultProfileSvg} width="50%" height="50%" />
       ),
       category: 'Profile',
     },
     {
       id: '1',
-      name: userDetails.name || 'N/A',
-      age: userDetails.age || 'N/A',
-      height: userDetails.height || 'N/A',
-      occupation: userDetails.occupation || 'N/A',
-      location: userDetails.workLocation || 'N/A',
-      isVerified: userDetails.isActive || false,
-      userStatus: userDetails.isPaid ? 'Premium' : 'Free',
-      img: userDetails.userImages?.[1] || (
+      name: userDetails?.name || 'N/A',
+      age: userDetails?.age || 'N/A',
+      height: userDetails?.height || 'N/A',
+      occupation: userDetails?.occupation || 'N/A',
+      location: userDetails?.workLocation || 'N/A',
+      isVerified: userDetails?.isActive || false,
+      userStatus: userDetails?.isPaid ? 'Premium' : 'Free',
+      img: userDetails?.userImages?.[1] || (
         <SvgXml xml={defaultProfileSvg} width="50%" height="50%" />
       ),
       category: 'Work',
     },
     {
       id: '2',
-      name: userDetails.name || 'N/A',
-      age: userDetails.age || 'N/A',
-      height: userDetails.height || 'N/A',
-      occupation: userDetails.occupation || 'N/A',
-      location: userDetails.city || 'N/A',
-      isVerified: userDetails.isActive || false,
-      userStatus: userDetails.isPaid ? 'Premium' : 'Free',
-      img: userDetails.userImages?.[2] || (
+      name: userDetails?.name || 'N/A',
+      age: userDetails?.age || 'N/A',
+      height: userDetails?.height || 'N/A',
+      occupation: userDetails?.occupation || 'N/A',
+      location: userDetails?.city || 'N/A',
+      isVerified: userDetails?.isActive || false,
+      userStatus: userDetails?.isPaid ? 'Premium' : 'Free',
+      img: userDetails?.userImages?.[2] || (
         <SvgXml xml={defaultProfileSvg} width="50%" height="50%" />
       ),
-      education: userDetails.highestDegree || 'N/A',
+      education: userDetails?.highestDegree || 'N/A',
     },
     {
       id: '3',
-      name: userDetails.name || 'N/A',
-      age: userDetails.age || 'N/A',
-      height: userDetails.height || 'N/A',
-      occupation: userDetails.occupation || 'N/A',
-      location: userDetails.city || 'N/A',
-      isVerified: userDetails.isActive || false,
-      userStatus: userDetails.isPaid ? 'Premium' : 'Free',
-      img: userDetails.userImages?.[3] || (
+      name: userDetails?.name || 'N/A',
+      age: userDetails?.age || 'N/A',
+      height: userDetails?.height || 'N/A',
+      occupation: userDetails?.occupation || 'N/A',
+      location: userDetails?.city || 'N/A',
+      isVerified: userDetails?.isActive || false,
+      userStatus: userDetails?.isPaid ? 'Premium' : 'Free',
+      img: userDetails?.userImages?.[3] || (
         <SvgXml xml={defaultProfileSvg} width="50%" height="50%" />
       ),
       category: 'Religion',
@@ -373,7 +369,7 @@ const UserDetailsScreen = ({navigation}) => {
               <Space mT={13} />
               <AppText
                 title={
-                  userDetails.description ||
+                  userDetails?.description ||
                   'This user prefers to keep an air of mystery about them.'
                 }
                 color={COLORS.dark.black}
@@ -453,7 +449,12 @@ const UserDetailsScreen = ({navigation}) => {
             <Space mT={12} />
             <View style={style.basicInfoContainer}>
               <View style={[style.infoCont1]}>
-                <Text>{LABELS.name}</Text>
+              <AppText
+                  title={LABELS.fullName}
+                  variant={'h4'}
+                  color={COLORS.dark.gray}
+                  extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
+                />
                 <Text style={{maxWidth:'80%',fontSize:16,color:'black'}}>{userDetails?.name || 'N/A'}</Text>
                 <Space mT={20} />
 
@@ -576,44 +577,48 @@ const UserDetailsScreen = ({navigation}) => {
               />
 
               <Space mT={17} />
-              <View style={{flexDirection: 'row'}}>
-                <View style={{width: '50%'}}>
-                  <AppText
-                    title={LABELS.phoneNumber}
-                    variant={'h4'}
-                    color={COLORS.dark.gray}
-                    extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
-                  />
-                  <AppText
-                    title={
-                      hasSubscription
-                        ? userDetails?.phone || 'N/A'
-                        : '+91 34********'
-                    }
-                    variant={'h4'}
-                    color={COLORS.dark.black}
-                    extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
-                  />
-                </View>
-                <View style={{width: '50%'}}>
-                  <AppText
-                    title={LABELS.email}
-                    variant={'h4'}
-                    color={COLORS.dark.gray}
-                    extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
-                  />
-                  <AppText
-                    title={
-                      hasSubscription
-                        ? userDetails?.email || 'N/A'
-                        : '******@gmail.com'
-                    }
-                    variant={'h4'}
-                    color={COLORS.dark.black}
-                    extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
-                  />
-                </View>
-              </View>
+              <View style={{ flexDirection: 'row' }}>
+          <View style={{ width: '50%' }}>
+          <TouchableOpacity onPress={handleContactPress}>
+            <AppText
+              title={LABELS.phoneNumber}
+              variant={'h4'}
+              color={COLORS.dark.gray}
+            />
+              <Text
+                title={
+                  hasSubscription
+                    ? userDetails?.phone || 'N/A'
+                    : '+91 34********'
+                }
+                variant={'h4'}
+                color={COLORS.dark.black}
+                style={style.test}
+              >{
+                hasSubscription
+                  ? userDetails?.phone || 'N/A'
+                  : '+91 34********'
+              }</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={{ width: '50%' }}>
+            <TouchableOpacity onPress={handleContactPress}>
+            <AppText
+              title={LABELS.email}
+              variant={'h4'}
+              color={COLORS.dark.gray}
+            />
+              <Text
+              style={style.test}
+              >{
+                hasSubscription
+                  ? userDetails?.email || 'N/A'
+                  : '******@gmail.com'
+              }</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
               <Space mT={20} />
               <View
                 style={{
@@ -912,6 +917,121 @@ const UserDetailsScreen = ({navigation}) => {
           </View>
         </Modal>
       </ScrollView>
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: 'rgba(0, 0, 0, 0.3)',
+          }}>
+          <View
+            style={{
+              width: '90%',
+              backgroundColor: 'white',
+              borderRadius: 10,
+              paddingVertical: 20,
+              paddingHorizontal: 25,
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.25,
+              shadowRadius: 4,
+              elevation: 5,
+              position: 'relative',
+            }}>
+            <TouchableOpacity
+              style={{
+                position: 'absolute',
+                top: 10,
+                right: 10,
+                padding: 5,
+              }}
+              onPress={() => setModalVisible(false)}>
+              <Text style={{ fontSize: 16, color: '#666' }}>X</Text>
+            </TouchableOpacity>
+
+            <Text
+              style={{
+                fontSize: 18,
+                fontWeight: '600',
+                textAlign: 'left',
+                color: '#000',
+              }}>
+              Upgrade Membership
+            </Text>
+
+            <View
+              style={{
+                height: 1,
+                width: '100%',
+                backgroundColor: '#ccc',
+                marginVertical: 10,
+              }}
+            />
+
+            <Text
+              style={{
+                fontSize: 15,
+                textAlign: 'left',
+                marginBottom: 25,
+                color: '#666',
+              }}>
+              Become a premium member to view contacts of this profile
+            </Text>
+
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                width: '100%',
+              }}>
+              <TouchableOpacity
+                style={{
+                  flex: 1,
+                  paddingVertical: 12,
+                  marginHorizontal: 5,
+                  borderRadius: 30,
+                  backgroundColor: '#FFF',
+                  borderWidth: 1,
+                  borderColor: '#ccc',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+                onPress={() => setModalVisible(false)}>
+                <Text style={{ color: '#666', fontSize: 16 }}>Cancel</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={{
+                  flex: 1,
+                  paddingVertical: 12,
+                  marginHorizontal: 5,
+                  borderRadius: 30,
+                  backgroundColor: '#ff6600',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+                onPress={() => {
+                  setModalVisible(false);
+                  navigation.navigate('MembershipPlan');
+                }}>
+                <Text
+                  style={{
+                    color: 'white',
+                    fontSize: 16,
+                    fontWeight: 'bold',
+                  }}>
+                  Upgrade Now
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
       <View
         style={{
           width: '100%',
