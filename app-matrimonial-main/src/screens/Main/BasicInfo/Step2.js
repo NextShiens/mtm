@@ -2,6 +2,8 @@ import React, {useState, useEffect} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {Dropdown} from 'react-native-element-dropdown';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { QualificationList, occupationList, workLocationList} from '../../../data/appData';
+
 
 const UserProfileStep2 = () => {
   const [highestDegree, setHighestDegree] = useState(null);
@@ -16,6 +18,38 @@ const UserProfileStep2 = () => {
     {label: 'Option 2', value: '2'},
     {label: 'Option 3', value: '3'},
   ];
+
+  const degrees = QualificationList.map(degree => ({
+    label: degree,
+    value: degree
+}));
+
+const occupationOptions = occupationList.map(occupation => ({
+  label: occupation,
+  value: occupation
+}));
+
+const annualIncomeList = [
+  '50,000', '2,50,000', '4,50,000', '6,50,000', '8,50,000', '10,50,000',
+  '12,50,000', '14,50,000', '16,50,000', '18,50,000', '20,50,000', '22,50,000',
+  '24,50,000', '26,50,000', '28,50,000', '30,50,000', '32,50,000', '34,50,000',
+  '36,50,000', '38,50,000', '40,50,000', '42,50,000', '44,50,000', '46,50,000',
+  '48,50,000', '50,50,000', '52,50,000', '54,50,000', '56,50,000', '58,50,000',
+  '60,50,000', '62,50,000', '64,50,000', '66,50,000', '68,50,000', '70,50,000',
+  '72,50,000', '74,50,000', '76,50,000', '78,50,000', '80,50,000', '82,50,000',
+  '84,50,000', '86,50,000', '88,50,000', '90,50,000', '92,50,000', '94,50,000',
+  '96,50,000', '98,50,000', '1,00,00,000'
+];
+
+const incomeOptions = annualIncomeList.map(income => ({
+  label: income,
+  value: income
+}));
+
+const cities = workLocationList.map(city => ({
+  label: city,
+  value: city
+}));
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -45,7 +79,7 @@ const UserProfileStep2 = () => {
         <Text style={styles.stepText}>HighestDegree</Text>
         <Dropdown
           style={styles.dropdown}
-          data={data}
+          data={degrees}
           labelField="label"
           valueField="value"
           placeholder={highestDegree}
@@ -62,7 +96,7 @@ const UserProfileStep2 = () => {
         <Text style={styles.stepText}>Occupation</Text>
         <Dropdown
           style={styles.dropdown}
-          data={data}
+          data={occupationOptions}
           labelField="label"
           valueField="value"
           placeholder={occupation}
@@ -73,7 +107,7 @@ const UserProfileStep2 = () => {
           inputSearchStyle={styles.inputSearchStyle}
           selectedTextStyle={styles.selectedTextStyle}
           value={occupation}
-          itemTextStyle={{color: 'gray'}}
+          itemTextStyle={{color: 'black'}}
           searchTextInputStyle={{color: 'black'}} // Set the search text color
           onChange={item => setOccupation(item.value)}
         />
@@ -92,12 +126,12 @@ const UserProfileStep2 = () => {
           selectedTextStyle={styles.selectedTextStyle}
           value={employment}
           onChange={item => setEmployment(item.value)}
-          itemTextStyle={{color: 'gray'}}
+          itemTextStyle={{color: 'black'}}
         />
         <Text style={styles.stepText}>AnnualIncome</Text>
         <Dropdown
           style={styles.dropdown}
-          data={data}
+          data={incomeOptions}
           labelField="label"
           valueField="value"
           placeholder={annualIncome}
@@ -109,12 +143,12 @@ const UserProfileStep2 = () => {
           selectedTextStyle={styles.selectedTextStyle}
           value={annualIncome}
           onChange={item => setAnnualIncome(item.value)}
-          itemTextStyle={{color: 'gray'}}
+          itemTextStyle={{color: 'black'}}
         />
         <Text style={styles.stepText}>Work Location</Text>
         <Dropdown
           style={styles.dropdown}
-          data={data}
+          data={cities}
           labelField="label"
           valueField="value"
           placeholder={workLocation}
@@ -126,7 +160,7 @@ const UserProfileStep2 = () => {
           selectedTextStyle={styles.selectedTextStyle}
           value={workLocation}
           onChange={item => setWorkLocation(item.value)}
-          itemTextStyle={{color: 'gray'}}
+          itemTextStyle={{color: 'black'}}
           // dropdownPosition="top"
         />
       </View>

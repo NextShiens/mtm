@@ -8,13 +8,15 @@ import {
 } from 'react-native';
 import {Dropdown} from 'react-native-element-dropdown';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { API_URL } from '../../../constant';
+
 
 const BasicInfo = () => {
   const [ageFrom, setAgeFrom] = useState(null);
   const [ageTo, setAgeTo] = useState(null);
   const [heightFrom, setHeightFrom] = useState(null);
   const [heightTo, setHeightTo] = useState(null);
-  const [lookinfor, setLookingFor] = useState(null);
+  const [lookingFor, setLookingFor] = useState(null);
   const [physicalStatus, setPhysicalStatus] = useState(null);
   const [food, setFood] = useState(null);
   const [smoking, setSmoking] = useState(null);
@@ -23,6 +25,7 @@ const BasicInfo = () => {
   const [familyStatus, setFamilyStatus] = useState(null);
   const [familyValue, setFamilyValue] = useState(null);
   const [fathersOccupation, setFatherOccupation] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const data = [
     {label: 'Option 1', value: '1'},
@@ -34,6 +37,7 @@ const BasicInfo = () => {
     const fetchUserData = async () => {
       try {
         const userData = await AsyncStorage.getItem('theUser');
+        console.log('userData', userData);
         if (userData !== null) {
           const parsedData = JSON.parse(userData);
           const user = parsedData.user; 
@@ -41,7 +45,7 @@ const BasicInfo = () => {
           setAgeTo(user.ageTo);
           setHeightFrom(user.heightFrom);
           setHeightTo(user.heightTo);
-          setLookingFor(user.lookinfor);
+          setLookingFor(user.lookingFor);
           setPhysicalStatus(user.physicalStatus);
           setFood(user.food);
           setSmoking(user.smoking);
@@ -59,15 +63,70 @@ const BasicInfo = () => {
     fetchUserData();
   }, []);
 
-  const handleSave = () => {
-    // Handle save action here
-    console.log('Preferences saved');
+  const handleSave = async () => {
+    const userProfile = {
+      ageFrom,
+      ageTo,
+      heightFrom,
+      heightTo,
+      lookingFor,
+      physicalStatus,
+      food,
+      smoking,
+      drinking,
+      familyType,
+      familyStatus,
+      familyValue,
+      fathersOccupation,
+    };
+
+    try {
+      setIsLoading(true);
+      const token = await AsyncStorage.getItem('AccessToken');
+      const response = await fetch(`${API_URL}/user/updateProfile`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          "authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify(userProfile),
+      });
+
+      const result = await response.json();
+      if (!response.ok) {
+        console.log('result', result);
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: result.message,
+        });
+      } else {
+        // Update user data in AsyncStorage
+        const userData = await AsyncStorage.getItem('theUser');
+        if (userData) {
+          const parsedUser = JSON.parse(userData);
+          parsedUser.user = { ...parsedUser.user, ...userProfile };
+          await AsyncStorage.setItem('theUser', JSON.stringify(parsedUser));
+        }
+        console.log('user data:', userData);
+        Toast('Profile Updated Successfully');
+      }
+    } catch (error) {
+      console.error('error', error);
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'An error occurred while updating the profile',
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
+
 
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.header}>Basic Info</Text>
-      <Text style={styles.stepText}>Step 1</Text>
       <Text style={styles.stepText}>Age</Text>
       <View style={styles.row}>
         <Dropdown
@@ -146,14 +205,14 @@ const BasicInfo = () => {
         data={data}
         labelField="label"
         valueField="value"
-        placeholder={lookinfor}
+        placeholder={lookingFor}
         search={true}
         searchPlaceholder="Search"
         searchPlaceholderTextColor="gray"
         placeholderStyle={{color: 'gray'}}
         inputSearchStyle={styles.inputSearchStyle}
         selectedTextStyle={styles.selectedTextStyle}
-        value={lookinfor}
+        value={lookingFor}
         onChange={item => setLookingFor(item.value)}
         itemTextStyle={{color: 'gray'}}
       />
