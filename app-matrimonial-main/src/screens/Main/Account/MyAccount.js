@@ -2,15 +2,50 @@ import React, { useState, useEffect } from 'react';
 import { View, TextInput, Button, StyleSheet, Text, SafeAreaView, TouchableOpacity, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { API_URL } from '../../../../constant';
+import { Toast } from '../../../utils/native';
+
 
 const MyAccountScreen = () => {
   const navigation = useNavigation();
   const [email, setEmail] = useState('');
   const [phone, setPhoneNumber] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSave = () => {
-    console.log('Email:', email, 'Phone Number:', phone, 'Password:', password);
+  const handleSave = async () => {
+    try {
+      setIsLoading(true);
+      const token = await AsyncStorage.getItem('AccessToken');
+      const response = await fetch(`${API_URL}/user/updateProfile`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          "authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({ phone }),
+      });
+
+      const result = await response.json();
+      if (!response.ok) {
+        console.log('result', result);
+        Toast(result.message);
+      } else {
+        // Update user data in AsyncStorage
+        const userData = await AsyncStorage.getItem('theUser');
+        if (userData) {
+          const parsedUser = JSON.parse(userData);
+          parsedUser.user.phone = phone;
+          await AsyncStorage.setItem('theUser', JSON.stringify(parsedUser));
+        }
+        console.log('user data:', userData);
+        Toast('Profile Updated Successfully');
+      }
+    } catch (error) {
+      console.error('error', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -42,7 +77,7 @@ const MyAccountScreen = () => {
           placeholder={email}
           placeholderTextColor={'#ccc'}
           value={email}
-          onChangeText={setEmail}
+          editable={false}
           keyboardType="email-address"
         />
         <Text style={styles.text}>Phone Number</Text>
@@ -60,12 +95,12 @@ const MyAccountScreen = () => {
           placeholder="Password"
           placeholderTextColor={'#ccc'}
           value={password}
-          onChangeText={setPassword}
+          editable={false}
           secureTextEntry
         />
       </View>
 
-      <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
+      <TouchableOpacity style={styles.saveButton} onPress={handleSave} disabled={isLoading}>
         <Text style={styles.saveButtonText}>Save</Text>
       </TouchableOpacity>
     </SafeAreaView>
