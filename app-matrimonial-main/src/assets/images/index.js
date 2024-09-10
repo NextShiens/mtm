@@ -63,4 +63,5 @@ export const IMAGES = {
   correct:require('./correct.png'),
   check:require('./checked.png'),
   filter:require('./Filter.png'),
+  accept:require('./tick.png'),
 };

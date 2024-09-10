@@ -220,4 +220,70 @@ export const STYLES = StyleSheet.create({
     flex: 1,
     paddingHorizontal: HORIZON_MARGIN,
   },
+  imageContainer: {
+    height: '60%',
+    width: '100%',
+    position: 'relative',
+  },
+  profileImage: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
+  },
+  newTag: {
+    position: 'absolute',
+    top: 10,
+    left: 10,
+    backgroundColor: COLORS.dark.primary,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 15,
+  },
+  newText: {
+    color: COLORS.dark.white,
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
+  verifiedIcon: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+  },
+  gradientOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    zIndex: 1,
+  },
+  infoContainer: {
+    paddingHorizontal: 20,
+    paddingTop: 15,
+  },
+  nameLocationContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  locationContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  locationText: {
+    fontSize: 10,
+    marginLeft: 5,
+  },
+  detailsText: {
+    flex: 1,
+    marginRight: 10,
+  },
+  actionContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+  },
+  actionButton: {
+    width: 17,
+    height: 17,
+    borderRadius: 20,
+    backgroundColor: COLORS.dark.primary,
+    justifyContent: 'center',
+    marginLeft: 10,
+  },
 });

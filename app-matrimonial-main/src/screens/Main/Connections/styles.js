@@ -1,6 +1,6 @@
 import {StyleSheet} from 'react-native';
 import {COLORS, HORIZON_MARGIN} from '../../../assets/theme';
-import { Fonts } from '../../../assets/fonts';
+import {Fonts} from '../../../assets/fonts';
 export const styles = StyleSheet.create({
   headerContainer: {
     height: 70,
@@ -124,105 +124,111 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  cardContainer: {
-    height: 125,
-    width: '100%',
-    backgroundColor: 'white',
-    borderWidth: 1,
-    borderColor: COLORS.dark.text,
+  main: {
     flexDirection: 'row',
-    borderRadius: 10,
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+  },
+  cardContainer: {
+    width: '48%', // Reduce this value to make sure two cards fit in one row
+    height: 190,
+    backgroundColor: COLORS.dark.white,
+    borderRadius: 15,
     elevation: 5,
-    marginTop: 10,
+    marginBottom: 15,
+    overflow: 'hidden',
   },
-  imgContainer: {
-    width: '35%',
-    borderRadius: 20,
+  imageContainer: {
+    height: '60%',
+    width: '100%',
+    position: 'relative',
   },
-
-  contentContainer: {
-    justifyContent: 'center',
-    width: '65%',
-    maxWidth: '65%',
-    paddingHorizontal: HORIZON_MARGIN,
+  profileImage: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
+  },
+  newTag: {
+    position: 'absolute',
+    top: 10,
+    left: 10,
+    backgroundColor: COLORS.dark.primary,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 15,
+  },
+  newText: {
+    color: COLORS.dark.white,
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
+  verifiedIcon: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
   },
   gradientOverlay: {
-    zIndex: 1,
     ...StyleSheet.absoluteFillObject,
-    borderRadius: 10,
+    zIndex: 1,
   },
-  textContainer: {
-    width: '100%',
+  infoContainer: {
+    paddingHorizontal: 10,
+    paddingTop: 10,
+  },
+  nameLocationContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: 15,
-  },
-  linkContainer: {
-    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-  },
-  horizontalScrollContainer: {
-    width: '100%',
-    height: 150,
-  },
-  img: {
-    flex: 1,
-    borderRadius: 10,
-  },
-  sendIconBtn: {
-    height: 25,
-    width: 25,
-    backgroundColor: COLORS.dark.secondary,
-    borderRadius: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  chatIconBtn: {
-    height: 25,
-    width: 25,
-    backgroundColor: COLORS.dark.primary,
-    borderRadius: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  verifyIconBtn: {
-    height: 25,
-    width: 25,
-    backgroundColor: COLORS.dark.white,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: COLORS.dark.lightGrey,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  image: {
-    ...StyleSheet.absoluteFillObject,
-    resizeMode: 'cover',
-    borderRadius: 10,
   },
   locationContainer: {
     flexDirection: 'row',
     alignItems: 'center',
   },
-  btnContainer: {
-    flexDirection: 'row',
+  locationText: {
+    fontSize: 10,
+    marginLeft: 5,
   },
-  sendInterestBtn: {
+  detailsText: {
+    flex: 1,
+    color: COLORS.dark.black,
+    marginRight: 10,
+  },
+  actionContainer: {
+    marginTop: 10,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+  },
+  occupationText: {
+    marginLeft: -10,
+    marginBottom: -17,
     width: '70%',
-    height: 40,
-    backgroundColor: COLORS.dark.secondary,
-    borderRadius: 5,
-    justifyContent: 'space-evenly',
+    paddingLeft: 10,
+  },
+  actionButton: {
+    width: 20,
+    height: 20,
+    borderRadius: 20,
+    backgroundColor: COLORS.dark.primary,
+    justifyContent: 'center',
+    marginLeft: 10,
+  },
+  ageHeightActionContainer: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
   },
-  chatBtn: {
-    width: '20%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: COLORS.dark.primary,
-    borderRadius: 5,
+  test: {
+    color: 'black',
+    fontSize: 12,
+  },
+  icon: {
+    width: 40,
+    height: 40,
+    resizeMode: 'contain',
+    backgroundColor: 'red',
+    marginRight: 5,
   },
   Bell_Icon: {
     width: 25,
