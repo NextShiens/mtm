@@ -39,7 +39,7 @@ const EditProfileScreen = () => {
         if (userData) {
           setUser(JSON.parse(userData));
         }
-        console.log('User data:', userData);
+        console.log('User data:rfrgretgrty', userData);
       } catch (error) {
         console.error('Failed to fetch user data:', error);
       }

@@ -113,11 +113,11 @@ const AuthStack = () => {
         component={PartnerMatch}
         options={options}
       />
-      <Stack.Screen
+      {/* <Stack.Screen
         name="SuggestedUsersPage"
         component={SuggestedUsersPage}
         options={options}
-      />
+      /> */}
       <Stack.Screen
         name="ForgotPassword"
         component={ForgotPassword}
@@ -304,6 +304,11 @@ const RootNavigator = () => {
       <Stack.Screen
         name="CriteriaPage"
         component={CriteriaPage}
+        options={options}
+      />
+      <Stack.Screen
+        name="SuggestedUsersPage"
+        component={SuggestedUsersPage}
         options={options}
       />
     </Stack.Navigator>

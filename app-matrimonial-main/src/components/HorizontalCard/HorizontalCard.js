@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, TouchableOpacity, View, Image, StyleSheet } from 'react-native';
+import { ScrollView, TouchableOpacity, View, Image, StyleSheet, Text } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -138,17 +138,18 @@ const HorizontalCard = ({ data }) => {
             style={styles.actionButton}
             onPress={() => handleSendInterest(item)}
           >
-            <CustomImage
+            <Image
               source={IMAGES.sendIcon}
-              size={10}
+              size={12}
               resizeMode="contain"
+              style={styles.image}
             />
           </TouchableOpacity>
           <TouchableOpacity
-            style={styles.actionButton}
+            style={styles.actionButton2}
             onPress={() => handleChatBtnClick(item)}
           >
-            <CustomImage source={IMAGES.chatIcon} size={10} />
+            <Image source={IMAGES.chatIcon} size={10} style={styles.image2}/>
           </TouchableOpacity>
         </View>
       </View>
@@ -165,29 +166,12 @@ const HorizontalCard = ({ data }) => {
           color="black" 
           extraStyle={[STYLES.fontFamily(Fonts.PoppinsSemiBold)]}
         />
-        <TouchableOpacity 
-          style={styles.linkContainer} 
-          onPress={() => navigation.navigate('SuggestedUsersPage')}
-        >
-          <AppText
-            title={LABELS.seeMore}
-            variant={'h5'}
-            extraStyle={[STYLES.fontFamily(Fonts.PoppinsRegular)]}
-            color={COLORS.dark.primary}
-          />
-          <View>
-            <Icon
-              SVGIcon={
-                <SVG.vectorIcon
-                  fill={COLORS.dark.primary}
-                  iconLeft={true}
-                  height={'10'}
-                  width={'10'}
-                /> 
-              }
-            />
-          </View>
-        </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('PartnerMatch')}>
+              <Text style={{color: 'rgba(249, 123, 34, 1)', fontSize: 16}}>
+                See All
+              </Text>
+            </TouchableOpacity>
       </View>
 
       <ScrollView
@@ -313,7 +297,7 @@ const styles = StyleSheet.create({
     width: 17,
     height: 17,
     borderRadius: 20,
-    backgroundColor: COLORS.dark.primary,
+    backgroundColor:'#1E285F14',
     justifyContent: 'center',
     marginLeft: 10,
   },
@@ -321,6 +305,24 @@ const styles = StyleSheet.create({
     marginLeft: -10,
     marginBottom: -17,
     width: '70%',
+  },
+  image: {
+    tintColor: '#1E285F',
+    alignItems: 'center',
+    alignSelf: 'center',
+  },
+  image2:{
+    tintColor: '#F97B22',
+    alignItems: 'center',
+    alignSelf: 'center',
+  },
+  actionButton2:{
+    width: 17,
+    height: 17,
+    borderRadius: 20,
+    backgroundColor:'#F97B221A',
+    justifyContent: 'center',
+    marginLeft: 10,
   },
 });
 

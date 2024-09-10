@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, Image, StyleSheet, Text } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -94,6 +94,8 @@ const GridCard = ({ data }) => {
           <AppText
             title={item?.name || 'N/A'}
             variant="h6"
+            numberOfLines={1}
+            width="60%"
             color={COLORS.dark.black}
           />
           <View style={styles.locationContainer}>
@@ -135,17 +137,18 @@ const GridCard = ({ data }) => {
             style={styles.actionButton}
             onPress={() => handleSendInterest(item)}
           >
-            <CustomImage
+            <Image
               source={IMAGES.sendIcon}
               size={10}
               resizeMode="contain"
+              style={styles.image}
             />
           </TouchableOpacity>
           <TouchableOpacity
-            style={styles.actionButton}
+            style={styles.actionButton2}
             onPress={() => handleChatBtnClick(item)}
           >
-            <CustomImage source={IMAGES.chatIcon} size={10} />
+            <Image source={IMAGES.chatIcon} size={10} style={styles.image2} />
           </TouchableOpacity>
         </View>
       </View>
@@ -161,29 +164,12 @@ const GridCard = ({ data }) => {
           color="black" 
           extraStyle={[STYLES.fontFamily(Fonts.PoppinsSemiBold)]}
         />
-        <TouchableOpacity 
-          style={styles.linkContainer} 
-          onPress={() => navigation.navigate('SuggestedUsersPage')}
-        >
-          <AppText
-            title={'See all'}
-            variant={'h5'}
-            extraStyle={[STYLES.fontFamily(Fonts.PoppinsRegular)]}
-            color={COLORS.dark.primary}
-          />
-          <View>
-            <Icon
-              SVGIcon={
-                <SVG.vectorIcon
-                  fill={COLORS.dark.primary}
-                  iconLeft={true}
-                  height={'10'}
-                  width={'10'}
-                /> 
-              }
-            />
-          </View>
-        </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('SuggestedUsersPage')}>
+              <Text style={{color: 'rgba(249, 123, 34, 1)', fontSize: 16}}>
+                See All
+              </Text>
+            </TouchableOpacity>
       </View>
 
       <View style={styles.gridContainer}>
@@ -296,7 +282,15 @@ const styles = StyleSheet.create({
     width: 17,
     height: 17,
     borderRadius: 20,
-    backgroundColor: COLORS.dark.primary,
+    backgroundColor:'#1E285F14',
+    justifyContent: 'center',
+    marginLeft: 10,
+  },
+  actionButton2:{
+    width: 17,
+    height: 17,
+    borderRadius: 20,
+    backgroundColor:'#F97B221A',
     justifyContent: 'center',
     marginLeft: 10,
   },
@@ -305,6 +299,16 @@ const styles = StyleSheet.create({
     marginBottom: -17,
     width: '70%',
   },
+  image: {
+    tintColor: '#1E285F',
+    alignItems: 'center',
+    alignSelf: 'center',
+  },
+  image2:{
+    tintColor: '#F97B22',
+    alignItems: 'center',
+    alignSelf: 'center',
+  }
 });
 
 export default GridCard;

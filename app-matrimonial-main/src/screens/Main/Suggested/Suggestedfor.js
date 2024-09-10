@@ -129,7 +129,7 @@ const SuggestedUsersPage = () => {
         style={styles.userImage}
       />
       <View style={styles.userInfo}>
-        <Text style={styles.userName}>{item.name || 'N/A'}</Text>
+        <Text style={styles.userName} numberOfLines={1} width='60%'>{item.name || 'N/A'}</Text>
         <View style={styles.userDetails}>
           <Text style={styles.userAge}>Age {item.age || 'N/A'}, </Text>
           <Text style={styles.userHeight}>{item.height || 'N/A'}</Text>
