@@ -33,7 +33,6 @@ const allowedOrigins = [
 ];
 
 // CORS configuration
-
 const corsOptions = {
   origin: function (origin, callback) {
     if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
@@ -53,7 +52,6 @@ app.use(cors(corsOptions));
 
 // Preflight request handling for all routes
 app.options('*', cors(corsOptions));
-
 
 app.use(cookieParser());
 
@@ -105,7 +103,10 @@ app.get("/", (req, res) => {
 
 // Global middleware to set CORS headers for all routes
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', allowedOrigins);
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin);
+  }
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, content-type, contenttype, ContentType');
   res.header('Access-Control-Allow-Credentials', 'true');
