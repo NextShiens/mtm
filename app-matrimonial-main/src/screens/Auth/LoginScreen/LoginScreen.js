@@ -168,9 +168,6 @@ const LoginScreen = () => {
       setIsLoading(false);
     }
   };
-  useEffect(() => {
-    navigation.navigate('PartnerExpectation');
-  }, []);
 
   const handleGoogleSignIn = async () => {
     try {
