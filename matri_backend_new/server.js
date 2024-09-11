@@ -28,8 +28,8 @@ const allowedOrigins = [
   'https://www.vaishakhimatrimony.com',
   'https://api.vaishakhimatrimony.com',
   'https://admin.vaishakhimatrimony.com',
-  "http://localhost:3000",
-  "http://localhost:3002",
+  'http://localhost:3000',
+  'http://localhost:3002',
 ];
 
 // CORS configuration
@@ -42,13 +42,17 @@ const corsOptions = {
     }
   },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'content-type'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'content-type', 'ContentType'],
+  exposedHeaders: ['Content-Length', 'Content-Range'],
   credentials: true,
   optionsSuccessStatus: 200
 };
 
 app.use(cors(corsOptions));
 app.use(cookieParser());
+
+// Preflight request handling
+app.options('*', cors(corsOptions));
 
 const server = http.createServer(app);
 
@@ -63,8 +67,7 @@ const io = new Server(server, {
     },
     methods: ['GET', 'POST'],
     allowedHeaders: ['Content-Type', 'Authorization', 'content-type'],
-    credentials: true,
-    optionsSuccessStatus: 200
+    credentials: true
   }
 });
 
@@ -83,7 +86,7 @@ io.on("connection", (socket) => {
         data.receiverId,
         {
           message: data.text,
-          title: data?.user?.name || "Metrimonial",
+          title: data?.user?.name || "Matrimonial",
         },
         data.user._id
       );
@@ -105,7 +108,19 @@ io.on("connection", (socket) => {
 });
 
 app.get("/", (req, res) => {
-  res.json({ version: "1.0.0:latest" });
+  res.json({ version: "1.0.1:latest" });
+});
+
+// Global middleware to set CORS headers for all routes
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, content-type, ContentType');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  next();
 });
 
 app.use(userRouter);
