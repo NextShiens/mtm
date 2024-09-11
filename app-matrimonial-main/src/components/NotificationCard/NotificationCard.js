@@ -7,6 +7,7 @@ import CustomImage from '../CustomImage/CustomImage';
 import { IMAGES } from '../../assets/images';
 import Space from '../Space/Space';
 import { styles } from './styles';
+import { Image } from 'react-native-elements';
 
 const style = styles;
 
@@ -117,26 +118,31 @@ const NotificationItem = ({ item, onPress }) => {
 
   return (
     <TouchableOpacity onPress={onPress}>
+      <View style={{ borderBottomColor:'rgba(228, 232, 238, 1)' , borderBottomWidth:1}}>
       <View style={style.contentContainer}>
         <View style={style.profileContainer}>
-          <CustomImage
+          <Image
             source={item.senderId.userImages[0] ? { uri: item.senderId.userImages[0] } : { uri: 'https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png' }}
             size={40}
-            extraStyle={{ container: STYLES.bR(20) }}
+            style={{ borderRadius: 20,width:50,height:50 }}
           />
         </View>
         <View style={style.messageContainer}>
           <AppText
             title={item.title == 'Chat' ? `${item?.senderId?.name} have sent you a Message` : item.message}
+            color={'black'}
             numberOfLines={2}
             elipsizeMode="tail"
+            style={{alignSelf: 'center'}}
             variant={'h5'}
             extraStyle={STYLES.fontFamily(Fonts.PoppinsRegular)}
           />
         </View>
-        <View style={style.timeStampContainer}>
+      </View>
+      <View style={style.timeStampContainer}>
           <AppText
             title={getTimeAgo(item.createdAt)}
+            variant={'h6'}
             extraStyle={[
               STYLES.fontFamily(Fonts.PoppinsRegular),
               STYLES.bottom(10),

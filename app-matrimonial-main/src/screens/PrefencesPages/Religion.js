@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Button,Image, Text, ScrollView, TouchableOpacity,ToastAndroid } from 'react-native';
+import { StyleSheet, View, Button, Image, Text, ScrollView, TouchableOpacity, ToastAndroid, ActivityIndicator, RefreshControl } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL } from '../../../constant';
 import { useNavigation } from '@react-navigation/native';
-import { indianCastes,QualificationList, occupationList, workLocationList, indianMotherTongues} from '../../data/appData';
-
-
+import { indianCastes, workLocationList, indianMotherTongues } from '../../data/appData';
 
 const ReligionPage = () => {
   const navigation = useNavigation();
@@ -20,6 +18,7 @@ const ReligionPage = () => {
   const [birthTime, setBirthTime] = useState(null);
   const [initialUserData, setInitialUserData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
   const religionsInIndia = [
     "Hinduism",
@@ -36,7 +35,7 @@ const ReligionPage = () => {
     value: religion
   }));
 
-  const castes =  indianCastes.map(caste => ({
+  const castes = indianCastes.map(caste => ({
     label: caste,
     value: caste
   }));
@@ -46,7 +45,7 @@ const ReligionPage = () => {
     value: tongue
   }));
 
-  const manglikOptions= [
+  const manglikOptions = [
     'Manglik', 'Non-Manglik', 'Anshik Manglik',
   ];
   const maglik = manglikOptions.map(manglik => ({
@@ -54,15 +53,15 @@ const ReligionPage = () => {
     value: manglik
   }));
 
-  const doshOptions= [
+  const doshOptions = [
     'No Dosh', 'Manglik', 'Sarpa-Dosh', 'Kaal Sarp Dosh', 'Rahu-Dosh',
     'kethu-Dosh', 'kalathra-Dosh', 'Nadi Dosh', 'Mangal Dosh',
   ];
   const doshoption = doshOptions.map(dosh => ({
     label: dosh,
     value: dosh
-  }));  
-  const starOptions= [
+  }));
+  const starOptions = [
     "Ashwini", "Bharani", "Krittika", "Rohini", "Mrigashirsha", "Ardra",
     "Punarvasu", "Pushya", "Ashlesha", "Magha", "Purva Phalguni", "Uttara Phalguni",
     "Hasta", "Chitra", "Swati", "Vishakha", "Anuradha", "Jyeshta", "Mula",
@@ -74,54 +73,51 @@ const ReligionPage = () => {
     value: star
   }));
 
-  const birthTimeOptions= [
+  const birthTimeOptions = [
     '12:00 am', '01:00 am', '02:00 am', '03:00 am', '04:00 am', '05:00 am',
     '06:00 am', '07:00 am', '08:00 am', '09:00 am', '10:00 am', '11:00 am',
     '12:00 pm', '01:00 pm', '02:00 pm', '03:00 pm', '04:00 pm', '05:00 pm',
     '06:00 pm', '07:00 pm', '08:00 pm', '09:00 pm', '10:00 pm', '11:00 pm',
   ];
-  const birth   = birthTimeOptions.map(birth => ({
+  const birth = birthTimeOptions.map(birth => ({
     label: birth,
     value: birth
   }));
 
   const location = workLocationList.map(location => ({
     label: location,
-  value: location
+    value: location
   }));
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const userData = await AsyncStorage.getItem('theUser');
-        console.log('userData', userData);
-        if (userData !== null) {
-          const parsedData = JSON.parse(userData);
-          const user = parsedData.user; 
-          setReligion(user.horoscopeDetails.religion);
-          setCaste(user.horoscopeDetails.caste);
-          setMotherTongue(user.horoscopeDetails.motherTongue);
-          setManglik(user.horoscopeDetails.manglik);
-          setStar(user.horoscopeDetails.star);
-          setDosh(user.horoscopeDetails.dosh);
-          setBirthPlace(user.horoscopeDetails.birthPlace);
-          setBirthTime(user.horoscopeDetails.birthTime);
-          setInitialUserData(user);
-        }
-      } catch (error) {
-        console.error('Failed to load user data', error);
+  const fetchData = async () => {
+    try {
+      setIsLoading(true);
+      const userData = await AsyncStorage.getItem('theUser');
+      console.log('userData', userData);
+      if (userData !== null) {
+        const parsedData = JSON.parse(userData);
+        const user = parsedData.user;
+        setReligion(user.horoscopeDetails.religion);
+        setCaste(user.horoscopeDetails.caste);
+        setMotherTongue(user.horoscopeDetails.motherTongue);
+        setManglik(user.horoscopeDetails.manglik);
+        setStar(user.horoscopeDetails.star);
+        setDosh(user.horoscopeDetails.dosh);
+        setBirthPlace(user.horoscopeDetails.birthPlace);
+        setBirthTime(user.horoscopeDetails.birthTime);
+        setInitialUserData(user);
       }
-    };
+    } catch (error) {
+      console.error('Failed to load user data', error);
+    } finally {
+      setIsLoading(false);
+      setRefreshing(false);
+    }
+  };
 
+  useEffect(() => {
     fetchData();
   }, []);
-
-  const data = [
-    { label: 'Option 1', value: '1' },
-    { label: 'Option 2', value: '2' },
-    { label: 'Option 3', value: '3' },
-  ];
-
 
   const handleSave = async () => {
     const userProfile = {};
@@ -175,14 +171,26 @@ const ReligionPage = () => {
     }
   };
 
+  const onRefresh = () => {
+    setRefreshing(true);
+    fetchData();
+  };
+
   return (
-    <ScrollView style={styles.container}>
-       <View style={styles.flexrow}>
-          <TouchableOpacity onPress={() => navigation.goBack()} style={styles.back}>
-            <Image source={require('../../../src/assets/images/leftarrow.png')} />
-          </TouchableOpacity>
-          <Text style={styles.heading}>Religion</Text>
-        </View>
+    <ScrollView
+      style={styles.container}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={['#FE4101']}
+        tintColor="#FE4101"/>
+      }
+    >
+      {isLoading && <ActivityIndicator size="large" color="#0000ff" />}
+      <View style={styles.flexrow}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.back}>
+          <Image source={require('../../../src/assets/images/leftarrow.png')} />
+        </TouchableOpacity>
+        <Text style={styles.heading}>Religion</Text>
+      </View>
       <Text style={styles.stepText}>Religion</Text>
       <Dropdown
         style={styles.dropdown}
@@ -328,6 +336,7 @@ const ReligionPage = () => {
           {isLoading ? 'Loading..' : 'Save'}
         </Text>
       </TouchableOpacity>
+      <View height={30}></View>
     </ScrollView>
   );
 };
@@ -365,6 +374,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
   },
   saveButton: {
+
     height: 56,
 
     backgroundColor: '#ff9900',
@@ -390,6 +400,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 20,
     marginBottom: 10,
+
   },
   heading: {
     color: '#1A1A1A',

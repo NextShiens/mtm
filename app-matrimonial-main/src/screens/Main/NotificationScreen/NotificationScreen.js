@@ -100,7 +100,7 @@ const NotificationScreen = ({ navigation }) => {
           />
         }
       >
-        <Space mT={20} />
+        {/* <Space mT={10} /> */}
         {notifications.length > 0 ? (
           <NotificationCard
             data={notifications}

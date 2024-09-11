@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, TouchableOpacity, Image, Text, ToastAndroid } from 'react-native';
+
+import { View, StyleSheet, TouchableOpacity, Image, Text, ToastAndroid, ActivityIndicator, RefreshControl, ScrollView } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL } from '../../../constant';
 import { useNavigation } from '@react-navigation/native';
-import { indianCastes, QualificationList, occupationList, workLocationList, indianMotherTongues } from '../../data/appData';
 
+import { indianCastes, QualificationList, occupationList, workLocationList, indianMotherTongues } from '../../data/appData';
 
 
 
@@ -16,6 +17,7 @@ const LocationPage = () => {
   const [city, setCity] = useState(null);
   const [initialUserData, setInitialUserData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
   const countries = ['india'];
   const countrie = countries.map(country => ({
@@ -91,41 +93,10 @@ const LocationPage = () => {
     { label: 'Houston', value: 'houston' },
   ];
 
+  
   const stateOptions = [
-    'Andhra Pradesh',
-    'Arunachal Pradesh',
-    'Assam',
-    'Bihar',
-    'Chhattisgarh',
-    'Goa',
-    'Gujarat',
-    'Haryana',
-    'Himachal Pradesh',
-    'Jharkhand',
-    'Karnataka',
-    'Kerala',
-    'Madhya Pradesh',
-    'Maharashtra',
-    'Manipur',
-    'Meghalaya',
-    'Mizoram',
-    'Nagaland',
-    'Odisha',
-    'Punjab',
-    'Rajasthan',
-    'Sikkim',
-    'Tamil Nadu',
-    'Telangana',
-    'Tripura',
-    'Uttar Pradesh',
-    'Uttarakhand',
-    'West Bengal',
-    'Andaman and Nicobar Islands',
-    'Chandigarh',
-    'Dadra and Nagar Haveli and Daman and Diu',
-    'Delhi',
-    'Lakshadweep',
-    'Puducherry'
+    'Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh', 'Goa', 'Gujarat', 'Haryana', 'Himachal Pradesh', 'Jharkhand', 'Karnataka', 'Kerala', 'Madhya Pradesh', 'Maharashtra', 'Manipur', 'Meghalaya', 'Mizoram', 'Nagaland', 'Odisha', 'Punjab', 'Rajasthan', 'Sikkim', 'Tamil Nadu', 'Telangana', 'Tripura', 'Uttar Pradesh', 'Uttarakhand', 'West Bengal', 'Andaman and Nicobar Islands', 'Chandigarh', 'Dadra and Nagar Haveli and Daman and Diu', 'Delhi', 'Lakshadweep', 'Puducherry'
+
   ];
 
   const indianstate = stateOptions.map(state => ({
@@ -149,16 +120,35 @@ const LocationPage = () => {
       } catch (error) {
         console.error('Failed to load user data', error);
       }
-    };
+    } catch (error) {
+      console.error('Failed to load user data', error);
+    } finally {
+      setIsLoading(false);
+      setRefreshing(false);
+    }
+  };
 
+  useEffect(() => {
     fetchData();
   }, []);
 
+  const onRefresh = () => {
+    setRefreshing(true);
+    fetchData();
+  };
 
   return (
-    <View style={styles.container}>
+    <ScrollView
+      style={styles.container}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={['#FE4101']}
+        tintColor="#FE4101" />
+      }
+    >
+      {isLoading && <ActivityIndicator size="large" color="#0000ff" />}
       <View style={styles.flexrow}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.back}>
+
           <Image source={require('../../../src/assets/images/leftarrow.png')} />
         </TouchableOpacity>
         <Text style={styles.heading}>Location</Text>
@@ -219,7 +209,7 @@ const LocationPage = () => {
           {isLoading ? 'Loading..' : 'Save'}
         </Text>
       </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -267,6 +257,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
   },
   saveButton: {
+
     height: 56,
 
     backgroundColor: '#ff9900',
@@ -275,6 +266,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     marginTop: 20,
     marginBottom: 50,
+
   },
   saveText: {
     color: '#fff',
