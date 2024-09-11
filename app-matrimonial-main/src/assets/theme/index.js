@@ -18,7 +18,7 @@ export const COMMON_COLORS = {
   facebook: '#0079F2',
   twitter: '#00ACF5',
   primary: '#F97B22',
-  inputBorder: '#A2A2A2',
+  inputBorder: '#E5E5E5',
   checkbox: '#626262',
   checkboxText: '#777777',
   googleIconCont: '#FFEFEE',

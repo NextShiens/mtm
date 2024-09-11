@@ -1,22 +1,26 @@
-import {StyleSheet} from 'react-native';
-import {COLORS, HORIZON_MARGIN} from '../../assets/theme';
-import {Fonts} from '../../assets/fonts';
+import { StyleSheet } from 'react-native';
+import { COLORS, HORIZON_MARGIN } from '../../assets/theme';
+import { Fonts } from '../../assets/fonts';
+
 export const styles = StyleSheet.create({
   textInputCont: {
-    height: 50,
     width: '100%',
     borderWidth: 1,
-    borderRadius: 6,
+    display: 'flex',
     flexDirection: 'row',
     borderColor: COLORS.dark.inputBorder,
-    paddingHorizontal: HORIZON_MARGIN,
+    height: 55,
+    alignItems: 'center',
+    borderRadius: 16,
   },
   textInput: {
     flex: 1,
     fontFamily: Fonts.PoppinsRegular,
-    flexDirection: 'row',
-    color:'black',
-    paddingBottom: 5,
+    color: '#949494', // Set text color
     textAlignVertical: 'center',
+    height: 55,
+    paddingHorizontal: 14,
+    alignItems: 'center',
+    borderRadius: 16,
   },
 });

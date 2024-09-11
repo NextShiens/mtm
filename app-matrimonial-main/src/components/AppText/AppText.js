@@ -27,6 +27,7 @@ const AppText = props => {
         ),
         STYLES.color(color),
         extraStyle,
+       
       ]}
       onPress={onPress}>
       {title}

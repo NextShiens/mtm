@@ -80,12 +80,11 @@ const PartnerExpectationForm = ({ navigation }) => {
   return (
     <ScrollView>
       <View style={style.container}>
-        <View style={style.headerContainer}>
-          <AppHeader
-            iconLeft={<SVG.BackArrow size={24} fill={'black'} />}
-            onLeftIconPress={backNavigationHandler}
-            title={LABELS.partnerExpectation}
-          />
+        <View style={styles.flexrow}>
+          <TouchableOpacity onPress={() => navigation.goBack()} style={styles.back}>
+            <Image source={require('../../../assets/images/leftarrow.png')} />
+          </TouchableOpacity>
+          <Text style={styles.heading}>Location</Text>
         </View>
         <Space mT={20} />
         <View style={style.contentContainer}>
@@ -95,13 +94,14 @@ const PartnerExpectationForm = ({ navigation }) => {
           />
           <Space mT={20} />
           <TextInput
-            style={style.input}
-            multiline
-            numberOfLines={6}
-            placeholder={'Write your partner expectation here'}
-            value={allProfileData.partnerExpectation}
-            onChangeText={updatePartnerExpectation}
-          />
+        style={[styles.input, { color: 'black' }]}
+        multiline
+        numberOfLines={6}
+        placeholder={'Write your partner expectation here'}
+        placeholderTextColor="gray"
+        value={allProfileData.partnerExpectation}
+        onChangeText={updatePartnerExpectation}
+      />
           <Space mT={20} />
           <AppButton
             variant="filled"

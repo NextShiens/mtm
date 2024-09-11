@@ -121,9 +121,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 10,
     borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-    backgroundColor: '#fff',
+    borderColor: '#E5E5E5',
+    height: 55,
+    alignItems: 'center',
+    borderRadius: 16,
   },
   placeholderText: {
     color: '#999',
@@ -158,6 +159,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     paddingRight: 40,
     color: '#000000',
+    borderRadius: 16,
   },
   searchIconContainer: {
     position: 'absolute',
@@ -169,20 +171,25 @@ const styles = StyleSheet.create({
   item: {
     padding: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    borderBottomColor: '#E5E5E5',
   },
   itemText: {
-    color: '#000000',
+    color: '#949494',
   },
   closeButton: {
     marginTop: 10,
     padding: 10,
-    backgroundColor: '#f0f0f0',
-    borderRadius: 5,
+    backgroundColor: '#fff',
+    justifyContent: 'center',
     alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#E5E5E5',
+    height: 40,
+    borderRadius: 16,
+    
   },
   closeButtonText: {
-    color: '#333',
+    color: '#949494',
     fontWeight: 'bold',
   },
 });

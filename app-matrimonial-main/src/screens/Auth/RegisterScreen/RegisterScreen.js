@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ScrollView, View, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { ScrollView, View, ActivityIndicator, TouchableOpacity, TextInput } from 'react-native';
 import { CountryPicker } from 'react-native-country-codes-picker';
 import { Fonts } from '../../../assets/fonts';
 import { IMAGES } from '../../../assets/images';
@@ -34,12 +34,12 @@ const RegisterScreen = ({ navigation }) => {
   const [showPassword, setShowPassword] = useState(false);
   const style = styles;
 
-  const PasswordEyeIcon = ({ showPassword}) => {
+  const PasswordEyeIcon = ({ showPassword }) => {
     return showPassword ? (
-      <Svg width={24} height={24} viewBox="0 0 24 24" fill="black">
+      <Svg width={24} height={24} viewBox="0 0 24 24" fill="none">
         <Path
           d="M1 12S4 4 12 4s11 8 11 8-3 8-11 8-11-8-11-8z"
-          fill="black"
+          fill="#E5E5E5"
         />
         <Path
           d="M12 15a3 3 0 100-6 3 3 0 000 6z"
@@ -55,7 +55,7 @@ const RegisterScreen = ({ navigation }) => {
           d="M12 4.5C7.78 4.5 4.3 7.5 3 12c1.3 4.5 4.78 7.5 9 7.5s7.7-3 9-7.5c-1.3-4.5-4.78-7.5-9-7.5z
           M12 15c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3z
           M-1 1L25 25"
-          stroke="black"
+          stroke="#E5E5E5"
           strokeWidth="1"
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -72,12 +72,12 @@ const RegisterScreen = ({ navigation }) => {
     navigation.goBack();
   };
 
-  const termsHandler = () => { 
+  const termsHandler = () => {
     navigation.navigate('PrivacyPolicyScreen');
   };
   const privacyHandler = () => {
     navigation.navigate('PrivacyPolicyScreen');
-   };
+  };
 
   const openCountryModal = () => {
     setCountryShow(true);
@@ -177,7 +177,7 @@ const RegisterScreen = ({ navigation }) => {
   };
 
   return (
-    <ScrollView style={{backgroundColor: 'white'}}>
+    <ScrollView style={{ backgroundColor: 'white' }}>
       <View style={[style.container]}>
         <LayoutImage imgSrc={IMAGES.theme2} />
         {/* <AppHeader
@@ -187,7 +187,7 @@ const RegisterScreen = ({ navigation }) => {
         /> */}
 
         <View style={[style.contentContainer]}>
-          <AppLogo extraStyle={{container: STYLES.bottom('10%')}} />
+          <AppLogo extraStyle={{ container: STYLES.bottom('10%') }} />
           <View style={[style.formContainer]}>
             <AppText
               title={LABELS.register}
@@ -238,6 +238,7 @@ const RegisterScreen = ({ navigation }) => {
             <Space mT={10} />
 
             <AppInput
+
               placeholder={LABELS.emailPlaceholder}
               onChangeText={text => handleInputChange('email', text)}
             />
@@ -281,19 +282,29 @@ const RegisterScreen = ({ navigation }) => {
             />
             <Space mT={10} />
 
-            <AppInput
-              placeholder={LABELS.passwordPlaceholder}
-              secureTextEntry={!showPassword}
-              keyboardType={'default'}
-              onChangeText={text => handleInputChange('password', text)}
-            />
+            <View style={styles.container}>
+              <View style={styles.inputContainer}>
+                <TextInput
+                  placeholder={LABELS.passwordPlaceholder}
+                  secureTextEntry={!showPassword}
+                  keyboardType={'default'}
+                  onChangeText={text => handleInputChange('password', text)}
+                  placeholderTextColor="#949494"
+                  style={styles.input}
+                />
+                <TouchableOpacity
+                  onPress={() => setShowPassword(!showPassword)}
+                  style={styles.iconContainer}>
+                  <PasswordEyeIcon showPassword={showPassword} color="#E5E5E5" />
+                </TouchableOpacity>
+              </View>
+            </View>
 
             <Space mT={10} />
 
             <TouchableOpacity
               onPress={() => setShowPassword(!showPassword)}
               style={styles.PasswordEyeIcon}>
-              <PasswordEyeIcon showPassword={showPassword} />
             </TouchableOpacity>
 
             <View style={[STYLES.row]}>
@@ -308,13 +319,13 @@ const RegisterScreen = ({ navigation }) => {
               />
             </View>
             <Space mT={20} />
-              <AppButton
-                title={isLoading ? 'Next...' : LABELS.next}
-                disabled={isLoading}
-                variant="filled"
-                textVariant={'h5'}
-                onPress={onRegisterPress}
-              />
+            <AppButton
+              title={isLoading ? 'Next...' : LABELS.next}
+              disabled={isLoading}
+              variant="filled"
+              textVariant={'h5'}
+              onPress={onRegisterPress}
+            />
           </View>
         </View>
       </View>

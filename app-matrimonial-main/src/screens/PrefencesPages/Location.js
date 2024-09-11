@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
+
 import { View, StyleSheet, TouchableOpacity, Image, Text, ToastAndroid, ActivityIndicator, RefreshControl, ScrollView } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL } from '../../../constant';
 import { useNavigation } from '@react-navigation/native';
-import { workLocationList } from '../../data/appData';
+
+import { indianCastes, QualificationList, occupationList, workLocationList, indianMotherTongues } from '../../data/appData';
+
+
 
 const LocationPage = () => {
   const navigation = useNavigation();
@@ -71,8 +75,28 @@ const LocationPage = () => {
     }
   };
 
+  const countryData = [
+    { label: 'USA', value: 'usa' },
+    { label: 'Canada', value: 'canada' },
+    { label: 'United Kingdom', value: 'uk' },
+  ];
+
+  const stateData = [
+    { label: 'California', value: 'california' },
+    { label: 'New York', value: 'new-york' },
+    { label: 'Texas', value: 'texas' },
+  ];
+
+  const cityData = [
+    { label: 'San Francisco', value: 'san-francisco' },
+    { label: 'New York City', value: 'new-york-city' },
+    { label: 'Houston', value: 'houston' },
+  ];
+
+  
   const stateOptions = [
     'Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh', 'Goa', 'Gujarat', 'Haryana', 'Himachal Pradesh', 'Jharkhand', 'Karnataka', 'Kerala', 'Madhya Pradesh', 'Maharashtra', 'Manipur', 'Meghalaya', 'Mizoram', 'Nagaland', 'Odisha', 'Punjab', 'Rajasthan', 'Sikkim', 'Tamil Nadu', 'Telangana', 'Tripura', 'Uttar Pradesh', 'Uttarakhand', 'West Bengal', 'Andaman and Nicobar Islands', 'Chandigarh', 'Dadra and Nagar Haveli and Daman and Diu', 'Delhi', 'Lakshadweep', 'Puducherry'
+
   ];
 
   const indianstate = stateOptions.map(state => ({
@@ -80,18 +104,21 @@ const LocationPage = () => {
     value: state
   }));
 
-  const fetchData = async () => {
-    try {
-      setIsLoading(true);
-      const userData = await AsyncStorage.getItem('theUser');
-      console.log('userData', userData);
-      if (userData !== null) {
-        const parsedData = JSON.parse(userData);
-        const user = parsedData.user;
-        setCountry(user.FamilyDetails.country);
-        setState(user.FamilyDetails.state);
-        setCity(user.FamilyDetails.city);
-        setInitialUserData(user);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const userData = await AsyncStorage.getItem('theUser');
+        console.log('userData', userData);
+        if (userData !== null) {
+          const parsedData = JSON.parse(userData);
+          const user = parsedData.user;
+          setCountry(user.FamilyDetails.country);
+          setState(user.FamilyDetails.state);
+          setCity(user.FamilyDetails.city);
+          setInitialUserData(user);
+        }
+      } catch (error) {
+        console.error('Failed to load user data', error);
       }
     } catch (error) {
       console.error('Failed to load user data', error);
@@ -120,7 +147,8 @@ const LocationPage = () => {
     >
       {isLoading && <ActivityIndicator size="large" color="#0000ff" />}
       <View style={styles.flexrow}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.back}>
+
           <Image source={require('../../../src/assets/images/leftarrow.png')} />
         </TouchableOpacity>
         <Text style={styles.heading}>Location</Text>
@@ -188,62 +216,95 @@ const LocationPage = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    padding: 15,
     backgroundColor: '#fff',
-    padding: 16,
+  },
+  header: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    // marginBottom: 10,
+  },
+  stepText: {
+    fontSize: 16,
+    // marginBottom: 10,
+    color: '#333',
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  centerText: {
+    flex: 1,
+    textAlign: 'center',
+    fontSize: 16,
+    color: '#333',
   },
   dropdown: {
-    height: 60,
-    borderColor: 'gray',
-    borderWidth: 0.5,
-    borderRadius: 8,
+    marginVertical: 10,
+    height: 56,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 16,
     paddingHorizontal: 8,
-    marginBottom: 16,
   },
-  placeholderStyle: {
-    fontSize: 16,
-  },
-  selectedTextStyle: {
-    fontSize: 16,
-    color: '#000',
-  },
-  inputSearchStyle: {
-    height: 40,
-    fontSize: 16,
-    color: 'gray',
-  },
-  iconStyle: {
-    width: 20,
-    height: 20,
+  textInput: {
+    marginBottom: 10,
+    height: 56,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 16,
+    paddingHorizontal: 8,
   },
   saveButton: {
-    height: 60,
-    backgroundColor: 'rgba(249, 123, 34, 1)',
+
+    height: 56,
+
+    backgroundColor: '#ff9900',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 43,
+    borderRadius: 16,
+    marginTop: 20,
+    marginBottom: 50,
+
   },
   saveText: {
     color: '#fff',
-    fontSize: 16,
+    fontWeight: 'bold',
   },
-  headerText: {
+  inputSearchStyle: {
+    color: '#333',
+  },
+  selectedTextStyle: {
     fontSize: 14,
-    color: '#000',
+    color: '#333',
   },
   flexrow: {
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 20,
-    alignSelf: 'center',
     marginBottom: 10,
   },
   heading: {
-    fontSize: 16,
-    color: 'black',
+    color: '#1A1A1A',
     textAlign: 'center',
-    width: '85%',
+    fontFamily: 'DM Sans',
+    fontSize: 21,
+    fontStyle: 'normal',
     fontWeight: '700',
+    lineHeight: 26,
+    textTransform: 'capitalize',
+    width: '85%',
+  },
+  back: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: '#F5F5F5',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
+
 
 export default LocationPage;

@@ -9,6 +9,9 @@ export const styles = StyleSheet.create({
         borderColor: COLORS.dark.inputBorder,
         paddingHorizontal: HORIZON_MARGIN,
         justifyContent: 'center',
+        height: 55,
+        color: '#949494',
+        borderRadius: 16,
     },
 
 })
