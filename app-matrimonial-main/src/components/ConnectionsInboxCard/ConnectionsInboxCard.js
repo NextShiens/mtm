@@ -50,13 +50,14 @@ const ConnectionsInboxCard = ({data}) => {
                     />
                     <AppText
                      title={item?.friend.sect || 'N/A'}   
-                      color={COLORS.light.inputBorder}
+                      color={'gray'}
                       extraStyle={[STYLES.fontFamily(Fonts.PoppinsRegular)]}
                     />
                   </View>
                   <View style={[STYLES.bottom(5)]}>
                     <AppText
                       title={item.friend?.occupation}
+                      color={'gray'}
                       variant={'h5'}
                       extraStyle={[STYLES.fontFamily(Fonts.PoppinsRegular)]}
                     />
@@ -64,7 +65,7 @@ const ConnectionsInboxCard = ({data}) => {
                          title={item?.updatedAt ? formatDate(item.updatedAt) : 'N/A'}
                       numberOfLines={1}
                       extraStyle={[STYLES.fontFamily(Fonts.PoppinsRegular)]}
-                      color={COLORS.dark.inputBorder}
+                      color={'gray'}
                       elipsizeMode="tail"
                     />
                   </View>

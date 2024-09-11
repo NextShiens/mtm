@@ -56,7 +56,6 @@ const UserProfileStep1 = () => {
     value: status
   }));
 
-
   const languages = [
     'Assamese', 'Bengali', 'Bhojpuri', 'Bodo', 'Dogri', 'English', 'Gujarati', 'Hindi', 'Kannada', 'Kashmiri',
     'Konkani', 'Maithili', 'Malayalam', 'Manipuri', 'Marathi', 'Nepali', 'Odia', 'Punjabi', 'Rajasthani', 'Sanskrit',
@@ -84,7 +83,7 @@ const UserProfileStep1 = () => {
     "Zoroastrianism",
     "Judaism",
     "Others"
-  ]
+  ];
 
   const religionData = religionsInIndia.map(religion => ({
     label: religion,
@@ -118,7 +117,6 @@ const UserProfileStep1 = () => {
         setCast(user.horoscopeDetails.caste);
         setCity(user.city);
         setInitialUserData(user);
-
       }
       console.log('User data:', userData);
     } catch (error) {
@@ -132,7 +130,6 @@ const UserProfileStep1 = () => {
   useEffect(() => {
     fetchUserData();
   }, []);
-
 
   const onRefresh = () => {
     setRefreshing(true);
@@ -329,7 +326,6 @@ const UserProfileStep1 = () => {
             value={motherTongue}
             onChange={(item) => setMotherTongue(item.value)}
             itemTextStyle={{ color: 'black' }}
- dropdownPosition="top"
           />
           <Text style={styles.stepText}>Cast</Text>
           <Dropdown
@@ -347,7 +343,6 @@ const UserProfileStep1 = () => {
             value={caste}
             onChange={(item) => setCast(item.value)}
             itemTextStyle={{ color: 'black' }}
- dropdownPosition="top"
           />
           <Text style={styles.stepText}>City</Text>
           <Dropdown
@@ -365,7 +360,6 @@ const UserProfileStep1 = () => {
             value={city}
             onChange={(item) => setCity(item.value)}
             itemTextStyle={{ color: 'black' }}
-              dropdownPosition="top"
           />
           <TouchableOpacity style={styles.saveButton} onPress={handleSave} disabled={isLoading}>
             <Text style={styles.saveText}>
@@ -395,40 +389,28 @@ const styles = StyleSheet.create({
     // marginBottom: 10,
     color: '#333',
   },
-  stepText1: {
-    color: '#1A1A1A',
-    fontSize: 16,
-    fontStyle: 'normal',
-    fontWeight: '700',
-    lineHeight: 26,
-    textTransform: 'capitalize',
-    marginVertical: 10,
-  },
   dropdown: {
-    marginVertical: 10,
-    height: 56,
-    borderColor: '#E5E5E5',
+    marginBottom: 10,
+    height: 60,
+    borderColor: '#ccc',
     borderWidth: 1,
-    borderRadius: 16,
+    borderRadius: 8,
     paddingHorizontal: 8,
   },
   textInput: {
-    marginVertical: 10,
-    height: 56,
-    borderColor: '#E5E5E5',
+    marginBottom: 10,
+    height: 60,
+    borderColor: '#ccc',
     borderWidth: 1,
-    borderRadius: 16,
+    borderRadius: 8,
     paddingHorizontal: 8,
   },
   saveButton: {
-    height: 56,
-    backgroundColor: '#ff9900',
+    height: 60,
+    backgroundColor: 'rgba(249, 123, 34, 1)',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 16,
-    marginTop: 15,
-    marginBottom: 50,
-
+    borderRadius: 43,
   },
   saveText: {
     color: '#fff',
@@ -444,27 +426,16 @@ const styles = StyleSheet.create({
   flexrow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 20,
+    // marginTop: 20,
+    alignSelf: 'center',
     marginBottom: 10,
   },
   heading: {
-    color: '#1A1A1A',
+    fontSize: 16,
+    color: 'black',
     textAlign: 'center',
-    fontFamily: 'DM Sans',
-    fontSize: 21,
-    fontStyle: 'normal',
-    fontWeight: '700',
-    lineHeight: 26,
-    textTransform: 'capitalize',
     width: '85%',
-  },
-  back: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
-    backgroundColor: '#F5F5F5',
-    justifyContent: 'center',
-    alignItems: 'center',
+    fontWeight: '700',
   },
   loadingContainer: {
     flex: 1,
