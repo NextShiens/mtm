@@ -6,6 +6,7 @@ import {COLORS} from '../../assets/theme';
 import AppText from '../../components/AppText/AppText';
 import {LABELS} from '../../labels';
 import {styles} from './styles';
+import { color } from 'react-native-elements/dist/helpers';
 
 const BirthDatePicker = ({
   placeholder,
@@ -31,6 +32,7 @@ const BirthDatePicker = ({
             extraStyle={{
               fontFamily: Fonts.PoppinsRegular,
               textAlignVertical: 'center',
+              color: '#949494', 
             }}
             onPress={onOpen}
           />
@@ -42,6 +44,7 @@ const BirthDatePicker = ({
           mode="date"
           onConfirm={onConfirm}
           onCancel={onCancel}
+     
         />
       </View>
     </>
