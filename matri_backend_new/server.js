@@ -20,35 +20,24 @@ const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 
 app.use(bodyParser.json({ limit: "50mb" }));
-//
 app.use(express.json({ limit: "50mb" }));
-app.use(
-  cors({
-    origin: ['https://vaishakhimatrimony.com',
-      'https://www.vaishakhimatrimony.com',
-      'https://api.vaishakhimatrimony.com',
-      'https://admin.vaishakhimatrimony.com',
-    "localhost:3000"],
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true,
-  })
-);
+
+// CORS configuration to allow all origins
+const corsOptions = {
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true,
+  optionsSuccessStatus: 200
+};
+
+app.use(cors(corsOptions));
 app.use(cookieParser());
+
 const server = http.createServer(app);
 
 const io = new Server(server, {
-  cors: {
-    origin: ['https://vaishakhimatrimony.com',
-  'https://www.vaishakhimatrimony.com',
-  'https://api.vaishakhimatrimony.com',
-  'https://admin.vaishakhimatrimony.com',
-"localhost:3000"],
-    // origin: "https://metrimonial-backend-2c3a23b121fc.herokuapp.com/",
-    methods: ["GET", "POST"],
-  },
+  cors: corsOptions
 });
-
-// const cors = require("cors");
 
 io.on("connection", (socket) => {
   console.log(`User Connected: ${socket.id}`);
