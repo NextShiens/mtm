@@ -313,8 +313,8 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     borderWidth: 1,
     borderColor: '#ccc',
-    height: 60,
-    borderRadius: 10,
+    height: 56,
+    borderRadius: 16,
   },
   optionText2: {
     fontSize: 16,
@@ -324,10 +324,10 @@ const styles = StyleSheet.create({
     marginTop: 17,
   },
   dropdown: {
-    height: 60,
+    height: 56,
     borderColor: '#ccc',
     borderWidth: 1,
-    borderRadius: 8,
+    borderRadius: 16,
     paddingHorizontal: 8,
   },
   inputSearchStyle: {

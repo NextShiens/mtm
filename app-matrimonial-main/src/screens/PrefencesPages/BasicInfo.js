@@ -474,10 +474,10 @@ const styles = StyleSheet.create({
   },
   dropdown: {
     marginBottom: 10,
-    height: 60,
+    height: 56,
     borderColor: '#ccc',
     borderWidth: 1,
-    borderRadius: 8,
+    borderRadius: 16,
     paddingHorizontal: 8,
   },
   textInput: {
