@@ -22,10 +22,27 @@ const bodyParser = require("body-parser");
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(express.json({ limit: "50mb" }));
 
-// CORS configuration to allow all origins
+// Define allowed origins
+const allowedOrigins = [
+  'https://vaishakhimatrimony.com',
+  'https://www.vaishakhimatrimony.com',
+  'https://api.vaishakhimatrimony.com',
+  'https://admin.vaishakhimatrimony.com',
+  "http://localhost:3000",
+  "http://localhost:3002",
+];
+
+// CORS configuration
 const corsOptions = {
-  origin: '*',
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  origin: function (origin, callback) {
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
   optionsSuccessStatus: 200
 };
@@ -63,24 +80,26 @@ io.on("connection", (socket) => {
       await saveMessage(data);
       await saveNotification(data);
 
-      // Emit to all clients in the room, including sender
       io.to(data.roomId).emit("receive_message", data);
     } catch (error) {
       console.error("Error processing message:", error);
-      // Optionally, emit an error event back to the sender
       socket.emit("message_error", { message: "Failed to send message" });
     }
   });
+
   socket.on("disconnect", () => {
     console.log("User Disconnected", socket.id);
   });
 });
+
 app.get("/", (req, res) => {
   res.json({ version: "1.0.0:latest" });
 });
+
 app.use(userRouter);
 app.use(adminRouter);
 app.use(paymentRouter);
+
 dbConnect();
 
 app.use(ErrorHandler);
