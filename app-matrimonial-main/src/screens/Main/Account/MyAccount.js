@@ -56,7 +56,6 @@ const MyAccountScreen = () => {
   };
 
   const uploadImage = async imageFile => {
-    debugger;
     try {
       if (images.length >= 3) {
         Toast('You can upload only 3 images');
@@ -287,6 +286,7 @@ const MyAccountScreen = () => {
             {isLoading ? 'Loading...' : 'Save'}
           </Text>
         </TouchableOpacity>
+        <View height={15}></View>
       </ScrollView>
     </SafeAreaView>
   );

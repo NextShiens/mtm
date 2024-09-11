@@ -50,10 +50,12 @@ const EditProfileScreen = () => {
 
   return (
     <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton}></TouchableOpacity>
-        <Text style={styles.headerText}>Edit Profile</Text>
-      </View>
+          <View style={styles.flexrow}>
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <Image source={require('../../../assets/images/leftarrow.png')} />
+            </TouchableOpacity>
+            <Text style={styles.heading}>Edit Profile Screen</Text>
+          </View>
 
       {/* Profile Image and Upgrade Button */}
       <View style={styles.profileSection}>
@@ -83,7 +85,7 @@ const EditProfileScreen = () => {
             labelField="label"
             valueField="value"
             placeholder="Basic Info"
-            placeholderStyle={{ color: 'gray' }}
+            placeholderStyle={{ color: 'black' }}
             selectedTextStyle={styles.selectedTextStyle}
             value={selectedStep}
             onChange={item => {
@@ -95,7 +97,7 @@ const EditProfileScreen = () => {
               }
             }}
             style={styles.dropdown}
-            itemTextStyle={{ color: 'gray' }}
+            itemTextStyle={{ color: 'black' }}
           />
         </View>
 
@@ -105,7 +107,7 @@ const EditProfileScreen = () => {
             labelField="label"
             valueField="value"
             placeholder="Preferences"
-            placeholderStyle={{ color: 'gray' }}
+            placeholderStyle={{ color: 'black' }}
             selectedTextStyle={styles.selectedTextStyle}
             value={selectedPreference}
             onChange={item => {
@@ -123,7 +125,7 @@ const EditProfileScreen = () => {
               }
             }}
             style={styles.dropdown}
-            itemTextStyle={{ color: 'gray' }}
+            itemTextStyle={{ color: 'black' }}
           />
         </View>
 
@@ -319,7 +321,7 @@ const styles = StyleSheet.create({
   optionText2: {
     fontSize: 16,
     marginBottom: 5,
-    color: 'gray',
+    color: 'black',
     marginLeft: 10,
     marginTop: 17,
   },
@@ -336,6 +338,20 @@ const styles = StyleSheet.create({
   selectedTextStyle: {
     fontSize: 14,
     color: '#333',
+  },
+  flexrow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 20,
+    alignSelf: 'center',
+    marginBottom: 10,
+  },
+  heading: {
+    fontSize: 16,
+    color: 'black',
+    textAlign: 'center',
+    width: '85%',
+    fontWeight: '700',
   },
 });
 
