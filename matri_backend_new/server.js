@@ -24,7 +24,11 @@ app.use(bodyParser.json({ limit: "50mb" }));
 app.use(express.json({ limit: "50mb" }));
 app.use(
   cors({
-    origin: "*",
+    origin: ['https://vaishakhimatrimony.com',
+      'https://www.vaishakhimatrimony.com',
+      'https://api.vaishakhimatrimony.com',
+      'https://admin.vaishakhimatrimony.com',
+    "localhost:3000"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
@@ -34,7 +38,11 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "*",
+    origin: ['https://vaishakhimatrimony.com',
+  'https://www.vaishakhimatrimony.com',
+  'https://api.vaishakhimatrimony.com',
+  'https://admin.vaishakhimatrimony.com',
+"localhost:3000"],
     // origin: "https://metrimonial-backend-2c3a23b121fc.herokuapp.com/",
     methods: ["GET", "POST"],
   },
