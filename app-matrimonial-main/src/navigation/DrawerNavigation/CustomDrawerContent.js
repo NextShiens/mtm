@@ -1,5 +1,5 @@
-import {DrawerContentScrollView,DrawerItemList} from '@react-navigation/drawer';
-import React, {useState, useEffect, useCallback} from 'react';
+import { DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Dimensions,
   Image,
@@ -10,26 +10,26 @@ import {
   Modal,
   Text,
 } from 'react-native';
-import {Fonts} from '../../assets/fonts';
-import {IMAGES} from '../../assets/images';
-import {SVG} from '../../assets/svg';
-import {COLORS, STYLES} from '../../assets/theme';
+import { Fonts } from '../../assets/fonts';
+import { IMAGES } from '../../assets/images';
+import { SVG } from '../../assets/svg';
+import { COLORS, STYLES } from '../../assets/theme';
 import AppText from '../../components/AppText/AppText';
 import CustomImage from '../../components/CustomImage/CustomImage';
 import Icon from '../../components/Icon/Icon';
 import Space from '../../components/Space/Space';
-import {DrawerListData} from '../../data/appData';
+import { DrawerListData } from '../../data/appData';
 import auth from '@react-native-firebase/auth';
-import {LABELS} from '../../labels';
-import {styles} from './styles';
+import { LABELS } from '../../labels';
+import { styles } from './styles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Toast} from '../../utils/native';
-import Svg, {Circle, Path} from 'react-native-svg';
+import { Toast } from '../../utils/native';
+import Svg, { Circle, Path } from 'react-native-svg';
 import ToggleSwitch from 'toggle-switch-react-native';
-import {API_URL} from '../../../constant';
-import {CommonActions} from '@react-navigation/native';
-import {Images} from 'lucide-react-native';
-import { useNavigation ,DrawerActions} from '@react-navigation/native';
+import { API_URL } from '../../../constant';
+import { CommonActions } from '@react-navigation/native';
+import { Images } from 'lucide-react-native';
+import { useNavigation, DrawerActions } from '@react-navigation/native';
 
 const ProfileAvatar = () => (
   <Svg width="50" height="50" viewBox="0 0 100 100">
@@ -43,7 +43,7 @@ const ProfileAvatar = () => (
   </Svg>
 );
 
-const CustomDrawerContent = ({props}) => {
+const CustomDrawerContent = ({ props }) => {
   const navigation = useNavigation();
   const [isOnline, setIsOnline] = useState(false);
   const [drawerData, setDrawerData] = useState(DrawerListData);
@@ -75,7 +75,7 @@ const CustomDrawerContent = ({props}) => {
     navigation.dispatch(
       CommonActions.reset({
         index: 0,
-        routes: [{name: 'InitialScreen'}],
+        routes: [{ name: 'InitialScreen' }],
       }),
     );
   };
@@ -191,54 +191,54 @@ const CustomDrawerContent = ({props}) => {
             <View style={style.avatarContainer}>
               {userImage !== '' ? (
                 <Image
-                  source={{uri: userImage}}
-                  style={{width: 50, height: 50, borderRadius: 25}}
+                  source={{ uri: userImage }}
+                  style={{ width: 50, height: 50, borderRadius: 25 }}
                 />
               ) : (
-                <ProfileAvatar extraStyle={{container: STYLES.bR(25)}} />
+                <ProfileAvatar extraStyle={{ container: STYLES.bR(25) }} />
               )}
               {isOnline && <View style={style.onlineDot}></View>}
             </View>
             <Space mL={10} />
-            <View style={{height: 40, marginBottom: 10, maxWidth: 100}}>
+            <View style={{ height: 40, marginBottom: 10, maxWidth: 100 }}>
               <Text>{userName}</Text>
               <Text>{userProfession}</Text>
             </View>
           </View>
 
           <TouchableOpacity
-          style={{
-            paddingVertical: 10,
-            paddingHorizontal: 20,
-            borderRadius: 30,
-            borderWidth: 1,
-            borderColor: '#ff6600',
-            backgroundColor: 'white',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-          onPress={() => {
-            navigation.dispatch(DrawerActions.closeDrawer());
-            setModalVisible(true);
-          }}>
-          <Text
             style={{
-              color: '#ff6600',
-              fontSize: 10,
-              fontWeight: 'bold',
+              paddingVertical: 10,
+              paddingHorizontal: 20,
+              borderRadius: 30,
+              borderWidth: 1,
+              borderColor: '#ff6600',
+              backgroundColor: 'white',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+            onPress={() => {
+              navigation.dispatch(DrawerActions.closeDrawer());
+              setModalVisible(true);
             }}>
-            Upgrade Now
-          </Text>
-        </TouchableOpacity>
+            <Text
+              style={{
+                color: '#ff6600',
+                fontSize: 10,
+                fontWeight: 'bold',
+              }}>
+              Upgrade Now
+            </Text>
+          </TouchableOpacity>
         </View>
         <View
-                  style={{
-                    height: 2,
-                    width: '100%',
-                    backgroundColor: '#E5E5E5',
-                    marginVertical: 10,
-                  }}
-                />
+          style={{
+            height: 2,
+            width: '100%',
+            backgroundColor: '#E5E5E5',
+            marginVertical: 10,
+          }}
+        />
 
 
         {DrawerListData.map(route => {
@@ -263,7 +263,7 @@ const CustomDrawerContent = ({props}) => {
                   resizeMode={'contain'}
                 />
                 <Space mL={10} />
-                <View style={{flex: 1}}>
+                <View style={{ flex: 1 }}>
                   <View
                     style={{
                       flexDirection: 'row',
@@ -303,7 +303,7 @@ const CustomDrawerContent = ({props}) => {
                 />
                 <Space mL={10} />
                 <View
-                  style={{maxWidth: '90%'}}
+                  style={{ maxWidth: '90%' }}
                   onPress={() => {
                     handleItemClick(route);
                   }}>
@@ -342,14 +342,14 @@ const CustomDrawerContent = ({props}) => {
                 />
                 <Space mL={10} />
                 <View
-                  style={{maxWidth: '90%'}}
+                  style={{ maxWidth: '90%' }}
                   onPress={() => {
                     handleItemClick(route);
                   }}>
                   <AppText
                     title={route.name}
                     variant={'h6'}
-                    extraStyle={[style.drawerItemText, {color: 'red'}]}
+                    extraStyle={[style.drawerItemText, { color: 'red' }]}
                     color={COLORS.dark.black}
                     onPress={() => {
                       handleItemClick(route);
@@ -380,7 +380,7 @@ const CustomDrawerContent = ({props}) => {
               />
               <Space mL={10} />
               <View
-                style={{maxWidth: '90%'}}
+                style={{ maxWidth: '90%' }}
                 onPress={() => {
                   handleItemClick(route);
                 }}>
@@ -438,7 +438,7 @@ const CustomDrawerContent = ({props}) => {
             }}>
             <Image
               source={IMAGES.space}
-              style={{width: 20, height: 20, resizeMode: 'contain'}}
+              style={{ width: 20, height: 20, resizeMode: 'contain' }}
               resizeMode={'contain'}
             />
             <Text
@@ -452,7 +452,7 @@ const CustomDrawerContent = ({props}) => {
           </TouchableOpacity>
         </View>
         <Space mT={50} />
-        <View style={{flex: 1}}>
+        <View style={{ flex: 1 }}>
           <Modal
             animationType="fade"
             transparent={true}
@@ -473,7 +473,7 @@ const CustomDrawerContent = ({props}) => {
                   paddingVertical: 20,
                   paddingHorizontal: 25,
                   shadowColor: '#000',
-                  shadowOffset: {width: 0, height: 2},
+                  shadowOffset: { width: 0, height: 2 },
                   shadowOpacity: 0.25,
                   shadowRadius: 4,
                   elevation: 5,
@@ -488,7 +488,7 @@ const CustomDrawerContent = ({props}) => {
                     padding: 5,
                   }}
                   onPress={() => setModalVisible(false)}>
-                  <Text style={{fontSize: 16, color: '#666'}}>X</Text>
+                  <Text style={{ fontSize: 16, color: '#666' }}>X</Text>
                 </TouchableOpacity>
 
                 <Text
@@ -539,7 +539,7 @@ const CustomDrawerContent = ({props}) => {
                       alignItems: 'center',
                     }}
                     onPress={() => setModalVisible(false)}>
-                    <Text style={{color: '#666', fontSize: 16}}>Cancel</Text>
+                    <Text style={{ color: '#666', fontSize: 16 }}>Cancel</Text>
                   </TouchableOpacity>
 
                   <TouchableOpacity

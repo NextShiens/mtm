@@ -8,7 +8,7 @@ import { COLORS } from '../../../assets/theme';
 import Space from '../../../components/Space/Space';
 import AppHeader from '../../../components/AppHeader/AppHeader';
 import { SVG } from '../../../assets/svg';
-import { Toast } from '../../../utils/native'; 
+import { Toast } from '../../../utils/native';
 
 
 const HoroscopeForm = () => {
@@ -120,7 +120,7 @@ const HoroscopeForm = () => {
         />
       </View>
       <Space mT={20} />
-      
+
       <View style={styles.fieldContainer}>
         <Text style={styles.label}>Religion</Text>
         <CustomDropdown
@@ -203,6 +203,7 @@ const HoroscopeForm = () => {
         <TextInput
           style={styles.input}
           placeholder="Select"
+          placeholderTextColor="gray" 
           value={birthPlace}
           onChangeText={setBirthPlace}
         />
@@ -245,7 +246,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     color: 'black',
     marginTop: 5,
-    padding: 10, // Add some padding for better text visibility
+    padding: 10, 
+    borderRadius: 16,  
   },
   submitButton: {
     backgroundColor: '#FF9B21',
@@ -253,6 +255,8 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: 'center',
     marginTop: 20,
+borderRadius: 16,
+height: 56,
     marginBottom: 20,
   },
   submitButtonText: {

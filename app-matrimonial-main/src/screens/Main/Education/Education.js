@@ -394,6 +394,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     marginBottom: 8,
+    marginLeft: 4,
     color: 'black',
   },
   input: {
@@ -409,7 +410,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#FF9B21',
     marginTop: 20,
     marginBottom: 32,
-    borderRadius: 8,
+    borderRadius:16,
+    height: 56,
   },
 });
 

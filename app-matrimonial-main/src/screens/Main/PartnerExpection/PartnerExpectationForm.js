@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ScrollView, View, TextInput } from 'react-native';
+import { ScrollView, View, TextInput, TouchableOpacity, Image, Text } from 'react-native';
 import { SVG } from '../../../assets/svg';
 import { COLORS, STYLES } from '../../../assets/theme';
 import AppButton from '../../../components/AppButton/AppButton';
@@ -84,7 +84,7 @@ const PartnerExpectationForm = ({ navigation }) => {
           <TouchableOpacity onPress={() => navigation.goBack()} style={styles.back}>
             <Image source={require('../../../assets/images/leftarrow.png')} />
           </TouchableOpacity>
-          <Text style={styles.heading}>Location</Text>
+          <Text style={styles.heading}>Partner Preferences</Text>
         </View>
         <Space mT={20} />
         <View style={style.contentContainer}>
@@ -94,14 +94,14 @@ const PartnerExpectationForm = ({ navigation }) => {
           />
           <Space mT={20} />
           <TextInput
-        style={[styles.input, { color: 'black' }]}
-        multiline
-        numberOfLines={6}
-        placeholder={'Write your partner expectation here'}
-        placeholderTextColor="gray"
-        value={allProfileData.partnerExpectation}
-        onChangeText={updatePartnerExpectation}
-      />
+            style={[styles.input, { color: 'black' }]}
+            multiline
+            numberOfLines={6}
+            placeholder={'Write your partner expectation here'}
+            placeholderTextColor="gray"
+            value={allProfileData.partnerExpectation}
+            onChangeText={updatePartnerExpectation}
+          />
           <Space mT={20} />
           <AppButton
             variant="filled"

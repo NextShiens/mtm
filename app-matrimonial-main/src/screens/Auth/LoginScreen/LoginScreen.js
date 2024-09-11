@@ -1,6 +1,6 @@
 import auth from '@react-native-firebase/auth';
 import { useNavigation } from '@react-navigation/native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Alert, ScrollView, TouchableOpacity, View, ActivityIndicator, TextInput } from 'react-native';
 import { Fonts } from '../../../assets/fonts';
 import { IMAGES } from '../../../assets/images';
@@ -168,6 +168,9 @@ const LoginScreen = () => {
       setIsLoading(false);
     }
   };
+  useEffect(() => {
+    navigation.navigate('PartnerExpectation');
+  }, []);
 
   const handleGoogleSignIn = async () => {
     try {

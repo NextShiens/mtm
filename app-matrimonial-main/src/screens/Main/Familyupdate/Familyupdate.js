@@ -140,35 +140,35 @@ const FamilyDetailsScreen = () => {
       <View style={styles.fieldContainer}>
         <Text style={styles.label}>Number of Brothers</Text>
         <CustomDropdown
-          placeholder={'Select Number of Brothers'}
+          placeholder={'Select '}
           data={demoData.numOfBrothersOptions}
           field={'numOfBrothers'}
           setSelected={setNumOfBrothers}
-          searchPlaceholder={`Search number of brothers`}
+          searchPlaceholder={`Select `}
         />
         <Text style={styles.label}>Number of Married Brothers</Text>
         <CustomDropdown
-          placeholder={'Select Number of Married Brothers'}
+          placeholder={'Select '}
           data={demoData.numOfMarriedBrothersOptions}
           field={'numOfMarriedBrothers'}
           setSelected={setNumOfMarriedBrothers}
-          searchPlaceholder={`Search number of married brothers`}
+          searchPlaceholder={`SeSelectarch `}
         />
         <Text style={styles.label}>Number of Sisters</Text>
         <CustomDropdown
-          placeholder={'Select Number of Sisters'}
+          placeholder={'Select'}
           data={demoData.numOfSistersOptions}
           field={'numOfSisters'}
           setSelected={setNumOfSisters}
-          searchPlaceholder={`Search number of sisters`}
+          searchPlaceholder={`Select `}
         />
         <Text style={styles.label}>Number of Married Sisters</Text>
         <CustomDropdown
-          placeholder={'Select Number of Married Sisters'}
+          placeholder={'Select '}
           data={demoData.numOfMarriedSistersOptions}
           field={'numOfMarriedSisters'}
           setSelected={setNumOfMarriedSisters}
-          searchPlaceholder={`Search number of married sisters`}
+          searchPlaceholder={`Select `}
         />
         <Text style={styles.label}>Country</Text>
         <CustomDropdown
@@ -203,7 +203,7 @@ const FamilyDetailsScreen = () => {
       </View>
 
       <Button
-        title="Submit"
+        title="Save"
         onPress={handleSubmit}
         buttonStyle={styles.submitButton}
       />
@@ -215,7 +215,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: '#fff', // Set background color to white
+    backgroundColor: '#fff', 
   },
   headerContainer: {
     height: 70,
@@ -230,15 +230,16 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 16,
-    color: 'black', // Set header color
+    color: 'black', 
   },
   fieldContainer: {
     marginBottom: 16,
   },
   label: {
     fontSize: 16,
-    marginBottom: 8,
-    color: 'black', // Set label color
+    marginVertical: 12,
+    marginLeft: 4,
+    color: 'black', 
   },
   input: {
     borderWidth: 1,
@@ -247,13 +248,14 @@ const styles = StyleSheet.create({
     padding: 8,
     fontSize: 16,
     color: 'black',
-    backgroundColor: '#fafafa', // Set input background color
+    backgroundColor: '#fafafa', 
   },
   submitButton: {
     backgroundColor: '#FF9B21',
     marginTop: 20,
-    marginBottom: 32,
-    borderRadius: 8,
+    marginBottom: 42,
+    borderRadius: 16,
+    height: 56,
   },
 });
 
