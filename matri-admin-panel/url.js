@@ -1,3 +1,3 @@
 export const backendUrl =
-  "https://matri-new-backend-c2fc1aac17ca.herokuapp.com";
+  "https://api.vaishakhimatrimony.com";
 // export const backendUrl = "http://localhost:5000";
