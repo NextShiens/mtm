@@ -184,7 +184,7 @@ const ReligionPage = () => {
         tintColor="#FE4101"/>
       }
     >
-      {isLoading && <ActivityIndicator size="large" color="#0000ff" />}
+      {isLoading && <ActivityIndicator size="large" color="orange" />}
       <View style={styles.flexrow}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.back}>
           <Image source={require('../../../src/assets/images/leftarrow.png')} />

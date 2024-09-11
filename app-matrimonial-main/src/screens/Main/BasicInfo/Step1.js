@@ -202,18 +202,18 @@ const UserProfileStep1 = () => {
     >
       {isLoading && (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#0000ff" />
+          <ActivityIndicator size="large" color="orange" />
         </View>
       )}
       {!isLoading && (
         <>
           <View style={styles.flexrow}>
-            <TouchableOpacity onPress={() => navigation.goBack()}>
+            <TouchableOpacity onPress={() => navigation.goBack()} style={styles.back}>
               <Image source={require('../../../assets/images/leftarrow.png')} />
             </TouchableOpacity>
             <Text style={styles.heading}>Basic Info</Text>
           </View>
-          <Text style={styles.stepText}>Step 1</Text>
+          <Text style={styles.stepText1}>Step 1</Text>
           <Text style={styles.stepText}>Age</Text>
           <Dropdown
             style={styles.dropdown}
@@ -389,31 +389,44 @@ const styles = StyleSheet.create({
     // marginBottom: 10,
     color: '#333',
   },
+  stepText1: {
+    color: '#1A1A1A',
+    fontSize: 16,
+    fontStyle: 'normal',
+    fontWeight: '700',
+    lineHeight: 26,
+    textTransform: 'capitalize',
+    marginVertical: 10,
+  },
   dropdown: {
-    marginBottom: 10,
-    height: 60,
-    borderColor: '#ccc',
+    marginVertical: 10,
+    height: 56,
+    borderColor: '#E5E5E5',
     borderWidth: 1,
-    borderRadius: 8,
+    borderRadius: 16,
     paddingHorizontal: 8,
   },
   textInput: {
-    marginBottom: 10,
-    height: 60,
-    borderColor: '#ccc',
+    marginVertical: 10,
+    height: 56,
+    borderColor: '#E5E5E5',
     borderWidth: 1,
-    borderRadius: 8,
+    borderRadius: 16,
     paddingHorizontal: 8,
   },
   saveButton: {
-    height: 60,
-    backgroundColor: 'rgba(249, 123, 34, 1)',
+    height: 56,
+    backgroundColor: '#ff9900',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 43,
+    borderRadius: 16,
+    marginTop: 15,
+    marginBottom: 50,
+
   },
   saveText: {
     color: '#fff',
+    fontSize: 16,
     fontWeight: 'bold',
   },
   inputSearchStyle: {
@@ -426,16 +439,27 @@ const styles = StyleSheet.create({
   flexrow: {
     flexDirection: 'row',
     alignItems: 'center',
-    // marginTop: 20,
-    alignSelf: 'center',
+    marginTop: 20,
     marginBottom: 10,
   },
   heading: {
-    fontSize: 16,
-    color: 'black',
+    color: '#1A1A1A',
     textAlign: 'center',
-    width: '85%',
+    fontFamily: 'DM Sans',
+    fontSize: 21,
+    fontStyle: 'normal',
     fontWeight: '700',
+    lineHeight: 26,
+    textTransform: 'capitalize',
+    width: '85%',
+  },
+  back: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: '#F5F5F5',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   loadingContainer: {
     flex: 1,

@@ -85,12 +85,12 @@ const CriteriaPage = ({ navigation }) => {
       style={styles.container}
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={['#FE4101']}
-        tintColor="#FE4101"/>
+          tintColor="#FE4101" />
       }
     >
       {isLoading && <ActivityIndicator size="large" color="#0000ff" />}
       <View style={styles.flexrow}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.back}>
           <Image source={require('../../assets/images/leftarrow.png')} />
         </TouchableOpacity>
         <Text style={styles.heading}>PartnerExpectation</Text>
@@ -107,7 +107,7 @@ const CriteriaPage = ({ navigation }) => {
       </View>
 
       <TouchableOpacity style={styles.saveButton} onPress={handleSave} disabled={isLoading}>
-        <Text style={styles.saveButtonText}>
+        <Text style={styles.saveText}>
           {isLoading ? 'Loading..' : 'Save'}
         </Text>
       </TouchableOpacity>
@@ -143,10 +143,12 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   input: {
-    backgroundColor: '#F5F5F5',
-    height: 100,
-    borderColor: 'gray',
-    borderWidth: 0.5,
+    backgroundColor: '#ffffff',
+    height: 140,
+    color: '#949494',
+    borderColor: '#ccc',
+    borderWidth: 1,
+
     textAlignVertical: 'top',
     padding: 10,
     paddingHorizontal: 10,
@@ -154,22 +156,51 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   saveButton: {
-    height: 60,
-    backgroundColor: 'rgba(249, 123, 34, 1)',
+    height: 56,
+
+    backgroundColor: '#ff9900',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 43,
+    borderRadius: 16,
+    marginTop: 20,
+    marginBottom: 50,
+
   },
-  saveButtonText: {
-    color: 'white',
-    fontSize: 16,
+  saveText: {
+    color: '#fff',
     fontWeight: 'bold',
+  },
+  inputSearchStyle: {
+    color: '#333',
+  },
+  selectedTextStyle: {
+    fontSize: 14,
+    color: '#333',
+  },
+  flexrow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    // marginTop: 20,
+    marginBottom: 25,
   },
   heading: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginLeft: 10,
-    color: 'black',
+    color: '#1A1A1A',
+    textAlign: 'center',
+    fontFamily: 'DM Sans',
+    fontSize: 21,
+    fontStyle: 'normal',
+    fontWeight: '700',
+    lineHeight: 26,
+    textTransform: 'capitalize',
+    width: '85%',
+  },
+  back: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: '#F5F5F5',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

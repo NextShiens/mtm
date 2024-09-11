@@ -20,7 +20,7 @@ const EducationPage = () => {
       console.log('userData', userData);
       if (userData !== null) {
         const parsedData = JSON.parse(userData);
-        const user = parsedData.user; 
+        const user = parsedData.user;
         setEducation(user.Education.education);
         setOccupation(user.Education.occupation);
         setAnnualIncome(user.Education.income);
@@ -52,7 +52,7 @@ const EducationPage = () => {
       ToastAndroid.showWithGravityAndOffset('No changes to save.', ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
       return;
     }
-  
+
     try {
       setIsLoading(true);
       const token = await AsyncStorage.getItem('AccessToken');
@@ -64,7 +64,7 @@ const EducationPage = () => {
         },
         body: JSON.stringify(userProfile),
       });
-  
+
       const result = await response.json();
       if (!response.ok) {
         console.log('result', result);
@@ -144,7 +144,7 @@ const EducationPage = () => {
   }));
 
   return (
-    <ScrollView 
+    <ScrollView
       style={styles.container}
       refreshControl={
         <RefreshControl
@@ -155,7 +155,7 @@ const EducationPage = () => {
       }
     >
       <View style={styles.flexrow}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.back}>
           <Image source={require('../../../src/assets/images/leftarrow.png')} />
         </TouchableOpacity>
         <Text style={styles.heading}>Education</Text>
@@ -170,12 +170,12 @@ const EducationPage = () => {
         search={true}
         searchPlaceholder="Search"
         searchPlaceholderTextColor="gray"
-        placeholderStyle={{color: 'gray'}}
+        placeholderStyle={{ color: 'gray' }}
         inputSearchStyle={styles.inputSearchStyle}
         selectedTextStyle={styles.selectedTextStyle}
         value={education}
         onChange={item => setEducation(item.value)}
-        itemTextStyle={{color: 'black'}}
+        itemTextStyle={{ color: 'black' }}
       />
       <Text style={styles.headerText}>Occupation</Text>
       <Dropdown
@@ -187,12 +187,12 @@ const EducationPage = () => {
         search={true}
         searchPlaceholder="Search"
         searchPlaceholderTextColor="gray"
-        placeholderStyle={{color: 'gray'}}
+        placeholderStyle={{ color: 'gray' }}
         inputSearchStyle={styles.inputSearchStyle}
         selectedTextStyle={styles.selectedTextStyle}
         value={occupation}
         onChange={item => setOccupation(item.value)}
-        itemTextStyle={{color: 'black'}}
+        itemTextStyle={{ color: 'black' }}
       />
       <Text style={styles.headerText}>Annual Income</Text>
       <Dropdown
@@ -204,12 +204,12 @@ const EducationPage = () => {
         search={true}
         searchPlaceholder="Search"
         searchPlaceholderTextColor="gray"
-        placeholderStyle={{color: 'gray'}}
+        placeholderStyle={{ color: 'gray' }}
         inputSearchStyle={styles.inputSearchStyle}
         selectedTextStyle={styles.selectedTextStyle}
         value={annualIncome}
         onChange={item => setAnnualIncome(item.value)}
-        itemTextStyle={{color: 'black'}}
+        itemTextStyle={{ color: 'black' }}
       />
       <TouchableOpacity style={styles.saveButton} onPress={handleSave} disabled={isLoading}>
         {isLoading ? (
@@ -227,13 +227,27 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     padding: 16,
   },
+  centerText: {
+    flex: 1,
+    textAlign: 'center',
+    fontSize: 16,
+    color: '#333',
+  },
   dropdown: {
-    height: 60,
-    borderColor: 'gray',
-    borderWidth: 0.5,
-    borderRadius: 8,
+    marginVertical: 10,
+    height: 56,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 16,
     paddingHorizontal: 8,
-    marginBottom: 16,
+  },
+  textInput: {
+    marginBottom: 10,
+    height: 56,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 16,
+    paddingHorizontal: 8,
   },
   placeholderStyle: {
     fontSize: 16,
@@ -252,11 +266,16 @@ const styles = StyleSheet.create({
     height: 20,
   },
   saveButton: {
-    height: 60,
-    backgroundColor: 'rgba(249, 123, 34, 1)',
+
+    height: 56,
+
+    backgroundColor: '#ff9900',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 43,
+    borderRadius: 16,
+    marginTop: 20,
+    marginBottom: 50,
+
   },
   saveText: {
     color: '#fff',
@@ -275,11 +294,23 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   heading: {
-    fontSize: 16,
-    color: 'black',
+    color: '#1A1A1A',
     textAlign: 'center',
-    width: '85%',
+    fontFamily: 'DM Sans',
+    fontSize: 21,
+    fontStyle: 'normal',
     fontWeight: '700',
+    lineHeight: 26,
+    textTransform: 'capitalize',
+    width: '85%',
+  },
+  back: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: '#F5F5F5',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

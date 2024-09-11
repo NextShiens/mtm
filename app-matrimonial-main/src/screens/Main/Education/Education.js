@@ -371,7 +371,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: '#fff', // Set background color to white
+    backgroundColor: '#fff',
   },
   headerContainer: {
     height: 70,
@@ -386,7 +386,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 16,
-    color: 'black', // Set header color
+    color: 'black',
   },
   fieldContainer: {
     marginBottom: 16,
@@ -394,7 +394,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     marginBottom: 8,
-    color: 'black', // Set label color
+    color: 'black',
   },
   input: {
     borderWidth: 1,
@@ -403,7 +403,7 @@ const styles = StyleSheet.create({
     padding: 8,
     fontSize: 16,
     color: 'black',
-    backgroundColor: '#fafafa', // Set input background color
+    backgroundColor: '#fafafa', 
   },
   submitButton: {
     backgroundColor: '#FF9B21',

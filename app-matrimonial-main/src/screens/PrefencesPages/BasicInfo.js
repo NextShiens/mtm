@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
   Text,
@@ -10,10 +10,10 @@ import {
   ActivityIndicator,
   RefreshControl,
 } from 'react-native';
-import {Dropdown} from 'react-native-element-dropdown';
+import { Dropdown } from 'react-native-element-dropdown';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {API_URL} from '../../../constant';
-import {useNavigation} from '@react-navigation/native';
+import { API_URL } from '../../../constant';
+import { useNavigation } from '@react-navigation/native';
 import {
   QualificationList,
   occupationList,
@@ -40,9 +40,9 @@ const BasicInfo = () => {
   const [refreshing, setRefreshing] = useState(false);
 
   const data = [
-    {label: 'Option 1', value: '1'},
-    {label: 'Option 2', value: '2'},
-    {label: 'Option 3', value: '3'},
+    { label: 'Option 1', value: '1' },
+    { label: 'Option 2', value: '2' },
+    { label: 'Option 3', value: '3' },
   ];
 
   const ageOptions = [
@@ -233,7 +233,7 @@ const BasicInfo = () => {
         const userData = await AsyncStorage.getItem('theUser');
         if (userData) {
           const parsedUser = JSON.parse(userData);
-          parsedUser.user = {...parsedUser.user, ...userProfile};
+          parsedUser.user = { ...parsedUser.user, ...userProfile };
           await AsyncStorage.setItem('theUser', JSON.stringify(parsedUser));
         }
         console.log('user data:', userData);
@@ -272,10 +272,10 @@ const BasicInfo = () => {
       style={styles.container}
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={['#FE4101']}
-        tintColor="#FE4101" />
+          tintColor="#FE4101" />
       }>
       <View style={styles.flexrow}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.back}>
           <Image source={require('../../../src/assets/images/leftarrow.png')} />
         </TouchableOpacity>
         <Text style={styles.heading}>BasicInfo</Text>
@@ -283,12 +283,12 @@ const BasicInfo = () => {
       <Text style={styles.stepText}>Age</Text>
       <View style={styles.row}>
         <Dropdown
-          style={[styles.dropdown, {width: '40%'}]}
+          style={[styles.dropdown, { width: '40%' }]}
           data={ageData}
           labelField="label"
           valueField="value"
           placeholder={ageFrom}
-          placeholderStyle={{color: 'black'}}
+          placeholderStyle={{ color: 'black' }}
           search={true}
           searchPlaceholder="Search"
           searchPlaceholderTextColor="gray"
@@ -296,16 +296,16 @@ const BasicInfo = () => {
           selectedTextStyle={styles.selectedTextStyle}
           value={ageFrom}
           onChange={item => setAgeFrom(item.value)}
-          itemTextStyle={{color: 'black'}}
+          itemTextStyle={{ color: 'black' }}
         />
         <Text style={styles.centerText}>To</Text>
         <Dropdown
-          style={[styles.dropdown, {width: '40%'}]}
+          style={[styles.dropdown, { width: '40%' }]}
           data={ageData}
           labelField="label"
           valueField="value"
           placeholder={ageTo}
-          placeholderStyle={{color: 'black'}}
+          placeholderStyle={{ color: 'black' }}
           search={true}
           searchPlaceholder="Search"
           searchPlaceholderTextColor="gray"
@@ -313,18 +313,18 @@ const BasicInfo = () => {
           selectedTextStyle={styles.selectedTextStyle}
           value={ageTo}
           onChange={item => setAgeTo(item.value)}
-          itemTextStyle={{color: 'black'}}
+          itemTextStyle={{ color: 'black' }}
         />
       </View>
       <Text style={styles.stepText}>Height</Text>
       <View style={styles.row}>
         <Dropdown
-          style={[styles.dropdown, {width: '40%'}]}
+          style={[styles.dropdown, { width: '40%' }]}
           data={heightData}
           labelField="label"
           valueField="value"
           placeholder={heightFrom}
-          placeholderStyle={{color: 'gray'}}
+          placeholderStyle={{ color: 'gray' }}
           search={true}
           searchPlaceholder="Search"
           searchPlaceholderTextColor="gray"
@@ -332,16 +332,16 @@ const BasicInfo = () => {
           selectedTextStyle={styles.selectedTextStyle}
           value={heightFrom}
           onChange={item => setHeightFrom(item.value)}
-          itemTextStyle={{color: 'black'}}
+          itemTextStyle={{ color: 'black' }}
         />
         <Text style={styles.centerText}>To</Text>
         <Dropdown
-          style={[styles.dropdown, {width: '40%'}]}
+          style={[styles.dropdown, { width: '40%' }]}
           data={heightData}
           labelField="label"
           valueField="value"
           placeholder={heightTo}
-          placeholderStyle={{color: 'gray'}}
+          placeholderStyle={{ color: 'gray' }}
           search={true}
           searchPlaceholder="Search"
           searchPlaceholderTextColor="gray"
@@ -349,7 +349,7 @@ const BasicInfo = () => {
           selectedTextStyle={styles.selectedTextStyle}
           value={heightTo}
           onChange={item => setHeightTo(item.value)}
-          itemTextStyle={{color: 'black'}}
+          itemTextStyle={{ color: 'black' }}
         />
       </View>
       <Text style={styles.stepText}>Looking For</Text>
@@ -362,12 +362,12 @@ const BasicInfo = () => {
         search={true}
         searchPlaceholder="Search"
         searchPlaceholderTextColor="gray"
-        placeholderStyle={{color: 'gray'}}
+        placeholderStyle={{ color: 'gray' }}
         inputSearchStyle={styles.inputSearchStyle}
         selectedTextStyle={styles.selectedTextStyle}
         value={lookingFor}
         onChange={item => setLookingFor(item.value)}
-        itemTextStyle={{color: 'black'}}
+        itemTextStyle={{ color: 'black' }}
       />
       <Text style={styles.stepText}>Physical Status</Text>
       <Dropdown
@@ -379,12 +379,12 @@ const BasicInfo = () => {
         search={true}
         searchPlaceholder="Search"
         searchPlaceholderTextColor="gray"
-        placeholderStyle={{color: 'gray'}}
+        placeholderStyle={{ color: 'gray' }}
         inputSearchStyle={styles.inputSearchStyle}
         selectedTextStyle={styles.selectedTextStyle}
         value={physicalStatus}
         onChange={item => setPhysicalStatus(item.value)}
-        itemTextStyle={{color: 'black'}}
+        itemTextStyle={{ color: 'black' }}
       />
       <Text style={styles.stepText}>Food</Text>
       <Dropdown
@@ -396,12 +396,12 @@ const BasicInfo = () => {
         search={true}
         searchPlaceholder="Search"
         searchPlaceholderTextColor="gray"
-        placeholderStyle={{color: 'gray'}}
+        placeholderStyle={{ color: 'gray' }}
         inputSearchStyle={styles.inputSearchStyle}
         selectedTextStyle={styles.selectedTextStyle}
         value={food}
         onChange={item => setFood(item.value)}
-        itemTextStyle={{color: 'black'}}
+        itemTextStyle={{ color: 'black' }}
       />
       <Text style={styles.stepText}>Smoking</Text>
       <Dropdown
@@ -413,12 +413,12 @@ const BasicInfo = () => {
         search={true}
         searchPlaceholder="Search"
         searchPlaceholderTextColor="gray"
-        placeholderStyle={{color: 'gray'}}
+        placeholderStyle={{ color: 'gray' }}
         inputSearchStyle={styles.inputSearchStyle}
         selectedTextStyle={styles.selectedTextStyle}
         value={smoking}
         onChange={item => setSmoking(item.value)}
-        itemTextStyle={{color: 'black'}}
+        itemTextStyle={{ color: 'black' }}
       />
       <Text style={styles.stepText}>Drinking</Text>
       <Dropdown
@@ -430,12 +430,12 @@ const BasicInfo = () => {
         search={true}
         searchPlaceholder="Search"
         searchPlaceholderTextColor="gray"
-        placeholderStyle={{color: 'gray'}}
+        placeholderStyle={{ color: 'gray' }}
         inputSearchStyle={styles.inputSearchStyle}
         selectedTextStyle={styles.selectedTextStyle}
         value={drinking}
         onChange={item => setDrinking(item.value)}
-        itemTextStyle={{color: 'black'}}
+        itemTextStyle={{ color: 'black' }}
       />
       <Text style={styles.stepText}>Family Type</Text>
       <Dropdown
@@ -447,12 +447,12 @@ const BasicInfo = () => {
         search={true}
         searchPlaceholder="Search"
         searchPlaceholderTextColor="gray"
-        placeholderStyle={{color: 'gray'}}
+        placeholderStyle={{ color: 'gray' }}
         inputSearchStyle={styles.inputSearchStyle}
         selectedTextStyle={styles.selectedTextStyle}
         value={familyType}
         onChange={item => setFamilyType(item.value)}
-        itemTextStyle={{color: 'black'}}
+        itemTextStyle={{ color: 'black' }}
       />
       <Text style={styles.stepText}>Family Status</Text>
       <Dropdown
@@ -464,12 +464,13 @@ const BasicInfo = () => {
         search={true}
         searchPlaceholder="Search"
         searchPlaceholderTextColor="gray"
-        placeholderStyle={{color: 'gray'}}
+        placeholderStyle={{ color: 'gray' }}
         inputSearchStyle={styles.inputSearchStyle}
         selectedTextStyle={styles.selectedTextStyle}
         value={familyStatus}
         onChange={item => setFamilyStatus(item.value)}
-        itemTextStyle={{color: 'black'}}
+        itemTextStyle={{ color: 'black' }}
+        dropdownPosition='top'
       />
       <Text style={styles.stepText}>Family Value</Text>
       <Dropdown
@@ -481,12 +482,13 @@ const BasicInfo = () => {
         search={true}
         searchPlaceholder="Search"
         searchPlaceholderTextColor="gray"
-        placeholderStyle={{color: 'gray'}}
+        placeholderStyle={{ color: 'gray' }}
         inputSearchStyle={styles.inputSearchStyle}
         selectedTextStyle={styles.selectedTextStyle}
         value={familyValue}
         onChange={item => setFamilyValue(item.value)}
-        itemTextStyle={{color: 'black'}}
+        itemTextStyle={{ color: 'black' }}
+        dropdownPosition='top'
       />
       <Text style={styles.stepText}>Father Occupation</Text>
       <Dropdown
@@ -498,12 +500,13 @@ const BasicInfo = () => {
         search={true}
         searchPlaceholder="Search"
         searchPlaceholderTextColor="gray"
-        placeholderStyle={{color: 'gray'}}
+        placeholderStyle={{ color: 'gray' }}
         inputSearchStyle={styles.inputSearchStyle}
         selectedTextStyle={styles.selectedTextStyle}
         value={fathersOccupation}
         onChange={item => setFatherOccupation(item.value)}
-        itemTextStyle={{color: 'black'}}
+        itemTextStyle={{ color: 'black' }}
+        dropdownPosition='top'
       />
       <TouchableOpacity
         style={styles.saveButton}
@@ -542,27 +545,31 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   dropdown: {
-    marginBottom: 10,
-    height: 60,
+    marginVertical: 10,
+    height: 56,
     borderColor: '#ccc',
     borderWidth: 1,
-    borderRadius: 8,
+    borderRadius: 16,
     paddingHorizontal: 8,
   },
   textInput: {
     marginBottom: 10,
-    height: 60,
+    height: 56,
     borderColor: '#ccc',
     borderWidth: 1,
-    borderRadius: 8,
+    borderRadius: 16,
     paddingHorizontal: 8,
   },
   saveButton: {
-    height: 60,
-    backgroundColor: 'rgba(249, 123, 34, 1)',
+    height: 56,
+
+    backgroundColor: '#ff9900',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 43,
+    borderRadius: 16,
+    marginTop: 20,
+    marginBottom: 50,
+
   },
   saveText: {
     color: '#fff',
@@ -578,7 +585,8 @@ const styles = StyleSheet.create({
   flexrow: {
     flexDirection: 'row',
     alignItems: 'center',
-    alignSelf: 'center',
+    marginTop: 20,
+
     marginBottom: 10,
   },
   heading: {
@@ -591,6 +599,14 @@ const styles = StyleSheet.create({
     lineHeight: 26,
     textTransform: 'capitalize',
     width: '85%',
+  },
+  back: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: '#F5F5F5',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   loadingContainer: {
     flex: 1,

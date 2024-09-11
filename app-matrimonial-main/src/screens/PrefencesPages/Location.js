@@ -115,12 +115,12 @@ const LocationPage = () => {
       style={styles.container}
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={['#FE4101']}
-        tintColor="#FE4101" />
+          tintColor="#FE4101" />
       }
     >
       {isLoading && <ActivityIndicator size="large" color="#0000ff" />}
       <View style={styles.flexrow}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.back}>
           <Image source={require('../../../src/assets/images/leftarrow.png')} />
         </TouchableOpacity>
         <Text style={styles.heading}>Location</Text>
@@ -158,6 +158,7 @@ const LocationPage = () => {
         value={state}
         onChange={item => setState(item.value)}
         itemTextStyle={{ color: 'black' }}
+
       />
       <Text style={styles.headerText}>City</Text>
       <Dropdown
@@ -192,12 +193,12 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   dropdown: {
-    height: 60,
-    borderColor: 'gray',
-    borderWidth: 0.5,
-    borderRadius: 8,
+    marginVertical: 10,
+    height: 56,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 16,
     paddingHorizontal: 8,
-    marginBottom: 16,
   },
   placeholderStyle: {
     fontSize: 16,
@@ -215,12 +216,24 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
   },
+  textInput: {
+    marginBottom: 10,
+    height: 56,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 16,
+    paddingHorizontal: 8,
+  },
   saveButton: {
-    height: 60,
-    backgroundColor: 'rgba(249, 123, 34, 1)',
+    height: 56,
+
+    backgroundColor: '#ff9900',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 43,
+    borderRadius: 16,
+    marginTop: 20,
+    marginBottom: 50,
+
   },
   saveText: {
     color: '#fff',
@@ -234,7 +247,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 20,
-    alignSelf: 'center',
+
     marginBottom: 10,
   },
   heading: {
@@ -247,6 +260,14 @@ const styles = StyleSheet.create({
     lineHeight: 26,
     textTransform: 'capitalize',
     width: '85%',
+  },
+  back: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: '#F5F5F5',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
