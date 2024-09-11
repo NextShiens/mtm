@@ -174,21 +174,24 @@ export const styles = StyleSheet.create({
     zIndex: 1,
   },
   infoContainer: {
-    paddingHorizontal: 10,
+    paddingHorizontal: 5,
     paddingTop: 10,
+    marginRight: 10,
   },
   nameLocationContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    paddingRight: 16,
     alignItems: 'center',
   },
   locationContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'flex-start',
   },
   locationText: {
     fontSize: 10,
-    marginLeft: 5,
+    marginLeft: 2,
   },
   detailsText: {
     flex: 1,
@@ -222,6 +225,7 @@ export const styles = StyleSheet.create({
   test: {
     color: 'black',
     fontSize: 12,
+    width:'70%'
   },
   icon: {
     width: 40,

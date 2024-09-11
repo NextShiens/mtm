@@ -276,7 +276,7 @@ const BasicInfo = () => {
       }>
       <View style={styles.flexrow}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image source={require('../../../src/assets/images/leftarrow.png')} style={styles.back}/>
+          <Image source={require('../../../src/assets/images/leftarrow.png')} />
         </TouchableOpacity>
         <Text style={styles.heading}>BasicInfo</Text>
       </View>
@@ -470,7 +470,6 @@ const BasicInfo = () => {
         value={familyStatus}
         onChange={item => setFamilyStatus(item.value)}
         itemTextStyle={{color: 'black'}}
-        dropdownPosition='top'
       />
       <Text style={styles.stepText}>Family Value</Text>
       <Dropdown
@@ -488,7 +487,6 @@ const BasicInfo = () => {
         value={familyValue}
         onChange={item => setFamilyValue(item.value)}
         itemTextStyle={{color: 'black'}}
-        dropdownPosition='top'
       />
       <Text style={styles.stepText}>Father Occupation</Text>
       <Dropdown
@@ -506,7 +504,6 @@ const BasicInfo = () => {
         value={fathersOccupation}
         onChange={item => setFatherOccupation(item.value)}
         itemTextStyle={{color: 'black'}}
-        dropdownPosition='top'
       />
       <TouchableOpacity
         style={styles.saveButton}
@@ -545,31 +542,27 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   dropdown: {
-    marginVertical: 10,
-    height: 56,
+    marginBottom: 10,
+    height: 60,
     borderColor: '#ccc',
     borderWidth: 1,
-    borderRadius: 16,
+    borderRadius: 8,
     paddingHorizontal: 8,
   },
   textInput: {
     marginBottom: 10,
-    height: 56,
+    height: 60,
     borderColor: '#ccc',
     borderWidth: 1,
-    borderRadius: 16,
+    borderRadius: 8,
     paddingHorizontal: 8,
   },
   saveButton: {
-    height: 56,
-
-    backgroundColor: '#ff9900',
+    height: 60,
+    backgroundColor: 'rgba(249, 123, 34, 1)',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 16,
-    marginTop: 20,
-    marginBottom: 50,
-
+    borderRadius: 43,
   },
   saveText: {
     color: '#fff',
@@ -585,8 +578,7 @@ const styles = StyleSheet.create({
   flexrow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 20,
-
+    alignSelf: 'center',
     marginBottom: 10,
   },
   heading: {
@@ -599,14 +591,6 @@ const styles = StyleSheet.create({
     lineHeight: 26,
     textTransform: 'capitalize',
     width: '85%',
-  },
-  back: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
-    backgroundColor: '#F5F5F5',
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   loadingContainer: {
     flex: 1,

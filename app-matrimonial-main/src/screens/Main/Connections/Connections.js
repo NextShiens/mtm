@@ -294,7 +294,7 @@ const Connections = ({navigation}) => {
                           </View>
                           <View style={styles.infoContainer}>
                             <View style={styles.nameLocationContainer}>
-                              <Text style={styles.test}>
+                              <Text style={styles.test} numberOfLines={1}>
                                 {item?.receiverId?.name || 'N/A'}
                               </Text>
                               <View style={styles.locationContainer}>
@@ -307,7 +307,7 @@ const Connections = ({navigation}) => {
                                 />
                                 <AppText
                                   title={item?.receiverId?.city || 'N/A'}
-                                  color={COLORS.dark.inputBorder}
+                                  color={'gray'}
                                   extraStyle={[
                                     Fonts.PoppinsRegular,
                                     styles.locationText,
@@ -330,21 +330,22 @@ const Connections = ({navigation}) => {
                             </View> */}
                             <View style={styles.ageHeightActionContainer}>
                               <AppText
-                                title={`Age ${
-                                  item?.receiverId?.age || 'N/A'
-                                }, ${item.receiverId?.height}`}
+                                title={`Age ${item?.receiverId?.age || 'N/A'}, ${item.receiverId?.height}`}
                                 color={COLORS.dark.inputBorder}
                                 extraStyle={[
                                   STYLES.fontFamily(Fonts.PoppinsRegular),
                                   STYLES.fontSize(11),
                                   styles.detailsText,
                                 ]}
+                                numberOfLines={1}
+                                // width="100%"
                               />
                             </View>
                             <AppText
                               title={item?.receiverId?.occupation || 'N/A'}
-                              color={COLORS.dark.inputBorder}
+                              color={'gray'}
                               numberOfLines={1}
+                              width="60%"
                               extraStyle={[
                                 STYLES.fontFamily(Fonts.PoppinsRegular),
                                 STYLES.fontSize(11),

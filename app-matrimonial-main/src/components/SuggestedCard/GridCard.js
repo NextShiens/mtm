@@ -105,7 +105,7 @@ const GridCard = ({ data }) => {
               />
               <AppText
                 title={item.city || 'N/A'}
-                color={COLORS.dark.inputBorder}
+                color={COLORS.dark.black}
                 extraStyle={[Fonts.PoppinsRegular, styles.locationText]}
               />
             </View>
@@ -114,7 +114,7 @@ const GridCard = ({ data }) => {
         <View style={styles.ageHeightActionContainer}>
           <AppText
             title={`Age ${item?.age || 'N/A'}, ${item.height}`}
-            color={COLORS.dark.inputBorder}
+            color={'gray'}
             extraStyle={[
               STYLES.fontFamily(Fonts.PoppinsRegular),
               STYLES.fontSize(11),
@@ -124,7 +124,7 @@ const GridCard = ({ data }) => {
         </View>
         <AppText
           title={item?.occupation || 'N/A'}
-          color={COLORS.dark.inputBorder}
+          color={'gray'}
           numberOfLines={1}
           extraStyle={[
             STYLES.fontFamily(Fonts.PoppinsRegular),
@@ -268,6 +268,7 @@ const styles = StyleSheet.create({
   locationText: {
     fontSize: 10,
     marginLeft: -3,
+    width:'70%'
   },
   detailsText: {
     flex: 1,
@@ -279,20 +280,20 @@ const styles = StyleSheet.create({
     paddingTop: 10,
   },
   actionButton: {
-    width: 17,
-    height: 17,
+    width: 23,
+    height: 23,
     borderRadius: 20,
     backgroundColor:'#1E285F14',
     justifyContent: 'center',
-    marginLeft: 10,
+    marginLeft: 5,
   },
   actionButton2:{
-    width: 17,
-    height: 17,
+    width: 23,
+    height: 23,
     borderRadius: 20,
     backgroundColor:'#F97B221A',
     justifyContent: 'center',
-    marginLeft: 10,
+    marginLeft: 5,
   },
   occupationText: {
     marginLeft: -10,

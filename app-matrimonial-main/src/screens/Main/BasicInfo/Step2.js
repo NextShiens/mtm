@@ -134,7 +134,6 @@ const UserProfileStep2 = () => {
   };
 
   return (
-
     <ScrollView 
       style={styles.container}
       refreshControl={
@@ -148,7 +147,7 @@ const UserProfileStep2 = () => {
         </View>
       )}
       <View style={styles.flexrow}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.back}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
           <Image source={require('../../../assets/images/leftarrow.png')} />
         </TouchableOpacity>
         <Text style={styles.heading}>Account</Text>
@@ -214,7 +213,6 @@ const UserProfileStep2 = () => {
           value={annualIncome}
           onChange={item => setAnnualIncome(item.value)}
           itemTextStyle={{color: 'black'}}
-           dropdownPosition="top"
         />
         <Text style={styles.stepText}>Work Location</Text>
         <Dropdown
@@ -232,8 +230,7 @@ const UserProfileStep2 = () => {
           value={workLocation}
           onChange={item => setWorkLocation(item.value)}
           itemTextStyle={{color: 'black'}}
-          dropdownPosition="top"
-
+          dropdownPosition='top'
         />
       </View>
 
@@ -262,14 +259,13 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   dropdown: {
-
-    marginVertical: 10,
-    height: 56,
-    borderColor: '#E5E5E5',
-
+    marginBottom: 15,
+    height: 60,
+    borderColor: '#ccc',
     borderWidth: 1,
-    borderRadius: 16,
-    paddingHorizontal: 8,
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    // backgroundColor: '#f7f7f7',
   },
   saveButton: {
     height: 60,
@@ -283,15 +279,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   stepText2: {
-    color: '#1A1A1A',
-    fontSize: 16,
-    fontStyle: 'normal',
-    fontWeight: '700',
-    lineHeight: 26,
-    textTransform: 'capitalize',
-    marginVertical: 10,
-    marginBottom: 14,
-
+    fontSize: 20,
+    marginBottom: 15,
+    color: '#333',
+    // marginTop: 10,
   },
   inputSearchStyle: {
     color: '#333',
@@ -303,27 +294,16 @@ const styles = StyleSheet.create({
   flexrow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 35,
-    marginBottom: 10,
+    marginTop: 20,
+    alignSelf: 'center',
+    // marginBottom: 10/,
   },
   heading: {
-    color: '#1A1A1A',
+    fontSize: 16,
+    color: 'black',
     textAlign: 'center',
-    fontFamily: 'DM Sans',
-    fontSize: 21,
-    fontStyle: 'normal',
-    fontWeight: '700',
-    lineHeight: 26,
-    textTransform: 'capitalize',
     width: '85%',
-  },
-  back: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
-    backgroundColor: '#F5F5F5',
-    justifyContent: 'center',
-    alignItems: 'center',
+    fontWeight: '700',
   },
   loadingContainer: {
     flex: 1,

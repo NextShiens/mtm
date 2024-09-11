@@ -441,6 +441,7 @@ const PartnerMatch = ({navigation, route}) => {
           iconLeft={<SVG.BackArrow size={24} fill={'black'} />}
           onLeftIconPress={() => navigation.goBack()}
           title={LABELS.matches || 'Matches'}
+          textColor={COLORS.dark.black}
           iconRight={
             <TouchableOpacity onPress={handleRightIconPress}>
               <Image

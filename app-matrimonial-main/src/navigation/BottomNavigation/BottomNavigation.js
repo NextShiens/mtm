@@ -1,7 +1,7 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useIsFocused } from '@react-navigation/native';
 import React, { useState, useEffect } from 'react';
-import { TouchableOpacity, Keyboard,View, Image, } from 'react-native';
+import { TouchableOpacity, Keyboard, View, Image } from 'react-native';
 import { SVG } from '../../assets/svg';
 import { COLORS } from '../../assets/theme';
 import Icon from '../../components/Icon/Icon';
@@ -44,7 +44,7 @@ const BottomNavigation = ({ navigation }) => {
     <Tab.Navigator
       screenOptions={() => ({
         tabBarActiveTintColor: COLORS.dark.primary,
-        tabBarInactiveTintColor: COLORS.dark.inputBorder,
+        tabBarInactiveTintColor: 'gray',
         headerShown: false,
         tabBarItemStyle: {
           backgroundColor: 'white',
@@ -66,7 +66,7 @@ const BottomNavigation = ({ navigation }) => {
                 SVGIcon={
                   <SVG.homeIcon
                     fill={
-                      focused ? COLORS.dark.primary : COLORS.dark.inputBorder
+                      focused ? COLORS.dark.primary : 'gray'
                     }
                     height={22}
                     width={22}
@@ -74,8 +74,7 @@ const BottomNavigation = ({ navigation }) => {
                 }
                 onPress={() => {
                   navigation.navigate('HomePage');
-                }
-                }
+                }}
               />
             </View>
           ),
@@ -93,7 +92,7 @@ const BottomNavigation = ({ navigation }) => {
                 SVGIcon={
                   <SVG.heartIcon
                     fill={
-                      focused ? COLORS.dark.primary : COLORS.dark.inputBorder
+                      focused ? COLORS.dark.primary : 'gray'
                     }
                     height={22}
                     width={22}
@@ -101,10 +100,8 @@ const BottomNavigation = ({ navigation }) => {
                 }
                 onPress={() => {
                   navigation.navigate('PartnerMatch');
-                }
-                }
+                }}
               />
-          
             </View>
           ),
         }}
@@ -121,11 +118,10 @@ const BottomNavigation = ({ navigation }) => {
                 navigation.navigate('InboxScreen');
               }}>
               <Icon
-                
                 SVGIcon={
                   <SVG.envelopeIcon
                     fill={
-                      focused ? COLORS.dark.primary : COLORS.dark.inputBorder
+                      focused ? COLORS.dark.primary : 'gray'
                     }
                     height={22}
                     width={22}
@@ -133,8 +129,7 @@ const BottomNavigation = ({ navigation }) => {
                 }
                 onPress={() => {
                   navigation.navigate('InboxScreen');
-                }
-                }
+                }}
               />
             </TouchableOpacity>
           ),
@@ -155,7 +150,7 @@ const BottomNavigation = ({ navigation }) => {
                 SVGIcon={
                   <SVG.bell
                     fill={
-                      focused ? COLORS.dark.primary : COLORS.dark.inputBorder
+                      focused ? COLORS.dark.primary : 'gray'
                     }
                     height={22}
                     width={22}
@@ -163,8 +158,7 @@ const BottomNavigation = ({ navigation }) => {
                 }
                 onPress={() => {
                   navigation.navigate('NotificationScreen');
-                }
-                }
+                }}
               />
             </TouchableOpacity>
           ),
@@ -185,7 +179,7 @@ const BottomNavigation = ({ navigation }) => {
                 SVGIcon={
                   <SVG.userIcon
                     fill={
-                      focused ? COLORS.dark.primary : COLORS.dark.inputBorder
+                      focused ? COLORS.dark.primary : 'gray'
                     }
                     height={22}
                     width={22}
@@ -193,8 +187,7 @@ const BottomNavigation = ({ navigation }) => {
                 }
                 onPress={() => {
                   navigation.navigate('EditProfileScreen');
-                }
-                }
+                }}
               />
             </TouchableOpacity>
           ),

@@ -141,6 +141,8 @@ const PartnerCard = ({ data }) => {
           <AppText
             title={item?.name || 'N/A'}
             variant="h6"
+            numberOfLines={1}
+            width="70%"
             color={COLORS.dark.black}
           />
           <View style={styles.locationContainer}>
@@ -150,7 +152,9 @@ const PartnerCard = ({ data }) => {
               />
               <AppText
                 title={item.city || 'N/A'}
-                color={COLORS.dark.inputBorder}
+                color={COLORS.dark.black}
+                numberOfLines={1}
+                width="70%"
                 extraStyle={[Fonts.PoppinsRegular, styles.locationText]}
               />
             </View>
@@ -159,7 +163,7 @@ const PartnerCard = ({ data }) => {
         <View style={styles.ageHeightActionContainer}>
           <AppText
             title={`Age ${item?.age || 'N/A'}, ${item.height}`}
-            color={COLORS.dark.inputBorder}
+            color={'gray'}
             extraStyle={[
               STYLES.fontFamily(Fonts.PoppinsRegular),
               STYLES.fontSize(11),
@@ -169,7 +173,7 @@ const PartnerCard = ({ data }) => {
         </View>
         <AppText
           title={item?.occupation || 'N/A'}
-          color={COLORS.dark.inputBorder}
+          color={'gray'}
           numberOfLines={1}
           extraStyle={[
             STYLES.fontFamily(Fonts.PoppinsRegular),
@@ -340,12 +344,12 @@ const styles = StyleSheet.create({
     paddingTop: 10,
   },
   actionButton: {
-    width: 17,
-    height: 17,
+    width: 23,
+    height: 23,
     borderRadius: 20,
     backgroundColor: COLORS.dark.primary,
     justifyContent: 'center',
-    marginLeft: 10,
+    marginLeft: 5,
   },
   occupationText: {
     marginLeft: -10,

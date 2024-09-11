@@ -106,7 +106,7 @@ const HorizontalCard = ({ data }) => {
               />
               <AppText
                 title={item.city || 'N/A'}
-                color={COLORS.dark.inputBorder}
+                color={COLORS.dark.black}
                 extraStyle={[Fonts.PoppinsRegular, styles.locationText]}
               />
             </View>
@@ -115,7 +115,7 @@ const HorizontalCard = ({ data }) => {
         <View style={styles.ageHeightActionContainer}>
           <AppText
             title={`Age ${item?.age || 'N/A'}, ${item.height}`}
-            color={COLORS.dark.inputBorder}
+            color={'gray'}
             extraStyle={[
               STYLES.fontFamily(Fonts.PoppinsRegular),
               STYLES.fontSize(11),
@@ -125,7 +125,7 @@ const HorizontalCard = ({ data }) => {
         </View>
         <AppText
           title={item?.occupation || 'N/A'}
-          color={COLORS.dark.inputBorder}
+          color={'gray'}
           numberOfLines={1}
           extraStyle={[
             STYLES.fontFamily(Fonts.PoppinsRegular),
@@ -290,12 +290,13 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   actionContainer: {
+    marginTop: 10,
     flexDirection: 'row',
     justifyContent: 'flex-end',
   },
   actionButton: {
-    width: 17,
-    height: 17,
+    width: 23,
+    height: 23,
     borderRadius: 20,
     backgroundColor:'#1E285F14',
     justifyContent: 'center',
@@ -317,12 +318,12 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   actionButton2:{
-    width: 17,
-    height: 17,
+    width: 23,
+    height: 23,
     borderRadius: 20,
     backgroundColor:'#F97B221A',
     justifyContent: 'center',
-    marginLeft: 10,
+    marginLeft: 5,
   },
 });
 

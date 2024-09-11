@@ -209,7 +209,7 @@ const SnapCarousel = ({data}) => {
           ) : (
             <Image
               source={IMAGES.chatIcon}
-              style={styles.bottomRightButtonIcon}
+              style={styles.bottomRightButtonIcon2}
             />
           )}
         </TouchableOpacity>
@@ -361,7 +361,7 @@ const styles = StyleSheet.create({
   bottomRightButton: {
     height: 30,
     width: 30,
-    backgroundColor: COLORS.dark.primary,
+    backgroundColor: '#fff',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 20,
@@ -370,6 +370,12 @@ const styles = StyleSheet.create({
   bottomRightButtonIcon: {
     width: 15,
     height: 15,
+    tintColor: '#1E285F',
+  },
+  bottomRightButtonIcon2: {
+    width: 15,
+    height: 15,
+    tintColor: '#F97B22',
   },
   paginationContainer: {
     paddingVertical: 8,
