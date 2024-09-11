@@ -42,33 +42,33 @@ const corsOptions = {
     }
   },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'content-type', 'ContentType'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'content-type', 'contenttype', 'ContentType'],
   exposedHeaders: ['Content-Length', 'Content-Range'],
   credentials: true,
   optionsSuccessStatus: 200
 };
 
+// Apply CORS middleware
 app.use(cors(corsOptions));
-app.use(cookieParser());
 
-// Preflight request handling
-app.options('*', cors(corsOptions));
+// Preflight request handling for all routes
+app.options('*', (req, res) => {
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, content-type, contenttype, ContentType');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.status(204).end();
+});
+
+app.use(cookieParser());
 
 const server = http.createServer(app);
 
 const io = new Server(server, {
-  cors: {
-    origin: function (origin, callback) {
-      if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
-    methods: ['GET', 'POST'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'content-type'],
-    credentials: true
-  }
+  cors: corsOptions
 });
 
 io.on("connection", (socket) => {
@@ -108,7 +108,7 @@ io.on("connection", (socket) => {
 });
 
 app.get("/", (req, res) => {
-  res.json({ version: "1.0.1:latest" });
+  res.json({ version: "1.0.0:latest" });
 });
 
 // Global middleware to set CORS headers for all routes
@@ -118,7 +118,7 @@ app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', origin);
   }
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, content-type, ContentType');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, content-type, contenttype, ContentType');
   res.header('Access-Control-Allow-Credentials', 'true');
   next();
 });
