@@ -24,10 +24,7 @@ app.use(bodyParser.json({ limit: "50mb" }));
 app.use(express.json({ limit: "50mb" }));
 app.use(
   cors({
-    origin: [
-      "http://localhost:3000",
-      "https://matri-admin-panel-52f6aaac61cf.herokuapp.com",
-    ],
+    origin: "*",
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
@@ -37,10 +34,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: [
-      "http://localhost:3000",
-      "https://matri-admin-panel-52f6aaac61cf.herokuapp.com",
-    ],
+    origin: "*",
     // origin: "https://metrimonial-backend-2c3a23b121fc.herokuapp.com/",
     methods: ["GET", "POST"],
   },
@@ -84,7 +78,9 @@ io.on("connection", (socket) => {
     console.log("User Disconnected", socket.id);
   });
 });
-
+app.get("/", (req, res) => {
+  res.json({ version: "1.0.0:latest" });
+});
 app.use(userRouter);
 app.use(adminRouter);
 app.use(paymentRouter);
