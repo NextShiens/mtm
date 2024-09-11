@@ -5,7 +5,7 @@ import { Dropdown } from 'react-native-element-dropdown';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL } from '../../../../constant';
 import { Toast } from '../../../utils/native';
-import {occupationList,indianCastes, workLocationList } from '../../../data/appData';
+import { occupationList, indianCastes, workLocationList } from '../../../data/appData';
 import { useNavigation } from '@react-navigation/native';
 
 
@@ -28,9 +28,9 @@ const UserProfileStep1 = () => {
     { label: 'Option 1', value: '1' },
     { label: 'Option 2', value: '2' },
     { label: 'Option 3', value: '3' },
-    {label: '16' , value: '16'},
+    { label: '16', value: '16' },
   ];
-  
+
   const genderOptions = [
     { label: 'Male', value: 'male' },
     { label: 'Female', value: 'Female' },
@@ -44,64 +44,64 @@ const UserProfileStep1 = () => {
     '6 feet 0 inches', '6 feet 1 inch', '6 feet 2 inches', '6 feet 3 inches', '6 feet 4 inches', '6 feet 5 inches',
     '6 feet 6 inches', '6 feet 7 inches', '6 feet 8 inches', '6 feet 9 inches', '6 feet 10 inches', '6 feet 11 inches',
     '7 feet 0 inches'
-];
+  ];
 
-const heightData = heights.map(height => ({
+  const heightData = heights.map(height => ({
     label: height,
     value: height
-}));
+  }));
 
-const statuses = ['Single', 'Divorced', 'Married', 'Widowed'];
+  const statuses = ['Single', 'Divorced', 'Married', 'Widowed'];
 
-const statusData = statuses.map(status => ({
+  const statusData = statuses.map(status => ({
     label: status,
     value: status
-}));
+  }));
 
 
-const languages = [
-  'Assamese', 'Bengali', 'Bhojpuri', 'Bodo', 'Dogri', 'English', 'Gujarati', 'Hindi', 'Kannada', 'Kashmiri',
-  'Konkani', 'Maithili', 'Malayalam', 'Manipuri', 'Marathi', 'Nepali', 'Odia', 'Punjabi', 'Rajasthani', 'Sanskrit',
-  'Santali', 'Sindhi', 'Tamil', 'Telugu', 'Tulu', 'Urdu'
-];
+  const languages = [
+    'Assamese', 'Bengali', 'Bhojpuri', 'Bodo', 'Dogri', 'English', 'Gujarati', 'Hindi', 'Kannada', 'Kashmiri',
+    'Konkani', 'Maithili', 'Malayalam', 'Manipuri', 'Marathi', 'Nepali', 'Odia', 'Punjabi', 'Rajasthani', 'Sanskrit',
+    'Santali', 'Sindhi', 'Tamil', 'Telugu', 'Tulu', 'Urdu'
+  ];
 
-const MotherTongues = languages.map(language => ({
-  label: language,
-  value: language
-}));
+  const MotherTongues = languages.map(language => ({
+    label: language,
+    value: language
+  }));
 
-const ageOptions = ["18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59", "60"];
+  const ageOptions = ["18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59", "60"];
 
-const ageData = ageOptions.map(age => ({
-  label: age,
-  value: age
-}));
+  const ageData = ageOptions.map(age => ({
+    label: age,
+    value: age
+  }));
 
-const religionsInIndia = [
-  "Hinduism",
-  "Christianity",
-  "Sikhism",
-  "Buddhism",
-  "Jainism",
-  "Zoroastrianism",
-  "Judaism",
-  "Others"
-];
+  const religionsInIndia = [
+    "Hinduism",
+    "Christianity",
+    "Sikhism",
+    "Buddhism",
+    "Jainism",
+    "Zoroastrianism",
+    "Judaism",
+    "Others"
+  ];
 
-const religionData = religionsInIndia.map(religion => ({
-  label: religion,
-  value: religion
-})); 
+  const religionData = religionsInIndia.map(religion => ({
+    label: religion,
+    value: religion
+  }));
 
-const casteData = indianCastes.map(caste => ({
-  label: caste,
-  value: caste
-}));
+  const casteData = indianCastes.map(caste => ({
+    label: caste,
+    value: caste
+  }));
 
-const cities = workLocationList.map(city => ({
-  label: city,
-  value: city
-}));
+  const cities = workLocationList.map(city => ({
+    label: city,
+    value: city
+  }));
 
 
 
@@ -112,7 +112,7 @@ const cities = workLocationList.map(city => ({
         const userData = await AsyncStorage.getItem('theUser');
         if (userData !== null) {
           const parsedData = JSON.parse(userData);
-          const user = parsedData.user; 
+          const user = parsedData.user;
           setAge(user.age);
           setGender(user.gender);
           setHeight(user.height);
@@ -133,7 +133,7 @@ const cities = workLocationList.map(city => ({
     fetchUserData();
   }, []);
 
-  
+
   const handleSave = async () => {
     const userProfile = {};
 
@@ -187,14 +187,14 @@ const cities = workLocationList.map(city => ({
   };
   return (
     <ScrollView style={styles.container}>
-       <View style={styles.flexrow}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Image source={require('../../../assets/images/leftarrow.png')} />
-          </TouchableOpacity>
-          <Text style={styles.heading}>Basic Info</Text>
-        </View>
+      <View style={styles.flexrow}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.back}>
+          <Image source={require('../../../assets/images/leftarrow.png')} />
+        </TouchableOpacity>
+        <Text style={styles.heading}>Basic Info</Text>
+      </View>
       {/* <Text style={styles.header}>Basic Info</Text> */}
-      <Text style={styles.stepText}>Step 1</Text>
+      <Text style={styles.stepText1}>Step 1</Text>
       <Text style={styles.stepText}>Age</Text>
       <Dropdown
         style={styles.dropdown}
@@ -202,7 +202,7 @@ const cities = workLocationList.map(city => ({
         labelField="label"
         valueField="value"
         placeholder={age}
-        placeholderStyle={{color: 'gray'}}
+        placeholderStyle={{ color: 'gray' }}
         search={true}
         searchPlaceholder="Search"
         searchPlaceholderTextColor="gray"
@@ -210,7 +210,7 @@ const cities = workLocationList.map(city => ({
         selectedTextStyle={styles.selectedTextStyle}
         value={age}
         onChange={(item) => setAge(item.value)}
-        itemTextStyle={{color: 'black'}}
+        itemTextStyle={{ color: 'black' }}
       />
       <Text style={styles.stepText}>Gender</Text>
       <Dropdown
@@ -222,12 +222,12 @@ const cities = workLocationList.map(city => ({
         search={true}
         searchPlaceholder="Search"
         searchPlaceholderTextColor="gray"
-        placeholderStyle={{color: 'gray'}}
+        placeholderStyle={{ color: 'gray' }}
         inputSearchStyle={styles.inputSearchStyle}
         selectedTextStyle={styles.selectedTextStyle}
         value={gender}
         onChange={(item) => setGender(item.value)}
-        itemTextStyle={{color: 'black'}}
+        itemTextStyle={{ color: 'black' }}
       />
       <Text style={styles.stepText}>Height</Text>
       <Dropdown
@@ -239,19 +239,19 @@ const cities = workLocationList.map(city => ({
         search={true}
         searchPlaceholder="Search"
         searchPlaceholderTextColor="gray"
-        placeholderStyle={{color: 'gray'}}
+        placeholderStyle={{ color: 'gray' }}
         inputSearchStyle={styles.inputSearchStyle}
         selectedTextStyle={styles.selectedTextStyle}
         value={height}
         onChange={(item) => setHeight(item.value)}
-        itemTextStyle={{color: 'black'}}
+        itemTextStyle={{ color: 'black' }}
       />
       <Text style={styles.stepText}>Date Of Birth</Text>
       <TextInput
-        style={[styles.textInput, { color: '#333' }]} // Added color to the text
+        style={[styles.textInput, { color: '#333' }]}
         placeholder="DD/MM/YY"
         placeholderTextColor='gray'
-        placeholderStyle={{color: 'gray'}}
+        placeholderStyle={{ color: 'gray' }}
         inputSearchStyle={styles.inputSearchStyle}
         selectedTextStyle={styles.selectedTextStyle}
         value={dob}
@@ -267,12 +267,12 @@ const cities = workLocationList.map(city => ({
         search={true}
         searchPlaceholder="Search"
         searchPlaceholderTextColor="gray"
-        placeholderStyle={{color: 'gray'}}
+        placeholderStyle={{ color: 'gray' }}
         inputSearchStyle={styles.inputSearchStyle}
         selectedTextStyle={styles.selectedTextStyle}
         value={maritalStatus}
         onChange={(item) => setMaritalStatus(item.value)}
-        itemTextStyle={{color: 'black'}}
+        itemTextStyle={{ color: 'black' }}
       />
       <Text style={styles.stepText}>Religion</Text>
       <Dropdown
@@ -284,12 +284,12 @@ const cities = workLocationList.map(city => ({
         search={true}
         searchPlaceholder="Search"
         searchPlaceholderTextColor="gray"
-        placeholderStyle={{color: 'gray'}}
+        placeholderStyle={{ color: 'gray' }}
         inputSearchStyle={styles.inputSearchStyle}
         selectedTextStyle={styles.selectedTextStyle}
         value={religion}
         onChange={(item) => setReligion(item.value)}
-        itemTextStyle={{color: 'black'}}
+        itemTextStyle={{ color: 'black' }}
       />
       <Text style={styles.stepText}>Mother Tongue</Text>
       <Dropdown
@@ -301,12 +301,13 @@ const cities = workLocationList.map(city => ({
         search={true}
         searchPlaceholder="Search"
         searchPlaceholderTextColor="gray"
-        placeholderStyle={{color: 'gray'}}
+        placeholderStyle={{ color: 'gray' }}
         inputSearchStyle={styles.inputSearchStyle}
         selectedTextStyle={styles.selectedTextStyle}
         value={motherTongue}
         onChange={(item) => setMotherTongue(item.value)}
-        itemTextStyle={{color: 'black'}}
+        itemTextStyle={{ color: 'black' }}
+         dropdownPosition="top"
       />
       <Text style={styles.stepText}>Cast</Text>
       <Dropdown
@@ -318,12 +319,13 @@ const cities = workLocationList.map(city => ({
         search={true}
         searchPlaceholder="Search"
         searchPlaceholderTextColor="gray"
-        placeholderStyle={{color: 'gray'}}
+        placeholderStyle={{ color: 'gray' }}
         inputSearchStyle={styles.inputSearchStyle}
         selectedTextStyle={styles.selectedTextStyle}
         value={caste}
         onChange={(item) => setCast(item.value)}
-        itemTextStyle={{color: 'black'}}
+        itemTextStyle={{ color: 'black' }}
+         dropdownPosition="top"
       />
       <Text style={styles.stepText}>City</Text>
       <Dropdown
@@ -335,12 +337,13 @@ const cities = workLocationList.map(city => ({
         search={true}
         searchPlaceholder="Search"
         searchPlaceholderTextColor="gray"
-        placeholderStyle={{color: 'black'}}
+        placeholderStyle={{ color: 'black' }}
         inputSearchStyle={styles.inputSearchStyle}
         selectedTextStyle={styles.selectedTextStyle}
         value={city}
         onChange={(item) => setCity(item.value)}
-        itemTextStyle={{color: 'black'}}
+        itemTextStyle={{ color: 'black' }}
+         dropdownPosition="top"
       />
 
       <TouchableOpacity style={styles.saveButton} onPress={handleSave} disabled={isLoading}>
@@ -368,28 +371,39 @@ const styles = StyleSheet.create({
     // marginBottom: 10,
     color: '#333',
   },
+  stepText1: {
+    color: '#1A1A1A',
+    fontSize: 16,
+    fontStyle: 'normal',
+    fontWeight: '700',
+    lineHeight: 26,
+    textTransform: 'capitalize',
+    marginVertical: 10,
+  },
   dropdown: {
-    marginBottom: 10,
-    height: 60,
-    borderColor: '#ccc',
+    marginVertical: 10,
+    height: 56,
+    borderColor: '#E5E5E5',
     borderWidth: 1,
-    borderRadius: 8,
+    borderRadius: 16,
     paddingHorizontal: 8,
   },
   textInput: {
-    marginBottom: 10,
-    height: 60,
-    borderColor: '#ccc',
+    marginVertical: 10,
+    height: 56,
+    borderColor: '#E5E5E5',
     borderWidth: 1,
-    borderRadius: 8,
+    borderRadius: 16,
     paddingHorizontal: 8,
   },
   saveButton: {
-    height: 50,
+    height: 56,
     backgroundColor: '#ff9900',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 8,
+    borderRadius: 16,
+    marginTop: 15,
+    marginBottom: 50,
   },
   saveText: {
     color: '#fff',
@@ -406,15 +420,26 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 20,
-    alignSelf: 'center',
     marginBottom: 10,
   },
   heading: {
-    fontSize: 16,
-    color: 'black',
+    color: '#1A1A1A',
     textAlign: 'center',
-    width: '85%',
+    fontFamily: 'DM Sans',
+    fontSize: 21,
+    fontStyle: 'normal',
     fontWeight: '700',
+    lineHeight: 26,
+    textTransform: 'capitalize',
+    width: '85%',
+  },
+  back: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: '#F5F5F5',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
