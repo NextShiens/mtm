@@ -178,7 +178,7 @@ const ReligionPage = () => {
   return (
     <ScrollView style={styles.container}>
        <View style={styles.flexrow}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
+          <TouchableOpacity onPress={() => navigation.goBack()} style={styles.back}>
             <Image source={require('../../../src/assets/images/leftarrow.png')} />
           </TouchableOpacity>
           <Text style={styles.heading}>Religion</Text>
@@ -284,6 +284,7 @@ const ReligionPage = () => {
         value={dosh}
         onChange={item => setDosh(item.value)}
         itemTextStyle={{ color: 'black' }}
+        dropdownPosition='top'
       />
       <Text style={styles.stepText}>Birth Place</Text>
       <Dropdown
@@ -301,6 +302,7 @@ const ReligionPage = () => {
         value={birthPlace}
         onChange={item => setBirthPlace(item.value)}
         itemTextStyle={{ color: 'black' }}
+        dropdownPosition='top'
       />
       <Text style={styles.stepText}>Birth Time</Text>
       <Dropdown
@@ -318,6 +320,7 @@ const ReligionPage = () => {
         value={birthTime}
         onChange={item => setBirthTime(item.value)}
         itemTextStyle={{ color: 'black' }}
+        dropdownPosition='top'
       />
 
       <TouchableOpacity style={styles.saveButton} onPress={handleSave} disabled={isLoading}>
@@ -346,27 +349,30 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   dropdown: {
-    marginBottom: 10,
-    height: 60,
+    marginVertical: 10,
+    height: 56,
     borderColor: '#ccc',
-    borderWidth: 0.5,
-    borderRadius: 15,
+    borderWidth: 1,
+    borderRadius: 16,
     paddingHorizontal: 8,
   },
   textInput: {
     marginBottom: 10,
-    height: 60,
+    height: 56,
     borderColor: '#ccc',
     borderWidth: 1,
-    borderRadius: 8,
+    borderRadius: 16,
     paddingHorizontal: 8,
   },
   saveButton: {
-    height: 50,
+    height: 56,
+
     backgroundColor: '#ff9900',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 8,
+    borderRadius: 16,
+    marginTop: 20,
+    marginBottom: 50,
   },
   saveText: {
     color: '#fff',
@@ -383,15 +389,26 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 20,
-    alignSelf: 'center',
     marginBottom: 10,
   },
   heading: {
-    fontSize: 16,
-    color: 'black',
+    color: '#1A1A1A',
     textAlign: 'center',
-    width: '85%',
+    fontFamily: 'DM Sans',
+    fontSize: 21,
+    fontStyle: 'normal',
     fontWeight: '700',
+    lineHeight: 26,
+    textTransform: 'capitalize',
+    width: '85%',
+  },
+  back: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: '#F5F5F5',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

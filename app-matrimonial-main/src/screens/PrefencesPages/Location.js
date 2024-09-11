@@ -1,10 +1,10 @@
-import React, { useState,useEffect } from 'react';
-import { View, StyleSheet, TouchableOpacity, Image,Text ,ToastAndroid} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, TouchableOpacity, Image, Text, ToastAndroid } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL } from '../../../constant';
 import { useNavigation } from '@react-navigation/native';
-import { indianCastes,QualificationList, occupationList, workLocationList, indianMotherTongues} from '../../data/appData';
+import { indianCastes, QualificationList, occupationList, workLocationList, indianMotherTongues } from '../../data/appData';
 
 
 
@@ -17,7 +17,7 @@ const LocationPage = () => {
   const [initialUserData, setInitialUserData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
 
-  const countries =['india'];
+  const countries = ['india'];
   const countrie = countries.map(country => ({
     label: country,
     value: country
@@ -30,7 +30,7 @@ const LocationPage = () => {
 
   const handleSave = async () => {
     const userProfile = {};
-  
+
     if (country !== initialUserData.FamilyDetails.country) userProfile.country = country;
     if (state !== initialUserData.FamilyDetails.state) userProfile.state = state;
     if (city !== initialUserData.FamilyDetails.city) userProfile.city = city;
@@ -38,7 +38,7 @@ const LocationPage = () => {
       ToastAndroid.showWithGravityAndOffset('No changes to save.', ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
       return;
     }
-  
+
     try {
       setIsLoading(true);
       const token = await AsyncStorage.getItem('AccessToken');
@@ -50,7 +50,7 @@ const LocationPage = () => {
         },
         body: JSON.stringify(userProfile),
       });
-  
+
       const result = await response.json();
       if (!response.ok) {
         console.log('result', result);
@@ -91,7 +91,7 @@ const LocationPage = () => {
     { label: 'Houston', value: 'houston' },
   ];
 
-  const stateOptions= [
+  const stateOptions = [
     'Andhra Pradesh',
     'Arunachal Pradesh',
     'Assam',
@@ -132,7 +132,7 @@ const LocationPage = () => {
     label: state,
     value: state
   }));
-  
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -140,7 +140,7 @@ const LocationPage = () => {
         console.log('userData', userData);
         if (userData !== null) {
           const parsedData = JSON.parse(userData);
-          const user = parsedData.user; 
+          const user = parsedData.user;
           setCountry(user.FamilyDetails.country);
           setState(user.FamilyDetails.state);
           setCity(user.FamilyDetails.city);
@@ -157,12 +157,12 @@ const LocationPage = () => {
 
   return (
     <View style={styles.container}>
-             <View style={styles.flexrow}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Image source={require('../../../src/assets/images/leftarrow.png')} />
-          </TouchableOpacity>
-          <Text style={styles.heading}>Location</Text>
-        </View>
+      <View style={styles.flexrow}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.back}>
+          <Image source={require('../../../src/assets/images/leftarrow.png')} />
+        </TouchableOpacity>
+        <Text style={styles.heading}>Location</Text>
+      </View>
       <Text style={styles.headerText}>Country</Text>
       <Dropdown
         style={styles.dropdown}
@@ -173,12 +173,12 @@ const LocationPage = () => {
         search={true}
         searchPlaceholder="Search"
         searchPlaceholderTextColor="gray"
-        placeholderStyle={{color: 'gray'}}
+        placeholderStyle={{ color: 'gray' }}
         inputSearchStyle={styles.inputSearchStyle}
         selectedTextStyle={styles.selectedTextStyle}
         value={country}
         onChange={item => setCountry(item.value)}
-        itemTextStyle={{color: 'black'}}
+        itemTextStyle={{ color: 'black' }}
       />
       <Text style={styles.headerText}>State</Text>
       <Dropdown
@@ -190,12 +190,12 @@ const LocationPage = () => {
         search={true}
         searchPlaceholder="Search"
         searchPlaceholderTextColor="gray"
-        placeholderStyle={{color: 'gray'}}
+        placeholderStyle={{ color: 'gray' }}
         inputSearchStyle={styles.inputSearchStyle}
         selectedTextStyle={styles.selectedTextStyle}
         value={state}
         onChange={item => setState(item.value)}
-        itemTextStyle={{color: 'black'}}
+        itemTextStyle={{ color: 'black' }}
       />
       <Text style={styles.headerText}>City</Text>
       <Dropdown
@@ -207,12 +207,12 @@ const LocationPage = () => {
         search={true}
         searchPlaceholder="Search"
         searchPlaceholderTextColor="gray"
-        placeholderStyle={{color: 'gray'}}
+        placeholderStyle={{ color: 'gray' }}
         inputSearchStyle={styles.inputSearchStyle}
         selectedTextStyle={styles.selectedTextStyle}
         value={city}
         onChange={item => setCity(item.value)}
-        itemTextStyle={{color: 'black'}}
+        itemTextStyle={{ color: 'black' }}
       />
       <TouchableOpacity style={styles.saveButton} onPress={handleSave} disabled={isLoading}>
         <Text style={styles.saveText}>
@@ -226,62 +226,93 @@ const LocationPage = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    padding: 15,
     backgroundColor: '#fff',
-    padding: 16,
+  },
+  header: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    // marginBottom: 10,
+  },
+  stepText: {
+    fontSize: 16,
+    // marginBottom: 10,
+    color: '#333',
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  centerText: {
+    flex: 1,
+    textAlign: 'center',
+    fontSize: 16,
+    color: '#333',
   },
   dropdown: {
-    height: 60,
-    borderColor: 'gray',
-    borderWidth: 0.5,
-    borderRadius: 8,
+    marginVertical: 10,
+    height: 56,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 16,
     paddingHorizontal: 8,
-    marginBottom: 16,
   },
-  placeholderStyle: {
-    fontSize: 16,
-  },
-  selectedTextStyle: {
-    fontSize: 16,
-    color: '#000',
-  },
-  inputSearchStyle: {
-    height: 40,
-    fontSize: 16,
-    color: 'gray',
-  },
-  iconStyle: {
-    width: 20,
-    height: 20,
+  textInput: {
+    marginBottom: 10,
+    height: 56,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 16,
+    paddingHorizontal: 8,
   },
   saveButton: {
-    height: 50,
+    height: 56,
+
     backgroundColor: '#ff9900',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 8,
+    borderRadius: 16,
+    marginTop: 20,
+    marginBottom: 50,
   },
   saveText: {
     color: '#fff',
-    fontSize: 16,
+    fontWeight: 'bold',
   },
-  headerText: {
+  inputSearchStyle: {
+    color: '#333',
+  },
+  selectedTextStyle: {
     fontSize: 14,
-    color: '#000',
+    color: '#333',
   },
   flexrow: {
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 20,
-    alignSelf: 'center',
     marginBottom: 10,
   },
   heading: {
-    fontSize: 16,
-    color: 'black',
+    color: '#1A1A1A',
     textAlign: 'center',
-    width: '85%',
+    fontFamily: 'DM Sans',
+    fontSize: 21,
+    fontStyle: 'normal',
     fontWeight: '700',
+    lineHeight: 26,
+    textTransform: 'capitalize',
+    width: '85%',
+  },
+  back: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: '#F5F5F5',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
+
 
 export default LocationPage;

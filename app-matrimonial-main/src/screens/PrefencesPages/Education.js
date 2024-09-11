@@ -358,7 +358,7 @@ const EducationPage = () => {
   return (
     <View style={styles.container}>
         <View style={styles.flexrow}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
+          <TouchableOpacity onPress={() => navigation.goBack()}  style={styles.back}>
             <Image source={require('../../../src/assets/images/leftarrow.png')} />
           </TouchableOpacity>
           <Text style={styles.heading}>Education</Text>
@@ -426,62 +426,91 @@ const EducationPage = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    padding: 15,
     backgroundColor: '#fff',
-    padding: 16,
+  },
+  header: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    // marginBottom: 10,
+  },
+  stepText: {
+    fontSize: 16,
+    // marginBottom: 10,
+    color: '#333',
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  centerText: {
+    flex: 1,
+    textAlign: 'center',
+    fontSize: 16,
+    color: '#333',
   },
   dropdown: {
-    height: 60,
-    borderColor: 'gray',
-    borderWidth: 0.5,
-    borderRadius: 8,
+    marginVertical: 10,
+    height: 56,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 16,
     paddingHorizontal: 8,
-    marginBottom: 16,
   },
-  placeholderStyle: {
-    fontSize: 16,
-  },
-  selectedTextStyle: {
-    fontSize: 16,
-    color: '#000',
-  },
-  inputSearchStyle: {
-    height: 40,
-    fontSize: 16,
-    color: 'gray',
-  },
-  iconStyle: {
-    width: 20,
-    height: 20,
+  textInput: {
+    marginBottom: 10,
+    height: 56,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 16,
+    paddingHorizontal: 8,
   },
   saveButton: {
-    height: 50,
+    height: 56,
+
     backgroundColor: '#ff9900',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 8,
+    borderRadius: 16,
+    marginTop: 20,
+    marginBottom: 50,
   },
   saveText: {
     color: '#fff',
-    fontSize: 16,
+    fontWeight: 'bold',
   },
-  headerText: {
+  inputSearchStyle: {
+    color: '#333',
+  },
+  selectedTextStyle: {
     fontSize: 14,
-    color: '#000',
-    marginBottom: 10,
+    color: '#333',
   },
   flexrow: {
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 20,
-    alignSelf: 'center',
     marginBottom: 10,
   },
   heading: {
-    fontSize: 16,
-    color: 'black',
+    color: '#1A1A1A',
     textAlign: 'center',
-    width: '85%',
+    fontFamily: 'DM Sans',
+    fontSize: 21,
+    fontStyle: 'normal',
     fontWeight: '700',
+    lineHeight: 26,
+    textTransform: 'capitalize',
+    width: '85%',
+  },
+  back: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: '#F5F5F5',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

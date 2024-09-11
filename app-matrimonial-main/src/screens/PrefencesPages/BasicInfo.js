@@ -205,7 +205,7 @@ const lookingfor = lookingForOptions.map(looking => ({
   return (
     <ScrollView style={styles.container}>
        <View style={styles.flexrow}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
+          <TouchableOpacity onPress={() => navigation.goBack()} style={styles.back}>
             <Image source={require('../../../src/assets/images/leftarrow.png')} />
           </TouchableOpacity>
           <Text style={styles.heading}>BasicInfo</Text>
@@ -401,6 +401,7 @@ const lookingfor = lookingForOptions.map(looking => ({
         value={familyStatus}
         onChange={item => setFamilyStatus(item.value)}
         itemTextStyle={{color: 'black'}}
+        dropdownPosition='top'
       />
       <Text style={styles.stepText}>Family Value</Text>
       <Dropdown
@@ -418,6 +419,7 @@ const lookingfor = lookingForOptions.map(looking => ({
         value={familyValue}
         onChange={item => setFamilyValue(item.value)}
         itemTextStyle={{color: 'black'}}
+        dropdownPosition='top'
       />
       <Text style={styles.stepText}>Father Occupation</Text>
       <Dropdown
@@ -435,6 +437,7 @@ const lookingfor = lookingForOptions.map(looking => ({
         value={fathersOccupation}
         onChange={item => setFatherOccupation(item.value)}
         itemTextStyle={{color: 'black'}}
+        dropdownPosition='top'
       />
       <TouchableOpacity style={styles.saveButton} onPress={handleSave} disabled={isLoading}>
         <Text style={styles.saveText}>
@@ -473,7 +476,7 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   dropdown: {
-    marginBottom: 10,
+    marginVertical: 10,
     height: 56,
     borderColor: '#ccc',
     borderWidth: 1,
@@ -482,18 +485,21 @@ const styles = StyleSheet.create({
   },
   textInput: {
     marginBottom: 10,
-    height: 60,
+    height: 56,
     borderColor: '#ccc',
     borderWidth: 1,
-    borderRadius: 8,
+    borderRadius: 16,
     paddingHorizontal: 8,
   },
   saveButton: {
-    height: 50,
+    height: 56,
+
     backgroundColor: '#ff9900',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 8,
+    borderRadius: 16,
+    marginTop: 20,
+    marginBottom: 50,
   },
   saveText: {
     color: '#fff',
@@ -509,16 +515,27 @@ const styles = StyleSheet.create({
   flexrow: {
     flexDirection: 'row',
     alignItems: 'center',
-    // marginTop: 20,
-    alignSelf: 'center',
+    marginTop: 20,
     marginBottom: 10,
   },
   heading: {
-    fontSize: 16,
-    color: 'black',
+    color: '#1A1A1A',
     textAlign: 'center',
-    width: '85%',
+    fontFamily: 'DM Sans',
+    fontSize: 21,
+    fontStyle: 'normal',
     fontWeight: '700',
+    lineHeight: 26,
+    textTransform: 'capitalize',
+    width: '85%',
+  },
+  back: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: '#F5F5F5',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

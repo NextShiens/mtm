@@ -75,14 +75,14 @@ const CriteriaPage = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.flexrow}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.back}>
           <Image source={require('../../assets/images/leftarrow.png')} />
         </TouchableOpacity>
-        <Text style={styles.heading}>PartnerExpectation</Text>
+        <Text style={styles.heading}>Partner Expectation</Text>
       </View>
 
       <View style={styles.inputContainer}>
-        <Text style={styles.label}>Partner Expectation</Text>
+        {/* <Text style={styles.label}>Partner Expectation</Text> */}
         <TextInput
           style={styles.input}
           placeholder={partnerExpectation||'Enter your partner expectation'}
@@ -128,9 +128,10 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   input: {
-    backgroundColor: '#F5F5F5',
-    height: 100,
-    borderColor: 'gray',
+    backgroundColor: '#ffffff',
+    height: 140,
+    color: '#949494',  
+    borderColor: '#ccc',
     borderWidth: 1,
     textAlignVertical: 'top',
     padding:10,
@@ -138,23 +139,52 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   saveButton: {
-    backgroundColor: '#FF7F00',
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 8,
-    alignSelf: 'flex-end',
+    height: 56,
+
+    backgroundColor: '#ff9900',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 16,
+    marginTop: 20,
+    marginBottom: 50,
   },
-  saveButtonText: {
-    color: 'white',
-    fontSize: 16,
+  saveText: {
+    color: '#fff',
     fontWeight: 'bold',
+  },
+  inputSearchStyle: {
+    color: '#333',
+  },
+  selectedTextStyle: {
+    fontSize: 14,
+    color: '#333',
+  },
+  flexrow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    // marginTop: 20,
+    marginBottom: 25,
   },
   heading: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginLeft: 10,
-    color: 'black',
+    color: '#1A1A1A',
+    textAlign: 'center',
+    fontFamily: 'DM Sans',
+    fontSize: 21,
+    fontStyle: 'normal',
+    fontWeight: '700',
+    lineHeight: 26,
+    textTransform: 'capitalize',
+    width: '85%',
   },
+  back: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: '#F5F5F5',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
 });
 
 export default CriteriaPage;
