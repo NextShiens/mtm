@@ -91,6 +91,7 @@ const CustomDrawerContent = ({props}) => {
       setUserImage(user.user.userImages[0]);
       setUserProfession(user.user.occupation);
       setUserEmail(user.user.email);
+      console.log('User 656785765676data:', user);
     } catch (error) {
       console.error('Error fetching user data:', error);
     }

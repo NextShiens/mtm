@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   TextInput,
@@ -12,11 +12,12 @@ import {
   Dimensions,
   FlatList,
   Alert,
+  RefreshControl,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {API_URL} from '../../../../constant';
-import {Toast} from '../../../utils/native';
+import { API_URL } from '../../../../constant';
+import { Toast } from '../../../utils/native';
 import * as ImagePicker from 'react-native-image-picker';
 
 const MyAccountScreen = () => {
@@ -26,9 +27,9 @@ const MyAccountScreen = () => {
   const [phone, setPhoneNumber] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [images, setImages] = useState([]); // Store selected images
-  const [initialFullName, setInitialFullName] = useState('');
-  const [initialPhone, setInitialPhone] = useState('');
+  const [images, setImages] = useState([]);
+  const [initialUserData, setInitialUserData] = useState({});
+  const [refreshing, setRefreshing] = useState(false);
   const screenWidth = Dimensions.get('window').width; // Get the screen width
 
   // Function to handle image selection
@@ -49,36 +50,41 @@ const MyAccountScreen = () => {
       } else if (response.errorMessage) {
         console.log('ImagePicker Error: ', response.errorMessage);
       } else if (response.assets) {
-        const selectedImages = response.assets.map(asset => asset.uri);
-        setImages(prevImages => [...prevImages, ...selectedImages]); // Append the new images to the existing ones
         response.assets.forEach(asset => uploadImage(asset)); // Upload each selected image
       }
     });
   };
 
   const uploadImage = async imageFile => {
+    debugger;
     try {
+      if (images.length >= 3) {
+        Toast('You can upload only 3 images');
+        return;
+      }
       const token = await AsyncStorage.getItem('AccessToken');
       if (!token) {
         throw new Error('No access token found');
       }
 
       const formData = new FormData();
+
+      // Use File instead of Blob if possible
       const fileUri = imageFile.uri;
-      const filename = imageFile.fileName || fileUri.split('/').pop();
+      const filename = imageFile.name || fileUri.split('/').pop();
       const match = /\.(\w+)$/.exec(filename);
       const type = match ? `image/${match[1]}` : 'image';
 
-      formData.append('file', {uri: fileUri, name: filename, type});
+      formData.append('file', { uri: fileUri, name: filename, type });
 
       const response = await fetch(`${API_URL}/user/uploadFile`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
+          // Let the browser set the Content-Type header for multipart/form-data
         },
         body: formData,
       });
-      console.log('response', response);
 
       if (!response.ok) {
         const errorText = await response.text();
@@ -87,6 +93,8 @@ const MyAccountScreen = () => {
       }
 
       const result = await response.json();
+
+      setImages(prevImages => [...prevImages, result.fileUrl]);
       Toast('Profile picture uploaded successfully');
     } catch (error) {
       console.error('Error uploading image:', error.message);
@@ -99,17 +107,12 @@ const MyAccountScreen = () => {
       setIsLoading(true);
       const token = await AsyncStorage.getItem('AccessToken');
 
+      const userProfile = {};
+
       // Build the request body dynamically based on changes
-      const updatedFields = {};
-      if (phone !== initialPhone) {
-        updatedFields.phone = phone;
-      }
-      if (fullName !== initialFullName) {
-        updatedFields.name = fullName;
-      }
-      if (images.length > 0) {
-        updatedFields.userImages = images;
-      }
+      if (fullName !== initialUserData.name) userProfile.name = fullName;
+      if (phone !== initialUserData.phone) userProfile.phone = phone;
+      if (images.length >= 0) userProfile.userImages = images;
 
       const response = await fetch(`${API_URL}/user/updateProfile`, {
         method: 'PUT',
@@ -117,7 +120,7 @@ const MyAccountScreen = () => {
           'Content-Type': 'application/json',
           authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(updatedFields),
+        body: JSON.stringify(userProfile),
       });
 
       const result = await response.json();
@@ -128,13 +131,13 @@ const MyAccountScreen = () => {
         const userData = await AsyncStorage.getItem('theUser');
         if (userData) {
           const parsedUser = JSON.parse(userData);
-          if (updatedFields.phone) {
+          if (userProfile.phone) {
             parsedUser.user.phone = phone;
           }
-          if (updatedFields.name) {
+          if (userProfile.name) {
             parsedUser.user.name = fullName;
           }
-          if (images.length > 0) {
+          if (userProfile.userImages) {
             parsedUser.user.userImages = images;
           }
           await AsyncStorage.setItem('theUser', JSON.stringify(parsedUser));
@@ -149,38 +152,44 @@ const MyAccountScreen = () => {
     }
   };
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const userData = await AsyncStorage.getItem('theUser');
-        console.log('User data:', userData);
-        if (userData) {
-          const parsedUser = JSON.parse(userData);
-          const user = parsedUser.user;
-          setEmail(user.email);
-          setPhoneNumber(user.phone);
-          setPassword(user.password);
-          setFullName(user.name);
-          setInitialPhone(user.phone);
-          setInitialFullName(user.name);
-        }
-      } catch (error) {
-        console.error('Failed to fetch user data:', error);
+  const fetchUser = async () => {
+    try {
+      const userData = await AsyncStorage.getItem('theUser');
+      console.log('User data:', userData);
+      if (userData) {
+        const parsedUser = JSON.parse(userData);
+        const user = parsedUser.user;
+        setEmail(user.email);
+        setPhoneNumber(user.phone);
+        setPassword(user.password);
+        setFullName(user.name);
+        setImages(user.userImages);
+        setInitialUserData(user);
       }
-    };
+    } catch (error) {
+      console.error('Failed to fetch user data:', error);
+    }
+  };
 
+  useEffect(() => {
     fetchUser();
   }, []);
 
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await fetchUser();
+    setRefreshing(false);
+  };
+
   // Function to delete an image from the images array
   const deleteImage = uri => {
-    setImages(images.filter(image => image !== uri));
+    setImages(prevImages => prevImages.filter(image => image !== uri));
   };
 
   // Render each image in the FlatList
-  const renderImage = ({item}) => (
+  const renderImage = ({ item }) => (
     <View style={styles.imageWrapper}>
-      <Image source={{uri: item}} style={styles.imagePreview} />
+      <Image source={{ uri: item }} style={styles.imagePreview} />
       <TouchableOpacity
         style={styles.deleteIcon}
         onPress={() => deleteImage(item)}>
@@ -191,7 +200,10 @@ const MyAccountScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }>
         <View style={styles.flexrow}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <Image source={require('../../../assets/images/leftarrow.png')} />
@@ -203,7 +215,7 @@ const MyAccountScreen = () => {
         <View style={styles.imageUploadContainer}>
           <TouchableOpacity style={styles.uploadButton} onPress={selectImages}>
             <Image
-              source={require('../../../assets/images/appleIcon.png')}
+              source={require('../../../assets/images/cloud-computing.png')}
               style={styles.uploadIcon}
             />
             <Text style={styles.uploadText}>
