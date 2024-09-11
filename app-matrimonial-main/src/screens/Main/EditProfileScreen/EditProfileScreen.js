@@ -59,7 +59,7 @@ const EditProfileScreen = () => {
       <View style={styles.profileSection}>
         <Image
           source={{
-            uri: user?.profileImage || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDbaDlF08MuAunpJmKR4yb59aeBwQTlt_S4g&s',
+            uri: user?.user?.userImages[0] || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDbaDlF08MuAunpJmKR4yb59aeBwQTlt_S4g&s',
           }}
           style={styles.profileImage}
         />

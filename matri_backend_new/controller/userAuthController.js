@@ -545,7 +545,8 @@ const userAuthController = {
       const {
           phone, name, dateOfBirth, userImages, email, gender, height, city, motherTongue,drinking, partnerExpectation, highestDegree, occupation, maritalStatus, employedIn, annualIncome, numOfSisters, numOfMarriedSisters, numOfBrothers, numOfMarriedBrothers, country, state, education, income, fathersOccupation, familyValue, familyStatus, familyType, smoking, food, physicalStatus, lookingFor, heightFrom, heightTo, ageFrom, ageTo, dosh, star, birthTime, birthPlace, religion, caste, sect, manglik,
       } = req.body;
-  
+
+      console.log(req.body.userImages,"jdsjshakjhdafkjhaghahggdg");
       const userId = req.user._id;
   
       const user = await User.findById(userId);
