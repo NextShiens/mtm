@@ -1,13 +1,13 @@
-import React, { useState,useEffect } from 'react';
-import { View, TextInput, StyleSheet, Text, TouchableOpacity, Image,ToastAndroid } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, TextInput, StyleSheet, Text, TouchableOpacity, Image, ToastAndroid, ActivityIndicator, RefreshControl, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL } from '../../../constant';
-
 
 const CriteriaPage = ({ navigation }) => {
   const [partnerExpectation, setPartnerExpectation] = useState('');
   const [initialUserData, setInitialUserData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
   const handleSave = async () => {
     const userProfile = {};
@@ -17,7 +17,7 @@ const CriteriaPage = ({ navigation }) => {
       ToastAndroid.showWithGravityAndOffset('No changes to save.', ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
       return;
     }
-  
+
     try {
       setIsLoading(true);
       const token = await AsyncStorage.getItem('AccessToken');
@@ -29,7 +29,7 @@ const CriteriaPage = ({ navigation }) => {
         },
         body: JSON.stringify(userProfile),
       });
-  
+
       const result = await response.json();
       if (!response.ok) {
         console.log('result', result);
@@ -52,28 +52,43 @@ const CriteriaPage = ({ navigation }) => {
     }
   };
 
-
+  const fetchData = async () => {
+    try {
+      setIsLoading(true);
+      const userData = await AsyncStorage.getItem('theUser');
+      console.log('userData', userData);
+      if (userData !== null) {
+        const parsedData = JSON.parse(userData);
+        const user = parsedData.user;
+        setPartnerExpectation(user.partnerExpectation);
+        setInitialUserData(user);
+      }
+    } catch (error) {
+      console.error('Failed to load user data', error);
+    } finally {
+      setIsLoading(false);
+      setRefreshing(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const userData = await AsyncStorage.getItem('theUser');
-        console.log('userData', userData);
-        if (userData !== null) {
-          const parsedData = JSON.parse(userData);
-          const user = parsedData.user; 
-          setPartnerExpectation(user.partnerExpectation);
-          setInitialUserData(user);
-        }
-      } catch (error) {
-        console.error('Failed to load user data', error);
-      }
-    };
-
     fetchData();
   }, []);
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    fetchData();
+  };
+
   return (
-    <View style={styles.container}>
+    <ScrollView
+      style={styles.container}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={['#FE4101']}
+        tintColor="#FE4101"/>
+      }
+    >
+      {isLoading && <ActivityIndicator size="large" color="#0000ff" />}
       <View style={styles.flexrow}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Image source={require('../../assets/images/leftarrow.png')} />
@@ -85,7 +100,7 @@ const CriteriaPage = ({ navigation }) => {
         <Text style={styles.label}>Partner Expectation</Text>
         <TextInput
           style={styles.input}
-          placeholder={partnerExpectation||'Enter your partner expectation'}
+          placeholder={partnerExpectation || 'Enter your partner expectation'}
           value={partnerExpectation}
           onChangeText={setPartnerExpectation}
         />
@@ -96,7 +111,7 @@ const CriteriaPage = ({ navigation }) => {
           {isLoading ? 'Loading..' : 'Save'}
         </Text>
       </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -105,7 +120,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
     paddingHorizontal: 20,
-    paddingVertical: 40,
+    paddingVertical: 20,
   },
   flexrow: {
     flexDirection: 'row',
@@ -116,7 +131,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     marginLeft: 10,
-    color:'#333'
+    color: '#333'
   },
   inputContainer: {
     marginBottom: 20,
@@ -131,18 +146,19 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5F5F5',
     height: 100,
     borderColor: 'gray',
-    borderWidth: 1,
+    borderWidth: 0.5,
     textAlignVertical: 'top',
-    padding:10,
+    padding: 10,
     paddingHorizontal: 10,
     borderRadius: 8,
+    color: 'black',
   },
   saveButton: {
-    backgroundColor: '#FF7F00',
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 8,
-    alignSelf: 'flex-end',
+    height: 60,
+    backgroundColor: 'rgba(249, 123, 34, 1)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 43,
   },
   saveButtonText: {
     color: 'white',

@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from 'react';
-// import { Image } from 'react-native-svg';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Image } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Image, ActivityIndicator, RefreshControl } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL } from '../../../../constant';
 import { Toast } from '../../../utils/native';
-import {occupationList,indianCastes, workLocationList } from '../../../data/appData';
+import { occupationList, indianCastes, workLocationList } from '../../../data/appData';
 import { useNavigation } from '@react-navigation/native';
-
-
 
 const UserProfileStep1 = () => {
   const navigation = useNavigation();
@@ -23,14 +20,15 @@ const UserProfileStep1 = () => {
   const [city, setCity] = useState(null);
   const [initialUserData, setInitialUserData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
   const data = [
     { label: 'Option 1', value: '1' },
     { label: 'Option 2', value: '2' },
     { label: 'Option 3', value: '3' },
-    {label: '16' , value: '16'},
+    { label: '16', value: '16' },
   ];
-  
+
   const genderOptions = [
     { label: 'Male', value: 'male' },
     { label: 'Female', value: 'Female' },
@@ -44,96 +42,100 @@ const UserProfileStep1 = () => {
     '6 feet 0 inches', '6 feet 1 inch', '6 feet 2 inches', '6 feet 3 inches', '6 feet 4 inches', '6 feet 5 inches',
     '6 feet 6 inches', '6 feet 7 inches', '6 feet 8 inches', '6 feet 9 inches', '6 feet 10 inches', '6 feet 11 inches',
     '7 feet 0 inches'
-];
+  ];
 
-const heightData = heights.map(height => ({
+  const heightData = heights.map(height => ({
     label: height,
     value: height
-}));
+  }));
 
-const statuses = ['Single', 'Divorced', 'Married', 'Widowed'];
+  const statuses = ['Single', 'Divorced', 'Married', 'Widowed'];
 
-const statusData = statuses.map(status => ({
+  const statusData = statuses.map(status => ({
     label: status,
     value: status
-}));
+  }));
 
+  const languages = [
+    'Assamese', 'Bengali', 'Bhojpuri', 'Bodo', 'Dogri', 'English', 'Gujarati', 'Hindi', 'Kannada', 'Kashmiri',
+    'Konkani', 'Maithili', 'Malayalam', 'Manipuri', 'Marathi', 'Nepali', 'Odia', 'Punjabi', 'Rajasthani', 'Sanskrit',
+    'Santali', 'Sindhi', 'Tamil', 'Telugu', 'Tulu', 'Urdu'
+  ];
 
-const languages = [
-  'Assamese', 'Bengali', 'Bhojpuri', 'Bodo', 'Dogri', 'English', 'Gujarati', 'Hindi', 'Kannada', 'Kashmiri',
-  'Konkani', 'Maithili', 'Malayalam', 'Manipuri', 'Marathi', 'Nepali', 'Odia', 'Punjabi', 'Rajasthani', 'Sanskrit',
-  'Santali', 'Sindhi', 'Tamil', 'Telugu', 'Tulu', 'Urdu'
-];
+  const MotherTongues = languages.map(language => ({
+    label: language,
+    value: language
+  }));
 
-const MotherTongues = languages.map(language => ({
-  label: language,
-  value: language
-}));
+  const ageOptions = ["18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59", "60"];
 
-const ageOptions = ["18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59", "60"];
+  const ageData = ageOptions.map(age => ({
+    label: age,
+    value: age
+  }));
 
-const ageData = ageOptions.map(age => ({
-  label: age,
-  value: age
-}));
+  const religionsInIndia = [
+    "Hinduism",
+    "Christianity",
+    "Sikhism",
+    "Buddhism",
+    "Jainism",
+    "Zoroastrianism",
+    "Judaism",
+    "Others"
+  ];
 
-const religionsInIndia = [
-  "Hinduism",
-  "Christianity",
-  "Sikhism",
-  "Buddhism",
-  "Jainism",
-  "Zoroastrianism",
-  "Judaism",
-  "Others"
-];
+  const religionData = religionsInIndia.map(religion => ({
+    label: religion,
+    value: religion
+  }));
 
-const religionData = religionsInIndia.map(religion => ({
-  label: religion,
-  value: religion
-})); 
+  const casteData = indianCastes.map(caste => ({
+    label: caste,
+    value: caste
+  }));
 
-const casteData = indianCastes.map(caste => ({
-  label: caste,
-  value: caste
-}));
+  const cities = workLocationList.map(city => ({
+    label: city,
+    value: city
+  }));
 
-const cities = workLocationList.map(city => ({
-  label: city,
-  value: city
-}));
-
-
-
+  const fetchUserData = async () => {
+    setIsLoading(true);
+    try {
+      const userData = await AsyncStorage.getItem('theUser');
+      if (userData !== null) {
+        const parsedData = JSON.parse(userData);
+        const user = parsedData.user;
+        setAge(user.age);
+        setGender(user.gender);
+        setHeight(user.height);
+        setDob(user.dateOfBirth);
+        setMaritalStatus(user.maritalStatus);
+        setReligion(user.religion);
+        setMotherTongue(user.motherTongue);
+        setCast(user.horoscopeDetails.caste);
+        setCity(user.city);
+        setInitialUserData(user);
+      }
+      console.log('User data:', userData);
+    } catch (error) {
+      console.error('Failed to load user data', error);
+    } finally {
+      setIsLoading(false);
+      setRefreshing(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const userData = await AsyncStorage.getItem('theUser');
-        if (userData !== null) {
-          const parsedData = JSON.parse(userData);
-          const user = parsedData.user; 
-          setAge(user.age);
-          setGender(user.gender);
-          setHeight(user.height);
-          setDob(user.dateOfBirth);
-          setMaritalStatus(user.maritalStatus);
-          setReligion(user.religion);
-          setMotherTongue(user.motherTongue);
-          setCast(user.horoscopeDetails.caste);
-          setCity(user.city);
-          setInitialUserData(user);
-        }
-        console.log('User data:', userData);
-      } catch (error) {
-        console.error('Failed to load user data', error);
-      }
-    };
-
     fetchUserData();
   }, []);
 
-  
+  const onRefresh = () => {
+    setRefreshing(true);
+    fetchUserData();
+  };
+
   const handleSave = async () => {
     const userProfile = {};
 
@@ -185,169 +187,188 @@ const cities = workLocationList.map(city => ({
       setIsLoading(false);
     }
   };
-  return (
-    <ScrollView style={styles.container}>
-       <View style={styles.flexrow}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Image source={require('../../../assets/images/leftarrow.png')} />
-          </TouchableOpacity>
-          <Text style={styles.heading}>Basic Info</Text>
-        </View>
-      {/* <Text style={styles.header}>Basic Info</Text> */}
-      <Text style={styles.stepText}>Step 1</Text>
-      <Text style={styles.stepText}>Age</Text>
-      <Dropdown
-        style={styles.dropdown}
-        data={ageData}
-        labelField="label"
-        valueField="value"
-        placeholder={age}
-        placeholderStyle={{color: 'gray'}}
-        search={true}
-        searchPlaceholder="Search"
-        searchPlaceholderTextColor="gray"
-        inputSearchStyle={styles.inputSearchStyle}
-        selectedTextStyle={styles.selectedTextStyle}
-        value={age}
-        onChange={(item) => setAge(item.value)}
-        itemTextStyle={{color: 'black'}}
-      />
-      <Text style={styles.stepText}>Gender</Text>
-      <Dropdown
-        style={styles.dropdown}
-        data={genderOptions}
-        labelField="label"
-        valueField="value"
-        placeholder={gender}
-        search={true}
-        searchPlaceholder="Search"
-        searchPlaceholderTextColor="gray"
-        placeholderStyle={{color: 'gray'}}
-        inputSearchStyle={styles.inputSearchStyle}
-        selectedTextStyle={styles.selectedTextStyle}
-        value={gender}
-        onChange={(item) => setGender(item.value)}
-        itemTextStyle={{color: 'black'}}
-      />
-      <Text style={styles.stepText}>Height</Text>
-      <Dropdown
-        style={styles.dropdown}
-        data={heightData}
-        labelField="label"
-        valueField="value"
-        placeholder={height}
-        search={true}
-        searchPlaceholder="Search"
-        searchPlaceholderTextColor="gray"
-        placeholderStyle={{color: 'gray'}}
-        inputSearchStyle={styles.inputSearchStyle}
-        selectedTextStyle={styles.selectedTextStyle}
-        value={height}
-        onChange={(item) => setHeight(item.value)}
-        itemTextStyle={{color: 'black'}}
-      />
-      <Text style={styles.stepText}>Date Of Birth</Text>
-      <TextInput
-        style={[styles.textInput, { color: '#333' }]} // Added color to the text
-        placeholder="DD/MM/YY"
-        placeholderTextColor='gray'
-        placeholderStyle={{color: 'gray'}}
-        inputSearchStyle={styles.inputSearchStyle}
-        selectedTextStyle={styles.selectedTextStyle}
-        value={dob}
-        onChangeText={setDob}
-      />
-      <Text style={styles.stepText}>Marital Status</Text>
-      <Dropdown
-        style={styles.dropdown}
-        data={statusData}
-        labelField="label"
-        valueField="value"
-        placeholder={maritalStatus}
-        search={true}
-        searchPlaceholder="Search"
-        searchPlaceholderTextColor="gray"
-        placeholderStyle={{color: 'gray'}}
-        inputSearchStyle={styles.inputSearchStyle}
-        selectedTextStyle={styles.selectedTextStyle}
-        value={maritalStatus}
-        onChange={(item) => setMaritalStatus(item.value)}
-        itemTextStyle={{color: 'black'}}
-      />
-      <Text style={styles.stepText}>Religion</Text>
-      <Dropdown
-        style={styles.dropdown}
-        data={religionData}
-        labelField="label"
-        valueField="value"
-        placeholder={religion}
-        search={true}
-        searchPlaceholder="Search"
-        searchPlaceholderTextColor="gray"
-        placeholderStyle={{color: 'gray'}}
-        inputSearchStyle={styles.inputSearchStyle}
-        selectedTextStyle={styles.selectedTextStyle}
-        value={religion}
-        onChange={(item) => setReligion(item.value)}
-        itemTextStyle={{color: 'black'}}
-      />
-      <Text style={styles.stepText}>Mother Tongue</Text>
-      <Dropdown
-        style={styles.dropdown}
-        data={MotherTongues}
-        labelField="label"
-        valueField="value"
-        placeholder={motherTongue}
-        search={true}
-        searchPlaceholder="Search"
-        searchPlaceholderTextColor="gray"
-        placeholderStyle={{color: 'gray'}}
-        inputSearchStyle={styles.inputSearchStyle}
-        selectedTextStyle={styles.selectedTextStyle}
-        value={motherTongue}
-        onChange={(item) => setMotherTongue(item.value)}
-        itemTextStyle={{color: 'black'}}
-      />
-      <Text style={styles.stepText}>Cast</Text>
-      <Dropdown
-        style={styles.dropdown}
-        data={casteData}
-        labelField="label"
-        valueField="value"
-        placeholder={caste}
-        search={true}
-        searchPlaceholder="Search"
-        searchPlaceholderTextColor="gray"
-        placeholderStyle={{color: 'gray'}}
-        inputSearchStyle={styles.inputSearchStyle}
-        selectedTextStyle={styles.selectedTextStyle}
-        value={caste}
-        onChange={(item) => setCast(item.value)}
-        itemTextStyle={{color: 'black'}}
-      />
-      <Text style={styles.stepText}>City</Text>
-      <Dropdown
-        style={styles.dropdown}
-        data={cities}
-        labelField="label"
-        valueField="value"
-        placeholder={city}
-        search={true}
-        searchPlaceholder="Search"
-        searchPlaceholderTextColor="gray"
-        placeholderStyle={{color: 'black'}}
-        inputSearchStyle={styles.inputSearchStyle}
-        selectedTextStyle={styles.selectedTextStyle}
-        value={city}
-        onChange={(item) => setCity(item.value)}
-        itemTextStyle={{color: 'black'}}
-      />
 
-      <TouchableOpacity style={styles.saveButton} onPress={handleSave} disabled={isLoading}>
-        <Text style={styles.saveText}>
-          {isLoading ? 'Loading...' : 'Save'}
-        </Text>
-      </TouchableOpacity>
+  return (
+    <ScrollView
+      style={styles.container}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+          colors={['#FE4101']}
+          tintColor="#FE4101"
+        />
+      }
+    >
+      {isLoading && (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#0000ff" />
+        </View>
+      )}
+      {!isLoading && (
+        <>
+          <View style={styles.flexrow}>
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <Image source={require('../../../assets/images/leftarrow.png')} />
+            </TouchableOpacity>
+            <Text style={styles.heading}>Basic Info</Text>
+          </View>
+          <Text style={styles.stepText}>Step 1</Text>
+          <Text style={styles.stepText}>Age</Text>
+          <Dropdown
+            style={styles.dropdown}
+            data={ageData}
+            labelField="label"
+            valueField="value"
+            placeholder={age}
+            placeholderStyle={{ color: 'gray' }}
+            search={true}
+            searchPlaceholder="Search"
+            searchPlaceholderTextColor="gray"
+            inputSearchStyle={styles.inputSearchStyle}
+            selectedTextStyle={styles.selectedTextStyle}
+            value={age}
+            onChange={(item) => setAge(item.value)}
+            itemTextStyle={{ color: 'black' }}
+          />
+          <Text style={styles.stepText}>Gender</Text>
+          <Dropdown
+            style={styles.dropdown}
+            data={genderOptions}
+            labelField="label"
+            valueField="value"
+            placeholder={gender}
+            search={true}
+            searchPlaceholder="Search"
+            searchPlaceholderTextColor="gray"
+            placeholderStyle={{ color: 'gray' }}
+            inputSearchStyle={styles.inputSearchStyle}
+            selectedTextStyle={styles.selectedTextStyle}
+            value={gender}
+            onChange={(item) => setGender(item.value)}
+            itemTextStyle={{ color: 'black' }}
+          />
+          <Text style={styles.stepText}>Height</Text>
+          <Dropdown
+            style={styles.dropdown}
+            data={heightData}
+            labelField="label"
+            valueField="value"
+            placeholder={height}
+            search={true}
+            searchPlaceholder="Search"
+            searchPlaceholderTextColor="gray"
+            placeholderStyle={{ color: 'gray' }}
+            inputSearchStyle={styles.inputSearchStyle}
+            selectedTextStyle={styles.selectedTextStyle}
+            value={height}
+            onChange={(item) => setHeight(item.value)}
+            itemTextStyle={{ color: 'black' }}
+          />
+          <Text style={styles.stepText}>Date Of Birth</Text>
+          <TextInput
+            style={[styles.textInput, { color: '#333' }]} // Added color to the text
+            placeholder="DD/MM/YY"
+            placeholderTextColor='gray'
+            placeholderStyle={{ color: 'gray' }}
+            inputSearchStyle={styles.inputSearchStyle}
+            selectedTextStyle={styles.selectedTextStyle}
+            value={dob}
+            onChangeText={setDob}
+          />
+          <Text style={styles.stepText}>Marital Status</Text>
+          <Dropdown
+            style={styles.dropdown}
+            data={statusData}
+            labelField="label"
+            valueField="value"
+            placeholder={maritalStatus}
+            search={true}
+            searchPlaceholder="Search"
+            searchPlaceholderTextColor="gray"
+            placeholderStyle={{ color: 'gray' }}
+            inputSearchStyle={styles.inputSearchStyle}
+            selectedTextStyle={styles.selectedTextStyle}
+            value={maritalStatus}
+            onChange={(item) => setMaritalStatus(item.value)}
+            itemTextStyle={{ color: 'black' }}
+          />
+          <Text style={styles.stepText}>Religion</Text>
+          <Dropdown
+            style={styles.dropdown}
+            data={religionData}
+            labelField="label"
+            valueField="value"
+            placeholder={religion}
+            search={true}
+            searchPlaceholder="Search"
+            searchPlaceholderTextColor="gray"
+            placeholderStyle={{ color: 'gray' }}
+            inputSearchStyle={styles.inputSearchStyle}
+            selectedTextStyle={styles.selectedTextStyle}
+            value={religion}
+            onChange={(item) => setReligion(item.value)}
+            itemTextStyle={{ color: 'black' }}
+          />
+          <Text style={styles.stepText}>Mother Tongue</Text>
+          <Dropdown
+            style={styles.dropdown}
+            data={MotherTongues}
+            labelField="label"
+            valueField="value"
+            placeholder={motherTongue}
+            search={true}
+            searchPlaceholder="Search"
+            searchPlaceholderTextColor="gray"
+            placeholderStyle={{ color: 'gray' }}
+            inputSearchStyle={styles.inputSearchStyle}
+            selectedTextStyle={styles.selectedTextStyle}
+            value={motherTongue}
+            onChange={(item) => setMotherTongue(item.value)}
+            itemTextStyle={{ color: 'black' }}
+          />
+          <Text style={styles.stepText}>Cast</Text>
+          <Dropdown
+            style={styles.dropdown}
+            data={casteData}
+            labelField="label"
+            valueField="value"
+            placeholder={caste}
+            search={true}
+            searchPlaceholder="Search"
+            searchPlaceholderTextColor="gray"
+            placeholderStyle={{ color: 'gray' }}
+            inputSearchStyle={styles.inputSearchStyle}
+            selectedTextStyle={styles.selectedTextStyle}
+            value={caste}
+            onChange={(item) => setCast(item.value)}
+            itemTextStyle={{ color: 'black' }}
+          />
+          <Text style={styles.stepText}>City</Text>
+          <Dropdown
+            style={styles.dropdown}
+            data={cities}
+            labelField="label"
+            valueField="value"
+            placeholder={city}
+            search={true}
+            searchPlaceholder="Search"
+            searchPlaceholderTextColor="gray"
+            placeholderStyle={{ color: 'black' }}
+            inputSearchStyle={styles.inputSearchStyle}
+            selectedTextStyle={styles.selectedTextStyle}
+            value={city}
+            onChange={(item) => setCity(item.value)}
+            itemTextStyle={{ color: 'black' }}
+          />
+          <TouchableOpacity style={styles.saveButton} onPress={handleSave} disabled={isLoading}>
+            <Text style={styles.saveText}>
+              {isLoading ? 'Loading...' : 'Save'}
+            </Text>
+          </TouchableOpacity>
+          <View height={50}></View>
+        </>
+      )}
     </ScrollView>
   );
 };
@@ -385,11 +406,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
   },
   saveButton: {
-    height: 50,
-    backgroundColor: '#ff9900',
+    height: 60,
+    backgroundColor: 'rgba(249, 123, 34, 1)',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 8,
+    borderRadius: 43,
   },
   saveText: {
     color: '#fff',
@@ -405,7 +426,7 @@ const styles = StyleSheet.create({
   flexrow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 20,
+    // marginTop: 20,
     alignSelf: 'center',
     marginBottom: 10,
   },
@@ -415,6 +436,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     width: '85%',
     fontWeight: '700',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
