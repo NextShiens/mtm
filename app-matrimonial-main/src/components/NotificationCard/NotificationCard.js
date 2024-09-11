@@ -147,7 +147,7 @@ const NotificationItem = ({ item, onPress }) => {
               STYLES.fontFamily(Fonts.PoppinsRegular),
               STYLES.bottom(10),
             ]}
-            color={COLORS.dark.inputBorder}
+            color={'gray'}
           />
         </View>
       </View>
