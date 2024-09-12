@@ -5,6 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL } from '../../../../constant';
 import { QualificationList, occupationList, workLocationList } from '../../../data/appData';
 import { useNavigation } from '@react-navigation/native';
+import { Toast } from '../../../utils/native';
 
 const UserProfileStep2 = () => {
   const navigation = useNavigation();
