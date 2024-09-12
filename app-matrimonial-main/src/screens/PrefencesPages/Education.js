@@ -18,12 +18,13 @@ const EducationPage = () => {
     try {
       const userData = await AsyncStorage.getItem('theUser');
       console.log('userData', userData);
-      if (userData !== null) {
+      if (userData !== null && userData !== undefined) {
         const parsedData = JSON.parse(userData);
-        const user = parsedData.user;
-        setEducation(user.Education.education);
-        setOccupation(user.Education.occupation);
-        setAnnualIncome(user.Education.income);
+        const user = parsedData.user || {};
+        const educationData = user.Education || {};
+        setEducation(educationData.education || null);
+        setOccupation(educationData.occupation || null);
+        setAnnualIncome(educationData.income || null);
         setInitialUserData(user);
       }
     } catch (error) {
@@ -45,9 +46,9 @@ const EducationPage = () => {
   const handleSave = async () => {
     const userProfile = {};
 
-    if (education !== initialUserData.Education.education) userProfile.education = education;
-    if (occupation !== initialUserData.Education.occupation) userProfile.occupation = occupation;
-    if (annualIncome !== initialUserData.Education.income) userProfile.income = annualIncome;
+    if (education !== initialUserData.Education?.education) userProfile.education = education;
+    if (occupation !== initialUserData.Education?.occupation) userProfile.occupation = occupation;
+    if (annualIncome !== initialUserData.Education?.income) userProfile.income = annualIncome;
     if (Object.keys(userProfile).length === 0) {
       ToastAndroid.showWithGravityAndOffset('No changes to save.', ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
       return;
@@ -221,6 +222,7 @@ const EducationPage = () => {
     </ScrollView>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -266,16 +268,13 @@ const styles = StyleSheet.create({
     height: 20,
   },
   saveButton: {
-
     height: 56,
-
     backgroundColor: '#ff9900',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 16,
     marginTop: 20,
     marginBottom: 50,
-
   },
   saveText: {
     color: '#fff',

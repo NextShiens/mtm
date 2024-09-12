@@ -81,37 +81,45 @@ const CriteriaPage = ({ navigation }) => {
   };
 
   return (
-    <ScrollView
-      style={styles.container}
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={['#FE4101']}
-          tintColor="#FE4101" />
-      }
-    >
-      {isLoading && <ActivityIndicator size="large" color="#0000ff" />}
-      <View style={styles.flexrow}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.back}>
-          <Image source={require('../../assets/images/leftarrow.png')} />
-        </TouchableOpacity>
-        <Text style={styles.heading}>PartnerExpectation</Text>
-      </View>
+    <View style={styles.container}>
+      {isLoading ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#ff9900" />
+          <Text style={styles.loadingText}>Loading...</Text>
+        </View>
+      ) : (
+        <ScrollView
+          style={styles.scrollView}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={['#FE4101']}
+              tintColor="#FE4101" />
+          }
+        >
+          <View style={styles.flexrow}>
+            <TouchableOpacity onPress={() => navigation.goBack()} style={styles.back}>
+              <Image source={require('../../assets/images/leftarrow.png')} />
+            </TouchableOpacity>
+            <Text style={styles.heading}>PartnerExpectation</Text>
+          </View>
 
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>Partner Expectation</Text>
-        <TextInput
-          style={styles.input}
-          placeholder={partnerExpectation || 'Enter your partner expectation'}
-          value={partnerExpectation}
-          onChangeText={setPartnerExpectation}
-        />
-      </View>
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Partner Expectation</Text>
+            <TextInput
+              style={styles.input}
+              placeholder={partnerExpectation || 'Enter your partner expectation'}
+              value={partnerExpectation}
+              onChangeText={setPartnerExpectation}
+            />
+          </View>
 
-      <TouchableOpacity style={styles.saveButton} onPress={handleSave} disabled={isLoading}>
-        <Text style={styles.saveText}>
-          {isLoading ? 'Loading..' : 'Save'}
-        </Text>
-      </TouchableOpacity>
-    </ScrollView>
+          <TouchableOpacity style={styles.saveButton} onPress={handleSave} disabled={isLoading}>
+            <Text style={styles.saveText}>
+              {isLoading ? 'Loading..' : 'Save'}
+            </Text>
+          </TouchableOpacity>
+        </ScrollView>
+      )}
+    </View>
   );
 };
 
@@ -121,6 +129,19 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     paddingHorizontal: 20,
     paddingVertical: 20,
+  },
+  scrollView: {
+    flex: 1,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 16,
+    color: '#ff9900',
   },
   flexrow: {
     flexDirection: 'row',
@@ -148,7 +169,6 @@ const styles = StyleSheet.create({
     color: '#949494',
     borderColor: '#ccc',
     borderWidth: 1,
-
     textAlignVertical: 'top',
     padding: 10,
     paddingHorizontal: 10,
@@ -157,14 +177,12 @@ const styles = StyleSheet.create({
   },
   saveButton: {
     height: 56,
-
     backgroundColor: '#ff9900',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 16,
     marginTop: 20,
     marginBottom: 50,
-
   },
   saveText: {
     color: '#fff',
@@ -180,7 +198,6 @@ const styles = StyleSheet.create({
   flexrow: {
     flexDirection: 'row',
     alignItems: 'center',
-    // marginTop: 20,
     marginBottom: 25,
   },
   heading: {

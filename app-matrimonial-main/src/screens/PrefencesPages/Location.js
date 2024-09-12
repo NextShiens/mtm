@@ -253,7 +253,6 @@ const styles = StyleSheet.create({
   heading: {
     color: '#1A1A1A',
     textAlign: 'center',
-    fontFamily: 'DM Sans',
     fontSize: 21,
     fontStyle: 'normal',
     fontWeight: '700',

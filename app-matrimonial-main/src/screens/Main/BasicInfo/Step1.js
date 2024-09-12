@@ -104,7 +104,7 @@ const UserProfileStep1 = () => {
     setIsLoading(true);
     try {
       const userData = await AsyncStorage.getItem('theUser');
-      if (userData !== null) {
+      if (userData !== null && userData !== undefined) {
         const parsedData = JSON.parse(userData);
         const user = parsedData.user;
         setAge(user.age);
