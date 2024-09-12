@@ -76,7 +76,7 @@ const CustomDrawerContent = ({ props }) => {
       navigation.dispatch(
         CommonActions.reset({
           index: 0,
-          routes: [{ name: 'InitialScreen' }],
+          routes: [{ name: 'AuthStack', state: { routes: [{ name: 'InitialScreen' }] } }],
         })
       );
     } catch (error) {
@@ -174,13 +174,12 @@ const CustomDrawerContent = ({ props }) => {
   const handleLogout = async () => {
     try {
       await AsyncStorage.removeItem('AccessToken');
-      Toast('Logged Out Successfully');
-      navigation.navigate('InitialScreen');
-      await auth().signOut();
       await AsyncStorage.removeItem('loginToken');
+      await auth().signOut();
+      Toast('Logged Out Successfully');
       resetToInitialScreen();
     } catch (err) {
-      console.log(err);
+      console.error('Logout error:', err);
     }
   };
   return (
