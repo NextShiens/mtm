@@ -114,7 +114,7 @@ import {
                 des={item.description}
                 onPress={() => {
                     if (item._id) {
-                      nav.navigate('SuccessStoriesDetails', { id: item._id });
+                      nav.navigate('SuccessStoriesDetals', { id: item._id });
                     } else {
                       console.log('Item ID is undefined');
                     }
