@@ -67,7 +67,7 @@ const UserUpdate = () => {
           setUser(data.user);
           toast.success(data.message);
         } else {
-          toast.error(data.message);
+          toast.error(data.message,'error updating user');
         }
       });
     });
@@ -93,7 +93,7 @@ const UserUpdate = () => {
           setUser(data.user);
           toast.success(data.message);
         } else {
-          toast.error(data.message);
+          toast.error(data.message,'error updating user');
         }
       });
     });
@@ -119,7 +119,7 @@ const UserUpdate = () => {
           setUser(data.user);
           toast.success(data.message);
         } else {
-          toast.error(data.message);
+          toast.error(data.message,'error updating user');
         }
       });
     });
@@ -166,7 +166,7 @@ const UserUpdate = () => {
                     className="p-2 flex justify-around"
                   >
                     <p>Name: {plan.name}</p>, <p>Price: {plan.price}</p>,{" "}
-                    <p>Duration: {plan.duration}</p>
+                    <p>Duration: {plan?.duration}</p>
                   </option>
                 );
               })}

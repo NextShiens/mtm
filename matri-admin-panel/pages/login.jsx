@@ -6,12 +6,15 @@ import toast, { LoaderIcon, Toaster } from "react-hot-toast";
 
 const Login = () => {
   const [isLoading, setIsloading] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const router = useRouter();
+
   useEffect(() => {
     fetch(backendUrl + "/admin/checkLogin", {
       method: "GET",
       headers: {
-        ContentType: "application/json",
+        "Content-Type": "application/json",
       },
       credentials: "include",
     })
@@ -20,11 +23,15 @@ const Login = () => {
         if (!data.error) {
           router.push("/");
         }
+      })
+      .catch((error) => {
+        console.error("Error during checkLogin:", error);
       });
   }, []);
 
   const handleLogin = () => {
     if (email === "" || password === "") {
+      toast.error("Email and password are required");
       return;
     }
     setIsloading(true);
@@ -38,19 +45,20 @@ const Login = () => {
     })
       .then((res) => res.json())
       .then((data) => {
+        setIsloading(false);
         if (data.error) {
-          setIsloading(false);
           toast.error(data.error);
-        }
-        if (data.success) {
+        } else if (data.success) {
           router.push("/");
-          setIsloading(false);
         }
+      })
+      .catch((error) => {
+        setIsloading(false);
+        toast.error("An error occurred during login");
+        console.error("Error during login:", error);
       });
   };
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   return (
     <div className="w-screen h-screen flex items-center justify-center">
       <Toaster position="top-center" />
@@ -62,9 +70,9 @@ const Login = () => {
           <input
             className="outline-none shadow-sm p-3 rounded-xl w-full border border-gray-200"
             type="text"
-            name="name"
+            name="email"
             placeholder="Email"
-            id=""
+            id="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
@@ -74,10 +82,10 @@ const Login = () => {
           <label htmlFor="Password">Password</label>
           <input
             className="outline-none shadow-sm p-3 rounded-xl w-full border border-gray-200"
-            type="text"
-            name="name"
+            type="password"
+            name="password"
             placeholder="Password"
-            id=""
+            id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
