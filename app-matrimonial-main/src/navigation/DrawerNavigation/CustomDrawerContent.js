@@ -72,12 +72,16 @@ const CustomDrawerContent = ({ props }) => {
   const style = styles;
   const windowWidth = Dimensions.get('window').width;
   const resetToInitialScreen = () => {
-    navigation.dispatch(
-      CommonActions.reset({
-        index: 0,
-        routes: [{ name: 'InitialScreen' }],
-      }),
-    );
+    try {
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: 'InitialScreen' }],
+        })
+      );
+    } catch (error) {
+      console.error('Failed to reset to initial screen:', error);
+    }
   };
 
   const fetchUserData = useCallback(async () => {
@@ -138,43 +142,47 @@ const CustomDrawerContent = ({ props }) => {
   //     Toast("Failed to update status. Please try again.");
   //   }
   // };
-
-  const handleItemClick = item => {
+  const handleItemClick = async item => {
     setSelectedRoute(item.name);
-    if (item.name === 'Connections') {
-      navigation.navigate('Connection');
-    } else if (item.name === 'Membership') {
-      navigation.navigate('MembershipPlan');
-    } else if (item.name === 'Payment Method') {
-      navigation.navigate('MembershipPlan');
-    } else if (item.name === 'Account Setting') {
-      navigation.navigate('AccountSettingsScreen');
-    } else if (item.name === 'Privacy & Policy') {
-      navigation.navigate('PrivacyPolicyScreen');
-    } else if (item.name === 'User Name') {
-      navigation.navigate('ProfileUpdateScreen');
-    } else if (item.name === 'Upgrade to Pro') {
-      navigation.navigate('MembershipPlan');
-    } else if (item.name === 'Log Out') {
-      const logout = async () => {
-        await AsyncStorage.removeItem('AccessToken');
-        Toast('Logged Out Successfully');
-        navigation.navigate('InitialScreen');
-      };
 
-      logout();
-      auth()
-        .signOut()
-        .then(async () => {
-          await AsyncStorage.removeItem('loginToken');
-          resetToInitialScreen();
-        })
-        .catch(err => {
-          console.log(err);
-        });
+    switch (item.name) {
+      case 'Connections':
+        navigation.navigate('Connection');
+        break;
+      case 'Membership':
+      case 'Payment Method':
+      case 'Upgrade to Pro':
+        navigation.navigate('MembershipPlan');
+        break;
+      case 'Account Setting':
+        navigation.navigate('AccountSettingsScreen');
+        break;
+      case 'Privacy & Policy':
+        navigation.navigate('PrivacyPolicyScreen');
+        break;
+      case 'User Name':
+        navigation.navigate('ProfileUpdateScreen');
+        break;
+      case 'Log Out':
+        await handleLogout();
+        break;
+      default:
+        console.log('Unknown route:', item.name);
     }
   };
 
+  const handleLogout = async () => {
+    try {
+      await AsyncStorage.removeItem('AccessToken');
+      Toast('Logged Out Successfully');
+      navigation.navigate('InitialScreen');
+      await auth().signOut();
+      await AsyncStorage.removeItem('loginToken');
+      resetToInitialScreen();
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <ScrollView
       style={style.container}

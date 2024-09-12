@@ -193,7 +193,7 @@ const UserDetailsScreen = ({navigation}) => {
       height: userDetails?.height || 'N/A',
       occupation: userDetails?.occupation || 'N/A',
       location: userDetails?.city || 'N/A',
-      isVerified: userDetails?.isActive || false,
+      isVerified: userDetails?.isActive || true,
       userStatus: userDetails?.isPaid ? 'Premium' : 'Free',
       img: userDetails?.userImages?.[0] || (
         <SvgXml xml={defaultProfileSvg} width="50%" height="50%" />
@@ -207,7 +207,7 @@ const UserDetailsScreen = ({navigation}) => {
       height: userDetails?.height || 'N/A',
       occupation: userDetails?.occupation || 'N/A',
       location: userDetails?.workLocation || 'N/A',
-      isVerified: userDetails?.isActive || false,
+      isVerified: userDetails?.isActive || true,
       userStatus: userDetails?.isPaid ? 'Premium' : 'Free',
       img: userDetails?.userImages?.[1] || (
         <SvgXml xml={defaultProfileSvg} width="50%" height="50%" />
@@ -221,7 +221,7 @@ const UserDetailsScreen = ({navigation}) => {
       height: userDetails?.height || 'N/A',
       occupation: userDetails?.occupation || 'N/A',
       location: userDetails?.city || 'N/A',
-      isVerified: userDetails?.isActive || false,
+      isVerified: userDetails?.isActive || true,
       userStatus: userDetails?.isPaid ? 'Premium' : 'Free',
       img: userDetails?.userImages?.[2] || (
         <SvgXml xml={defaultProfileSvg} width="50%" height="50%" />
@@ -235,7 +235,7 @@ const UserDetailsScreen = ({navigation}) => {
       height: userDetails?.height || 'N/A',
       occupation: userDetails?.occupation || 'N/A',
       location: userDetails?.city || 'N/A',
-      isVerified: userDetails?.isActive || false,
+      isVerified: userDetails?.isActive || true,
       userStatus: userDetails?.isPaid ? 'Premium' : 'Free',
       img: userDetails?.userImages?.[3] || (
         <SvgXml xml={defaultProfileSvg} width="50%" height="50%" />
