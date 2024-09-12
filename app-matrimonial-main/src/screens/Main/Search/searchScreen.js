@@ -19,6 +19,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 import CustomImage from '../../../components/CustomImage/CustomImage';
+import { Toast } from '../../../utils/native';
+import { checkLiveChatAvailability, subscriptionCheck } from '../../../utils/subscriptionCheck';
+
 
 const RECENT_SEARCHES_KEY = 'recentSearches';
 
@@ -32,7 +35,6 @@ export default function SearchScreen() {
   const [recentSearches, setRecentSearches] = useState([]);
 
   useEffect(() => {
-    // Focus the input only the first time the user visits the screen
     if (isFirstTime) {
       const timer = setTimeout(() => {
         if (inputRef.current) {
@@ -45,7 +47,6 @@ export default function SearchScreen() {
   }, [isFirstTime]);
 
   useEffect(() => {
-    // Load recent searches from AsyncStorage
     const loadRecentSearches = async () => {
       try {
         const savedSearches = await AsyncStorage.getItem(RECENT_SEARCHES_KEY);
@@ -60,9 +61,21 @@ export default function SearchScreen() {
     loadRecentSearches();
   }, []);
 
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      if (searchQuery) {
+        fetchSuccesStories(searchQuery);
+      } else {
+        setSearch([]);
+      }
+    }, 300);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchQuery]);
+
   const saveRecentSearch = async (query) => {
     try {
-      const updatedSearches = [query, ...recentSearches].slice(0, 5);
+      const updatedSearches = [query, ...recentSearches.filter(item => item !== query)].slice(0, 5);
       await AsyncStorage.setItem(RECENT_SEARCHES_KEY, JSON.stringify(updatedSearches));
       setRecentSearches(updatedSearches);
     } catch (error) {
@@ -70,22 +83,23 @@ export default function SearchScreen() {
     }
   };
 
-  const fetchSuccesStories = async () => {
-    if (!searchQuery) return;
+  const fetchSuccesStories = async (query) => {
+    if (!query) return;
 
     try {
       setNewUsersLoading(true);
       const token = await AsyncStorage.getItem('AccessToken');
       const response = await fetch(
-        `${API_URL}/user/search?query=${searchQuery}`,
+        `${API_URL}/user/search?query=${query}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-
+      console.log('response', response);
       if (!response.ok) {
+        console.error('Error fetching success stories:', response);
         throw new Error(
           response.status === 404 ? 'No results found' : 'Server error'
         );
@@ -93,7 +107,7 @@ export default function SearchScreen() {
 
       const result = await response.json();
       setSearch(result.data || []);
-      await saveRecentSearch(searchQuery); // Save recent search
+      await saveRecentSearch(query);
     } catch (error) {
       console.error('Error fetching success stories:', error);
     } finally {
@@ -101,12 +115,40 @@ export default function SearchScreen() {
     }
   };
 
-  const handleSendInterest = (item) => {
-    navigation.navigate('UserDetailsScreen', { userId: item?._id });
+  const handleRecentSearchClick = (query) => {
+    setSearchQuery(query);
   };
 
-  const handleChatBtnClick = (item) => {
-    navigation.navigate('ChatScreen')
+  const handleSendInterest = async (item) => {
+    try {
+      if (await subscriptionCheck(item)) {
+        navigation.navigate('UserDetailsScreen', { userId: item?._id });
+      } else {
+        Toast("Your profile view limit exceeded.");
+      }
+    } catch (error) {
+      console.error('Error in handleSendInterest:', error);
+      Toast("An error occurred. Please try again.");
+    }
+  };
+
+  const handleChatBtnClick = async (item) => {
+    try {
+      const canChat = await checkLiveChatAvailability(item);
+      if (canChat) {
+        navigation.navigate('ChatScreen', { 
+          userId: item?._id, 
+          roomId: `${item?._id}_${currentUser.user._id}`, 
+          user: item 
+        });
+        console.log('canChat', canChat);
+      } else {
+        Toast("You can't chat. Please buy premium.");
+      }
+    } catch (error) {
+      console.error('Error checking chat availability:', error);
+      Toast("An error occurred. Please try again.");
+    }
   };
 
   const renderItem = ({ item, index }) => (
@@ -146,22 +188,24 @@ export default function SearchScreen() {
         <View style={styles.nameLocationContainer}>
           <AppText
             title={item?.name || 'N/A'}
+            numberOfLines={1}
+            width={'60%'}
             variant="h6"
             color={COLORS.dark.black}
           />
-          <View style={styles.locationContainer}>
+          <View style={styles.locationWrapper}>
             <Icon SVGIcon={<SVG.locationIconSVG fill={COLORS.dark.primary} />} />
             <AppText
               title={item.city || 'N/A'}
-              color={COLORS.dark.inputBorder}
+              color={'black'}
               extraStyle={[Fonts.PoppinsRegular, styles.locationText]}
             />
           </View>
         </View>
-        <View style={styles.ageHeightActionContainer}>
+        <View style={styles.ageHeightContainer}>
           <AppText
             title={`Age ${item?.age || 'N/A'}, ${item.height}`}
-            color={COLORS.dark.inputBorder}
+            color={'gray'}
             extraStyle={[
               STYLES.fontFamily(Fonts.PoppinsRegular),
               STYLES.fontSize(11),
@@ -169,37 +213,40 @@ export default function SearchScreen() {
             ]}
           />
         </View>
-        <AppText
-          title={item?.occupation || 'N/A'}
-          color={COLORS.dark.inputBorder}
-          numberOfLines={1}
-          extraStyle={[
-            STYLES.fontFamily(Fonts.PoppinsRegular),
-            STYLES.fontSize(11),
-            styles.occupationText,
-          ]}
-        />
-        <View style={styles.actionContainer}>
-          <TouchableOpacity
-            style={styles.actionButton}
-            onPress={() => handleSendInterest(item)}
-          >
-            <CustomImage source={IMAGES.sendIcon} size={10} resizeMode="contain" />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.actionButton}
-            onPress={() => handleChatBtnClick(item)}
-          >
-            <CustomImage source={IMAGES.chatIcon} size={10} />
-          </TouchableOpacity>
+        <View style={styles.occupationActionContainer}>
+          <AppText
+            title={item?.occupation || 'N/A'}
+            style={styles.occupation}
+            color={'gray'}
+            numberOfLines={1}
+            width={'60%'}
+            extraStyle={[
+              STYLES.fontFamily(Fonts.PoppinsRegular),
+              STYLES.fontSize(11),
+            ]}
+          />
+          <View style={styles.actionContainer}>
+            <TouchableOpacity
+              style={styles.actionButton}
+              onPress={() => handleSendInterest(item)}
+            >
+              <CustomImage source={IMAGES.sendIcon} size={10} resizeMode="contain" />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.actionButton}
+              onPress={() => handleChatBtnClick(item)}
+            >
+              <CustomImage source={IMAGES.chatIcon} size={10} />
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     </View>
   );
+  
 
   return (
     <View style={styles.container}>
-      {/* Header */}
       <View style={styles.flexrow}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Image source={require('../../../assets/images/leftarrow.png')} />
@@ -207,10 +254,9 @@ export default function SearchScreen() {
         <Text style={styles.heading}>Search</Text>
       </View>
 
-      {/* Search Bar */}
       <View style={styles.searchBar}>
         <SVG.magnifyingGlass
-          fill={COLORS.dark.inputBorder}
+          fill={'gray'}
           height={20}
           width={20}
           style={{ marginLeft: 10, marginRight: 10 }}
@@ -218,30 +264,27 @@ export default function SearchScreen() {
         <TextInput
           style={styles.input}
           placeholder="Search ..."
-          placeholderTextColor={COLORS.dark.inputBorder}
+          placeholderTextColor={'gray'}
           ref={inputRef}
+          value={searchQuery}
           onChangeText={setSearchQuery}
         />
-        <TouchableOpacity onPress={fetchSuccesStories}>
-          <Image
-            source={require('../../../assets/images/leftarrow.png')}
-            style={styles.icon}
-          />
-        </TouchableOpacity>
       </View>
 
-      {/* Conditional Rendering */}
-      {search.length === 0 ? (
-        // Show Recent Searches when there's no search result
+      {newUsersLoading ? (
+        <Text style={styles.loadingText}>Loading...</Text>
+      ) : search.length === 0 && !searchQuery ? (
         <>
           <Text style={styles.recentSearchesText}>Recent Searches</Text>
           <FlatList
             data={recentSearches}
             renderItem={({ item }) => (
-              <View style={styles.listItem}>
-                <Image source={IMAGES.filter} style={styles.icon} />
-                <Text style={styles.listItemText}>{item}</Text>
-              </View>
+              <TouchableOpacity onPress={() => handleRecentSearchClick(item)}>
+                <View style={styles.listItem}>
+                  <Image source={IMAGES.filter} style={styles.icon} />
+                  <Text style={styles.listItemText}>{item}</Text>
+                </View>
+              </TouchableOpacity>
             )}
             keyExtractor={(item, index) => `${index}`}
           />
@@ -253,6 +296,9 @@ export default function SearchScreen() {
           numColumns={2}
           keyExtractor={(item, index) => `${item._id}_${index}`}
           columnWrapperStyle={styles.columnWrapper}
+          ListEmptyComponent={
+            <Text style={styles.noResultsText}>No results found</Text>
+          }
         />
       )}
     </View>
@@ -268,9 +314,9 @@ const styles = StyleSheet.create({
   flexrow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 20,
+    marginTop: 10,
     alignSelf: 'center',
-    marginBottom: 30,
+    marginBottom: 10,
   },
   heading: {
     fontSize: 16,
@@ -301,6 +347,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 10,
+    color:'black'
   },
   listItem: {
     flexDirection: 'row',
@@ -310,13 +357,14 @@ const styles = StyleSheet.create({
   listItemText: {
     marginLeft: 10,
     fontSize: 16,
+    color: 'black', 
   },
   columnWrapper: {
-    justifyContent: 'space-between', // Ensure cards are spaced evenly
+    justifyContent: 'space-between', 
     marginBottom: 15,
   },
   cardContainer: {
-    width: '48%', // Reduce this value to make sure two cards fit in one row
+    width: '48%',
     height: 190,
     backgroundColor: COLORS.dark.white,
     borderRadius: 15,
@@ -358,21 +406,28 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   infoContainer: {
-    paddingHorizontal: 20,
-    paddingTop: 15,
+    paddingHorizontal: 10,
+    paddingTop: 7,
   },
-  nameLocationContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+  nameOccupationContainer: {
+    marginBottom: 5,
+  },
+  occupation: {
+    marginTop: 2,
   },
   locationContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginBottom: 5,
   },
   locationText: {
     fontSize: 10,
     marginLeft: 5,
+  },
+  ageHeightActionContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   detailsText: {
     flex: 1,
@@ -380,7 +435,6 @@ const styles = StyleSheet.create({
   },
   actionContainer: {
     flexDirection: 'row',
-    justifyContent: 'flex-end',
   },
   actionButton: {
     width: 17,
@@ -388,6 +442,71 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     backgroundColor: COLORS.dark.primary,
     justifyContent: 'center',
+    alignItems: 'center',
     marginLeft: 10,
+  },
+  loadingText: {
+    fontSize: 16,
+    color: 'black',
+    textAlign: 'center',
+    marginTop: 20,
+  },
+  noResultsText: {
+    fontSize: 16,
+    color: 'black',
+    textAlign: 'center',
+    marginTop: 20,
+  },
+  nameLocationContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 5,
+  },
+  ageHeightContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 5,
+  },
+  occupation: {
+    marginTop: 2,
+    marginBottom: 5,
+  },
+  nameLocationContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 5,
+  },
+  locationWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  locationText: {
+    fontSize: 10,
+    marginLeft: 2, // Reduced margin to remove space
+  },
+  occupationActionContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 5,
+  },
+  occupation: {
+    flex: 1,
+    marginRight: 10,
+  },
+  actionContainer: {
+    flexDirection: 'row',
+  },
+  actionButton: {
+    width: 17,
+    height: 17,
+    borderRadius: 20,
+    backgroundColor: COLORS.dark.primary,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 5,
   },
 });

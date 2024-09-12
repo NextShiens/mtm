@@ -186,17 +186,18 @@ const PartnerCard = ({ data }) => {
             style={styles.actionButton}
             onPress={() => handleSendInterest(item)}
           >
-            <CustomImage
+            <Image
               source={IMAGES.sendIcon}
               size={10}
               resizeMode="contain"
+              style={{alignSelf:'center', tintColor:'#1E285F'}}
             />
           </TouchableOpacity>
           <TouchableOpacity
-            style={styles.actionButton}
+            style={styles.actionButton2}
             onPress={() => handleChatBtnClick(item)}
           >
-            <CustomImage source={IMAGES.chatIcon} size={10} />
+            <Image source={IMAGES.chatIcon} size={10} style={{alignSelf:'center',tintColor:'#F97B22'}}/>
           </TouchableOpacity>
         </View>
       </View>
@@ -347,7 +348,15 @@ const styles = StyleSheet.create({
     width: 23,
     height: 23,
     borderRadius: 20,
-    backgroundColor: COLORS.dark.primary,
+    backgroundColor: '#1E285F14',
+    justifyContent: 'center',
+    marginLeft: 5,
+  },
+  actionButton2: {
+    width: 23,
+    height: 23,
+    borderRadius: 20,
+    backgroundColor: '#F97B221A',
     justifyContent: 'center',
     marginLeft: 5,
   },
