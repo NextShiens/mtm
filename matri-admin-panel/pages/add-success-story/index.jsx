@@ -4,6 +4,7 @@ import { backendUrl } from '@/url';
 import { FaArrowLeft } from 'react-icons/fa';
 import { useRouter } from 'next/router';
 import AdminLayout from '@/components/AdminLayout';
+import toast from 'react-hot-toast';
 
 const SuccessStoryForm = () => {
     const router = useRouter();
@@ -53,7 +54,7 @@ const SuccessStoryForm = () => {
             setImage(response.data.fileUrl);
         } catch (error) {
             console.error("Error uploading image:", error);
-            alert("Error uploading image. Please try again.");
+            toast.error("Error uploading image. Please try again.");
         }
     };
 
@@ -72,14 +73,14 @@ const SuccessStoryForm = () => {
                 },
                 withCredentials: true,
             });
-            alert("Success story added successfully!");
+            toast.success("Success story added successfully!");
             setTitle('');
             setDescription('');
             setImage(null);
             fetchSuccessStories();
         } catch (error) {
             console.error("Error adding success story:", error);
-            alert("Error adding success story. Please try again.");
+            toast.error("Error adding success story. Please try again.");
         }
 
         setIsLoading(false);
@@ -88,17 +89,17 @@ const SuccessStoryForm = () => {
     const handleDelete = async (id) => {
         if (window.confirm("Are you sure you want to delete this success story?")) {
             try {
-                await axios.delete(`${backendUrl}/admin/success-stories/${id}`, {
+                await axios.delete(`${backendUrl}/admin/delete-success-story/${id}`, {
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     withCredentials: true,
                 });
-                alert("Success story deleted successfully!");
+                toast.success("Success story deleted successfully!");
                 fetchSuccessStories();
             } catch (error) {
                 console.error("Error deleting success story:", error);
-                alert("Error deleting success story. Please try again.");
+                toast.error("Error deleting success story. Please try again.");
             }
         }
     };
