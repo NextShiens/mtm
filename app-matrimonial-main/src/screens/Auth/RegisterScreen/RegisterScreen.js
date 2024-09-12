@@ -144,37 +144,38 @@ const RegisterScreen = ({ navigation }) => {
   };
 
   const onRegisterPress = async () => {
-    const { name, email, phoneNumber, password } = formData;
-    if (!name || !email || !password || !phoneNumber || !isChecked) {
-      Toast(ERRORS.emptyForm);
-      return;
-    }
-
-    if (isValidatedSignup({
-      name,
-      email,
-      phoneNumber,
-      countryCode,
-      selectedCountry,
-      password,
-      isChecked,
-    })) {
-      setIsLoading(true);
-      try {
-        const userFirebaseId = await RegisterUser(email, password);
-        if (userFirebaseId) {
-          console.log('User Firebase Id:', userFirebaseId);
-          await userFirstTimeReg(userFirebaseId);
-          await verifyUserEmail();
-        }
-      } catch (error) {
-        console.error('Error:', error);
-        Toast('An unexpected error occurred. Please try again.');
-      } finally {
-        setIsLoading(false);
+      const { name, email, phoneNumber, password } = formData;
+      if (!name || !email || !password || !phoneNumber || !isChecked) {
+        Toast(ERRORS.emptyForm);
+        return;
       }
-    }
-  };
+  
+      if (isValidatedSignup({
+        name,
+        email,
+        phoneNumber,
+        countryCode,
+        selectedCountry,
+        password,
+        isChecked,
+      })) {
+        setIsLoading(true);
+        try {
+          const userFirebaseId = await RegisterUser(email, password);
+          if (userFirebaseId) {
+            console.log('User Firebase Id:', userFirebaseId);
+            await userFirstTimeReg(userFirebaseId);
+            await verifyUserEmail();
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          const errorMessage = error.message || 'An unexpected error occurred. Please try again.';
+          Toast(errorMessage);
+        } finally {
+          setIsLoading(false);
+        }
+      }
+    };
 
   return (
     <ScrollView style={{ backgroundColor: 'white' }}>
