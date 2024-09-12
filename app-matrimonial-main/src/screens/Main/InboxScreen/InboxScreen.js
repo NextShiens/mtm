@@ -115,6 +115,7 @@ const InboxScreen = ({ navigation }) => {
           iconLeft={<SVG.BackArrow size={24} fill={'black'} />}
           onLeftIconPress={() => navigation.goBack()}
           title={LABELS.inbox}
+          textColor={"black"}
           iconRight={
             <TouchableOpacity onPress={handleRightIconPress}>
               <Image source={IMAGES.notificationIcon} style={styles.Bell_Icon} />

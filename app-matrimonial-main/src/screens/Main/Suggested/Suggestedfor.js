@@ -141,7 +141,7 @@ const SuggestedUsersPage = () => {
         </View>
         <View style={styles.locationContainer}>
         <Icon
-                SVGIcon={<SVG.locationIconSVG fill={COLORS.dark.primary} />}
+                SVGIcon={<SVG.locationIconSVG fill={COLORS.dark.primary} style={{top:4}}/>}
               />
           <Text style={styles.userLocation}>{item.city || 'N/A'}</Text>
           <View style={styles.actionContainer}>
@@ -149,19 +149,21 @@ const SuggestedUsersPage = () => {
               style={styles.actionButton}
               onPress={() => handleSendInterest(item)}
             >
-              <CustomImage
+              <Image
                 source={IMAGES.sendIcon}
                 size={10}
                 resizeMode="contain"
+                style={styles.image}
               />
             </TouchableOpacity>
             <TouchableOpacity
-              style={styles.actionButton}
+              style={styles.actionButton2}
               onPress={() => handleChatBtnClick(item)}
             >
-              <CustomImage
+              <Image
                 source={IMAGES.chatIcon}
                 size={10}
+                style={styles.image2}
               />
             </TouchableOpacity>
           </View>
@@ -245,7 +247,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 3,
     position: 'relative',
-    height: 200, 
+    height: 190, 
     width: cardWidth, 
   },
   userImage: {
@@ -297,16 +299,36 @@ const styles = StyleSheet.create({
   },
   actionContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
+    justifyContent: 'flex-end',
+    paddingTop: 5,
   },
   actionButton: {
     width: 18,
     height: 18,
     borderRadius: 15,
-    backgroundColor: COLORS.dark.primary,
+    backgroundColor: '#1E285F14',
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: 10,
+  },
+  actionButton2: {
+    width: 18,
+    height: 18,
+    borderRadius: 15,
+    backgroundColor: '#F97B221A',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 10,
+  },
+  image: {
+    tintColor: '#1E285F',
+    alignItems: 'center',
+    alignSelf: 'center',
+  },
+  image2:{
+    tintColor: '#F97B22',
+    alignItems: 'center',
+    alignSelf: 'center',
   },
   actionButtonText: {
     fontSize: 16,

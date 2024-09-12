@@ -595,13 +595,13 @@ const HomePage = () => {
       <View style={styles.contentContainer}>
         <View style={styles.searchBoxContainer}>
           <AppInput
-            iconLeft={
-              <SVG.magnifyingGlass
-                fill={COLORS.dark.inputBorder}
-                height={15}
-                width={15}
-              />
-            }
+            // iconLeft={
+            //   <SVG.magnifyingGlass
+            //     fill={COLORS.dark.inputBorder}
+            //     height={15}
+            //     width={15}
+            //   />
+            // }
             extraStyle={{textInputCont: [styles.searchInputCont]}}
             placeholder={LABELS.searchHere}
             onFocus={handleSearchFocus}

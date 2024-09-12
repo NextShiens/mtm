@@ -232,7 +232,7 @@ export const styles = StyleSheet.create({
     marginVertical: 10,
   },
   text:{
-    fontSize: 12,
-    color: '#ff385c',
+    fontSize: 14,
+    color: COLORS.dark.primary,
   }
 });
