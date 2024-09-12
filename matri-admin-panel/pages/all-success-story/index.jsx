@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { backendUrl } from '@/url';
 import { FaTrash } from 'react-icons/fa';
+import AdminLayout from '@/components/AdminLayout';
 
 const HomePage = () => {
   const [successStories, setSuccessStories] = useState([]);
@@ -71,5 +72,7 @@ const HomePage = () => {
     </div>
   );
 };
+
+HomePage.getLayout = (page) => <AdminLayout>{page}</AdminLayout>;
 
 export default HomePage;
