@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 import { backendUrl } from '@/url';
 import { FaArrowLeft } from 'react-icons/fa';
 import AdminLayout from '@/components/AdminLayout';
+import toast from 'react-hot-toast';
 
 
 
@@ -32,8 +33,8 @@ const EditUserForm = () => {
             const userData = response.data.user;
 
             if (userData.dateOfBirth) {
-              const date = new Date(userData.dateOfBirth);
-              userData.dateOfBirth = date.toISOString().split('T')[0];
+                const date = new Date(userData.dateOfBirth);
+                userData.dateOfBirth = date.toISOString().split('T')[0];
             }
 
             setUser(response.data.user);
@@ -53,18 +54,18 @@ const EditUserForm = () => {
                 },
                 withCredentials: true,
             });
-            alert("User updated successfully");
+            toast.success("User updated successfully");
         } catch (error) {
             console.error("Error updating user:", error);
-            alert("An error occurred while updating the user");
+            toast.error("An error occurred while updating the user");
         }
         setSubmitting(false);
     };
     const handleGoBack = () => {
         router.push('/');
-      };
+    };
 
-      const handleImageUpload = async (event, setFieldValue, values) => {
+    const handleImageUpload = async (event, setFieldValue, values) => {
         const file = event.target.files[0];
         const formData = new FormData();
         formData.append('file', file);
@@ -83,7 +84,7 @@ const EditUserForm = () => {
             setFieldValue('userImages', [...values.userImages, response.data.fileUrl]);
         } catch (error) {
             console.error("Error uploading image:", error);
-            alert("Error uploading image. Please try again.");
+            toast.error("Error uploading image. Please try again.");
         }
     };
 
@@ -107,13 +108,13 @@ const EditUserForm = () => {
         >
             {({ values, setFieldValue }) => (
                 <Form className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-lg">
-                     <div className="flex items-center mb-6">
-            <FaArrowLeft 
-              className="text-orange-600 cursor-pointer mr-2" 
-              onClick={handleGoBack} 
-            />
-            <h2 className="text-2xl font-bold text-orange-600">Edit User</h2>
-          </div>
+                    <div className="flex items-center mb-6">
+                        <FaArrowLeft
+                            className="text-orange-600 cursor-pointer mr-2"
+                            onClick={handleGoBack}
+                        />
+                        <h2 className="text-2xl font-bold text-orange-600">Edit User</h2>
+                    </div>
 
                     <div className="mb-4">
                         <label htmlFor="name" className="block text-orange-600 font-semibold mb-2">Name</label>
