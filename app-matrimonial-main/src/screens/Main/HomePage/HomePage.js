@@ -760,6 +760,7 @@ const HomePage = () => {
                       borderWidth: 2,
                       borderColor: '#F97B22',
                       padding: 5,
+                      marginLeft: 14,
                       marginTop: 5,
                     }}
                   />
@@ -872,7 +873,7 @@ const HomePage = () => {
               alignItems: 'center',
               marginBottom: 10,
             }}>
-            <Text style={{fontSize: 18, fontWeight: 'bold', color: '#333'}}>
+            <Text style={{fontSize: 18, fontWeight: 'bold', color: '#333', marginLeft:8}}>
               Success Stories
             </Text>
             <TouchableOpacity

@@ -62,7 +62,6 @@ const { width } = Dimensions.get('window');
 const numColumns = 2;
 const cardWidth = (width - 40) / numColumns;
 
-
 const SuggestedUsersPage = () => {
   const navigation = useNavigation();
   const [matchedUsers, setMatchedUsers] = useState([]);
@@ -148,7 +147,7 @@ const SuggestedUsersPage = () => {
   };
 
   const renderUserItem = ({ item }) => (
-    <View style={styles.userItem}>
+    <TouchableOpacity onPress={() => handleSendInterest(item)} style={styles.userItem}>
       <Text style={styles.newBadge}>New</Text>
       {item.userImages && item.userImages.length > 0 ? (
         <Image
@@ -182,9 +181,12 @@ const SuggestedUsersPage = () => {
           <View style={styles.actionContainer}>
             <TouchableOpacity
               style={styles.actionButton}
-              onPress={() => handleSendInterest(item)}
+              onPress={(e) => {
+                e.stopPropagation();
+                handleSendInterest(item);
+              }}
             >
-              <CustomImage
+              <Image
                 source={IMAGES.sendIcon}
                 size={10}
                 resizeMode="contain"
@@ -193,9 +195,12 @@ const SuggestedUsersPage = () => {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.actionButton2}
-              onPress={() => handleChatBtnClick(item)}
+              onPress={(e) => {
+                e.stopPropagation();
+                handleChatBtnClick(item);
+              }}
             >
-              <CustomImage
+              <Image
                 source={IMAGES.chatIcon}
                 size={10}
                 style={styles.image2}
@@ -204,8 +209,9 @@ const SuggestedUsersPage = () => {
           </View>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
+
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
@@ -226,7 +232,7 @@ const SuggestedUsersPage = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-      <TouchableOpacity onPress={() => {navigation.navigate('HomePage')}}>
+        <TouchableOpacity onPress={() => {navigation.navigate('HomePage')}}>
           <Image source={require('../../../assets/images/leftarrow.png')} />
         </TouchableOpacity>
         <Text style={styles.headerText}>Suggested For You</Text>
@@ -266,6 +272,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     color: '#333',
+    marginLeft: 65,
   },
   listContainer: {
     padding: 8,
@@ -293,7 +300,7 @@ const styles = StyleSheet.create({
     padding: 7,
   },
   userName: {
-    fontSize: 12,
+    fontSize: 10,
     fontWeight: 'bold',
     color: '#333',
     marginBottom: 4,
@@ -328,17 +335,19 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   userLocation: {
-    fontSize: 12,
+    fontSize: 10,
     color: '#666',
+    // fontFamily:'arial',
   },
   actionContainer: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    paddingTop: 5,
+    // paddingTop: 5,
+    marginLeft: 30,
   },
   actionButton: {
-    width: 18,
-    height: 18,
+    width: 23,
+    height: 23,
     borderRadius: 15,
     backgroundColor: '#1E285F14',
     justifyContent: 'center',
@@ -346,8 +355,8 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   actionButton2: {
-    width: 18,
-    height: 18,
+    width: 23,
+    height: 23,
     borderRadius: 15,
     backgroundColor: '#F97B221A',
     justifyContent: 'center',
