@@ -13,7 +13,6 @@ import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SvgXml } from 'react-native-svg';
 
-// Assume these are imported from their respective files
 import { Fonts } from '../../assets/fonts';
 import { IMAGES } from '../../assets/images';
 import { SVG } from '../../assets/svg';
@@ -127,8 +126,56 @@ const SnapCarousel = ({ data }) => {
     }
   }
 
+  const handleSlidePress = async () => {
+    setLoadingViewProfile(true);
+    const currentItem = data[activeSlide];
+    const isSubscribed = await subscriptionCheck(currentItem);
+    if (isSubscribed) {
+      await addToRecentlyViewed(currentItem?._id);
+      navigation.navigate('UserDetailsScreen', {userId: currentItem?._id});
+    } else {
+      Toast('Your profile view limit exceeded.');
+    }
+    setLoadingViewProfile(false);
+  };
+
+  const handleSendInterest = async () => {
+    setLoadingViewProfile(true);
+    const currentItem = data[activeSlide];
+    const isSubscribed = await subscriptionCheck(currentItem);
+    if (isSubscribed) {
+      await addToRecentlyViewed(currentItem?._id);
+      navigation.navigate('UserDetailsScreen', {userId: currentItem?._id});
+    } else {
+      Toast('Your profile view limit exceeded.');
+    }
+    setLoadingViewProfile(false);
+  };
+
+  const handleChat = async () => {
+    setLoadingChat(true);
+    const currentItem = data[activeSlide];
+    const isSubscribed = await checkLiveChatAvailability(
+      JSON.parse(await AsyncStorage.getItem('theUser')),
+    );
+    if (isSubscribed) {
+      navigation.navigate('ChatScreen', {
+        userId: currentItem?._id,
+        roomId: `${currentItem?._id}_${currentUser.user._id}`,
+        user: currentItem,
+      });
+    } else {
+      Toast("You can't chat buy premium plan");
+    }
+    setLoadingChat(false);
+  };
+
   const renderItem = ({item, index}) => (
-    <View style={styles.slideContainer}>
+    <TouchableOpacity 
+      style={styles.slideContainer} 
+      onPress={handleSlidePress}
+      activeOpacity={0.9}
+    >
       {item.userImages && item.userImages.length > 0 ? (
         <Image source={{uri: item.userImages[0]}} style={styles.profileImage} />
       ) : item?.gender === 'male' ? (
@@ -207,7 +254,10 @@ const SnapCarousel = ({ data }) => {
       <View style={styles.bottomRightButtonsContainer}>
         <TouchableOpacity
           style={styles.bottomRightButton}
-          onPress={handleSendInterest}
+          onPress={(e) => {
+            e.stopPropagation();
+            handleSendInterest();
+          }}
           disabled={loadingViewProfile}>
           {loadingViewProfile ? (
             <ActivityIndicator size="small" color="#fff" />
@@ -220,7 +270,10 @@ const SnapCarousel = ({ data }) => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.bottomRightButton}
-          onPress={handleChat}
+          onPress={(e) => {
+            e.stopPropagation();
+            handleChat();
+          }}
           disabled={loadingChat}>
           {loadingChat ? (
             <ActivityIndicator size="small" color="#fff" />
@@ -232,39 +285,8 @@ const SnapCarousel = ({ data }) => {
           )}
         </TouchableOpacity>
       </View>
-    </View>
+    </TouchableOpacity>
   );
-
-  const handleSendInterest = async () => {
-    setLoadingViewProfile(true);
-    const currentItem = data[activeSlide];
-    const isSubscribed = await subscriptionCheck(currentItem);
-    if (isSubscribed) {
-      await addToRecentlyViewed(currentItem?._id);
-      navigation.navigate('UserDetailsScreen', {userId: currentItem?._id});
-    } else {
-      Toast('Your profile view limit exceeded.');
-    }
-    setLoadingViewProfile(false);
-  };
-
-  const handleChat = async () => {
-    setLoadingChat(true);
-    const currentItem = data[activeSlide];
-    const isSubscribed = await checkLiveChatAvailability(
-      JSON.parse(await AsyncStorage.getItem('theUser')),
-    );
-    if (isSubscribed) {
-      navigation.navigate('ChatScreen', {
-        userId: currentItem?._id,
-        roomId: `${currentItem?._id}_${currentUser.user._id}`,
-        user: currentItem,
-      });
-    } else {
-      Toast("You can't chat buy premium plan");
-    }
-    setLoadingChat(false);
-  };
 
   return (
     <View style={styles.container}>
@@ -301,7 +323,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: 'center',
   },
-  image: {
+  profileImage: {
     width: '100%',
     height: '100%',
     resizeMode: 'fit',

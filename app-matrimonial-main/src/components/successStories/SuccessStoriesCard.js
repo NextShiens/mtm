@@ -28,7 +28,7 @@ const style = StyleSheet.create({
     backgroundColor: 'white',
     elevation: 3,
     flexDirection: 'row',
-    gap: 10,
+    gap: 15,
     padding: 5,
     marginTop: 10,
     borderRadius: 10,
