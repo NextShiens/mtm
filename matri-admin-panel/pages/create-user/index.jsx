@@ -6,6 +6,7 @@ import { FaArrowLeft } from 'react-icons/fa';
 import { backendUrl } from '@/url';
 import { useRouter } from 'next/router';
 import AdminLayout from '@/components/AdminLayout';
+import {age,genderList,indianMotherTongues,indianCastes,workLocationList,QualificationList,occupationList,annualIncomeRangesIndia,manglikOptions,lookingForOptions,numOfBrothersOptions,countryOptions,cityOptions,stateOptions,religionsInIndia,statuses,doshOptions,starOptions,birthTimeOptions,physicalStatusOptions,foodOptions,smokingOptions,drinkingOptions,familyTypeOptions,familyStatusOptions,familyValueOptions,heightToOptions}  from '@/data/appData';
 
 const UserForm = ({ userId = null }) => {
     const [user, setUser] = useState(null);
@@ -163,7 +164,7 @@ const UserForm = ({ userId = null }) => {
         gender: Yup.string().required('Required'),
         dateOfBirth: Yup.date().required('Required'),
         age: Yup.number().required('Required').positive().integer(),
-        height: Yup.number().required('Required').positive(),
+        height: Yup.string().required('Required'),
         motherTongue: Yup.string().required('Required'),
         cast: Yup.string().required('Required'),
         religion: Yup.string().required('Required'),
@@ -178,8 +179,8 @@ const UserForm = ({ userId = null }) => {
         userImages: Yup.array().of(Yup.string().url()),
         ageFrom: Yup.number().required('Required').positive().integer(),
         ageTo: Yup.number().required('Required').positive().integer(),
-        heightFrom: Yup.number().required('Required').positive(),
-        heightTo: Yup.number().required('Required').positive(),
+        heightFrom: Yup.string().required('Required'),
+        heightTo: Yup.string().required('Required'),
         lookingFor: Yup.string().required('Required'),
         physicalStatus: Yup.string().required('Required'),
         food: Yup.string().required('Required'),
@@ -237,26 +238,21 @@ const UserForm = ({ userId = null }) => {
                         <FormField name="email" label="Email" type="email" />
                         <FormField name="phone" label="Phone" />
                         {!userId && <FormField name="password" label="Password" type="password" />}
-                        <FormField name="isAdmin" label="Is Admin" type="checkbox" />
-                        <FormField name="gender" label="Gender" as="select">
-                            <option value="">Select Gender</option>
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
-                        </FormField>
+                        <FormField name="isAdmin" label="Is Admin" type="checkbox" style={{textAlign:'le'}} />
+                        <DropdownField name="gender" label="Gender" options={genderList} />
                         <FormField name="dateOfBirth" label="Date of Birth" type="date" />
-                        <FormField name="age" label="Age" />
-                        <FormField name="height" label="Height" />
-                        <FormField name="motherTongue" label="Mother Tongue" />
-                        <FormField name="cast" label="Cast" />
-                        <FormField name="religion" label="Religion" />
-                        <FormField name="sect" label="Sect" />
-                        <FormField name="city" label="City" />
-                        <FormField name="highestDegree" label="Highest Degree" />
-                        <FormField name="occupation" label="Occupation" />
-                        <FormField name="employedIn" label="Employed In" />
-                        <FormField name="annualIncome" label="Annual Income" />
-                        <FormField name="workLocation" label="Work Location" />
-                        <FormField name="maritalStatus" label="Marital Status" />
+                        <DropdownField name="age" label="Age" options={age} />
+                        <DropdownField name="height" label="Height" options={heightToOptions} />
+                        <DropdownField name="motherTongue" label="Mother Tongue" options={indianMotherTongues} />
+                        <DropdownField name="cast" label="Cast" options={indianCastes} />
+                        <DropdownField name="religion" label="Religion" options={religionsInIndia}/>
+                        <DropdownField name="sect" label="Sect" options={indianCastes} />
+                        <DropdownField name="city" label="City" options={workLocationList} />
+                        <DropdownField name="highestDegree" label="Highest Degree" options={QualificationList} />
+                        <DropdownField name="occupation" label="Occupation" options={occupationList} />
+                        <DropdownField name="annualIncome" label="Annual Income" options={annualIncomeRangesIndia} />
+                        <DropdownField name="workLocation" label="Work Location" options={workLocationList} />
+                        <DropdownField name="maritalStatus" label="Marital Status"options={statuses} />
                         <div className="mb-4">
                             <label htmlFor="userImages" className="block text-orange-600 font-semibold mb-2">User Images</label>
                             <input
@@ -271,46 +267,46 @@ const UserForm = ({ userId = null }) => {
                     </FormSection>
 
                     <FormSection title="Partner Preferences">
-                        <FormField name="ageFrom" label="Age From" />
-                        <FormField name="ageTo" label="Age To" />
-                        <FormField name="heightFrom" label="Height From" />
-                        <FormField name="heightTo" label="Height To" />
-                        <FormField name="lookingFor" label="Looking For" />
-                        <FormField name="physicalStatus" label="Physical Status" />
-                        <FormField name="food" label="Food Preference" />
-                        <FormField name="smoking" label="Smoking" />
-                        <FormField name="drinking" label="Drinking" />
-                        <FormField name="familyType" label="Family Type" />
-                        <FormField name="familyStatus" label="Family Status" />
-                        <FormField name="familyValue" label="Family Value" />
-                        <FormField name="fathersOccupation" label="Father's Occupation" />
+                        <DropdownField name="ageFrom" label="Age From" options={age} />
+                        <DropdownField name="ageTo" label="Age To" options={age} />
+                        <DropdownField name="heightFrom" label="Height From"  options={heightToOptions}/>
+                        <DropdownField name="heightTo" label="Height To" options={heightToOptions}/>
+                        <DropdownField name="lookingFor" label="Looking For" options={lookingForOptions} />
+                        <DropdownField name="physicalStatus" label="Physical Status" options={physicalStatusOptions}/>
+                        <DropdownField name="food" label="Food Preference" options={foodOptions} />
+                        <DropdownField name="smoking" label="Smoking" options={smokingOptions} />
+                        <DropdownField name="drinking" label="Drinking" options={drinkingOptions} />
+                        <DropdownField name="familyType" label="Family Type" options={familyTypeOptions}/>
+                        <DropdownField name="familyStatus" label="Family Status" options={familyStatusOptions} />
+                        <DropdownField name="familyValue" label="Family Value" options={familyValueOptions} />
+                        <DropdownField name="fathersOccupation" label="Father's Occupation" options={occupationList}/>
                     </FormSection>
 
                     <FormSection title="Horoscope Details">
-                        <FormField name="horoscopeDetails.dosh" label="Dosh" />
-                        <FormField name="horoscopeDetails.star" label="Star" />
-                        <FormField name="horoscopeDetails.birthTime" label="Birth Time" />
-                        <FormField name="horoscopeDetails.birthPlace" label="Birth Place" />
-                        <FormField name="horoscopeDetails.religion" label="Religion" />
-                        <FormField name="horoscopeDetails.caste" label="Caste" />
-                        <FormField name="horoscopeDetails.motherTongue" label="Mother Tongue" />
-                        <FormField name="horoscopeDetails.manglik" label="Manglik" />
+                        <DropdownField name="horoscopeDetails.dosh" label="Dosh" options={doshOptions} />
+                        <DropdownField name="horoscopeDetails.star" label="Star" options={starOptions} />
+                        <DropdownField name="horoscopeDetails.birthTime" label="Birth Time" options={birthTimeOptions}/>
+                        <DropdownField name="horoscopeDetails.birthPlace" label="Birth Place"options={workLocationList} />
+                        <DropdownField name="horoscopeDetails.religion" label="Religion" options={religionsInIndia} />
+                        <DropdownField name="cast" label="Cast" options={indianCastes} />
+                        <DropdownField name="horoscopeDetails.motherTongue" label="Mother Tongue" options={indianMotherTongues} />
+                        <DropdownField name="horoscopeDetails.manglik" label="Manglik" options={manglikOptions} />
                     </FormSection>
 
                     <FormSection title="Family Details">
-                        <FormField name="FamilyDetails.numOfBrothers" label="Number of Brothers" />
-                        <FormField name="FamilyDetails.numOfMarriedBrothers" label="Number of Married Brothers" />
-                        <FormField name="FamilyDetails.numOfSisters" label="Number of Sisters" />
-                        <FormField name="FamilyDetails.numOfMarriedSisters" label="Number of Married Sisters" />
-                        <FormField name="FamilyDetails.country" label="Country" />
-                        <FormField name="FamilyDetails.state" label="State" />
-                        <FormField name="FamilyDetails.city" label="City" />
+                        <DropdownField name="FamilyDetails.numOfBrothers" label="Number of Brothers" options={numOfBrothersOptions} />
+                        <DropdownField name="FamilyDetails.numOfMarriedBrothers" label="Number of Married Brothers" options={numOfBrothersOptions}/>
+                        <DropdownField name="FamilyDetails.numOfSisters" label="Number of Sisters" options={numOfBrothersOptions} />
+                        <DropdownField name="FamilyDetails.numOfMarriedSisters" label="Number of Married Sisters" options={numOfBrothersOptions} />
+                        <DropdownField name="FamilyDetails.country" label="Country" options={countryOptions} />
+                        <DropdownField name="FamilyDetails.state" label="State" options={stateOptions} />
+                        <DropdownField name="FamilyDetails.city" label="City" options={cityOptions} />
                     </FormSection>
 
                     <FormSection title="Education">
-                        <FormField name="Education.education" label="Education" />
-                        <FormField name="Education.occupation" label="Occupation" />
-                        <FormField name="Education.income" label="Income" />
+                        <DropdownField name="Education.education" label="Education" options={QualificationList} />
+                        <DropdownField name="Education.occupation" label="Occupation" options={occupationList} />
+                        <DropdownField name="Education.income" label="Income" options={annualIncomeRangesIndia} />
                     </FormSection>
 
                     <FormField name="partnerExpectation" label="Partner Expectation" as="textarea" />
@@ -336,6 +332,18 @@ const FormField = ({ name, label, type = 'text', as = 'input', ...props }) => (
     </div>
 );
 
+const DropdownField = ({ name, label, options }) => (
+    <div className="mb-4">
+        <label htmlFor={name} className="block text-orange-600 font-semibold mb-2">{label}</label>
+        <Field name={name} as="select" className="w-full p-2 border border-orange-300 rounded">
+            <option value="">Select {label}</option>
+            {options?.map((option, index) => (
+                <option key={index} value={option.value || option}>{option.value || option}</option>
+            ))}
+        </Field>
+        <ErrorMessage name={name} component="div" className="text-red-500 text-sm mt-1" />
+    </div>
+);
 
 const FormSection = ({ title, children }) => (
     <div className="mb-6">
