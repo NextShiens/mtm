@@ -10,43 +10,41 @@ const EditPlan = () => {
   const { id } = router.query;
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
-    name: null,
+    name: "",
     price: "",
     duration: "",
     messages: 0,
-    sms: 0,
-    contactViews: 0,
     liveChat: "NO",
     profileViews: 0,
   });
 
   useEffect(() => {
-    fetch(backendUrl + "/admin/plan/" + id, {
-      method: "GET",
-      headers: {
-        ContentType: "application/json",
-      },
-      credentials: "include",
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.subscription) {
-          setPlan(data.subscription);
-        }
-      });
-  }, []);
+    if (id) {
+      fetch(backendUrl + "/admin/plan/" + id, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.subscription) {
+            setPlan(data.subscription);
+          }
+        });
+    }
+  }, [id]);
 
   useEffect(() => {
     if (plan) {
       setFormData({
-        name: plan.name,
-        price: plan.price,
-        duration: plan.duration,
-        messages: plan.messages,
-        sms: plan.sms,
-        contactViews: plan.contactViews,
-        liveChat: plan.liveChat,
-        profileViews: plan.profileViews,
+        name: plan.name || "",
+        price: plan.price || "",
+        duration: plan.duration || "",
+        messages: plan.messages || 0,
+        liveChat: plan.liveChat || "NO",
+        profileViews: plan.profileViews || 0,
       });
     }
   }, [plan]);
@@ -64,8 +62,6 @@ const EditPlan = () => {
       !formData.price ||
       !formData.duration ||
       !formData.messages ||
-      !formData.sms ||
-      !formData.contactViews ||
       !formData.liveChat ||
       !formData.profileViews
     ) {
@@ -162,8 +158,8 @@ const EditPlan = () => {
           />
         </div>
       </div>
-
-      <div className="flex justify-center flex-col md:flex-row gap-5">
+      
+      {/* <div className="flex justify-center flex-col md:flex-row gap-5">
         <div className="flex flex-col gap-2 w-full px-2">
           <label htmlFor="sms">SMS</label>
           <input
@@ -191,7 +187,7 @@ const EditPlan = () => {
             value={formData.contactViews}
           />
         </div>
-      </div>
+      </div> */}
 
       <div className="flex justify-center flex-col md:flex-row gap-5">
         <div className="w-full flex flex-col gap-2 px-2">
@@ -209,8 +205,8 @@ const EditPlan = () => {
             <option value="" className="text-gray-600">
               Live chat{" "}
             </option>
-            <option value="yes">Yes</option>
-            <option value="no">No</option>
+            <option value="YES">Yes</option>
+            <option value="NO">No</option>
           </select>
         </div>
 
