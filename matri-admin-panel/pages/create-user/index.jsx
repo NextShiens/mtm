@@ -113,26 +113,24 @@ const UserForm = ({ userId = null }) => {
 
   const handleSubmit = async (values, { setSubmitting }) => {
     setIsLoading(true);
-    console.log("Form Values:", values);
-    alert("Form submitted successfully");
-    // try {
-    //   if (userId) {
-    //     await axios.put(`${backendUrl}/admin/edit-user/${userId}`, values, {
-    //       headers: { "Content-Type": "application/json" },
-    //       withCredentials: true,
-    //     });
-    //     alert("User updated successfully");
-    //   } else {
-    //     await axios.post(`${backendUrl}/admin/create-user`, values, {
-    //       headers: { "Content-Type": "application/json" },
-    //       withCredentials: true,
-    //     });
-    //     alert("User created successfully");
-    //   }
-    // } catch (error) {
-    //   console.error("Error submitting form:", error);
-    //   alert("An error occurred. Please try again.");
-    // }
+    try {
+      if (userId) {
+        await axios.put(`${backendUrl}/admin/edit-user/${userId}`, values, {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        });
+        alert("User updated successfully");
+      } else {
+        await axios.post(`${backendUrl}/admin/create-user`, values, {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        });
+        alert("User created successfully");
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      alert("An error occurred. Please try again.");
+    }
     setIsLoading(false);
     setSubmitting(false);
   };
