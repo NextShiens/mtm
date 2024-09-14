@@ -143,15 +143,16 @@ const GridCard = ({data}) => {
         <View style={styles.nameLocationContainer}>
           <AppText
             title={item?.name || 'N/A'}
-            variant="h6"
+            variant="h5"
             numberOfLines={1}
             width="60%"
             color={COLORS.dark.black}
+            extraStyle={{fontWeight:'700'}}
           />
           <View style={styles.locationContainer}>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <View style={{flexDirection: 'row', alignItems: 'center' , gap:5 ,marginLeft:10}}>
               <Icon
-                SVGIcon={<SVG.locationIconSVG fill={COLORS.dark.primary} />}
+                SVGIcon={<SVG.locationIconSVG fill={'#ccc'} />}
               />
               <AppText
                 title={item.city || 'N/A'}
@@ -330,7 +331,7 @@ const styles = StyleSheet.create({
   actionContainer: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    paddingTop: 10,
+    // paddingTop: 7,
   },
   actionButton: {
     width: 23,
@@ -352,6 +353,7 @@ const styles = StyleSheet.create({
     marginLeft: -10,
     marginBottom: -17,
     width: '70%',
+    marginTop: 5,
   },
   image: {
     tintColor: '#1E285F',

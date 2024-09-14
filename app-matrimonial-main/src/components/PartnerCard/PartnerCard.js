@@ -203,9 +203,9 @@ const PartnerCard = ({ data }) => {
             color={COLORS.dark.black}
           />
           <View style={styles.locationContainer}>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center',gap:5}}>
               <Icon
-                SVGIcon={<SVG.locationIconSVG fill={COLORS.dark.primary} />}
+                SVGIcon={<SVG.locationIconSVG fill={'#ccc'} />}
               />
               <AppText
                 title={item.city || 'N/A'}
@@ -404,7 +404,7 @@ const styles = StyleSheet.create({
   actionContainer: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    paddingTop: 10,
+    // paddingTop: 10,
   },
   actionButton: {
     width: 23,
@@ -426,6 +426,7 @@ const styles = StyleSheet.create({
     marginLeft: -10,
     marginBottom: -17,
     width: '70%',
+    marginTop: 5,
   },
 });
 

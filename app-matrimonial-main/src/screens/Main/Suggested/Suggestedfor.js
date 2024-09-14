@@ -175,7 +175,7 @@ const SuggestedUsersPage = () => {
         </View>
         <View style={styles.locationContainer}>
           <Icon
-            SVGIcon={<SVG.locationIconSVG fill={COLORS.dark.primary} style={{top:4}}/>}
+            SVGIcon={<SVG.locationIconSVG fill={'#ccc'} style={{top:4}}/>}
           />
           <Text style={styles.userLocation}>{item.city || 'N/A'}</Text>
           <View style={styles.actionContainer}>

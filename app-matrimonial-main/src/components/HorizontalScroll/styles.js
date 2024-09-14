@@ -18,7 +18,7 @@ export const styles = StyleSheet.create({
   selectedItemContainer: {
     height: 50,
     width: 95,
-    backgroundColor: COLORS.dark.white,
+    backgroundColor: 'rgba(229, 229, 229, 0.4)',
     borderRadius: 25,
     marginHorizontal: 10,
     justifyContent: 'center',

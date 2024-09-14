@@ -167,11 +167,12 @@ const HorizontalCard = ({data}) => {
             width="60%"
             numberOfLines={1}
             color={COLORS.dark.black}
+            extraStyle={{fontWeight:'700' ,fontFamily:'DMSans-Bold'}}
           />
           <View style={styles.locationContainer}>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <Icon
-                SVGIcon={<SVG.locationIconSVG fill={COLORS.dark.primary} />}
+                SVGIcon={<SVG.locationIconSVG fill={'#ccc'} />}
               />
               <AppText
                 title={item.city || 'N/A'}
@@ -360,7 +361,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   actionContainer: {
-    marginTop: 10,
+    // marginTop: 10,
     flexDirection: 'row',
     justifyContent: 'flex-end',
   },
@@ -376,6 +377,7 @@ const styles = StyleSheet.create({
     marginLeft: -10,
     marginBottom: -17,
     width: '70%',
+    marginTop: 5,
   },
   image: {
     tintColor: '#1E285F',
