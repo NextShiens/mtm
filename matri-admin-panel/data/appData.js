@@ -1,19 +1,15 @@
-export const annualIncomeRangesIndia = [
-  "Below ₹1,00,000",
-  "₹1,00,000 - ₹2,50,000",
-  "₹2,50,000 - ₹5,00,000",
-  "₹5,00,000 - ₹10,00,000",
-  "₹10,00,000 - ₹20,00,000",
-  "₹20,00,000 - ₹50,00,000",
-  "₹50,00,000 - ₹1,00,00,000",
-  "Above ₹1,00,00,000"
-];
+export const annualIncomeRangesIndia =['50,000', '2,50,000', '4,50,000', '6,50,000', '8,50,000', '10,50,000',
+  '12,50,000', '14,50,000', '16,50,000', '18,50,000', '20,50,000', '22,50,000',
+  '24,50,000', '26,50,000', '28,50,000', '30,50,000', '32,50,000', '34,50,000',
+  '36,50,000', '38,50,000', '40,50,000', '42,50,000', '44,50,000', '46,50,000',
+  '48,50,000', '50,50,000', '52,50,000', '54,50,000', '56,50,000', '58,50,000',
+  '60,50,000', '62,50,000', '64,50,000', '66,50,000', '68,50,000', '70,50,000',
+  '72,50,000', '74,50,000', '76,50,000', '78,50,000', '80,50,000', '82,50,000',
+  '84,50,000', '86,50,000', '88,50,000', '90,50,000', '92,50,000', '94,50,000',
+  '96,50,000', '98,50,000', '1,00,00,000'];
 
 
-export const genderList = [
-  {key: '1', value: 'Male'},
-  {key: '2', value: 'Female'},
-];
+export const genderList = ["male", "female"];
 export const QualificationList = [
   '10th Standard',
   '12th Standard',
@@ -523,7 +519,7 @@ export const filterOptions = [
 ];
 
 
-export const age=['18 Years', '19 Years', '20 Years' , '21 Years', '22 Years', '23 Years', '24 Years', '25 Years', '26 Years', '27 Years', '28 Years', '29 Years', '30 Years', '31 Years', '32 Years', '33 Years', '34 Years', '35 Years', '36 Years', '37 Years', '38 Years', '39 Years', '40 Years', '41 Years', '42 Years', '43 Years', '44 Years', '45 Years', '46 Years', '47 Years', '48 Years', '49 Years', '50 Years', '51 Years', '52 Years', '53 Years', '54 Years', '55 Years', '56 Years', '57 Years', '58 Years', '59 Years' , '60 Years', '61 Years', '62 Years', '63 Years', '64 Years', '65 Years', '66 Years', '67 Years', '68 Years', '69 Years', '70 Years', '71 Years', '72 Years', '73 Years', '74 Years', '75 Years', '76 Years', '77 Years', '78 Years', '79 Years', '80 Years', '81 Years', '82 Years', '83 Years', '84 Years', '85 Years', '86 Years', '87 Years', '88 Years', '89 Years', '90 Years', '91 Years', '92 Years', '93 Years', '94 Years', '95 Years', '96 Years', '97 Years', '98 Years', '99 Years', '100 Years']
+export const age=["18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59", "60"]
 
 
 
