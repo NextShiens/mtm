@@ -10,7 +10,17 @@ const AccessToken = require("../models/accessToken.js");
 const { sendchatNotification } = require("../firebase/service/index.js");
 const jwt = require("jsonwebtoken");
 const user = require("../models/user.js");
+const admin = require('firebase-admin');
+const serviceAccount = require('../vaishakhi-matrimony-firebase-adminsdk-mjr6h-33d857fb90.json'); // Replace with the path to your Firebase service account key file
 
+if (!admin.apps.length) {
+  const serviceAccount = require('../../vaishakhi-matrimony-firebase-adminsdk-mjr6h-33d857fb90.json');
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    // If you're using other Firebase services, include their configs here
+  });
+}
+const auth = admin.auth();
 const passwordPattern =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/;
 
@@ -222,6 +232,13 @@ const userAuthController = {
     let user;
 
     try {
+      const userRecord = await auth.getUserByEmail(email);
+      if(!userRecord){
+        return res.status(404).json({ message: "Email not exsit!" });
+      }
+      const uid = userRecord.uid;
+      
+      await auth.updateUser(uid, { password: password });
       user = await User.findOne({ email: email });
 
       if (!user) {

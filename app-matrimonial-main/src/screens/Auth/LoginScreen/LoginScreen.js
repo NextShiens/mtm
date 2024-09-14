@@ -99,6 +99,8 @@ const LoginScreen = () => {
   };
   const loginAndGetAccessToken = async () => {
     try {
+      let fcToke= await AsyncStorage.getItem('fcmToken')
+      console.log('fc',fcToke)
       const response = await fetch(`${API_URL}/user/login`, {
         method: 'POST',
         headers: {
@@ -108,7 +110,7 @@ const LoginScreen = () => {
         body: JSON.stringify({
           email: email,
           password: password,
-          fcmToken: await AsyncStorage.getItem('fcmToken'),
+          fcmToken:fcToke.toString()
         }),
       });
 
