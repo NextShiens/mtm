@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -11,19 +11,19 @@ import {
   Dimensions,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { API_URL } from '../../../../constant';
-import { COLORS, STYLES } from '../../../assets/theme';
+import {API_URL} from '../../../../constant';
+import {COLORS, STYLES} from '../../../assets/theme';
 import CustomImage from '../../../components/CustomImage/CustomImage';
-import { IMAGES } from '../../../assets/images';
-import { useNavigation } from '@react-navigation/native';
+import {IMAGES} from '../../../assets/images';
+import {useNavigation} from '@react-navigation/native';
 import {
-    subscriptionCheck,
-    checkLiveChatAvailability,
-  } from '../../../utils/subscriptionCheck';
+  subscriptionCheck,
+  checkLiveChatAvailability,
+} from '../../../utils/subscriptionCheck';
 import Icon from '../../../components/Icon/Icon';
 import {Toast} from '../../../utils/native';
 import {SVG} from '../../../assets/svg';
-import { SvgXml } from 'react-native-svg';
+import {SvgXml} from 'react-native-svg';
 
 const maleUserSvg = `<svg width="181" height="207" viewBox="0 0 181 207" fill="none" xmlns="http://www.w3.org/2000/svg">
   <path d="M134.84 55.1933H71.4624V4.97703L107.364 2.19678C122.183 1.04946 134.84 12.7647 134.84 27.6279V55.1933Z" fill="#555A5E"/>
@@ -58,7 +58,7 @@ const femaleUserSvg = `<svg width="182" height="207" viewBox="0 0 250 250" fill=
 <path d="M171.506 153.326V208.522C156.686 208.522 144.663 196.499 144.663 181.663V144.902C146.454 143.126 148.277 141.193 150.305 139.166C152.269 137.201 153.982 133.413 155.475 128.746C158.54 130.097 161.306 131.999 163.648 134.341C168.504 139.213 171.506 145.908 171.506 153.326Z" fill="#555A5E"/>
 </svg>`;
 
-const { width } = Dimensions.get('window');
+const {width} = Dimensions.get('window');
 const numColumns = 2;
 const cardWidth = (width - 40) / numColumns;
 
@@ -115,45 +115,44 @@ const SuggestedUsersPage = () => {
     }
   };
 
-  const handleSendInterest = async (item) => {
+  const handleSendInterest = async item => {
     try {
       if (await subscriptionCheck(item)) {
-        navigation.navigate('UserDetailsScreen', { userId: item?._id });
+        navigation.navigate('UserDetailsScreen', {userId: item?._id});
       } else {
-        Toast("Your profile view limit exceeded.");
+        Toast('Your profile view limit exceeded.');
       }
     } catch (error) {
       console.error('Error in handleSendInterest:', error);
-      Toast("An error occurred. Please try again.");
+      Toast('An error occurred. Please try again.');
     }
   };
 
-  const handleChatBtnClick = async (item) => {
+  const handleChatBtnClick = async item => {
     try {
       const canChat = await checkLiveChatAvailability(item);
       if (canChat) {
-        navigation.navigate('ChatScreen', { 
-          userId: item?._id, 
-          roomId: `${item?._id}_${currentUser.user._id}`, 
-          user: item 
+        navigation.navigate('ChatScreen', {
+          userId: item?._id,
+          roomId: `${item?._id}_${currentUser.user._id}`,
+          user: item,
         });
       } else {
         Toast("You can't chat. Please buy premium.");
       }
     } catch (error) {
       console.error('Error checking chat availability:', error);
-      Toast("An error occurred. Please try again.");
+      Toast('An error occurred. Please try again.');
     }
   };
 
-  const renderUserItem = ({ item }) => (
-    <TouchableOpacity onPress={() => handleSendInterest(item)} style={styles.userItem}>
+  const renderUserItem = ({item}) => (
+    <TouchableOpacity
+      onPress={() => handleSendInterest(item)}
+      style={styles.userItem}>
       <Text style={styles.newBadge}>New</Text>
       {item.userImages && item.userImages.length > 0 ? (
-        <Image
-          source={{ uri: item.userImages[0] }}
-          style={styles.userImage}
-        />
+        <Image source={{uri: item.userImages[0]}} style={styles.userImage} />
       ) : (
         <SvgXml
           xml={item.gender === 'male' ? maleUserSvg : femaleUserSvg}
@@ -163,29 +162,38 @@ const SuggestedUsersPage = () => {
         />
       )}
       <View style={styles.userInfo}>
-        <Text style={styles.userName} numberOfLines={1} width='60%'>{item.name || 'N/A'}</Text>
+        <Text style={styles.userName} numberOfLines={1} width="60%">
+          {item.name || 'N/A'}
+        </Text>
         <View style={styles.userDetails}>
           <Text style={styles.userAge}>Age {item.age || 'N/A'}, </Text>
           <Text style={styles.userHeight}>{item.height || 'N/A'}</Text>
         </View>
         <View style={styles.professionContainer}>
+          <Image
+            source={IMAGES.briefcaseColored}
+            style={{
+              position: 'absolute',
+              bottom: 1,
+              tintColor: 'gray',
+            }}
+          />
           <Text style={styles.userProfession} numberOfLines={1}>
             {item.occupation || 'N/A'}
           </Text>
         </View>
         <View style={styles.locationContainer}>
           <Icon
-            SVGIcon={<SVG.locationIconSVG fill={'#ccc'} style={{top:4}}/>}
+            SVGIcon={<SVG.locationIconSVG fill={'#ccc'} style={{top: 4}} />}
           />
           <Text style={styles.userLocation}>{item.city || 'N/A'}</Text>
           <View style={styles.actionContainer}>
             <TouchableOpacity
               style={styles.actionButton}
-              onPress={(e) => {
+              onPress={e => {
                 e.stopPropagation();
                 handleSendInterest(item);
-              }}
-            >
+              }}>
               <Image
                 source={IMAGES.sendIcon}
                 size={10}
@@ -195,16 +203,11 @@ const SuggestedUsersPage = () => {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.actionButton2}
-              onPress={(e) => {
+              onPress={e => {
                 e.stopPropagation();
                 handleChatBtnClick(item);
-              }}
-            >
-              <Image
-                source={IMAGES.chatIcon}
-                size={10}
-                style={styles.image2}
-              />
+              }}>
+              <Image source={IMAGES.chatIcon} size={10} style={styles.image2} />
             </TouchableOpacity>
           </View>
         </View>
@@ -232,7 +235,10 @@ const SuggestedUsersPage = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => {navigation.navigate('HomePage')}}>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('HomePage');
+          }}>
           <Image source={require('../../../assets/images/leftarrow.png')} />
         </TouchableOpacity>
         <Text style={styles.headerText}>Suggested For You</Text>
@@ -283,28 +289,30 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     overflow: 'hidden',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
     position: 'relative',
-    height: 190, 
-    width: cardWidth, 
+    height: 190,
+    width: cardWidth,
   },
   userImage: {
     width: '100%',
-    height: 100, 
+    height: 100,
     resizeMode: 'cover',
   },
   userInfo: {
     padding: 7,
   },
   userName: {
-    fontSize: 10,
+    fontSize: 14,
     fontWeight: 'bold',
     color: '#333',
     marginBottom: 4,
     marginTop: -6,
+    fontWeight: '700',
+    fontFamily: 'DMSans-SemiBold',
   },
   userDetails: {
     flexDirection: 'row',
@@ -328,6 +336,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#666',
     width: '70%',
+    marginLeft: 20,
   },
   locationContainer: {
     flexDirection: 'row',
@@ -368,7 +377,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'center',
   },
-  image2:{
+  image2: {
     tintColor: '#F97B22',
     alignItems: 'center',
     alignSelf: 'center',

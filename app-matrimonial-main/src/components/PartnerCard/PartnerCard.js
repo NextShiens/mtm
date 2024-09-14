@@ -197,10 +197,11 @@ const PartnerCard = ({ data }) => {
         <View style={styles.nameLocationContainer}>
           <AppText
             title={item?.name || 'N/A'}
-            variant="h6"
+            variant="h5"
             numberOfLines={1}
             width="70%"
             color={COLORS.dark.black}
+            extraStyle={{fontWeight: '700', fontFamily: 'DMSans-SemiBold'}}
           />
           <View style={styles.locationContainer}>
             <View style={{ flexDirection: 'row', alignItems: 'center',gap:5}}>
@@ -228,6 +229,15 @@ const PartnerCard = ({ data }) => {
             ]}
           />
         </View>
+        <Image
+          source={IMAGES.briefcaseColored}
+          style={{
+            position: 'absolute',
+            bottom: 22,
+            marginLeft: 5,
+            tintColor: 'gray',
+          }}
+        />
         <AppText
           title={item?.occupation || 'N/A'}
           color={'gray'}
@@ -236,6 +246,9 @@ const PartnerCard = ({ data }) => {
             STYLES.fontFamily(Fonts.PoppinsRegular),
             STYLES.fontSize(11),
             styles.occupationText,
+            {
+              marginLeft: 10,
+            },
           ]}
         />
         <View style={styles.actionContainer}>

@@ -163,7 +163,7 @@ const HorizontalCard = ({data}) => {
         <View style={styles.nameLocationContainer}>
           <AppText
             title={item?.name || 'N/A'}
-            variant="h6"
+            variant="h5"
             width="60%"
             numberOfLines={1}
             color={COLORS.dark.black}
@@ -193,6 +193,15 @@ const HorizontalCard = ({data}) => {
             ]}
           />
         </View>
+        <Image
+          source={IMAGES.briefcaseColored}
+          style={{
+            position: 'absolute',
+            bottom: 22,
+            marginLeft: 5,
+            tintColor: 'gray',
+          }}
+        />
         <AppText
           title={item?.occupation || 'N/A'}
           color={'gray'}
@@ -201,6 +210,9 @@ const HorizontalCard = ({data}) => {
             STYLES.fontFamily(Fonts.PoppinsRegular),
             STYLES.fontSize(11),
             styles.occupationText,
+            {
+              marginLeft: 10,
+            },
           ]}
         />
         <View style={styles.actionContainer}>

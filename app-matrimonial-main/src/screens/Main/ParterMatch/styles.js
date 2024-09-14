@@ -5,6 +5,7 @@ export const styles = StyleSheet.create({
     width: '80%',
     backgroundColor: COLORS.dark.searchBox,
     borderWidth: 0,
+    paddingLeft:10
   },
   headerContainer: {
     height: 70,

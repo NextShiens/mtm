@@ -147,13 +147,17 @@ const GridCard = ({data}) => {
             numberOfLines={1}
             width="60%"
             color={COLORS.dark.black}
-            extraStyle={{fontWeight:'700'}}
+            extraStyle={{fontWeight: '700', fontFamily: 'DMSans-SemiBold'}}
           />
           <View style={styles.locationContainer}>
-            <View style={{flexDirection: 'row', alignItems: 'center' , gap:5 ,marginLeft:10}}>
-              <Icon
-                SVGIcon={<SVG.locationIconSVG fill={'#ccc'} />}
-              />
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                gap: 5,
+                marginLeft: 10,
+              }}>
+              <Icon SVGIcon={<SVG.locationIconSVG fill={'#ccc'} />} />
               <AppText
                 title={item.city || 'N/A'}
                 color={COLORS.dark.black}
@@ -173,6 +177,15 @@ const GridCard = ({data}) => {
             ]}
           />
         </View>
+        <Image
+          source={IMAGES.briefcaseColored}
+          style={{
+            position: 'absolute',
+            bottom: 22,
+            marginLeft: 5,
+            tintColor: 'gray',
+          }}
+        />
         <AppText
           title={item?.occupation || 'N/A'}
           color={'gray'}
@@ -181,6 +194,9 @@ const GridCard = ({data}) => {
             STYLES.fontFamily(Fonts.PoppinsRegular),
             STYLES.fontSize(11),
             styles.occupationText,
+            {
+              marginLeft: 10,
+            },
           ]}
         />
         <View style={styles.actionContainer}>
