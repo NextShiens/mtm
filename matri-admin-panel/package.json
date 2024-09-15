@@ -13,6 +13,7 @@
     "heroku-postbuild": "next build"
   },
   "dependencies": {
+    "@popperjs/core": "^2.11.8",
     "antd": "^5.18.3",
     "axios": "^1.7.7",
     "formik": "^2.4.6",
@@ -23,6 +24,7 @@
     "react-dom": "^18",
     "react-hot-toast": "^2.4.1",
     "react-icons": "^4.11.0",
+    "react-popper": "^2.3.0",
     "serve": "^14.2.3",
     "yup": "^1.4.0"
   },

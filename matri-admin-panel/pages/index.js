@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { BiSolidEdit } from "react-icons/bi";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { AiOutlineEye } from "react-icons/ai";
 import { backendUrl } from "@/url";
-import Link from "next/link";
 import AdminLayout from "@/components/AdminLayout";
 import toast from "react-hot-toast";
 import { useRouter } from 'next/router';
+import { usePopper } from 'react-popper';
 
 const DashboardCard = ({ item, dashboardDetails }) => (
   <div
@@ -57,12 +57,35 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [activeMenu, setActiveMenu] = useState(null);
   const router = useRouter();
+  const [referenceElement, setReferenceElement] = useState(null);
+  const [popperElement, setPopperElement] = useState(null);
   const menuRef = useRef(null);
+
+  const { styles, attributes } = usePopper(referenceElement, popperElement, {
+    placement: 'bottom-end',
+    modifiers: [
+      { name: 'offset', options: { offset: [0, 8] } },
+      { name: 'preventOverflow', options: { padding: 8 } },
+    ],
+  });
 
   useEffect(() => {
     fetchUsers();
     fetchDashboardDetails();
   }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setActiveMenu(null);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [menuRef]);
 
   const fetchUsers = async () => {
     try {
@@ -116,9 +139,12 @@ export default function Home() {
     router.push(`/edit-user?userId=${userId}`);
   };
 
-  const toggleMenu = (index) => {
-    setActiveMenu(activeMenu === index ? null : index);
-  };
+  const toggleMenu = useCallback((index, event) => {
+    event.stopPropagation();
+    setActiveMenu(prevActiveMenu => prevActiveMenu === index ? null : index);
+    setReferenceElement(event.currentTarget);
+  }, []);
+
   const cardsData = [
     {
       id: 1,
@@ -135,11 +161,10 @@ export default function Home() {
       id: 2,
       background: "#F4F2EB",
       heading: "Active Members",
-      textNumber: `${dashboardDetails && dashboardDetails.activeUsers}`,
+      textNumber: dashboardDetails?.activeUsers || 0,
       spanText: "#E8BC42",
-      percentage:
-        dashboardDetails && dashboardDetails.activeUserPercentageChange,
-      text: `  Since Last month`,
+      percentage: dashboardDetails?.activeUserPercentageChange || 0,
+      text: "Since Last month",
       img: "/images/allActiveMemberIcon.png",
       borderColor: "10px solid #EAC562",
     },
@@ -147,15 +172,10 @@ export default function Home() {
       id: 3,
       background: "#F1E8F0",
       heading: "Paid Members",
-      textNumber: `${dashboardDetails && dashboardDetails.paidUsers === undefined ? (
-        <LoaderIcon />
-      ) : (
-        dashboardDetails && dashboardDetails.paidUsers
-      )
-        }`,
+      textNumber: dashboardDetails?.paidUsers || 0,
       spanText: "#C73170",
-      percentage: dashboardDetails && dashboardDetails.paidUserPercentageChange,
-      text: ` Since Last month`,
+      percentage: dashboardDetails?.paidUserPercentageChange || 0,
+      text: "Since Last month",
       img: "/images/paidMemberIcon.png",
       borderColor: "10px solid #C93B77",
     },
@@ -163,11 +183,10 @@ export default function Home() {
       id: 4,
       background: "#F4EEEB",
       heading: "Featured Members",
-      textNumber: `${dashboardDetails && dashboardDetails.featuredUsers}`,
+      textNumber: dashboardDetails?.featuredUsers || 0,
       spanText: "#ED6C0E",
-      percentage:
-        dashboardDetails && dashboardDetails.featuredUserPercentageChange,
-      text: ` Since Last month`,
+      percentage: dashboardDetails?.featuredUserPercentageChange || 0,
+      text: "Since Last month",
       img: "/images/featureMemberIcon.png",
       borderColor: "10px solid #ED883F",
     },
@@ -182,11 +201,11 @@ export default function Home() {
       </div>
 
       <h1 className="text-2xl font-semibold mb-4">Recent Members</h1>
-      <div className="h-[500px] overflow-y-auto">
+      <div className="overflow-x-auto">
         <table className="min-w-full bg-white border border-gray-200">
-          <thead className="bg-gray-50 sticky top-0">
+          <thead className="bg-gray-50">
             <tr>
-            <th className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer ID</th>
+              <th className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer ID</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User Name</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Gender</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email Address</th>
@@ -198,7 +217,7 @@ export default function Home() {
           <tbody className="bg-white divide-y divide-gray-200">
             {users.map((user, index) => (
               <tr key={user._id}>
-                  <td className="px-2 py-4 whitespace-nowrap">
+                <td className="px-2 py-4 whitespace-nowrap">
                   <div className="text-sm text-gray-900">{user._id}</div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
@@ -229,15 +248,22 @@ export default function Home() {
                     {user.isActive ? 'Active' : 'Inactive'}
                   </span>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium relative">
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                   <button
-                    onClick={() => toggleMenu(index)}
+                    onClick={(event) => toggleMenu(index, event)}
                     className="text-indigo-600 hover:text-indigo-900 action-menu-button"
                   >
                     <BsThreeDotsVertical />
                   </button>
                   {activeMenu === index && (
-                    <div ref={menuRef} className="absolute right-0 mt-2 z-10">
+                    <div
+                      ref={(el) => {
+                        setPopperElement(el);
+                        menuRef.current = el;
+                      }}
+                      style={styles.popper}
+                      {...attributes.popper}
+                    >
                       <ActionMenu
                         onClose={() => setActiveMenu(null)}
                         onView={() => router.push(`/user-profile/${user._id}`)}
@@ -256,5 +282,5 @@ export default function Home() {
     </div>
   );
 }
-Home.getLayout = (page) => <AdminLayout>{page}</AdminLayout>;
 
+Home.getLayout = (page) => <AdminLayout>{page}</AdminLayout>;
