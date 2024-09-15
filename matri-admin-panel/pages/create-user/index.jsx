@@ -315,12 +315,12 @@ const UserForm = ({ userId = null }) => {
             {!userId && (
               <FormField name="password" label="Password" type="password" />
             )}
-            <FormField
+            {/* <FormField
               name="isAdmin"
               label="Is Admin"
               type="checkbox"
               style={{ textAlign: "left" }}
-            />
+            /> */}
             <DropdownField
               name="gender"
               label="Gender"
@@ -718,7 +718,7 @@ const UserForm = ({ userId = null }) => {
             disabled={isLoading}
             className="w-full p-2 bg-orange-600 text-white font-semibold rounded"
           >
-            {isLoading ? "Submitting..." : "Create User"}
+            {isLoading ? "Submitting..." : ""}
           </button>
         </Form>
       )}
