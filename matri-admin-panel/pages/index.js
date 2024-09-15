@@ -218,7 +218,7 @@ export default function Home() {
             {users.map((user, index) => (
               <tr key={user._id}>
                 <td className="px-2 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-900">{user._id}</div>
+                  <div className="text-sm text-gray-900">{user._id.toString().substring(0, 10)}</div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex items-center">
