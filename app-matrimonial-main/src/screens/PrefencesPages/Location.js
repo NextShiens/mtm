@@ -135,7 +135,7 @@ const LocationPage = () => {
         search={true}
         searchPlaceholder="Search"
         searchPlaceholderTextColor="gray"
-        placeholderStyle={{ color: 'gray' }}
+        placeholderStyle={{ color: 'black' }}
         inputSearchStyle={styles.inputSearchStyle}
         selectedTextStyle={styles.selectedTextStyle}
         value={country}
@@ -152,7 +152,7 @@ const LocationPage = () => {
         search={true}
         searchPlaceholder="Search"
         searchPlaceholderTextColor="gray"
-        placeholderStyle={{ color: 'gray' }}
+        placeholderStyle={{ color: 'black' }}
         inputSearchStyle={styles.inputSearchStyle}
         selectedTextStyle={styles.selectedTextStyle}
         value={state}
@@ -170,7 +170,7 @@ const LocationPage = () => {
         search={true}
         searchPlaceholder="Search"
         searchPlaceholderTextColor="gray"
-        placeholderStyle={{ color: 'gray' }}
+        placeholderStyle={{ color: 'black' }}
         inputSearchStyle={styles.inputSearchStyle}
         selectedTextStyle={styles.selectedTextStyle}
         value={city}

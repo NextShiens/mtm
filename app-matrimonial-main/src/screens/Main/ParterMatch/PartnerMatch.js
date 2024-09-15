@@ -467,10 +467,10 @@ const PartnerMatch = ({navigation, route}) => {
           style={styles.filterBtn}
           activeOpacity={0.8}
           onPress={() => setShowFilters(true)}>
-          <CustomImage
+          <Image
             source={IMAGES.filterIcon}
-            size={17}
             resizeMode={'contain'}
+            style={{width:20,height:20}}
           />
         </TouchableOpacity>
       </View>

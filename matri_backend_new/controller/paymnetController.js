@@ -5,10 +5,13 @@ const User = require("../models/user");
 const Order = require("../models/order");
 
 const razorpay = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID,
-  key_secret: process.env.RAZORPAY_KEY_SECRET,
+  key_id: process.env.RAZORPAY_KEY_ID ,
+  key_secret: process.env.RAZORPAY_KEY_SECRET ,
 });
+
 console.log(process.env.RAZORPAY_KEY_ID, "key_id");
+
+
 const createOrder = async (req, res) => {
   const { amount } = req.body;
   console.log(amount, "amount");
@@ -23,6 +26,7 @@ const createOrder = async (req, res) => {
 
   try {
     const order = await razorpay.orders.create(options);
+    console.log(order)
     res.status(200).json(order);
   } catch (error) {
     console.log(error, "error");

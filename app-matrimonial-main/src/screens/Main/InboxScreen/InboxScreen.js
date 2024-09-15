@@ -132,6 +132,7 @@ const InboxScreen = ({ navigation }) => {
               width: '100%',
               backgroundColor: COLORS.dark.searchBox,
               borderWidth: 0,
+              padding:20,
             },
           }}
           placeholder={LABELS.searchHere}

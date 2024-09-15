@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -8,9 +8,12 @@ import {
   ScrollView,
   Modal,
 } from 'react-native';
-import { Dropdown } from 'react-native-element-dropdown';
-import { useNavigation } from '@react-navigation/native';
+import {Dropdown} from 'react-native-element-dropdown';
+import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Clipboard from '@react-native-clipboard/clipboard';
+import Svg, {Circle, Path} from 'react-native-svg';
+import {Toast} from '../../../utils/native';
 
 const EditProfileScreen = () => {
   const navigation = useNavigation();
@@ -20,23 +23,24 @@ const EditProfileScreen = () => {
   const [user, setUser] = useState(null);
 
   const stepOptions = [
-    { label: 'Step 1', value: 'step1' },
-    { label: 'Step 2', value: 'step2' },
+    {label: 'Step 1', value: 'step1'},
+    {label: 'Step 2', value: 'step2'},
   ];
   const preferenceOptions = [
-    { label: 'Basic Info', value: 'basicInfo' },
-    { label: 'Religion', value: 'religion' },
-    { label: 'Location', value: 'location' },
-    { label: 'Criteria', value: 'criteria' },
-    { label: 'Education', value: 'education' },
+    {label: 'Basic Info', value: 'basicInfo'},
+    {label: 'Religion', value: 'religion'},
+    {label: 'Location', value: 'location'},
+    {label: 'Criteria', value: 'criteria'},
+    {label: 'Education', value: 'education'},
   ];
-
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const userData = await AsyncStorage.getItem('theUser');
+        console.log(userData);
         if (userData) {
+          const data = JSON.parse(userData);
           setUser(JSON.parse(userData));
         }
         console.log('User data:rfrgretgrty', userData);
@@ -48,28 +52,84 @@ const EditProfileScreen = () => {
     fetchUser();
   }, []);
 
+  const copyToClipboard = () => {
+    Clipboard.setString(user._id);
+    Toast('User ID copied to clipboard');
+  };
+
+  // const displayUserId = user._id.replace(/\D/g, '').slice(-8);
+
   return (
     <ScrollView style={styles.container}>
-          <View style={styles.flexrow}>
-            <TouchableOpacity onPress={() => navigation.goBack()}>
-              <Image source={require('../../../assets/images/leftarrow.png')} />
-            </TouchableOpacity>
-            <Text style={styles.heading}>Edit Profile Screen</Text>
-          </View>
+      <View style={styles.flexrow}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Image source={require('../../../assets/images/leftarrow.png')} />
+        </TouchableOpacity>
+        <Text style={styles.heading}>Edit Profile Screen</Text>
+      </View>
 
       {/* Profile Image and Upgrade Button */}
       <View style={styles.profileSection}>
         <Image
           source={{
-            uri: user?.user?.userImages[0] || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDbaDlF08MuAunpJmKR4yb59aeBwQTlt_S4g&s',
+            uri:
+              user?.user?.userImages[0] ||
+              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDbaDlF08MuAunpJmKR4yb59aeBwQTlt_S4g&s',
           }}
           style={styles.profileImage}
         />
-        <TouchableOpacity
-          style={styles.upgradeButton}
-          onPress={() => setModalVisible(true)}>
-          <Text style={styles.upgradeButtonText}>Upgrade Now</Text>
-        </TouchableOpacity>
+        <View>
+          <TouchableOpacity
+            style={styles.upgradeButton}
+            onPress={() => setModalVisible(true)}>
+            <Text style={styles.upgradeButtonText}>Upgrade Now</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={copyToClipboard}
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              alignSelf: 'center',
+              borderColor: 'rgba(0, 0, 0, 0.07)',
+              marginTop: 10,
+              borderWidth: 1,
+              borderRadius: 10,
+              paddingHorizontal:5,
+              backgroundColor: 'rgba(0, 0, 0, 0.05)',
+              justifyContent:'center',
+            }}>
+            <Text
+              style={{
+                width: 60,
+                color: 'black',
+                fontSize: 12,
+               
+              }}>
+              {user?.user?._id?.slice(0, 8)}
+            </Text>
+             <Svg
+                width="11"
+                height="11"
+                viewBox="0 0 8 11"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <Path
+                  d="M7.06835 4.24266C7.0671 3.0135 7.04877 2.37683 6.69085 1.941C6.62178 1.8567 6.5446 1.77939 6.46044 1.71016C6.00002 1.3335 5.31669 1.3335 3.95002 1.3335C2.58335 1.3335 1.90002 1.3335 1.44002 1.71058C1.35585 1.77981 1.27868 1.85712 1.2096 1.94141C0.83252 2.40016 0.83252 3.0835 0.83252 4.45016C0.83252 5.81683 0.83252 6.50016 1.21002 6.95975C1.27946 7.04419 1.35627 7.121 1.44044 7.19016C1.87669 7.5485 2.51335 7.56683 3.74252 7.56766"
+                  stroke="#949494"
+                  stroke-width="0.625"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <Path
+                  d="M5.84518 4.26059L7.08101 4.24268M5.83934 9.66768L7.07518 9.64976M9.15518 6.34268L9.14351 7.57601M3.75434 6.34851L3.74268 7.58184M4.78643 4.26059C4.43976 4.32268 3.88226 4.38643 3.75434 5.10393M8.12309 9.64976C8.47101 9.59268 9.02893 9.53726 9.16809 8.82226M8.12309 4.26059C8.46976 4.32268 9.02726 4.38643 9.15518 5.10393M4.79184 9.64893C4.44476 9.58726 3.88768 9.52351 3.75934 8.80601"
+                  stroke="#949494"
+                  stroke-width="0.625"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </Svg>
+          </TouchableOpacity>
+        </View>
       </View>
 
       <View style={styles.section}>
@@ -85,7 +145,7 @@ const EditProfileScreen = () => {
             labelField="label"
             valueField="value"
             placeholder="Basic Info"
-            placeholderStyle={{ color: 'black' }}
+            placeholderStyle={{color: 'black'}}
             selectedTextStyle={styles.selectedTextStyle}
             value={selectedStep}
             onChange={item => {
@@ -97,7 +157,7 @@ const EditProfileScreen = () => {
               }
             }}
             style={styles.dropdown}
-            itemTextStyle={{ color: 'black' }}
+            itemTextStyle={{color: 'black'}}
           />
         </View>
 
@@ -107,7 +167,7 @@ const EditProfileScreen = () => {
             labelField="label"
             valueField="value"
             placeholder="Preferences"
-            placeholderStyle={{ color: 'black' }}
+            placeholderStyle={{color: 'black'}}
             selectedTextStyle={styles.selectedTextStyle}
             value={selectedPreference}
             onChange={item => {
@@ -125,7 +185,7 @@ const EditProfileScreen = () => {
               }
             }}
             style={styles.dropdown}
-            itemTextStyle={{ color: 'black' }}
+            itemTextStyle={{color: 'black'}}
           />
         </View>
 
@@ -156,7 +216,7 @@ const EditProfileScreen = () => {
               paddingVertical: 20,
               paddingHorizontal: 25,
               shadowColor: '#000',
-              shadowOffset: { width: 0, height: 2 },
+              shadowOffset: {width: 0, height: 2},
               shadowOpacity: 0.25,
               shadowRadius: 4,
               elevation: 5,
@@ -171,7 +231,7 @@ const EditProfileScreen = () => {
                 padding: 5,
               }}
               onPress={() => setModalVisible(false)}>
-              <Text style={{ fontSize: 16, color: '#666' }}>X</Text>
+              <Text style={{fontSize: 16, color: '#666'}}>X</Text>
             </TouchableOpacity>
 
             <Text
@@ -223,7 +283,7 @@ const EditProfileScreen = () => {
                   alignItems: 'center',
                 }}
                 onPress={() => setModalVisible(false)}>
-                <Text style={{ color: '#666', fontSize: 16 }}>Cancel</Text>
+                <Text style={{color: '#666', fontSize: 16}}>Cancel</Text>
               </TouchableOpacity>
 
               <TouchableOpacity

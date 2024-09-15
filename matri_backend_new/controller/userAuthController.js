@@ -826,10 +826,10 @@ const userAuthController = {
   },
 
   async currentUser(req, res, next) {
-    if (!user) {
+    if (!req.user) {
       res.status(401).json({ success: false, message: "User not found" });
     } else {
-      res.status(200).json({ user, success: true });
+      res.status(200).json({ data:req.user, success: true });
     }
   },
 };
