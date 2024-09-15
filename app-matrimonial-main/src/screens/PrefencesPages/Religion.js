@@ -201,7 +201,7 @@ const ReligionPage = () => {
         search={true}
         searchPlaceholder="Search"
         searchPlaceholderTextColor="gray"
-        placeholderStyle={{ color: 'gray' }}
+        placeholderStyle={{ color: 'black' }}
         inputSearchStyle={styles.inputSearchStyle}
         selectedTextStyle={styles.selectedTextStyle}
         value={religion}
@@ -218,7 +218,7 @@ const ReligionPage = () => {
         search={true}
         searchPlaceholder="Search"
         searchPlaceholderTextColor="gray"
-        placeholderStyle={{ color: 'gray' }}
+        placeholderStyle={{ color: 'black' }}
         inputSearchStyle={styles.inputSearchStyle}
         selectedTextStyle={styles.selectedTextStyle}
         value={caste}
@@ -235,7 +235,7 @@ const ReligionPage = () => {
         search={true}
         searchPlaceholder="Search"
         searchPlaceholderTextColor="gray"
-        placeholderStyle={{ color: 'gray' }}
+        placeholderStyle={{ color: 'black' }}
         inputSearchStyle={styles.inputSearchStyle}
         selectedTextStyle={styles.selectedTextStyle}
         value={motherTongue}
@@ -252,7 +252,7 @@ const ReligionPage = () => {
         search={true}
         searchPlaceholder="Search"
         searchPlaceholderTextColor="gray"
-        placeholderStyle={{ color: 'gray' }}
+        placeholderStyle={{ color: 'black' }}
         inputSearchStyle={styles.inputSearchStyle}
         selectedTextStyle={styles.selectedTextStyle}
         value={manglik}
@@ -269,7 +269,7 @@ const ReligionPage = () => {
         search={true}
         searchPlaceholder="Search"
         searchPlaceholderTextColor="gray"
-        placeholderStyle={{ color: 'gray' }}
+        placeholderStyle={{ color: 'black' }}
         inputSearchStyle={styles.inputSearchStyle}
         selectedTextStyle={styles.selectedTextStyle}
         value={star}
@@ -286,7 +286,7 @@ const ReligionPage = () => {
         search={true}
         searchPlaceholder="Search"
         searchPlaceholderTextColor="gray"
-        placeholderStyle={{ color: 'gray' }}
+        placeholderStyle={{ color: 'black' }}
         inputSearchStyle={styles.inputSearchStyle}
         selectedTextStyle={styles.selectedTextStyle}
         value={dosh}
@@ -304,7 +304,7 @@ const ReligionPage = () => {
         search={true}
         searchPlaceholder="Search"
         searchPlaceholderTextColor="gray"
-        placeholderStyle={{ color: 'gray' }}
+        placeholderStyle={{ color: 'black' }}
         inputSearchStyle={styles.inputSearchStyle}
         selectedTextStyle={styles.selectedTextStyle}
         value={birthPlace}
@@ -322,7 +322,7 @@ const ReligionPage = () => {
         search={true}
         searchPlaceholder="Search"
         searchPlaceholderTextColor="gray"
-        placeholderStyle={{ color: 'gray' }}
+        placeholderStyle={{ color: 'black' }}
         inputSearchStyle={styles.inputSearchStyle}
         selectedTextStyle={styles.selectedTextStyle}
         value={birthTime}

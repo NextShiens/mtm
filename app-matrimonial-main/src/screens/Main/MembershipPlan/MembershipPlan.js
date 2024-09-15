@@ -63,10 +63,10 @@ const MembershipPlan = ({navigation}) => {
           isSelected && styles.selectedText,
           {color: '#F97B22'},
         ]}>
-        ₹{plan.price}k{' '}
-        <Text style={[{color: 'black'}, isSelected && {color: 'white'}]}>
+        ₹{plan.price}{' '}
+        {/* <Text style={[{color: 'black'}, isSelected && {color: 'white'}]}>
           /mo
-        </Text>
+        </Text> */}
       </Text>
       <View style={styles.featuresContainer}>
         {['duration', 'messages', 'liveChats', 'profileViews'].map(

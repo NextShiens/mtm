@@ -1,7 +1,7 @@
 import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { API_URL } from '../../constant';
+import {API_URL} from '../../constant';
 
 export const saveCurrentUser = async () => {
   try {
@@ -10,23 +10,22 @@ export const saveCurrentUser = async () => {
       method: 'GET',
       headers: {
         // Include any necessary headers, such as authorization tokens
-        'Authorization': 'Bearer ' + (await AsyncStorage.getItem('AccessToken')),
+        Authorization: 'Bearer ' + (await AsyncStorage.getItem('AccessToken')),
         'Content-Type': 'application/json',
       },
     });
 
     const jsonResponse = await response.json();
-
+    console.log(jsonResponse.data);
+    let user = jsonResponse.data;
     if (response.ok && jsonResponse.success) {
       // Save the user in AsyncStorage
-      await AsyncStorage.setItem('theUser', JSON.stringify(jsonResponse));
+      await AsyncStorage.setItem('theUser', JSON.stringify({user: user}));
       console.log('User saved successfully');
     } else {
     }
-  } catch (error) {
-  }
+  } catch (error) {}
 };
-
 
 export async function requestUserPermission() {
   const authStatus = await messaging().requestPermission();
@@ -66,7 +65,7 @@ async function sendFCMTokenToBackend(fcmToken) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${accessToken}`,
+        Authorization: `Bearer ${accessToken}`,
       },
       body: JSON.stringify({
         userId: userId,
@@ -80,7 +79,7 @@ async function sendFCMTokenToBackend(fcmToken) {
   }
 }
 
-export const notificationListener = (navigation) => {
+export const notificationListener = navigation => {
   messaging().onNotificationOpenedApp(remoteMessage => {
     console.log(
       'Notification caused app to open from background state:',

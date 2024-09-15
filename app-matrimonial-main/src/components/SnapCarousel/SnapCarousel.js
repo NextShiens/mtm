@@ -225,7 +225,7 @@ const SnapCarousel = ({ data }) => {
               />
             </View>
             <View style={styles.occupationContainer}>
-              <CustomImage source={IMAGES.briefcaseColored} size={14} />
+              <Image source={IMAGES.briefcaseColored} size={14} style={{tintColor:'white'}}/>
               <Space mL={5} />
               <AppText
                 title={item.occupation || 'undefined'}
@@ -240,7 +240,7 @@ const SnapCarousel = ({ data }) => {
 
       <View style={styles.cityContainer}>
         <Icon
-          SVGIcon={<SVG.locationIconSVG fill={COLORS.dark.primary} />}
+          SVGIcon={<SVG.locationIconSVG fill={COLORS.dark.white} />}
           style={{marginRight: 8}}
         />
         <AppText
@@ -263,7 +263,7 @@ const SnapCarousel = ({ data }) => {
             <ActivityIndicator size="small" color="#fff" />
           ) : (
             <Image
-              source={IMAGES.sendIcon}
+              source={require('../../assets/images/send123.png')}
               style={styles.bottomRightButtonIcon}
             />
           )}
@@ -279,7 +279,7 @@ const SnapCarousel = ({ data }) => {
             <ActivityIndicator size="small" color="#fff" />
           ) : (
             <Image
-              source={IMAGES.chatIcon}
+              source={require('../../assets/images/chat123.png')}
               style={styles.bottomRightButtonIcon2}
             />
           )}

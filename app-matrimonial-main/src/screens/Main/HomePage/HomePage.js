@@ -610,11 +610,11 @@ const HomePage = () => {
             style={styles.filterBtn}
             activeOpacity={0.8}
             onPress={() => setShowFilters(true)}>
-            <CustomImage
-              source={IMAGES.filterIcon}
-              size={17}
-              resizeMode={'contain'}
-            />
+          <Image
+            source={IMAGES.filterIcon}
+            resizeMode={'contain'}
+            style={{width:20,height:20}}
+          />
           </TouchableOpacity>
         </View>
 

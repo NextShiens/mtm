@@ -449,7 +449,7 @@ const PaymentScreen = ({navigation, route}) => {
       if (!data.keyId) {
         throw new Error('KeyId is not present in the response');
       }
-      +setKeyId('rzp_live_87MOwe1ckbeY0F');
+      setKeyId(data.keyId);
     } catch (error) {
       console.error('Error fetching key ID:', error);
       Alert.alert('Error', 'Unable to initialize payment. Please try again.');
@@ -534,13 +534,13 @@ const PaymentScreen = ({navigation, route}) => {
       const user = JSON.parse(currentUser);
   
       const options = {
-        key:'rzp_live_87MOwe1ckbeY0F', // Use environment variable for key
+        key:keyId, // Use environment variable for key
         amount: orderData.amount,
         currency: orderData.currency,
         name: 'MTM',
         description: 'MTM Transaction',
         image: 'https://yourimageurl.com/logo.png', // Replace with your actual logo URL
-        order_id: orderData.id,
+        // order_id: orderData.id,
         prefill: {
           name: user.user?.name,
           email: user.user?.email,
@@ -621,8 +621,8 @@ const PaymentScreen = ({navigation, route}) => {
           <View style={[styles.planCard]}>
             <Text style={[styles.planName]}>{plan.name}</Text>
             <Text style={[styles.planPrice]}>
-              ₹{plan.price}k{' '}
-              <Text style={[{color: 'black'}, {color: 'white'}]}>/mo</Text>
+              ₹{plan.price}{' '}
+              {/* <Text style={[{color: 'black'}, {color: 'white'}]}>/mo</Text> */}
             </Text>
             <View style={styles.featuresContainer}>
               {['duration', 'messages', 'liveChats', 'profileViews'].map(
