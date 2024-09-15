@@ -388,7 +388,7 @@ const styles = StyleSheet.create({
   occupationText: {
     marginLeft: -10,
     marginBottom: -17,
-    width: '70%',
+    width: '50%',
     marginTop: 5,
   },
   image: {

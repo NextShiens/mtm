@@ -1,5 +1,8 @@
-import { DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
-import React, { useState, useEffect, useCallback } from 'react';
+import {
+  DrawerContentScrollView,
+  DrawerItemList,
+} from '@react-navigation/drawer';
+import React, {useState, useEffect, useCallback} from 'react';
 import {
   Dimensions,
   Image,
@@ -10,26 +13,26 @@ import {
   Modal,
   Text,
 } from 'react-native';
-import { Fonts } from '../../assets/fonts';
-import { IMAGES } from '../../assets/images';
-import { SVG } from '../../assets/svg';
-import { COLORS, STYLES } from '../../assets/theme';
+import {Fonts} from '../../assets/fonts';
+import {IMAGES} from '../../assets/images';
+import {SVG} from '../../assets/svg';
+import {COLORS, STYLES} from '../../assets/theme';
 import AppText from '../../components/AppText/AppText';
 import CustomImage from '../../components/CustomImage/CustomImage';
 import Icon from '../../components/Icon/Icon';
 import Space from '../../components/Space/Space';
-import { DrawerListData } from '../../data/appData';
+import {DrawerListData} from '../../data/appData';
 import auth from '@react-native-firebase/auth';
-import { LABELS } from '../../labels';
-import { styles } from './styles';
+import {LABELS} from '../../labels';
+import {styles} from './styles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Toast } from '../../utils/native';
-import Svg, { Circle, Path } from 'react-native-svg';
+import {Toast} from '../../utils/native';
+import Svg, {Circle, Path} from 'react-native-svg';
 import ToggleSwitch from 'toggle-switch-react-native';
-import { API_URL } from '../../../constant';
-import { CommonActions } from '@react-navigation/native';
-import { Images } from 'lucide-react-native';
-import { useNavigation, DrawerActions } from '@react-navigation/native';
+import {API_URL} from '../../../constant';
+import {CommonActions} from '@react-navigation/native';
+import {Images} from 'lucide-react-native';
+import {useNavigation, DrawerActions} from '@react-navigation/native';
 import Clipboard from '@react-native-clipboard/clipboard';
 
 const ProfileAvatar = () => (
@@ -44,7 +47,7 @@ const ProfileAvatar = () => (
   </Svg>
 );
 
-const CustomDrawerContent = ({ props }) => {
+const CustomDrawerContent = ({props}) => {
   const navigation = useNavigation();
   const [isOnline, setIsOnline] = useState(false);
   const [drawerData, setDrawerData] = useState(DrawerListData);
@@ -78,8 +81,10 @@ const CustomDrawerContent = ({ props }) => {
       navigation.dispatch(
         CommonActions.reset({
           index: 0,
-          routes: [{ name: 'AuthStack', state: { routes: [{ name: 'InitialScreen' }] } }],
-        })
+          routes: [
+            {name: 'AuthStack', state: {routes: [{name: 'InitialScreen'}]}},
+          ],
+        }),
       );
     } catch (error) {
       console.error('Failed to reset to initial screen:', error);
@@ -97,7 +102,7 @@ const CustomDrawerContent = ({ props }) => {
       setUserImage(user.user.userImages[0]);
       setUserProfession(user.user.occupation);
       setUserEmail(user.user.email);
-      setUserId(user.user._id)
+      setUserId(user.user._id);
       console.log('User 656785765676data:', user);
     } catch (error) {
       console.error('Error fetching user data:', error);
@@ -209,24 +214,53 @@ const CustomDrawerContent = ({ props }) => {
             <View style={style.avatarContainer}>
               {userImage !== '' ? (
                 <Image
-                  source={{ uri: userImage }}
-                  style={{ width: 50, height: 50, borderRadius: 25 }}
+                  source={{uri: userImage}}
+                  style={{width: 50, height: 50, borderRadius: 25}}
                 />
               ) : (
-                <ProfileAvatar extraStyle={{ container: STYLES.bR(25) }} />
+                <ProfileAvatar extraStyle={{container: STYLES.bR(25)}} />
               )}
               {isOnline && <View style={style.onlineDot}></View>}
             </View>
             <Space mL={10} />
-            <View style={{ height: 40, maxWidth: 100 }}>
-              <Text style={{color:'black'}}>{userName}</Text>
+            <View style={{height: 40, maxWidth: 100}}>
+              <Text style={{color: 'black'}}>{userName}</Text>
               {/* <Text style={{color:'black'}}>{userProfession}</Text> */}
-              <TouchableOpacity onPress={copyToClipboard} style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Text style={{width:70,color: 'black', fontSize: 12 , backgroundColor:'rgba(0, 0, 0, 0.05)', borderColor:'rgba(0, 0, 0, 0.05)' ,borderWidth:1 , borderRadius:10}}>{displayUserId}
-                <Svg width="11" height="11" viewBox="0 0 8 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <Path d="M7.06835 4.24266C7.0671 3.0135 7.04877 2.37683 6.69085 1.941C6.62178 1.8567 6.5446 1.77939 6.46044 1.71016C6.00002 1.3335 5.31669 1.3335 3.95002 1.3335C2.58335 1.3335 1.90002 1.3335 1.44002 1.71058C1.35585 1.77981 1.27868 1.85712 1.2096 1.94141C0.83252 2.40016 0.83252 3.0835 0.83252 4.45016C0.83252 5.81683 0.83252 6.50016 1.21002 6.95975C1.27946 7.04419 1.35627 7.121 1.44044 7.19016C1.87669 7.5485 2.51335 7.56683 3.74252 7.56766" stroke="#949494" stroke-width="0.625" stroke-linecap="round" stroke-linejoin="round"/>
-                  <Path d="M5.84518 4.26059L7.08101 4.24268M5.83934 9.66768L7.07518 9.64976M9.15518 6.34268L9.14351 7.57601M3.75434 6.34851L3.74268 7.58184M4.78643 4.26059C4.43976 4.32268 3.88226 4.38643 3.75434 5.10393M8.12309 9.64976C8.47101 9.59268 9.02893 9.53726 9.16809 8.82226M8.12309 4.26059C8.46976 4.32268 9.02726 4.38643 9.15518 5.10393M4.79184 9.64893C4.44476 9.58726 3.88768 9.52351 3.75934 8.80601" stroke="#949494" stroke-width="0.625" stroke-linecap="round" stroke-linejoin="round"/>
-                </Svg>
+              <TouchableOpacity
+                onPress={copyToClipboard}
+                style={{flexDirection: 'row', alignItems: 'center'}}>
+                <Text
+                  style={{
+                    width: 70,
+                    color: 'black',
+                    fontSize: 12,
+                    backgroundColor: 'rgba(0, 0, 0, 0.05)',
+                    borderColor: 'rgba(0, 0, 0, 0.05)',
+                    borderWidth: 1,
+                    borderRadius: 10,
+                  }}>
+                  {displayUserId}
+                  <Svg
+                    width="11"
+                    height="11"
+                    viewBox="0 0 8 11"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <Path
+                      d="M7.06835 4.24266C7.0671 3.0135 7.04877 2.37683 6.69085 1.941C6.62178 1.8567 6.5446 1.77939 6.46044 1.71016C6.00002 1.3335 5.31669 1.3335 3.95002 1.3335C2.58335 1.3335 1.90002 1.3335 1.44002 1.71058C1.35585 1.77981 1.27868 1.85712 1.2096 1.94141C0.83252 2.40016 0.83252 3.0835 0.83252 4.45016C0.83252 5.81683 0.83252 6.50016 1.21002 6.95975C1.27946 7.04419 1.35627 7.121 1.44044 7.19016C1.87669 7.5485 2.51335 7.56683 3.74252 7.56766"
+                      stroke="#949494"
+                      stroke-width="0.625"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <Path
+                      d="M5.84518 4.26059L7.08101 4.24268M5.83934 9.66768L7.07518 9.64976M9.15518 6.34268L9.14351 7.57601M3.75434 6.34851L3.74268 7.58184M4.78643 4.26059C4.43976 4.32268 3.88226 4.38643 3.75434 5.10393M8.12309 9.64976C8.47101 9.59268 9.02893 9.53726 9.16809 8.82226M8.12309 4.26059C8.46976 4.32268 9.02726 4.38643 9.15518 5.10393M4.79184 9.64893C4.44476 9.58726 3.88768 9.52351 3.75934 8.80601"
+                      stroke="#949494"
+                      stroke-width="0.625"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </Svg>
                 </Text>
               </TouchableOpacity>
             </View>
@@ -266,7 +300,6 @@ const CustomDrawerContent = ({ props }) => {
           }}
         />
 
-
         {DrawerListData.map(route => {
           if (route.name === 'Home') {
             return null;
@@ -289,7 +322,7 @@ const CustomDrawerContent = ({ props }) => {
                   resizeMode={'contain'}
                 />
                 <Space mL={10} />
-                <View style={{ flex: 1 }}>
+                <View style={{flex: 1}}>
                   <View
                     style={{
                       flexDirection: 'row',
@@ -329,7 +362,7 @@ const CustomDrawerContent = ({ props }) => {
                 />
                 <Space mL={10} />
                 <View
-                  style={{ maxWidth: '90%' }}
+                  style={{maxWidth: '90%'}}
                   onPress={() => {
                     handleItemClick(route);
                   }}>
@@ -358,24 +391,20 @@ const CustomDrawerContent = ({ props }) => {
                 onPress={() => {
                   handleItemClick(route);
                 }}>
-                <CustomImage
-                  source={route.iconName}
-                  size={25}
-                  resizeMode={'contain'}
-                  onPress={() => {
-                    handleItemClick(route);
-                  }}
+                <Image
+                  source={require('../../assets/images/logout.png')}
+                  style={{width: 25, height: 25}}
                 />
                 <Space mL={10} />
                 <View
-                  style={{ maxWidth: '90%' }}
+                  style={{maxWidth: '90%'}}
                   onPress={() => {
                     handleItemClick(route);
                   }}>
                   <AppText
                     title={route.name}
                     variant={'h6'}
-                    extraStyle={[style.drawerItemText, { color: 'red' }]}
+                    extraStyle={[style.drawerItemText, {color: 'red'}]}
                     color={COLORS.dark.black}
                     onPress={() => {
                       handleItemClick(route);
@@ -406,7 +435,7 @@ const CustomDrawerContent = ({ props }) => {
               />
               <Space mL={10} />
               <View
-                style={{ maxWidth: '90%' }}
+                style={{maxWidth: '90%'}}
                 onPress={() => {
                   handleItemClick(route);
                 }}>
@@ -464,7 +493,7 @@ const CustomDrawerContent = ({ props }) => {
             }}>
             <Image
               source={IMAGES.space}
-              style={{ width: 20, height: 20, resizeMode: 'contain' }}
+              style={{width: 20, height: 20, resizeMode: 'contain'}}
               resizeMode={'contain'}
             />
             <Text
@@ -472,13 +501,13 @@ const CustomDrawerContent = ({ props }) => {
                 color: COLORS.dark.white,
                 fontFamily: Fonts.PoppinsSemiBold,
                 left: 5,
-              }}
-            >Upgrade Now</Text>
-
+              }}>
+              Upgrade Now
+            </Text>
           </TouchableOpacity>
         </View>
         <Space mT={50} />
-        <View style={{ flex: 1 }}>
+        <View style={{flex: 1}}>
           <Modal
             animationType="fade"
             transparent={true}
@@ -499,7 +528,7 @@ const CustomDrawerContent = ({ props }) => {
                   paddingVertical: 20,
                   paddingHorizontal: 25,
                   shadowColor: '#000',
-                  shadowOffset: { width: 0, height: 2 },
+                  shadowOffset: {width: 0, height: 2},
                   shadowOpacity: 0.25,
                   shadowRadius: 4,
                   elevation: 5,
@@ -514,7 +543,7 @@ const CustomDrawerContent = ({ props }) => {
                     padding: 5,
                   }}
                   onPress={() => setModalVisible(false)}>
-                  <Text style={{ fontSize: 16, color: '#666' }}>X</Text>
+                  <Text style={{fontSize: 16, color: '#666'}}>X</Text>
                 </TouchableOpacity>
 
                 <Text
@@ -565,7 +594,7 @@ const CustomDrawerContent = ({ props }) => {
                       alignItems: 'center',
                     }}
                     onPress={() => setModalVisible(false)}>
-                    <Text style={{ color: '#666', fontSize: 16 }}>Cancel</Text>
+                    <Text style={{color: '#666', fontSize: 16}}>Cancel</Text>
                   </TouchableOpacity>
 
                   <TouchableOpacity
