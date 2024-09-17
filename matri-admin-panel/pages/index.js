@@ -215,7 +215,7 @@ export default function Home() {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {users.map((user, index) => (
+            {users?.map((user, index) => (
               <tr key={user._id}>
                 <td className="px-2 py-4 whitespace-nowrap">
                   <div className="text-sm text-gray-900">{user._id.toString().substring(0, 10)}</div>
