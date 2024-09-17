@@ -14,6 +14,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Clipboard from '@react-native-clipboard/clipboard';
 import Svg, {Circle, Path} from 'react-native-svg';
 import {Toast} from '../../../utils/native';
+import { ChevronRight } from 'lucide-react-native';
 
 const EditProfileScreen = () => {
   const navigation = useNavigation();
@@ -57,7 +58,7 @@ const EditProfileScreen = () => {
     Toast('User ID copied to clipboard');
   };
 
-  // const displayUserId = user._id.replace(/\D/g, '').slice(-8);
+  const displayUserId = user?.user?._id?.replace(/\D/g, '').slice(-8);
 
   return (
     <ScrollView style={styles.container}>
@@ -105,7 +106,7 @@ const EditProfileScreen = () => {
                 fontSize: 12,
                
               }}>
-              {user?.user?._id?.slice(0, 8)}
+              {displayUserId}
             </Text>
              <Svg
                 width="11"
@@ -137,6 +138,7 @@ const EditProfileScreen = () => {
           style={styles.option1}
           onPress={() => navigation.navigate('MyAccountScreen')}>
           <Text style={styles.optionText2}>My Account</Text>
+          <ChevronRight size={20} color="gray" style={{position: 'absolute', right: 10 , top:17}} />
         </TouchableOpacity>
 
         <View style={styles.option}>
@@ -158,6 +160,7 @@ const EditProfileScreen = () => {
             }}
             style={styles.dropdown}
             itemTextStyle={{color: 'black'}}
+            containerStyle={styles.dropdownContainer}
           />
         </View>
 
@@ -186,6 +189,7 @@ const EditProfileScreen = () => {
             }}
             style={styles.dropdown}
             itemTextStyle={{color: 'black'}}
+            containerStyle={styles.dropdownContainer}
           />
         </View>
 
@@ -193,6 +197,7 @@ const EditProfileScreen = () => {
           style={styles.option1}
           onPress={() => navigation.navigate('DeleteAccount')}>
           <Text style={styles.optionText2}>Delete Account</Text>
+          <ChevronRight size={20} color="gray" style={{position: 'absolute', right: 10 , top:17}} />
         </TouchableOpacity>
       </View>
 
@@ -322,6 +327,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
+  dropdownContainer: {
+    borderRadius: 8,
+  },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -376,7 +384,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ccc',
     height: 56,
-    borderRadius: 16,
+    borderRadius: 10,
   },
   optionText2: {
     fontSize: 16,
@@ -389,14 +397,14 @@ const styles = StyleSheet.create({
     height: 56,
     borderColor: '#ccc',
     borderWidth: 1,
-    borderRadius: 16,
+    borderRadius: 10,
     paddingHorizontal: 8,
   },
   inputSearchStyle: {
     color: '#333',
   },
   selectedTextStyle: {
-    fontSize: 14,
+    fontSize: 16,
     color: '#333',
   },
   flexrow: {

@@ -603,6 +603,7 @@ const PaymentScreen = ({navigation, route}) => {
           iconLeft={<SVG.BackArrow fill={'black'} />}
           onLeftIconPress={bacKNavigationHandler}
           title={LABELS.Payment}
+          textColor={'black'}
           iconRight={
             <TouchableOpacity onPress={handleRightIconPress}>
               <Image

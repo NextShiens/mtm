@@ -562,11 +562,10 @@ const styles = StyleSheet.create({
   },
   saveButton: {
     height: 56,
-
-    backgroundColor: '#ff9900',
+    backgroundColor: 'rgba(249, 123, 34, 1)',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 16,
+    borderRadius: 43.5,
     marginTop: 20,
     marginBottom: 50,
 
