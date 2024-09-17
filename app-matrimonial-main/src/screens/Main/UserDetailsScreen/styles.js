@@ -106,7 +106,6 @@ export const styles = StyleSheet.create({
     height: 280,
     borderRadius: 20,
     borderBottomRadius: 10,
-    backgroundColor: `yellow`,
   },
   image: {
     width: '100%',

@@ -102,27 +102,40 @@ const RegisterScreen = ({ navigation }) => {
   };
 
   const userFirstTimeReg = async (userFirebaseId) => {
-    const res = await fetch(`${API_URL}/user/register`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        name: formData.name,
-        email: formData.email,
-        password: formData.password,
-        phone: formData.phoneNumber,
-        fcmToken: userFirebaseId
-      }),
-    });
-    const data = await res.json();
-    if (data.error) {
-      console.log('Error:', data.error);
-      Toast(data.error);
-    } else {
-      await AsyncStorage.setItem('AccessToken', data.token);
-      Toast('User registered successfully');
-      navigation.navigate('OTPScreen', { email: formData.email });
+    try {
+      const res = await fetch(`${API_URL}/user/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+          phone: formData.phoneNumber,
+          fcmToken: userFirebaseId
+        }),
+      });
+      const data = await res.json();
+      if (data.error) {
+        if (data.error.includes('Email')) {
+          Toast('Email is already Registered');
+        } else if (data.error.includes('Phone')) {
+          Toast('Phone NO is already Registered');
+        } else {
+          Toast(data.error);
+        }
+      } else if (data.token) {
+        await AsyncStorage.setItem('AccessToken', data.token);
+        Toast('User registered successfully');
+        navigation.navigate('OTPScreen', { email: formData.email });
+      } else {
+        console.log('Error: Token is undefined');
+        Toast('Registration failed. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      Toast('An unexpected error occurred. Please try again.', error);
     }
   };
 

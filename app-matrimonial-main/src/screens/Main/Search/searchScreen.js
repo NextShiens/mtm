@@ -200,7 +200,17 @@ export default function SearchScreen() {
       ) : item?.gender === 'female' ? (
         <SvgXml xml={femaleUserSvg} width="100%" height="100%" />
       ) : (
-        <SvgXml xml={maleUserSvg} width="100%" height="100%" />
+        <SvgXml
+        xml={
+          item?.gender === 'male'
+         ? maleUserSvg
+         : item?.gender === 'female'
+         ? femaleUserSvg
+         : maleUserSvg // Default to maleUserSvg if gender is not specified
+     }
+     width="100%"
+     height="100%"
+   />
       )}
       <View style={styles.newTag}>
         <AppText title="New" extraStyle={styles.newText} />
