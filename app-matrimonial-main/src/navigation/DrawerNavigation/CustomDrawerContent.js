@@ -173,7 +173,7 @@ const CustomDrawerContent = ({props}) => {
       case 'Privacy & Policy':
         navigation.navigate('PrivacyPolicyScreen');
         break;
-      case 'User Name':
+      case 'My Account':
         navigation.navigate('ProfileUpdateScreen');
         break;
       case 'Log Out':
@@ -224,7 +224,7 @@ const CustomDrawerContent = ({props}) => {
             </View>
             <Space mL={10} />
             <View style={{height: 40, maxWidth: 100}}>
-              <Text style={{color: 'black'}}>{userName}</Text>
+              <Text style={{color: 'black'}} numberOfLines={1} width={'70%'}>{userName}</Text>
               {/* <Text style={{color:'black'}}>{userProfession}</Text> */}
               <TouchableOpacity
                 onPress={copyToClipboard}
@@ -371,9 +371,7 @@ const CustomDrawerContent = ({props}) => {
                     variant={'h6'}
                     extraStyle={style.drawerItemText}
                     color={COLORS.dark.black}
-                    onPress={() => {
-                      handleItemClick(route);
-                    }}
+                    onPress={() => navigation.navigate('EditProfileScreen')}
                   />
                 </View>
               </TouchableOpacity>
@@ -551,6 +549,7 @@ const CustomDrawerContent = ({props}) => {
                     fontSize: 18,
                     fontWeight: '600',
                     textAlign: 'left', // Left-aligned text for title
+                    color:'black'
                   }}>
                   Upgrade Membership
                 </Text>

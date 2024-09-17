@@ -189,35 +189,28 @@ export default function SearchScreen() {
 
   const renderItem = ({ item, index }) => (
     <View style={styles.cardContainer} key={`${item._id}_${index}`}>
-<View style={styles.imageContainer}>
-  {item.userImages && item.userImages.length > 0 ? (
-    <Image
-      source={{ uri: item.userImages[0] }}
-      style={styles.profileImage}
-    />
-  ) : item?.gender === 'male' ? (
-    <SvgXml xml={maleUserSvg} width="100%" height="100%" />
-  ) : item?.gender === 'female' ? (
-    <SvgXml xml={femaleUserSvg} width="100%" height="100%" />
-  ) : (
-    <Image
-      source={{ uri: 'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-male-5.png' }}
-      style={styles.profileImage}
-    />
-  )}
-  <View style={styles.newTag}>
-    <AppText title="New" extraStyle={styles.newText} />
-  </View>
-  {item.isVerified && (
-    <View style={styles.verifiedIcon}>
-      <CustomImage source={IMAGES.verifyIcon} size={24} resizeMode="contain" />
+ <View style={styles.imageContainer}>
+      {item.userImages && item.userImages.length > 0 ? (
+        <Image
+          source={{ uri: item.userImages[0] }}
+          style={styles.profileImage}
+        />
+      ) : item?.gender === 'male' ? (
+        <SvgXml xml={maleUserSvg} width="100%" height="100%" />
+      ) : item?.gender === 'female' ? (
+        <SvgXml xml={femaleUserSvg} width="100%" height="100%" />
+      ) : (
+        <SvgXml xml={maleUserSvg} width="100%" height="100%" />
+      )}
+      <View style={styles.newTag}>
+        <AppText title="New" extraStyle={styles.newText} />
+      </View>
+      {item.isVerified && (
+        <View style={styles.verifiedIcon}>
+          <CustomImage source={IMAGES.verifyIcon} size={24} resizeMode="contain" />
+        </View>
+      )}
     </View>
-  )}
-  {/* <LinearGradient
-    colors={['transparent', COLORS.dark.secondary]}
-    style={styles.gradientOverlay}
-  /> */}
-</View>
       <View style={styles.infoContainer}>
         <View style={styles.nameLocationContainer}>
           <AppText

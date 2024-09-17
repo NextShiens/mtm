@@ -184,13 +184,14 @@ const MyAccountScreen = () => {
     setRefreshing(false);
   };
   const copyToClipboard = () => {
-    Clipboard.setString(userId);
+    Clipboard.setString(displayUserId);
     Toast('User ID copied to clipboard');
   };
   // Function to delete an image from the images array
   const deleteImage = uri => {
     setImages(prevImages => prevImages.filter(image => image !== uri));
   };
+  const displayUserId = userId?.replace(/\D/g, '').slice(-8);
 
   // Render each image in the FlatList
   const renderImage = ({item}) => (
@@ -254,7 +255,7 @@ const MyAccountScreen = () => {
               style={[styles.input, styles.inputText]}
               placeholder="Full Name"
               placeholderTextColor={'#ccc'}
-              value={userId}
+              value={displayUserId}
               onChangeText={setFullName}
               keyboardType="default"
               editable={false}
