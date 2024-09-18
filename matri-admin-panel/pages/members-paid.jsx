@@ -157,7 +157,6 @@ const MembersPaid = () => {
     }
   };
 
-  console.log(members, "jkdshskjh")
 
   const handlePageChange = (newPage) => {
     setPage(newPage);

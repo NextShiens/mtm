@@ -181,39 +181,53 @@ const userAuthController = {
   },
 
   async changePassword(req, res, next) {
-    const { password, newPassword, userId } = req.body;
+    const { password, newPassword, userId, userEmail } = req.body;
+
     const userChangePasswordSchema = Joi.object({
-      password: Joi.string().required(),
-      newPassword: Joi.string().required(),
-      userId: Joi.string().required(),
+        password: Joi.string().required(),
+        newPassword: Joi.string().required(),
+        userId: Joi.string().required(),
+        userEmail: Joi.string().required(),
     });
+
     const { error } = userChangePasswordSchema.validate(req.body);
-
     if (error) {
-      return next(error);
+        return next(error);
     }
-    let user;
+
     try {
-      user = await User.findById(userId);
-      if (!user) {
-        return res.status(404).json({ message: "User not found" });
-      }
+        const userRecord = await admin.auth().getUserByEmail(userEmail);
+        console.log(userRecord, "userRecord");
 
-      const isMatch = await bcrypt.compare(password, user.password);
-      if (!isMatch) {
-        return res.status(400).json({ message: "Invalid current password" });
-      }
+        if (!userRecord) {
+            return res.status(404).json({ message: "User not found in Firebase" });
+        }
 
-      const hashedPassword = await bcrypt.hash(newPassword, 10);
-      user.password = hashedPassword;
-      await user.save();
+        const uid = userRecord.uid;
+        console.log(uid, "uid");
 
-      res.json({ message: "Password changed successfully" });
+        await admin.auth().updateUser(uid, { password: newPassword });
+
+        let user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(400).json({ message: "Invalid current password" });
+        }
+
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        user.password = hashedPassword;
+        await user.save();
+
+        res.json({ message: "Password changed successfully" });
     } catch (err) {
-      console.error(err.message);
-      res.status(500).send("Server Error");
+        console.error(err.message);
+        res.status(500).send("Server Error");
     }
-  },
+},
   async forgotPassword(req, res, next) {
     // const userId = req.query.id;
 
@@ -263,7 +277,7 @@ const userAuthController = {
 
   async deleteAccount(req, res, next) {
     const userDeleteSchema = Joi.object({
-      email: Joi.string().min(5).max(30).required(),
+      email: Joi.string().required(),
       userId: Joi.string().required(),
     });
     const { error } = userDeleteSchema.validate(req.body);
