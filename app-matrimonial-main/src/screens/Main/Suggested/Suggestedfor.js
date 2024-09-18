@@ -186,7 +186,7 @@ const SuggestedUsersPage = () => {
           <Icon
             SVGIcon={<SVG.locationIconSVG fill={'#ccc'} style={{top: 4}} />}
           />
-          <Text style={styles.userLocation}>{item.city || 'N/A'}</Text>
+          <Text style={styles.userLocation} numberOfLines={1}>{item.city || 'N/A'}</Text>
           <View style={styles.actionContainer}>
             <TouchableOpacity
               style={styles.actionButton}
@@ -211,6 +211,7 @@ const SuggestedUsersPage = () => {
             </TouchableOpacity>
           </View>
         </View>
+        
       </View>
     </TouchableOpacity>
   );
@@ -339,20 +340,22 @@ const styles = StyleSheet.create({
     marginLeft: 20,
   },
   locationContainer: {
+    width:'100%',
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 8,
+    display: 'flex',
+    justifyContent: 'space-between',
   },
   userLocation: {
     fontSize: 10,
     color: '#666',
     // fontFamily:'arial',
+    // width:'50%'
   },
   actionContainer: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    // paddingTop: 5,
-    marginLeft: 30,
   },
   actionButton: {
     width: 23,
