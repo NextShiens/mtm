@@ -260,10 +260,10 @@ const PartnerCard = ({ data }) => {
             }}
           >
             <Image
-              source={IMAGES.sendIcon}
+              source={IMAGES.Sendd}
               size={10}
               resizeMode="contain"
-              style={{alignSelf:'center', tintColor:'#1E285F'}}
+              style={{alignSelf:'center', tintColor:'#1E285F',width:13,height:13}}
             />
           </TouchableOpacity>
           <TouchableOpacity
@@ -273,7 +273,7 @@ const PartnerCard = ({ data }) => {
               handleChatBtnClick(item);
             }}
           >
-            <Image source={IMAGES.chatIcon} size={10} style={{alignSelf:'center',tintColor:'#F97B22'}}/>
+            <Image source={IMAGES.Chat} size={10} style={{alignSelf:'center',tintColor:'#F97B22',width:13,height:13}}/>
           </TouchableOpacity>
         </View>
       </View>

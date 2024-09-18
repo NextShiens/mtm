@@ -263,7 +263,7 @@ const SnapCarousel = ({ data }) => {
             <ActivityIndicator size="small" color="#fff" />
           ) : (
             <Image
-              source={require('../../assets/images/send123.png')}
+              source={require('../../assets/images/sendd.png')}
               style={styles.bottomRightButtonIcon}
             />
           )}
@@ -279,7 +279,7 @@ const SnapCarousel = ({ data }) => {
             <ActivityIndicator size="small" color="#fff" />
           ) : (
             <Image
-              source={require('../../assets/images/chat123.png')}
+              source={require('../../assets/images/chat-bubble.png')}
               style={styles.bottomRightButtonIcon2}
             />
           )}

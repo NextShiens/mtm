@@ -1,5 +1,6 @@
 import {StyleSheet, Dimensions} from 'react-native';
 import {COLORS, HORIZON_MARGIN} from '../../../assets/theme';
+import { windowWidth } from '../../../components/InboxCard/style';
 const screenWidth = Dimensions.get('window').width;
 export const styles = StyleSheet.create({
   hr: {
@@ -102,15 +103,25 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
   },
   slideContainer: {
-    width: '100%',
+    width: screenWidth,
     height: 280,
     borderRadius: 20,
-    borderBottomRadius: 10,
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 10,
+    overflow: 'hidden',
+  },
+  imageContainer: {
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#f0f0f0', // Fallback background color
   },
   image: {
     width: '100%',
     height: '100%',
-    resizeMode: 'cover',
+    // resizeMode: 'contain',
+    objectFit:'fill' // Changed from 'contain' to 'cover'
   },
   gradient: {
     ...StyleSheet.absoluteFillObject,

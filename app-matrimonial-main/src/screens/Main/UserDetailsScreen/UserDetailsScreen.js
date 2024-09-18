@@ -280,6 +280,7 @@ const UserDetailsScreen = ({navigation}) => {
     console.log('item', item),
     (
       <View style={styles.slideContainer}>
+        <View style={styles.imageContainer}>
         {userDetails?.userImages && userDetails?.userImages.length > 0 ? (
           <Image
             source={{uri: userDetails.userImages[0]}}
@@ -296,7 +297,7 @@ const UserDetailsScreen = ({navigation}) => {
           ? maleUserSvg
           : userDetails?.gender === 'female'
           ? femaleUserSvg
-          : maleUserSvg // Default to maleUserSvg if gender is not specified
+          : maleUserSvg 
       }
       width="100%"
       height="100%"
@@ -306,6 +307,7 @@ const UserDetailsScreen = ({navigation}) => {
           colors={['transparent', COLORS.dark.secondary]}
           style={styles.gradientOverlay}
         /> */}
+        </View>
       </View>
     )
   );
@@ -809,7 +811,7 @@ const UserDetailsScreen = ({navigation}) => {
                     extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
                   />
                   <AppText
-                    title={userDetails.Education?.education || 'N/A'}
+                    title={userDetails?.Education?.education || 'N/A'}
                     variant={'h4'}
                     color={COLORS.dark.black}
                     extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
