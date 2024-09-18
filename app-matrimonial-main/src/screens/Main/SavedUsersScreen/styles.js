@@ -193,4 +193,128 @@ export const styles = StyleSheet.create({
     resizeMode: 'contain',
     marginRight: '1%',
   },
+  main: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+  },
+  cardContainer: {
+    width: '48%', // Reduce this value to make sure two cards fit in one row
+    height: 190,
+    backgroundColor: COLORS.dark.white,
+    borderRadius: 15,
+    elevation: 5,
+    marginBottom: 15,
+    overflow: 'hidden',
+  },
+  imageContainer: {
+    height: '60%',
+    width: '100%',
+    position: 'relative',
+  },
+  profileImage: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
+  },
+  newTag: {
+    position: 'absolute',
+    top: 10,
+    left: 10,
+    backgroundColor: COLORS.dark.primary,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 15,
+  },
+  newText: {
+    color: COLORS.dark.white,
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
+  verifiedIcon: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+  },
+  gradientOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    zIndex: 1,
+  },
+  infoContainer: {
+    paddingHorizontal: 5,
+    paddingTop: 10,
+    marginRight: 10,
+  },
+  nameLocationContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingRight: 16,
+    alignItems: 'center',
+  },
+  locationContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+  },
+  locationText: {
+    fontSize: 10,
+    marginLeft: 2,
+  },
+  detailsText: {
+    flex: 1,
+    color: COLORS.dark.black,
+    marginRight: 10,
+  },
+  actionContainer: {
+    marginTop: 10,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+  },
+  occupationText: {
+    marginLeft: -10,
+    marginBottom: -17,
+    width: '70%',
+    paddingLeft: 10,
+  },
+  actionButton1: {
+    width: 20,
+    height: 20,
+    borderRadius: 20,
+    backgroundColor: '#1E285F14',
+    justifyContent: 'center',
+    marginLeft: 10,
+  },
+  actionButton2: {
+    width: 20,
+    height: 20,
+    borderRadius: 20,
+    backgroundColor: '#F97B221A',
+    justifyContent: 'center',
+    marginLeft: 10,
+  },
+  ageHeightActionContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  test: {
+    color: 'black',
+    fontSize: 12,
+    width:'70%'
+  },
+  icon: {
+    width: 40,
+    height: 40,
+    resizeMode: 'contain',
+    backgroundColor: 'red',
+    marginRight: 5,
+  },
+  Bell_Icon: {
+    width: 25,
+    height: 30,
+    resizeMode: 'contain',
+    marginRight: '1%',
+  },
 });

@@ -176,6 +176,12 @@ const CustomDrawerContent = ({props}) => {
       case 'My Account':
         navigation.navigate('ProfileUpdateScreen');
         break;
+        case 'Success Stories':
+        navigation.navigate('SuccessStories');
+        break;
+        case 'Saved User':
+        navigation.navigate('SavedUserScreen');
+        break;
       case 'Log Out':
         await handleLogout();
         break;
@@ -316,10 +322,9 @@ const CustomDrawerContent = ({props}) => {
                   paddingHorizontal: 10,
                   marginHorizontal: 20,
                 }}>
-                <CustomImage
-                  source={route.iconName}
-                  size={25}
-                  resizeMode={'contain'}
+                <Image
+                  source={require('../../assets/images/check-mark.png')}
+                  style={{width: 25, height: 25}}
                 />
                 <Space mL={10} />
                 <View style={{flex: 1}}>
@@ -352,13 +357,9 @@ const CustomDrawerContent = ({props}) => {
                 onPress={() => {
                   handleItemClick(route);
                 }}>
-                <CustomImage
-                  source={route.iconName}
-                  size={25}
-                  resizeMode={'contain'}
-                  onPress={() => {
-                    handleItemClick(route);
-                  }}
+                <Image
+                  source={require('../../assets/images/Men.png')}
+                  style={{width: 25, height: 25 ,resizeMode:'contain'}}
                 />
                 <Space mL={10} />
                 <View
@@ -423,14 +424,13 @@ const CustomDrawerContent = ({props}) => {
               onPress={() => {
                 handleItemClick(route);
               }}>
-              <CustomImage
-                source={route.iconName}
-                size={25}
-                resizeMode={'contain'}
-                onPress={() => {
+              <Image
+                  source={route.iconName}
+                  style={{width: 25, height: 25}}
+                  onPress={() => {
                   handleItemClick(route);
                 }}
-              />
+              /> 
               <Space mL={10} />
               <View
                 style={{maxWidth: '90%'}}

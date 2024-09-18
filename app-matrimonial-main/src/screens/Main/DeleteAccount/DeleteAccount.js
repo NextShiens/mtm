@@ -20,7 +20,6 @@ const DeleteAccount = () => {
 
   
   const handleDeleteAccount = async () => {
-
     const user = await AsyncStorage.getItem('theUser');
     try {
       setIsLoading(true);
@@ -40,6 +39,7 @@ const DeleteAccount = () => {
       });
 
       if (!response.ok) {
+        console.log('Failed to delete account:', response);
         throw new Error('Failed to delete account');
       }
 
@@ -71,7 +71,10 @@ const DeleteAccount = () => {
         title="Delete Account"
         iconRight={
           <TouchableOpacity onPress={handleRightIconPress}>
-            <Image source={IMAGES.notificationIcon} style={styles.Bell_Icon} />
+            <Image
+                source={IMAGES.Bell}
+                style={{width: 25, height: 25}}
+              />
           </TouchableOpacity>
         }
       />

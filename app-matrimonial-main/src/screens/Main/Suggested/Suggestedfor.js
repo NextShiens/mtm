@@ -195,7 +195,7 @@ const SuggestedUsersPage = () => {
                 handleSendInterest(item);
               }}>
               <Image
-                source={IMAGES.sendIcon}
+                source={IMAGES.Sendd}
                 size={10}
                 resizeMode="contain"
                 style={styles.image}
@@ -207,7 +207,7 @@ const SuggestedUsersPage = () => {
                 e.stopPropagation();
                 handleChatBtnClick(item);
               }}>
-              <Image source={IMAGES.chatIcon} size={10} style={styles.image2} />
+              <Image source={IMAGES.Chat} size={10} style={styles.image2} />
             </TouchableOpacity>
           </View>
         </View>
@@ -376,11 +376,15 @@ const styles = StyleSheet.create({
     tintColor: '#1E285F',
     alignItems: 'center',
     alignSelf: 'center',
+    height: 13,
+    width: 13,
   },
   image2: {
     tintColor: '#F97B22',
     alignItems: 'center',
     alignSelf: 'center',
+    height: 13,
+    width: 13,
   },
   actionButtonText: {
     fontSize: 16,

@@ -118,7 +118,10 @@ const InboxScreen = ({ navigation }) => {
           textColor={"black"}
           iconRight={
             <TouchableOpacity onPress={handleRightIconPress}>
-              <Image source={IMAGES.notificationIcon} style={styles.Bell_Icon} />
+               <Image
+                source={IMAGES.Bell}
+                style={{width: 25, height: 25}}
+              />
             </TouchableOpacity>
           }
         />

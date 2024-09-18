@@ -27,8 +27,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import {Toast} from '../../../utils/native';
 import {API_URL} from '../../../../constant';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { SvgXml } from 'react-native-svg';
-
+import {SvgXml} from 'react-native-svg';
 
 const maleUserSvg = `<svg width="181" height="207" viewBox="0 0 181 207" fill="none" xmlns="http://www.w3.org/2000/svg">
   <path d="M134.84 55.1933H71.4624V4.97703L107.364 2.19678C122.183 1.04946 134.84 12.7647 134.84 27.6279V55.1933Z" fill="#555A5E"/>
@@ -62,7 +61,6 @@ const femaleUserSvg = `<svg width="182" height="207" viewBox="0 0 250 250" fill=
 <path d="M161.93 98.043C161.93 98.043 142.93 101.666 125.158 72.1975V42.4873L150.98 52.9591L164.144 71.9555L165.637 88.0286L161.93 98.043Z" fill="#555A5E"/>
 <path d="M171.506 153.326V208.522C156.686 208.522 144.663 196.499 144.663 181.663V144.902C146.454 143.126 148.277 141.193 150.305 139.166C152.269 137.201 153.982 133.413 155.475 128.746C158.54 130.097 161.306 131.999 163.648 134.341C168.504 139.213 171.506 145.908 171.506 153.326Z" fill="#555A5E"/>
 </svg>`;
-
 
 const Connections = ({navigation}) => {
   const [selectedBtn, setSelectedBtn] = useState(1);
@@ -182,7 +180,7 @@ const Connections = ({navigation}) => {
     Toast('Request accepted');
   };
 
-  const handleRejectRequest = (requestId) => {
+  const handleRejectRequest = requestId => {
     rejectRequest(requestId);
     Toast('Request rejected');
   };
@@ -238,10 +236,7 @@ const Connections = ({navigation}) => {
             textColor={COLORS.dark.primary}
             iconRight={
               <TouchableOpacity onPress={handleRightIconPress}>
-                <Image
-                  source={IMAGES.notificationIcon}
-                  style={styles.Bell_Icon}
-                />
+                <Image source={IMAGES.Bell} style={{width: 25, height: 25}} />
               </TouchableOpacity>
             }
           />
@@ -294,33 +289,54 @@ const Connections = ({navigation}) => {
                         <View
                           style={styles.cardContainer}
                           key={`${item._id}_${index}`}>
-<View style={styles.imageContainer}>
-  {item.userImages && item.userImages.length > 0 ? (
-    console.log('item:', item),
-    <Image
-      source={{ uri: item.userImages[0] }}
-      style={styles.profileImage}
-    />
-  ) : item?.gender === 'male' ? (
-    <SvgXml xml={maleUserSvg} width="100%" height="100%" />
-  ) : item?.gender === 'female' ? (
-    <SvgXml xml={femaleUserSvg} width="100%" height="100%" />
-  ) : (
-    <SvgXml xml={maleUserSvg} width="100%" height="100%" />
-  )}
-  <View style={styles.newTag}>
-    <AppText title="New" extraStyle={styles.newText} />
-  </View>
-  {item.isVerified && (
-    <View style={styles.verifiedIcon}>
-      <CustomImage source={IMAGES.verifyIcon} size={24} resizeMode="contain" />
-    </View>
-  )}
-  {/* <LinearGradient
+                          <View style={styles.imageContainer}>
+                            {item.userImages && item.userImages.length > 0 ? (
+                              (console.log('item:', item),
+                              (
+                                <Image
+                                  source={{uri: item.userImages[0]}}
+                                  style={styles.profileImage}
+                                />
+                              ))
+                            ) : item?.gender === 'male' ? (
+                              <SvgXml
+                                xml={maleUserSvg}
+                                width="100%"
+                                height="100%"
+                              />
+                            ) : item?.gender === 'female' ? (
+                              <SvgXml
+                                xml={femaleUserSvg}
+                                width="100%"
+                                height="100%"
+                              />
+                            ) : (
+                              <SvgXml
+                                xml={maleUserSvg}
+                                width="100%"
+                                height="100%"
+                              />
+                            )}
+                            <View style={styles.newTag}>
+                              <AppText
+                                title="New"
+                                extraStyle={styles.newText}
+                              />
+                            </View>
+                            {item.isVerified && (
+                              <View style={styles.verifiedIcon}>
+                                <CustomImage
+                                  source={IMAGES.verifyIcon}
+                                  size={24}
+                                  resizeMode="contain"
+                                />
+                              </View>
+                            )}
+                            {/* <LinearGradient
     colors={['transparent', COLORS.dark.secondary]}
     style={styles.gradientOverlay}
   /> */}
-</View>
+                          </View>
                           <View style={styles.infoContainer}>
                             <View style={styles.nameLocationContainer}>
                               <Text style={styles.test} numberOfLines={1}>
@@ -359,7 +375,9 @@ const Connections = ({navigation}) => {
                             </View> */}
                             <View style={styles.ageHeightActionContainer}>
                               <AppText
-                                title={`Age ${item?.receiverId?.age || 'N/A'}, ${item.receiverId?.height}`}
+                                title={`Age ${
+                                  item?.receiverId?.age || 'N/A'
+                                }, ${item.receiverId?.height}`}
                                 color={COLORS.dark.inputBorder}
                                 extraStyle={[
                                   STYLES.fontFamily(Fonts.PoppinsRegular),
