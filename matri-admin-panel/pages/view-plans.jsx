@@ -47,7 +47,6 @@ const viewPlans = () => {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
         toast.success("Plan deleted successfully");
 
         if (data.subscriptions) {

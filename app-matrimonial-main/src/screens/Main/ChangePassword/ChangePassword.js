@@ -80,6 +80,7 @@ const ChangePasswordScreen = () => {
         },
         body: JSON.stringify({
           userId: user.user._id,
+          userEmail: user.user.email,
           password: oldPassword,
           newPassword: newPassword,
         }),
@@ -232,3 +233,5 @@ const styles = StyleSheet.create({
 });
 
 export default ChangePasswordScreen;
+
+
