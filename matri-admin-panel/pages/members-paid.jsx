@@ -10,7 +10,7 @@ import {
 } from "react-icons/lia";
 import { FaUserXmark } from "react-icons/fa6";
 import { ImUserCheck } from "react-icons/im";
-import { Select, Space } from "antd";
+import { Select, Space, Spin } from "antd";
 import { Modal } from "antd";
 import EditModal from "../components/modals/editModal";
 import DeleteModal from "../components/modals/deleteModal";
@@ -59,6 +59,7 @@ const MembersPaid = () => {
   const [popperElement, setPopperElement] = useState(null);
   const menuRef = useRef();
   const divRef = useRef();
+  const [isLoading, setIsLoading] = useState(true);
 
   const { styles, attributes } = usePopper(referenceElement, popperElement, {
     placement: 'bottom-end',
@@ -104,22 +105,59 @@ const MembersPaid = () => {
     };
   }, [show]);
 
-  const fetchItems = async (page, pageSize) => {
+  const fetchItems = async () => {
+    setIsLoading(true);
     try {
-      const response = await axios.get(`${backendUrl}/admin/getAllUsers`, {
-        params: {
-          page,
-          pageSize,
-          sortValue,
-        },
-        withCredentials: true,
-      });
-      setTotal(response.data.totalPages);
-      setMembers(response.data.users);
+      // Retrieve subscription plans and get their IDs
+      const subscriptionPlans = JSON.parse(localStorage.getItem('subscriptionPlans'));
+      const subscriptionIds = subscriptionPlans.map(plan => plan._id);
+
+      let allUsers = [];
+      let page = 1;
+      let totalPages;
+      let filteredUsers = [];
+
+      // Fetch all users and filter them by subscription IDs
+      do {
+        const response = await axios.get(`${backendUrl}/admin/getAllUsers`, {
+          params: {
+            page,
+            pageSize, // Default pageSize
+            sortValue,
+          },
+          withCredentials: true,
+        });
+
+        // Accumulate users
+        allUsers = allUsers.concat(response.data.users);
+
+        // Move to the next page
+        page += 1;
+
+        // Update totalPages if available in the response
+        totalPages = response.data.totalPages;
+
+      } while (page <= totalPages);
+
+      // Filter users by subscription IDs
+      filteredUsers = allUsers.filter(user => subscriptionIds.includes(user.membership));
+
+      // Calculate the total pages for filtered users
+      const itemsPerPage = 10; // Adjust based on your needs
+      const totalFilteredPages = Math.ceil(filteredUsers.length / itemsPerPage);
+
+      // Set the total pages and members (filtered users)
+      setTotal(totalFilteredPages);
+      setMembers(filteredUsers);
+
     } catch (error) {
-      console.error("Error fetching items:", error);
+      console.error("Error fetching users:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
+
+  console.log(members, "jkdshskjh")
 
   const handlePageChange = (newPage) => {
     setPage(newPage);
@@ -340,74 +378,86 @@ const MembersPaid = () => {
         </div>
 
         <div className="overflow-x-auto mt-7">
-          <table className="min-w-full bg-white">
-            <thead className="ltr:text-left rtl:text-right border-t border-t-[rgba(0, 0, 0, 0.07)] p-4">
+          {isLoading ? (
+            <div className="flex justify-center items-center h-64">
+              <Spin size="large" />
+            </div>
+          ) : (
+            <table className="min-w-full bg-white">
+            <thead className="bg-gray-100">
               <tr>
-                <th className="whitespace-nowrap px-5 py-4 text-[16px] text-[#363B49] font-[400]">
+                <th className="p-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  MemberShip ID
+                </th>
+                <th className="p-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   User Name
                 </th>
-                <th className="whitespace-nowrap px-4 py-4 text-[16px] text-[#363B49] font-[400]">
+                <th className="p-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Gender
                 </th>
-                <th className="whitespace-nowrap px-4 py-4 text-[16px] text-[#363B49] font-[400]">
+                <th className="p-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Email Address
                 </th>
-                <th className="whitespace-nowrap px-4 py-4 text-[16px] text-[#363B49] font-[400]">
+                <th className="p-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Mobile Number
                 </th>
-                <th className="whitespace-nowrap px-4 py-4 text-[16px] text-[#363B49] font-[400]">
+                <th className="p-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Status
                 </th>
-                <th className="whitespace-nowrap px-4 py-4 text-[16px] text-[#363B49] font-[400]">
+                <th className="p-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Action
                 </th>
               </tr>
             </thead>
             <tbody className="home-table">
               {members.map((item, index) => {
-                if (!item.isPaid) return null
+                if (!item) return null;
                 return (
-                  <tr
-                    className="border border-[rgba(0, 0, 0, 0.07)]"
-                    key={index}
-                  >
-                    <td className="whitespace-nowrap p-4 text-[14px] text-blackColor font-[500] flex items-center gap-4 max-xl:w-[200px]">
-                      {item && item.userImages.length > 0 ? (
-                        <img
-                          src={item.userImages[0]}
-                          alt="Profile Image"
-                          className="block mx-auto h-10 w-10 rounded-full"
-                        />
-                      ) : (
-                        <div className="h-10 w-10 flex items-center justify-center bg-gray-200 rounded-full mx-auto">
-                          {item && item.name[0]}
-                        </div>
-                      )}
-                      <h1>{item.name}</h1>
+                  <tr key={index} className="hover:bg-gray-50">
+                    <td className="p-3 whitespace-nowrap">
+                      <div className="text-sm font-medium text-gray-900">{item.membership}</div>
                     </td>
-                    <td className="whitespace-nowrap p-4 font-roboto text-black font-[500] max-xl:w-[300px]">
-                      {item.gender}
+                    <td className="p-3 whitespace-nowrap">
+                      <div className="flex items-center">
+                        {item && item.userImages.length > 0 ? (
+                          <img
+                            src={item.userImages[0]}
+                            alt="Profile Image"
+                            className="h-10 w-10 rounded-full mr-3"
+                          />
+                        ) : (
+                          <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center mr-3">
+                            <span className="text-xl font-medium text-gray-700">
+                              {item && item.name[0]}
+                            </span>
+                          </div>
+                        )}
+                        <div className="text-sm font-medium text-gray-900">{item.name}</div>
+                      </div>
                     </td>
-                    <td className="whitespace-nowrap p-4 font-roboto text-blackColor font-[500] max-xl:w-[300px]">
-                      {item.email}
+                    <td className="p-3 whitespace-nowrap">
+                      <div className="text-sm text-gray-500">{item.gender || "N/A"}</div>
                     </td>
-                    <td className="whitespace-nowrap p-4 font-roboto text-blackColor font-[500] max-xl:w-[300px]">
-                      {item.phone}
+                    <td className="p-3 whitespace-nowrap">
+                      <div className="text-sm text-gray-500">{item.email}</div>
                     </td>
-                    <td className="whitespace-nowrap p-4 text-blackColor font-[500] max-xl:w-[300px]">
-                      <button
-                        className={`w-[108px] h-[40px] font-roboto p-2 rounded-lg ${!item.isActive
-                            ? "bg-[#CFD8ED] text-[#1240B4]"
-                            : "bg-[#CFFFDA] text-[#28A745]"
+                    <td className="p-3 whitespace-nowrap">
+                      <div className="text-sm text-gray-500">{item.phone}</div>
+                    </td>
+                    <td className="p-3 whitespace-nowrap">
+                      <span
+                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${item.isActive
+                          ? "bg-green-100 text-green-800"
+                          : "bg-red-100 text-red-800"
                           }`}
                       >
-                        {item.isActive ? "Approved" : "Pending"}
-                      </button>
+                        {item.isActive ? "Active" : "Inactive"}
+                      </span>
                     </td>
-                    <td className="whitespace-nowrap p-4 text-blackColor font-[500] max-xl:w-[300px] relative">
+                    <td className="p-3 whitespace-nowrap text-sm font-medium relative">
                       <button
+                        className="text-indigo-600 hover:text-indigo-900"
                         onClick={(event) => toggleMenu(index, event)}
-                        className="text-indigo-600 hover:text-indigo-900 action-menu-button"
                       >
                         <BsThreeDotsVertical />
                       </button>
@@ -417,6 +467,7 @@ const MembersPaid = () => {
               })}
             </tbody>
           </table>
+          )}
         </div>
 
         <Pagination

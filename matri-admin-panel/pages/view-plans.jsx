@@ -32,6 +32,7 @@ const viewPlans = () => {
     })
       .then((res) => res.json())
       .then((data) => {
+        localStorage.setItem('subscriptionPlans', JSON.stringify(data.subscription));
         setPlans(data.subscription);
       });
   }, []);
