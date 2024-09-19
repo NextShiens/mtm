@@ -156,16 +156,17 @@ export default function SearchScreen() {
   };
 
   const handleSendInterest = async (item) => {
-    try {
-      if (await subscriptionCheck(item)) {
-        navigation.navigate('UserDetailsScreen', { userId: item?._id });
-      } else {
-        Toast("Your profile view limit exceeded.");
-      }
-    } catch (error) {
-      console.error('Error in handleSendInterest:', error);
-      Toast("An error occurred. Please try again.");
-    }
+    // try {
+    //   if (await subscriptionCheck(item)) {
+    //     navigation.navigate('UserDetailsScreen', { userId: item?._id });
+    //   } else {
+    //     Toast("Your profile view limit exceeded.");
+    //   }
+    // } catch (error) {
+    //   console.error('Error in handleSendInterest:', error);
+    //   Toast("An error occurred. Please try again.");
+    // }
+    navigation.navigate('UserDetailsScreen', { userId: item?._id });
   };
 
   const handleChatBtnClick = async (item) => {

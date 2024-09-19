@@ -19,6 +19,7 @@ import {
   checkLiveChatAvailability,
 } from '../../../utils/subscriptionCheck';
 import { Toast } from '../../../utils/native';
+import { Navigation } from 'lucide-react-native';
 
 const maleUserSvg = `<svg width="181" height="207" viewBox="0 0 181 207" fill="none" xmlns="http://www.w3.org/2000/svg">
   <path d="M134.84 55.1933H71.4624V4.97703L107.364 2.19678C122.183 1.04946 134.84 12.7647 134.84 27.6279V55.1933Z" fill="#555A5E"/>
@@ -113,16 +114,17 @@ const SavedUserScreen = ({ navigation }) => {
   };
 
   const handleSendInterest = async item => {
-    try {
-      if (await subscriptionCheck(item)) {
-        navigation.navigate('UserDetailsScreen', { userId: item?._id });
-      } else {
-        Toast('Your profile view limit exceeded.');
-      }
-    } catch (error) {
-      console.error('Error in handleSendInterest:', error);
-      Toast('An error occurred. Please try again.');
-    }
+    // try {
+    //   if (await subscriptionCheck(item)) {
+    //     navigation.navigate('UserDetailsScreen', { userId: item?._id });
+    //   } else {
+    //     Toast('Your profile view limit exceeded.');
+    //   }
+    // } catch (error) {
+    //   console.error('Error in handleSendInterest:', error);
+    //   Toast('An error occurred. Please try again.');
+    // }
+    Navigation.navigate('UserDetailsScreen', { userId: item?._id });
   };
 
   const handleChatBtnClick = async item => {
