@@ -113,33 +113,31 @@ const PartnerCard = ({ data }) => {
   }
 
   const handleCardPress = async (item) => {
-    // try {
-    //   await addToRecentlyViewed(item?._id);
-    //   if (await subscriptionCheck(item)) {
-    //     navigation.navigate('UserDetailsScreen', { userId: item?._id });
-    //   } else {
-    //     Toast("Your profile view limit exceeded.");
-    //   }
-    // } catch (error) {
-    //   console.error('Error in handleCardPress:', error);
-    //   Toast("An error occurred. Please try again.");
-    // }
-    navigation.navigate('UserDetailsScreen', { userId: item?._id });
+    try {
+      await addToRecentlyViewed(item?._id);
+      if (await subscriptionCheck(item)) {
+        navigation.navigate('UserDetailsScreen', { userId: item?._id });
+      } else {
+        Toast("Your profile view limit exceeded.");
+      }
+    } catch (error) {
+      console.error('Error in handleCardPress:', error);
+      Toast("An error occurred. Please try again.");
+    }
   };
 
   const handleSendInterest = async (item) => {
-    // try {
-    //   await addToRecentlyViewed(item?._id);
-    //   if (await subscriptionCheck(item)) {
-    //     navigation.navigate('UserDetailsScreen', { userId: item?._id });
-    //   } else {
-    //     Toast("Your profile view limit exceeded.");
-    //   }
-    // } catch (error) {
-    //   console.error('Error in handleSendInterest:', error);
-    //   Toast("An error occurred. Please try again.");
-    // }
-    navigation.navigate('UserDetailsScreen', { userId: item?._id });
+    try {
+      await addToRecentlyViewed(item?._id);
+      if (await subscriptionCheck(item)) {
+        navigation.navigate('UserDetailsScreen', { userId: item?._id });
+      } else {
+        Toast("Your profile view limit exceeded.");
+      }
+    } catch (error) {
+      console.error('Error in handleSendInterest:', error);
+      Toast("An error occurred. Please try again.");
+    }
   };
 
   const handleChatBtnClick = async (item) => {

@@ -6,6 +6,7 @@ import CustomImage from '../../../components/CustomImage/CustomImage';
 import AppHeader from '../../../components/AppHeader/AppHeader';
 import {IMAGES} from '../../../assets/images'; 
 import { SVG } from '../../../assets/svg';
+import { STYLES } from '../../../assets/theme';
 
 const AccountSettingsScreen = ({ navigation }) => {
 
@@ -100,7 +101,7 @@ const styles = StyleSheet.create({
     marginLeft: 8,
     fontSize: 18,
     color: '#434343',
-    fontFamily: 'OpenSans',
+    fontFamily: STYLES.fontFamily(Fonts.PoppinsMedium),
   },
   line: {
     height: 1,

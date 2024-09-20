@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Dimensions,
   Image,
@@ -9,24 +9,24 @@ import {
   Text,
   Modal,
 } from 'react-native';
-import {useRoute} from '@react-navigation/native';
-import Carousel, {Pagination} from 'react-native-snap-carousel';
+import { useRoute } from '@react-navigation/native';
+import Carousel, { Pagination } from 'react-native-snap-carousel';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {SvgXml} from 'react-native-svg';
-import {Fonts} from '../../../assets/fonts';
-import {IMAGES} from '../../../assets/images';
-import {SVG} from '../../../assets/svg';
-import {COLORS, STYLES} from '../../../assets/theme';
+import { SvgXml } from 'react-native-svg';
+import { Fonts } from '../../../assets/fonts';
+import { IMAGES } from '../../../assets/images';
+import { SVG } from '../../../assets/svg';
+import { COLORS, STYLES } from '../../../assets/theme';
 import AppHeader from '../../../components/AppHeader/AppHeader';
 import AppText from '../../../components/AppText/AppText';
 import CustomImage from '../../../components/CustomImage/CustomImage';
 import Space from '../../../components/Space/Space';
-import {LABELS} from '../../../labels';
+import { LABELS } from '../../../labels';
 import Icon from '../../../components/Icon/Icon';
-import {styles} from './styles';
-import {Toast} from '../../../utils/native';
-import {API_URL} from '../../../../constant';
-import {checkIsPaidUser} from '../../../utils/subscriptionCheck';
+import { styles } from './styles';
+import { Toast } from '../../../utils/native';
+import { API_URL } from '../../../../constant';
+import { checkIsPaidUser, checkLiveChatAvailability } from '../../../utils/subscriptionCheck';
 
 
 const defaultProfileSvg = `
@@ -72,7 +72,7 @@ const femaleUserSvg = `<svg width="182" height="207" viewBox="0 0 250 250" fill=
 <path d="M171.506 153.326V208.522C156.686 208.522 144.663 196.499 144.663 181.663V144.902C146.454 143.126 148.277 141.193 150.305 139.166C152.269 137.201 153.982 133.413 155.475 128.746C158.54 130.097 161.306 131.999 163.648 134.341C168.504 139.213 171.506 145.908 171.506 153.326Z" fill="#555A5E"/>
 </svg>`;
 
-const UserDetailsScreen = ({navigation}) => {
+const UserDetailsScreen = ({ navigation }) => {
   const route = useRoute();
   const userId = route.params?.userId || '';
   const screenWidth = Dimensions.get('window').width;
@@ -155,7 +155,7 @@ const UserDetailsScreen = ({navigation}) => {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({userId: userId}),
+        body: JSON.stringify({ userId: userId }),
       });
       if (!response.ok) {
         const errorData = await response.json();
@@ -167,12 +167,28 @@ const UserDetailsScreen = ({navigation}) => {
       Toast('send interest successfully');
     } catch (error) {
       console.error('Error saving user:', error);
-      Toast('An unexpected error occurred'); 
+      Toast('An unexpected error occurred');
     } finally {
       setIsSaving(false);
     }
   };
-
+  const handleChatBtnClick = async item => {
+    try {
+      const canChat = await checkLiveChatAvailability(item);
+      if (canChat) {
+        navigation.navigate('ChatScreen', {
+          userId: item?._id,
+          roomId: `${item?._id}_${currentUser.user._id}`,
+          user: item,
+        });
+      } else {
+        Toast("You can't chat. Please buy premium.");
+      }
+    } catch (error) {
+      console.error('Error checking chat availability:', error);
+      Toast('An error occurred. Please try again.');
+    }
+  };
   const sendInterest = async () => {
     setIsSendingInterest(true);
     const apiUrl = `${API_URL}/user/sendInterest`;
@@ -276,34 +292,34 @@ const UserDetailsScreen = ({navigation}) => {
       category: 'Religion',
     },
   ];
-  const renderItem = ({item, index}) => (
+  const renderItem = ({ item, index }) => (
     console.log('item', item),
     (
       <View style={styles.slideContainer}>
         <View style={styles.imageContainer}>
-        {userDetails?.userImages && userDetails?.userImages.length > 0 ? (
-          <Image
-            source={{uri: userDetails.userImages[0]}}
-            style={styles.image}
-          />
-        ) : item?.gender === 'male' ? (
-          <SvgXml xml={maleUserSvg} width="100%" height="100%" />
-        ) : item?.gender === 'female' ? (
-          <SvgXml xml={femaleUserSvg} width="100%" height="100%" />
-        ) : (
-          <SvgXml
-         xml={
-        userDetails?.gender === 'male'
-          ? maleUserSvg
-          : userDetails?.gender === 'female'
-          ? femaleUserSvg
-          : maleUserSvg 
-      }
-      width="100%"
-      height="100%"
-    />
-        )}
-        {/* <LinearGradient
+          {userDetails?.userImages && userDetails?.userImages.length > 0 ? (
+            <Image
+              source={{ uri: userDetails.userImages[0] }}
+              style={styles.image}
+            />
+          ) : item?.gender === 'male' ? (
+            <SvgXml xml={maleUserSvg} width="100%" height="100%" />
+          ) : item?.gender === 'female' ? (
+            <SvgXml xml={femaleUserSvg} width="100%" height="100%" />
+          ) : (
+            <SvgXml
+              xml={
+                userDetails?.gender === 'male'
+                  ? maleUserSvg
+                  : userDetails?.gender === 'female'
+                    ? femaleUserSvg
+                    : maleUserSvg
+              }
+              width="100%"
+              height="100%"
+            />
+          )}
+          {/* <LinearGradient
           colors={['transparent', COLORS.dark.secondary]}
           style={styles.gradientOverlay}
         /> */}
@@ -328,13 +344,13 @@ const UserDetailsScreen = ({navigation}) => {
                 }}>
                 <Image
                   source={IMAGES.savedIcon}
-                  style={{width: 20, height: 20}}
+                  style={{ width: 20, height: 20 }}
                 />
               </TouchableOpacity>
             }
             title={LABELS.matches}
             extraStyle={{
-              container: {width: '100%', position: 'absolute', zIndex: 1},
+              container: { width: '100%', position: 'absolute', zIndex: 1 },
             }}
           />
         </View>
@@ -352,7 +368,7 @@ const UserDetailsScreen = ({navigation}) => {
                 borderRadius: 50,
               }}>
               <Image
-                style={{width: 20, height: 20}}
+                style={{ width: 20, height: 20 }}
                 source={IMAGES.correct}></Image>
             </View>
 
@@ -394,7 +410,7 @@ const UserDetailsScreen = ({navigation}) => {
               />
               <Space mT={13} />
               <View
-                style={{flexDirection: 'row', alignItems: 'start', gap: 5}}>
+                style={{ flexDirection: 'row', alignItems: 'start', gap: 5 }}>
                 <View
                   style={{
                     flexDirection: 'row',
@@ -408,7 +424,7 @@ const UserDetailsScreen = ({navigation}) => {
                   }}>
                   <Image
                     source={IMAGES.briefcaseColored} // Update with the correct path
-                    style={{width: 13, height: 13, marginRight: 8}}
+                    style={{ width: 13, height: 13, marginRight: 8 }}
                   />
                   <Text
                     style={{
@@ -436,7 +452,7 @@ const UserDetailsScreen = ({navigation}) => {
                   }}>
                   <Icon
                     SVGIcon={<SVG.locationIconSVG fill={COLORS.dark.primary} />} // Update with the correct path
-                    style={{width: 40, height: 40}}
+                    style={{ width: 40, height: 40 }}
                   />
                   <Text
                     style={{
@@ -466,13 +482,13 @@ const UserDetailsScreen = ({navigation}) => {
             <Space mT={12} />
             <View style={style.basicInfoContainer}>
               <View style={[style.infoCont1]}>
-              <AppText
+                <AppText
                   title={LABELS.fullName}
                   variant={'h4'}
                   color={COLORS.dark.gray}
                   extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
                 />
-                <Text style={{maxWidth:'80%',fontSize:16,color:'black'}}>{userDetails?.name || 'N/A'}</Text>
+                <Text style={{ maxWidth: '80%', fontSize: 16, color: 'black' }}>{userDetails?.name || 'N/A'}</Text>
                 <Space mT={20} />
 
                 <AppText
@@ -577,7 +593,7 @@ const UserDetailsScreen = ({navigation}) => {
               </View>
             </View>
 
-            <View style={{paddingHorizontal: 10}}>
+            <View style={{ paddingHorizontal: 10 }}>
               <View
                 style={{
                   height: 1,
@@ -595,46 +611,46 @@ const UserDetailsScreen = ({navigation}) => {
 
               <Space mT={17} />
               <View style={{ flexDirection: 'row' }}>
-          <View style={{ width: '50%' }}>
-          <TouchableOpacity onPress={handleContactPress}>
-            <AppText
-              title={LABELS.phoneNumber}
-              variant={'h4'}
-              color={COLORS.dark.gray}
-            />
-              <Text
-                title={
-                  hasSubscription
-                    ? userDetails?.phone || 'N/A'
-                    : '+91 34********'
-                }
-                variant={'h4'}
-                color={COLORS.dark.black}
-                style={style.test}
-              >{
-                hasSubscription
-                  ? userDetails?.phone || 'N/A'
-                  : '+91 34********'
-              }</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={{ width: '50%' }}>
-            <TouchableOpacity onPress={handleContactPress}>
-            <AppText
-              title={LABELS.email}
-              variant={'h4'}
-              color={COLORS.dark.gray}
-            />
-              <Text
-              style={style.test}
-              >{
-                hasSubscription
-                  ? userDetails?.email || 'N/A'
-                  : '******@gmail.com'
-              }</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+                <View style={{ width: '50%' }}>
+                  <TouchableOpacity onPress={handleContactPress}>
+                    <AppText
+                      title={LABELS.phoneNumber}
+                      variant={'h4'}
+                      color={COLORS.dark.gray}
+                    />
+                    <Text
+                      title={
+                        hasSubscription
+                          ? userDetails?.phone || 'N/A'
+                          : '+91 34********'
+                      }
+                      variant={'h4'}
+                      color={COLORS.dark.black}
+                      style={style.test}
+                    >{
+                        hasSubscription
+                          ? userDetails?.phone || 'N/A'
+                          : '+91 34********'
+                      }</Text>
+                  </TouchableOpacity>
+                </View>
+                <View style={{ width: '50%' }}>
+                  <TouchableOpacity onPress={handleContactPress}>
+                    <AppText
+                      title={LABELS.email}
+                      variant={'h4'}
+                      color={COLORS.dark.gray}
+                    />
+                    <Text
+                      style={style.test}
+                    >{
+                        hasSubscription
+                          ? userDetails?.email || 'N/A'
+                          : '******@gmail.com'
+                      }</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
 
               <Space mT={20} />
               <View
@@ -753,7 +769,7 @@ const UserDetailsScreen = ({navigation}) => {
                 <Space mT={10} />
               </View>
             </View>
-            <View style={{paddingHorizontal: 10}}>
+            <View style={{ paddingHorizontal: 10 }}>
               <View
                 style={{
                   height: 1,
@@ -773,7 +789,7 @@ const UserDetailsScreen = ({navigation}) => {
                   width: '100%',
                   flexDirection: 'row',
                 }}>
-                <View style={{width: '60%'}}>
+                <View style={{ width: '60%' }}>
                   <AppText
                     title={LABELS.maritalExpectation}
                     variant={'h4'}
@@ -795,9 +811,8 @@ const UserDetailsScreen = ({navigation}) => {
                     extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
                   />
                   <AppText
-                    title={`${userDetails?.ageFrom || 'N/A'} - ${
-                      userDetails?.ageTo || 'N/A'
-                    }`}
+                    title={`${userDetails?.ageFrom || 'N/A'} - ${userDetails?.ageTo || 'N/A'
+                      }`}
                     variant={'h4'}
                     color={COLORS.dark.black}
                     extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
@@ -831,7 +846,7 @@ const UserDetailsScreen = ({navigation}) => {
                   />
                 </View>
 
-                <View style={{width: '40%'}}>
+                <View style={{ width: '40%' }}>
                   <AppText
                     title={LABELS.cast}
                     variant={'h4'}
@@ -853,9 +868,8 @@ const UserDetailsScreen = ({navigation}) => {
                     extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
                   />
                   <AppText
-                    title={`${userDetails.heightFrom || 'N/A'} - ${
-                      userDetails.heightTo || 'N/A'
-                    }`}
+                    title={`${userDetails.heightFrom || 'N/A'} - ${userDetails.heightTo || 'N/A'
+                      }`}
                     variant={'h4'}
                     color={COLORS.dark.black}
                     extraStyle={STYLES.fontFamily(Fonts.PoppinsMedium)}
@@ -894,7 +908,7 @@ const UserDetailsScreen = ({navigation}) => {
           <Space mT={80} />
           <Space mT={20} />
         </View>
-        <View style={{height: 60}} />
+        <View style={{ height: 60 }} />
         <Modal
           transparent={true}
           visible={isRequestSent}
@@ -908,7 +922,7 @@ const UserDetailsScreen = ({navigation}) => {
               backgroundColor: 'rgba(0,0,0,0.5)',
             }}>
             <View
-              style={{backgroundColor: 'white', padding: 20, borderRadius: 10}}>
+              style={{ backgroundColor: 'white', padding: 20, borderRadius: 10 }}>
               <View style={styles.box}>
                 <View style={styles.contentbox}>
                   <View style={styles.iconbox}>
@@ -1077,23 +1091,17 @@ const UserDetailsScreen = ({navigation}) => {
           }}>
           <Image
             source={IMAGES.sendIcon}
-            style={{width:14,height:14}}
+            style={{ width: 14, height: 14 }}
           />
           <Space mL={10} />
           <Text
-            style={{fontFamily: Fonts.PoppinsRegular,color:'white',fontSize:14}}
+            style={{ fontFamily: Fonts.PoppinsRegular, color: 'white', fontSize: 14 }}
           >Send Interest</Text>
         </TouchableOpacity>
         <Space mL={10} />
 
         <TouchableOpacity
-          onPress={() => {
-            navigation.navigate('ChatScreen', {
-              userId: userDetails?._id,
-              roomId: `${userDetails?._id}_${currentUser.user._id}`,
-              user: userDetails,
-            });
-          }}
+          onPress={() => handleChatBtnClick(userDetails)}
           style={{
             width: '48%',
             height: 50,
@@ -1103,11 +1111,16 @@ const UserDetailsScreen = ({navigation}) => {
             flexDirection: 'row',
             borderRadius: 30,
           }}>
-          <Image source={IMAGES.chatIcon} style={{width:14,height:14}} />
+          <Image source={IMAGES.chatIcon} style={{ width: 14, height: 14 }} />
           <Space mL={10} />
           <Text
-            style={{fontFamily: Fonts.PoppinsRegular,color:'white',fontSize:14}}
-          >Chat Now</Text>
+            style={{
+              fontFamily: Fonts.PoppinsRegular,
+              color: 'white',
+              fontSize: 14,
+            }}>
+            Chat Now
+          </Text>
         </TouchableOpacity>
       </View>
     </View>

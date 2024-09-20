@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, TextInput, StyleSheet, Text, TouchableOpacity, Image, ToastAndroid, ActivityIndicator, RefreshControl, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL } from '../../../constant';
+import { Fonts } from '../../assets/fonts';
 
 const CriteriaPage = ({ navigation }) => {
   const [partnerExpectation, setPartnerExpectation] = useState('');
@@ -203,7 +204,7 @@ const styles = StyleSheet.create({
   heading: {
     color: '#1A1A1A',
     textAlign: 'center',
-    fontFamily: 'DM Sans',
+    fontFamily: Fonts.PoppinsRegular,
     fontSize: 21,
     fontStyle: 'normal',
     fontWeight: '700',

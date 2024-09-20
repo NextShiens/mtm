@@ -5,6 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL } from '../../../constant';
 import { useNavigation } from '@react-navigation/native';
 import { indianCastes, workLocationList, indianMotherTongues } from '../../data/appData';
+import { Fonts } from '../../assets/fonts';
 
 const ReligionPage = () => {
   const navigation = useNavigation();
@@ -403,7 +404,7 @@ const styles = StyleSheet.create({
   heading: {
     color: '#1A1A1A',
     textAlign: 'center',
-    fontFamily: 'DM Sans',
+    fontFamily: Fonts.PoppinsRegular,
     fontSize: 21,
     fontStyle: 'normal',
     fontWeight: '700',

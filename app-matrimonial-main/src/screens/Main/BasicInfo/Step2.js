@@ -6,6 +6,7 @@ import { API_URL } from '../../../../constant';
 import { QualificationList, occupationList, workLocationList } from '../../../data/appData';
 import { useNavigation } from '@react-navigation/native';
 import { Toast } from '../../../utils/native';
+import { STYLES } from '../../../assets/theme';
 
 const UserProfileStep2 = () => {
   const navigation = useNavigation();
@@ -307,7 +308,7 @@ const styles = StyleSheet.create({
   heading: {
     color: '#1A1A1A',
     textAlign: 'center',
-    fontFamily: 'DM Sans',
+    fontFamily: STYLES.fontFamily(Fonts.PoppinsMedium),
     fontSize: 21,
     fontStyle: 'normal',
     fontWeight: '700',

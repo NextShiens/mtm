@@ -27,7 +27,7 @@ module.exports = {
         "homeText-Color": "#0F2354",
       },
       fontFamily: {
-        roboto: ["Roboto", "sans-serif"],
+        roboto: ["DMSans", "sans-serif"],
       },
     },
   },

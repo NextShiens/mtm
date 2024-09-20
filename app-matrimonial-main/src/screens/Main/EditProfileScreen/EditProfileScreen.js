@@ -15,6 +15,7 @@ import Clipboard from '@react-native-clipboard/clipboard';
 import Svg, {Circle, Path} from 'react-native-svg';
 import {Toast} from '../../../utils/native';
 import { ChevronRight } from 'lucide-react-native';
+import { Fonts } from '../../../assets/fonts';
 
 const EditProfileScreen = () => {
   const navigation = useNavigation();
@@ -284,6 +285,7 @@ const EditProfileScreen = () => {
                   backgroundColor: '#FFF',
                   borderWidth: 1,
                   borderColor: '#ccc',
+                  fontFamily: Fonts.PoppinsRegular,
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}
@@ -349,6 +351,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 20,
+    fontFamily: Fonts.PoppinsRegular,
     marginBottom: 20,
   },
   profileImage: {
@@ -361,12 +364,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     borderRadius: 20,
     marginLeft: 15,
+    fontFamily: Fonts.PoppinsRegular,
     borderWidth: 1,
     borderColor: '#FFA500',
   },
   upgradeButtonText: {
     color: '#FFA500',
+    
     fontWeight: 'bold',
+    fontFamily: Fonts.PoppinsRegular,
   },
   section: {
     padding: 20,
@@ -376,6 +382,7 @@ const styles = StyleSheet.create({
   },
   optionText: {
     fontSize: 16,
+    fontFamily: Fonts.PoppinsRegular,
     marginBottom: 5,
     color: '#000',
   },
@@ -388,6 +395,7 @@ const styles = StyleSheet.create({
   },
   optionText2: {
     fontSize: 16,
+    fontFamily: Fonts.PoppinsRegular,
     marginBottom: 5,
     color: 'black',
     marginLeft: 10,
@@ -395,6 +403,7 @@ const styles = StyleSheet.create({
   },
   dropdown: {
     height: 56,
+    fontFamily: Fonts.PoppinsRegular,
     borderColor: '#ccc',
     borderWidth: 1,
     borderRadius: 10,
@@ -411,11 +420,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 20,
+
     alignSelf: 'center',
     marginBottom: 10,
   },
   heading: {
     fontSize: 16,
+    fontFamily: Fonts.PoppinsRegular,
     color: 'black',
     textAlign: 'center',
     width: '85%',
