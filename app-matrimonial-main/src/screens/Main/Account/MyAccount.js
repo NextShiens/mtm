@@ -1,8 +1,7 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   TextInput,
-  Button,
   StyleSheet,
   Text,
   SafeAreaView,
@@ -11,17 +10,15 @@ import {
   ScrollView,
   Dimensions,
   FlatList,
-  Alert,
   RefreshControl,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {API_URL} from '../../../../constant';
-import {Toast} from '../../../utils/native';
-import * as ImagePicker from 'react-native-image-picker';
-import {Path, Svg} from 'react-native-svg';
+import { API_URL } from '../../../../constant';
+import { Toast } from '../../../utils/native';
+import ImagePicker from 'react-native-image-crop-picker';
+import { Path, Svg } from 'react-native-svg';
 import Clipboard from '@react-native-clipboard/clipboard';
-
 
 const MyAccountScreen = () => {
   const navigation = useNavigation();
@@ -33,27 +30,34 @@ const MyAccountScreen = () => {
   const [images, setImages] = useState([]);
   const [initialUserData, setInitialUserData] = useState({});
   const [refreshing, setRefreshing] = useState(false);
-  const screenWidth = Dimensions.get('window').width; // Get the screen width
   const [userId, setUserId] = useState('');
-  // Function to handle image selection
-  const selectImages = () => {
+
+  const selectAndCropImage = () => {
     if (images.length >= 3) {
       Toast('You can only upload up to 3 images.');
       return;
     }
 
-    const options = {
-      mediaType: 'photo',
-      selectionLimit: 3 - images.length, // Limit to remaining images
-    };
-
-    ImagePicker.launchImageLibrary(options, response => {
-      if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.errorMessage) {
-        console.log('ImagePicker Error: ', response.errorMessage);
-      } else if (response.assets) {
-        response.assets.forEach(asset => uploadImage(asset)); // Upload each selected image
+    ImagePicker.openPicker({
+      width: 300,
+      height: 300,
+      cropping: true,
+      cropperToolbarTitle: 'Crop your image',
+      cropperToolbarColor: '#FF7F00',
+      cropperStatusBarColor: '#FF7F00',
+      cropperActiveWidgetColor: '#FF7F00',
+      cropperToolbarWidgetColor: '#ffffff',
+      cropperPromptTextColor: '#ffffff',
+      cropperInitialAspectRatio: 1,
+      freeStyleCropEnabled: true,
+      cropperCancelText: 'Cancel',
+      cropperChooseText: 'Choose',
+    }).then(image => {
+      uploadImage(image);
+    }).catch(error => {
+      if (error.code !== 'E_PICKER_CANCELLED') {
+        console.log('ImagePicker Error: ', error);
+        Toast('Error selecting image');
       }
     });
   };
@@ -71,19 +75,17 @@ const MyAccountScreen = () => {
 
       const formData = new FormData();
 
-      // Use File instead of Blob if possible
-      const fileUri = imageFile.uri;
-      const filename = imageFile.name || fileUri.split('/').pop();
+      const fileUri = imageFile.path;
+      const filename = fileUri.split('/').pop();
       const match = /\.(\w+)$/.exec(filename);
       const type = match ? `image/${match[1]}` : 'image';
 
-      formData.append('file', {uri: fileUri, name: filename, type});
+      formData.append('file', { uri: fileUri, name: filename, type });
 
       const response = await fetch(`${API_URL}/user/uploadFile`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
-          // Let the browser set the Content-Type header for multipart/form-data
         },
         body: formData,
       });
@@ -111,7 +113,6 @@ const MyAccountScreen = () => {
 
       const userProfile = {};
 
-      // Build the request body dynamically based on changes
       if (fullName !== initialUserData.name) userProfile.name = fullName;
       if (phone !== initialUserData.phone) userProfile.phone = phone;
       if (images.length >= 0) userProfile.userImages = images;
@@ -183,20 +184,21 @@ const MyAccountScreen = () => {
     await fetchUser();
     setRefreshing(false);
   };
+
   const copyToClipboard = () => {
     Clipboard.setString(displayUserId);
     Toast('User ID copied to clipboard');
   };
-  // Function to delete an image from the images array
+
   const deleteImage = uri => {
     setImages(prevImages => prevImages.filter(image => image !== uri));
   };
+
   const displayUserId = userId?.replace(/\D/g, '').slice(-8);
 
-  // Render each image in the FlatList
-  const renderImage = ({item}) => (
+  const renderImage = ({ item }) => (
     <View style={styles.imageWrapper}>
-      <Image source={{uri: item}} style={styles.imagePreview} />
+      <Image source={{ uri: item }} style={styles.imagePreview} />
       <TouchableOpacity
         style={styles.deleteIcon}
         onPress={() => deleteImage(item)}>
@@ -218,19 +220,17 @@ const MyAccountScreen = () => {
           <Text style={styles.heading}>Account</Text>
         </View>
 
-        {/* Image Upload Section */}
         <View style={styles.imageUploadContainer}>
-          <TouchableOpacity style={styles.uploadButton} onPress={selectImages}>
+          <TouchableOpacity style={styles.uploadButton} onPress={selectAndCropImage}>
             <Image
               source={require('../../../assets/images/cloud-computing.png')}
               style={styles.uploadIcon}
             />
             <Text style={styles.uploadText}>
-              Drag & drop files or <Text style={styles.browseText}>Browse</Text>
+              Tap to select and crop an image
             </Text>
           </TouchableOpacity>
 
-          {/* Display selected images in a FlatList (horizontal slider) */}
           {images.length > 0 && (
             <FlatList
               data={images}
@@ -246,11 +246,10 @@ const MyAccountScreen = () => {
           )}
         </View>
 
-        {/* Form Section */}
         <View style={styles.formContainer}>
           <Text style={styles.text}>Profile ID</Text>
 
-          <View >
+          <View>
             <TextInput
               style={[styles.input, styles.inputText]}
               placeholder="Full Name"
@@ -260,8 +259,9 @@ const MyAccountScreen = () => {
               keyboardType="default"
               editable={false}
             />
-            <TouchableOpacity style={{position:'absolute',right:10,top:13}}
-            onPress={copyToClipboard}>
+            <TouchableOpacity
+              style={{ position: 'absolute', right: 10, top: 13 }}
+              onPress={copyToClipboard}>
               <Svg
                 width="31"
                 height="31"
@@ -331,7 +331,7 @@ const MyAccountScreen = () => {
             {isLoading ? 'Loading...' : 'Save'}
           </Text>
         </TouchableOpacity>
-        <View height={15}></View>
+        <View style={{ height: 15 }} />
       </ScrollView>
     </SafeAreaView>
   );
@@ -379,10 +379,6 @@ const styles = StyleSheet.create({
     color: '#333',
     fontSize: 14,
   },
-  browseText: {
-    color: '#FF7F00',
-    fontWeight: 'bold',
-  },
   flatlistContainer: {
     marginTop: 20,
   },
@@ -391,7 +387,7 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   imagePreview: {
-    width: Dimensions.get('window').width / 2.2, // Adjust to show 3 images per row
+    width: Dimensions.get('window').width / 2.2,
     height: 140,
     borderRadius: 10,
   },
