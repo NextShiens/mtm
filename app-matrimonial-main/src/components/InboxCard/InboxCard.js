@@ -7,6 +7,7 @@ import AppText from '../AppText/AppText';
 import CustomImage from '../CustomImage/CustomImage';
 import Space from '../Space/Space';
 import { styles, windowWidth } from './style';
+import { color } from 'react-native-elements/dist/helpers';
 
 const InboxCard = ({ conversation }) => { 
   if (!conversation) {
@@ -46,9 +47,10 @@ const InboxCard = ({ conversation }) => {
       <Space mL={5} />
       <View style={styles.textContainer}>
         <AppText
+
           title={conversation?.name || 'Unknown'}
           variant="h5"
-          extraStyle={STYLES.fontFamily(Fonts.PoppinsRegular)}
+          extraStyle={[STYLES.fontFamily(Fonts.PoppinsRegular),{color: COLORS.dark.black}]}
         />
         {/* <AppText
           title={message}

@@ -7,6 +7,7 @@ import AppHeader from '../../../components/AppHeader/AppHeader';
 import {IMAGES} from '../../../assets/images'; 
 import { SVG } from '../../../assets/svg';
 import { STYLES } from '../../../assets/theme';
+import { Fonts } from '../../../assets/fonts';
 
 const AccountSettingsScreen = ({ navigation }) => {
 

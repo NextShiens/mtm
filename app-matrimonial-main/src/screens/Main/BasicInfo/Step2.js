@@ -7,6 +7,7 @@ import { QualificationList, occupationList, workLocationList } from '../../../da
 import { useNavigation } from '@react-navigation/native';
 import { Toast } from '../../../utils/native';
 import { STYLES } from '../../../assets/theme';
+import { Fonts } from '../../../assets/fonts';
 
 const UserProfileStep2 = () => {
   const navigation = useNavigation();

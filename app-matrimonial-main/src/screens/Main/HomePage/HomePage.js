@@ -818,25 +818,6 @@ const HomePage = () => {
         <Space mT={20} />
 
         <View style={[STYLES.pL(6)]}>
-          {recentlyViewedLoading ? (
-            <ActivityIndicator size="large" color={COLORS.dark.primary} />
-          ) : recentlyViewed && recentlyViewed.length > 0 ? (
-            <HorizontalCard
-              data={recentlyViewed}
-              onLinkPress={showMoreUserHandler}
-              onSendInterest={sendInterestHandler}
-              onChatBtnClick={chatPressHandler}
-              onVerifyBtnClick={() => {
-                Toast('This account is verified');
-              }}
-            />
-          ) : (
-            <Text style={styles.noDataText}>No recently viewed users</Text>
-          )}
-        </View>
-        <Space mT={20} />
-
-        <View style={[STYLES.pL(6)]}>
           {loading ? (
             <ActivityIndicator size="large" color={COLORS.dark.primary} />
           ) : matchedUsers && matchedUsers.length > 0 ? (
