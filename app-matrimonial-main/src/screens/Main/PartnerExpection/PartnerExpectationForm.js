@@ -1,19 +1,26 @@
-import React, { useState } from 'react';
-import { ScrollView, View, TextInput, TouchableOpacity, Image, Text } from 'react-native';
-import { SVG } from '../../../assets/svg';
-import { COLORS, STYLES } from '../../../assets/theme';
+import React, {useState} from 'react';
+import {
+  ScrollView,
+  View,
+  TextInput,
+  TouchableOpacity,
+  Image,
+  Text,
+} from 'react-native';
+import {SVG} from '../../../assets/svg';
+import {COLORS, STYLES} from '../../../assets/theme';
 import AppButton from '../../../components/AppButton/AppButton';
 import AppHeader from '../../../components/AppHeader/AppHeader';
 import AppText from '../../../components/AppText/AppText';
 import Space from '../../../components/Space/Space';
-import { LABELS } from '../../../labels';
-import { styles } from './styles';
-import { useRoute } from '@react-navigation/native';
-import { API_URL } from '../../../../constant';
+import {LABELS} from '../../../labels';
+import {styles} from './styles';
+import {useRoute} from '@react-navigation/native';
+import {API_URL} from '../../../../constant';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Toast } from '../../../utils/native';
+import {Toast} from '../../../utils/native';
 
-const PartnerExpectationForm = ({ navigation }) => {
+const PartnerExpectationForm = ({navigation}) => {
   const route = useRoute();
   const previousProfileData = route.params?.profileData || {};
 
@@ -30,10 +37,10 @@ const PartnerExpectationForm = ({ navigation }) => {
     navigation.goBack();
   };
 
-  const updatePartnerExpectation = (value) => {
+  const updatePartnerExpectation = value => {
     setAllProfileData(prevData => ({
       ...prevData,
-      partnerExpectation: value
+      partnerExpectation: value,
     }));
   };
 
@@ -55,7 +62,7 @@ const PartnerExpectationForm = ({ navigation }) => {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          "authorization": `Bearer ${await AsyncStorage.getItem('AccessToken')}`
+          authorization: `Bearer ${await AsyncStorage.getItem('AccessToken')}`,
         },
         body: JSON.stringify(allProfileData),
       });
@@ -67,8 +74,17 @@ const PartnerExpectationForm = ({ navigation }) => {
       }
 
       const responseData = await response.json();
+      if (responseData) {
+        await AsyncStorage.setItem(
+          'theUser',
+          JSON.stringify({user: responseData.user}),
+        );
+        navigation.reset({
+          index: 0,
+          routes: [{name: 'DrawerNavigation'}],
+        });
+      }
       Toast('Account Created successfully!');
-      navigation.navigate('LoginScreen');
     } catch (error) {
       console.error('Error updating profile:', error.message);
       Toast('An error occurred. Please try again.');
@@ -81,20 +97,19 @@ const PartnerExpectationForm = ({ navigation }) => {
     <ScrollView>
       <View style={style.container}>
         <View style={styles.flexrow}>
-          <TouchableOpacity onPress={() => navigation.goBack()} style={styles.back}>
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            style={styles.back}>
             <Image source={require('../../../assets/images/leftarrow.png')} />
           </TouchableOpacity>
           <Text style={styles.heading}>Partner Preferences</Text>
         </View>
         <Space mT={20} />
         <View style={style.contentContainer}>
-          <AppText
-            title={LABELS.partnerExpectation}
-            variant={'h4'}
-          />
+          <AppText title={LABELS.partnerExpectation} variant={'h4'} />
           <Space mT={20} />
           <TextInput
-            style={[styles.input, { color: 'black' }]}
+            style={[styles.input, {color: 'black'}]}
             multiline
             numberOfLines={6}
             placeholder={'Write your partner expectation here'}

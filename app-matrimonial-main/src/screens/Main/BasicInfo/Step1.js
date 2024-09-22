@@ -7,7 +7,6 @@ import { Toast } from '../../../utils/native';
 import { occupationList, indianCastes, workLocationList } from '../../../data/appData';
 import { useNavigation } from '@react-navigation/native';
 import { STYLES } from '../../../assets/theme';
-import { Fonts } from '../../../assets/fonts';
 
 const UserProfileStep1 = () => {
   const navigation = useNavigation();
@@ -447,7 +446,7 @@ const styles = StyleSheet.create({
   heading: {
     color: '#1A1A1A',
     textAlign: 'center',
-    fontFamily: STYLES.fontFamily(Fonts.PoppinsMedium),
+    fontFamily: 'PoppinsMedium',
     fontSize: 21,
     fontStyle: 'normal',
     fontWeight: '700',
