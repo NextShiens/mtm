@@ -129,26 +129,15 @@ const SnapCarousel = ({ data }) => {
   const handleSlidePress = async () => {
     setLoadingViewProfile(true);
     const currentItem = data[activeSlide];
-    const isSubscribed = await subscriptionCheck(currentItem);
-    if (isSubscribed) {
-      await addToRecentlyViewed(currentItem?._id);
       navigation.navigate('UserDetailsScreen', {userId: currentItem?._id});
-    } else {
-      Toast('Your profile view limit exceeded.');
-    }
     setLoadingViewProfile(false);
   };
 
   const handleSendInterest = async () => {
     setLoadingViewProfile(true);
     const currentItem = data[activeSlide];
-    const isSubscribed = await subscriptionCheck(currentItem);
-    if (isSubscribed) {
       await addToRecentlyViewed(currentItem?._id);
       navigation.navigate('UserDetailsScreen', {userId: currentItem?._id});
-    } else {
-      Toast('Your profile view limit exceeded.');
-    }
     setLoadingViewProfile(false);
   };
 
