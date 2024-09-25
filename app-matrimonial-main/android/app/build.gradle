@@ -79,8 +79,8 @@ android {
         applicationId "com.metrimoni"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 18
-        versionName "4.118"
+        versionCode 19
+        versionName "19"
     }
     signingConfigs {
         debug {
