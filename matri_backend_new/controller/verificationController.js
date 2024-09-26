@@ -105,20 +105,18 @@ const verificationController = {
 
       console.log("Creating email transporter");
       let transporter = nodemailer.createTransport({
-        host: 'smtp.gmail.com',
-        port: 465,
-        secure: true,
+        host: 'smtp.hostinger.com',
+        port: 587,
+        secure: false,
         auth: {
-          user: '18cr231@gmail.com', // your email address
-          pass: 'ybul ovxm fssz rhst' // your app password
+          user: 'info@vaishakhimatrimony.com', // your email address
+          pass: 'Temp@12345' // your app password
         },
-        debug: true, // Enable debug logging
-        logger: true // Enable logging
       });
 
       console.log("Preparing mail options");
       var mailOptions = {
-        from: "18cr231@gmail.com",
+        from: "info@vaishakhimatrimony.com",
         to: email,
         subject: "Account Verification",
         text: `Your verification code is ${codeToSave.code}\n\nThank You!\n`,
