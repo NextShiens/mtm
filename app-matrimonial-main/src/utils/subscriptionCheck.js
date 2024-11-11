@@ -91,4 +91,4 @@ async function checkLiveChatAvailability() {
   }
 }
 
-export { subscriptionCheck, checkLiveChatAvailability };
+export { subscriptionCheck, checkLiveChatAvailability , checkIsPaidUser};
